@@ -1,0 +1,278 @@
+
+export const translations = {
+    en: {
+        nav: {
+            home: 'Home',
+            shop: 'Shop',
+            about: 'About',
+            contact: 'Contact',
+            mode: {
+                retail: 'Retail Mode',
+                wholesale: 'Wholesale Mode',
+            },
+            search: 'Search for tools...',
+        },
+        hero: {
+            retailTitle: 'Professional Jewelry Tools',
+            wholesaleTitle: 'Bulk Manufacturing Supplies',
+            subtitle: 'Premium quality tools for every craftsman',
+            cta: 'Shop Now',
+        },
+        product: {
+            addToCart: 'Add to Cart',
+            outOfStock: 'Out of Stock',
+            retailPrice: 'Price',
+            wholesalePrice: 'Wholesale Price',
+            moq: 'Min Order Qty',
+        },
+        cart: {
+            title: 'Your Cart',
+            checkout: 'Checkout',
+            empty: 'Cart is empty',
+        },
+        delivery: {
+            check: 'Check Delivery Availability',
+            instant: '⚡ Instant Delivery (Delhi NCR)',
+            standard: '🚚 Standard Shipping',
+            enterPincode: 'Enter Pincode',
+            available: 'Available',
+            unavailable: 'Not Available',
+        },
+    },
+    hi: {
+        nav: {
+            home: 'होम',
+            shop: 'दुकान',
+            about: 'हमारे बारे में',
+            contact: 'संपर्क करें',
+            mode: {
+                retail: 'खुदरा मोड',
+                wholesale: 'थोक मोड',
+            },
+            search: 'औजार खोजें...',
+        },
+        hero: {
+            retailTitle: 'पेशेवर आभूषण औजार',
+            wholesaleTitle: 'थोक निर्माण आपूर्ति',
+            subtitle: 'हर कारीगर के लिए प्रीमियम गुणवत्ता वाले औजार',
+            cta: 'अभी खरीदें',
+        },
+        product: {
+            addToCart: 'कार्ट में डालें',
+            outOfStock: 'स्टॉक में नहीं',
+            retailPrice: 'मूल्य',
+            wholesalePrice: 'थोक मूल्य',
+            moq: 'न्यूनतम आदेश मात्रा',
+        },
+        cart: {
+            title: 'आपकी कार्ट',
+            checkout: 'चेकआउट',
+            empty: 'कार्ट खाली है',
+        },
+        delivery: {
+            check: 'डिलीवरी उपलब्धता की जाँच करें',
+            instant: '⚡ त्वरित डिलीवरी (दिल्ली एनसीआर)',
+            standard: '🚚 मानक शिपिंग',
+            enterPincode: 'पिनकोड दर्ज करें',
+            available: 'उपलब्ध',
+            unavailable: 'उपलब्ध नहीं',
+        },
+    },
+    mr: { // Marathi
+        nav: {
+            home: 'होम',
+            shop: 'दुकान',
+            about: 'आमच्याबद्दल',
+            contact: 'संपर्क',
+            mode: {
+                retail: 'किरकोळ मोड',
+                wholesale: 'घाऊक मोड',
+            },
+            search: 'साधने शोधा...',
+        },
+        hero: {
+            retailTitle: 'व्यावसायिक दागिने साधने',
+            wholesaleTitle: 'घाऊक उत्पादन पुरवठा',
+            subtitle: 'प्रत्येक कारागिरासाठी प्रीमियम गुणवत्तेची साधने',
+            cta: 'आता खरेदी करा',
+        },
+        product: {
+            addToCart: 'कार्टमध्ये जोडा',
+            outOfStock: 'स्टॉक संपला',
+            retailPrice: 'किंमत',
+            wholesalePrice: 'घाऊक किंमत',
+            moq: 'किमान ऑर्डर',
+        },
+        cart: {
+            title: 'तुमची कार्ट',
+            checkout: 'चेकआउट',
+            empty: 'कार्ट रिकामी आहे',
+        },
+        delivery: {
+            check: 'डिलिव्हरी उपलब्धता तपासा',
+            instant: '⚡ त्वरित डिलिव्हरी (दिल्ली NCR)',
+            standard: '🚚 रेग्युलर शिपिंग',
+            enterPincode: 'पिनकोड टाका',
+            available: 'उपलब्ध',
+            unavailable: 'उपलब्ध नाही',
+        },
+    },
+    gu: { // Gujarati
+        nav: {
+            home: 'હોમ',
+            shop: 'દુકાન',
+            about: 'અમારા વિશે',
+            contact: 'સંપર્ક',
+            mode: {
+                retail: 'રિટેલ મોડ',
+                wholesale: 'જથ્થાબંધ મોડ',
+            },
+            search: 'સાધનો શોધો...',
+        },
+        hero: {
+            retailTitle: 'પ્રોફેશનલ જ્વેલરી સાધનો',
+            wholesaleTitle: 'જથ્થાબંધ ઉત્પાદન પુરવઠો',
+            subtitle: 'દરેક કારીગર માટે પ્રીમિયમ ગુણવત્તાના સાધનો',
+            cta: 'હમણાં ખરીદો',
+        },
+        product: {
+            addToCart: 'કાર્ટમાં ઉમેરો',
+            outOfStock: 'સ્ટોકમાં નથી',
+            retailPrice: 'કિંમત',
+            wholesalePrice: 'જથ્થાબંધ કિંમત',
+            moq: 'ન્યૂનતમ ઓર્ડર',
+        },
+        cart: {
+            title: 'તમારું કાર્ટ',
+            checkout: 'ચેકઆઉટ',
+            empty: 'કાર્ટ ખાલી છે',
+        },
+        delivery: {
+            check: 'ડિલિવરી તપાસો',
+            instant: '⚡ ઝડપી ડિલિવરી (દિલ્હી NCR)',
+            standard: '🚚 સ્ટાન્ડર્ડ શિપિંગ',
+            enterPincode: 'પિનકોડ દાખલ કરો',
+            available: 'ઉપલબ્ધ',
+            unavailable: 'ઉપલબ્ધ નથી',
+        },
+    },
+    bn: { // Bengali
+        nav: {
+            home: 'হোম',
+            shop: 'দোকান',
+            about: 'আমাদের সম্পর্কে',
+            contact: 'যোগাযোগ',
+            mode: {
+                retail: 'খুচরো মোড',
+                wholesale: 'পাইকারি মোড',
+            },
+            search: 'সরঞ্জাম খুঁজুন...',
+        },
+        hero: {
+            retailTitle: 'পেশাদার গয়না সরঞ্জাম',
+            wholesaleTitle: 'পাইকারি উত্পাদন সরবরাহ',
+            subtitle: 'প্রতিটি কারিগরের জন্য প্রিমিয়াম মানের সরঞ্জাম',
+            cta: 'এখন কিনুন',
+        },
+        product: {
+            addToCart: 'কার্টে যোগ করুন',
+            outOfStock: 'স্টক শেষ',
+            retailPrice: 'দাম',
+            wholesalePrice: 'পাইকারি দাম',
+            moq: 'নূন্যতম অর্ডার',
+        },
+        cart: {
+            title: 'আপনার কার্ট',
+            checkout: 'চেকআউট',
+            empty: 'কার্ট খালি',
+        },
+        delivery: {
+            check: 'ডেলিভারি চেক করুন',
+            instant: '⚡ দ্রুত ডেলিভারি (দিল্লি NCR)',
+            standard: '🚚 সাধারণ শিপিং',
+            enterPincode: 'পিনকোড দিন',
+            available: 'উপলব্ধ',
+            unavailable: 'উপলব্ধ নেই',
+        },
+    },
+    ta: { // Tamil
+        nav: {
+            home: 'முகப்பு',
+            shop: 'கடை',
+            about: 'எங்களை பற்றி',
+            contact: 'தொடர்பு',
+            mode: {
+                retail: 'சில்லறை முறை',
+                wholesale: 'மொத்த விற்பனை',
+            },
+            search: 'கருவிகளைத் தேடுங்கள்...',
+        },
+        hero: {
+            retailTitle: 'தொழில்முறை நகை கருவிகள்',
+            wholesaleTitle: 'மொத்த உற்பத்தி பொருட்கள்',
+            subtitle: 'ஒவ்வொரு கைவினைஞருக்கும் பிரீமியம் கருவிகள்',
+            cta: 'இப்போது வாங்கவும்',
+        },
+        product: {
+            addToCart: 'கூடையில் சேர்',
+            outOfStock: 'இருப்பு இல்லை',
+            retailPrice: 'விலை',
+            wholesalePrice: 'மொத்த விலை',
+            moq: 'குறைந்தபட்ச ஆர்டர்',
+        },
+        cart: {
+            title: 'உங்கள் கூடை',
+            checkout: 'செக் அவுட்',
+            empty: 'கூடை காலியாக உள்ளது',
+        },
+        delivery: {
+            check: 'டெலிவரியை சரிபார்க்கவும்',
+            instant: '⚡ உடனடி டெலிவரி (டெல்லி NCR)',
+            standard: '🚚 தரமான ஷிப்பிங்',
+            enterPincode: 'பின்கோடு உள்ளிடவும்',
+            available: 'கிடைக்கும்',
+            unavailable: 'கிடைக்கவில்லை',
+        },
+    },
+    te: { // Telugu
+        nav: {
+            home: 'హోమ్',
+            shop: 'దుకాణం',
+            about: 'మా గురించి',
+            contact: 'సంప్రదించండి',
+            mode: {
+                retail: 'రీటైల్ మోడ్',
+                wholesale: 'హోల్ సేల్ మోడ్',
+            },
+            search: 'పనిముట్లు వెతకండి...',
+        },
+        hero: {
+            retailTitle: 'వృత్తిపరమైన ఆభరణాల పనిముట్లు',
+            wholesaleTitle: 'హోల్ సేల్ సామాగ్రి',
+            subtitle: 'ప్రతి కళాకారుడికి ప్రీమియం నాణ్యత పనిముట్లు',
+            cta: 'ఇప్పుడే కొనండి',
+        },
+        product: {
+            addToCart: 'కార్ట్‌కు జోడించు',
+            outOfStock: 'స్టాక్‌లో లేదు',
+            retailPrice: 'ధర',
+            wholesalePrice: 'హోల్ సేల్ ధర',
+            moq: 'కనీస ఆర్డర్',
+        },
+        cart: {
+            title: 'మీ కార్ట్',
+            checkout: 'చెక్అవుట్',
+            empty: 'కార్ట్ ఖాళీగా ఉంది',
+        },
+        delivery: {
+            check: 'డెలివరీ లభ్యతను తనిఖీ చేయండి',
+            instant: '⚡ తక్షణ డెలివరీ (ఢిల్లీ NCR)',
+            standard: '🚚 సాధారణ షిప్పింగ్',
+            enterPincode: 'పిన్‌కోడ్ నమోదు చేయండి',
+            available: 'అందుబాటులో ఉంది',
+            unavailable: 'అందుబాటులో లేదు',
+        },
+    },
+};
+
+export type TranslationKey = keyof typeof translations.en;

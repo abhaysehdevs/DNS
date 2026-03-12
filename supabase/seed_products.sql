@@ -1,0 +1,50 @@
+
+-- CLEAR EXISTING PRODUCTS (Optional, use carefully)
+-- TRUNCATE TABLE public.products CASCADE;
+
+-- INSERT NEW PRODUCTS
+INSERT INTO public.products (id, name, description, retail_price, wholesale_price, wholesale_moq, image, category, in_stock, group_id, variant_attributes) VALUES
+('t-15f-tweezers', '15F Precision Tweezers', 'High-quality 15F stainless steel tweezers for precision work.', 350, 200, 12, '/images/products/15f-tweezers.png', 'Tools', true, NULL, NULL),
+('t-aa-tweezers', 'Dinanath''s AA Tweezers', 'Standard AA tweezers for general jewelry handling.', 250, 150, 12, '/images/products/dinanath''s-aa-tweezers.png', 'Tools', true, NULL, NULL),
+('t-red-tweezers', 'Red Coated Grip Tweezers', 'Comfort grip tweezers with red coating.', 280, 160, 12, '/images/products/red-tweezers.png', 'Tools', true, NULL, NULL),
+('t-ss-10k', 'SS 10K Tweezers', 'Stainless Steel 10K series tweezers.', 400, 250, 10, '/images/products/tweezer-ss-10k.png', 'Tools', true, NULL, NULL),
+('t-steel-nose-plier', 'Steel Nose Round Plier', 'Durable round nose plier for wire looping.', 450, 280, 6, '/images/products/dinanath''s-steel-nose-round-plier.png', 'Tools', true, NULL, NULL),
+('t-nipper-cutter', 'Nipper Cutter', 'Sharp nipper cutter for wire cutting.', 350, 220, 6, '/images/products/nipper-cutter.png', 'Tools', true, NULL, NULL),
+('t-red-plier', 'Red Handle Plier', 'Ergonomic red handle pliers.', 380, 240, 6, '/images/products/red-plier.png', 'Tools', true, NULL, NULL),
+('t-ss-plier', 'Stainless Steel Plier', 'Full stainless steel plier for heavy duty use.', 500, 350, 6, '/images/products/ss-plier.png', 'Tools', true, NULL, NULL),
+('t-katiya', 'Katiya Shears', 'Traditional metal cutting shears (Katiya).', 600, 400, 5, '/images/products/katiya.png', 'Tools', true, NULL, NULL),
+('t-sandasi', 'Sandasi Holder', 'Heat resistant holding tool (Sandasi).', 300, 180, 10, '/images/products/sandasi.png', 'Tools', true, NULL, NULL),
+('t-file-set', 'Needle File Set', 'Set of precision files for jewelry detailing.', 850, 600, 5, '/images/products/file-set.png', 'Tools', true, NULL, NULL),
+('t-saw-blade', 'Clarion Saw Blades', 'Premium quality saw blades for metal cutting.', 200, 120, 24, '/images/products/clarion-saw-blade.png', 'Tools', true, NULL, NULL),
+('t-saw-handle', 'Adjustable Saw Frame', 'Ergonomic saw frame handle.', 450, 300, 6, '/images/products/saw-handle.png', 'Tools', true, NULL, NULL),
+('t-ring-stick', 'Ring Sizing Stick', 'Standard aluminum ring mandrel.', 550, 350, 5, '/images/products/ring-stick.png', 'Tools', true, NULL, NULL),
+('t-ring-extender', 'Ring Extender Tool', 'Tool for stretching rings to increase size.', 2500, 1800, 2, '/images/products/ring-extender.png', 'Tools', true, NULL, NULL),
+('t-ring-extender-heavy', 'Heavy Duty Ring Extender', 'Heavy duty ring stretcher reducing machine.', 8500, 6500, 1, '/images/products/heavy-duty-ring-extender.png', 'Tools', true, NULL, NULL),
+('t-sharping-stone', 'Sharpening Stone', 'Oil stone for sharpening gravers and tools.', 350, 200, 10, '/images/products/sharping-stone.png', 'Tools', true, NULL, NULL),
+('t-gas-torch-auto', 'Auto Ignition Gas Torch', 'Handheld gas torch with auto ignition.', 1200, 800, 5, '/images/products/gas-torch-auto.png', 'Tools', true, NULL, NULL),
+('t-gas-torch-manual', 'Manual Gas Torch Head', 'Professional gas torch head for soldering.', 600, 400, 10, '/images/products/gas-torch-manual.png', 'Tools', true, NULL, NULL),
+('t-gas-burner', 'Industrial Gas Burner', 'Heavy duty gas burner for melting furnaces.', 2800, 2000, 2, '/images/products/gas-burner.png', 'Tools', true, NULL, NULL),
+('c-suhaga-liquid', 'Liquid Suhaga Flux', 'Borax liquid flux for soldering gold and silver.', 150, 90, 20, '/images/products/suhaga-goti.png', 'Chemicals', true, NULL, NULL),
+('c-suhaga-solid', 'Suhaga Goti (Solid Borax)', 'Solid borax pieces for flux preparation.', 120, 70, 25, '/images/products/suhaga-big.png', 'Chemicals', true, NULL, NULL),
+('c-silver-cleaner', 'Instant Silver Cleaner', 'Dip and clean solution for silver jewelry.', 350, 200, 12, '/images/products/silver-cleaner.png', 'Chemicals', true, NULL, NULL),
+('c-tiktak-cleaner', 'Tik Tak Silver Polish', 'Premium silver polishing liquid.', 450, 280, 12, '/images/products/tik-tak-silver-cleaner.png', 'Chemicals', true, NULL, NULL),
+('c-gas-refill', 'Butane Gas Refill', 'Refill canister for gas torches.', 150, 100, 24, '/images/products/gas-refill.png', 'Consumables', true, NULL, NULL),
+('c-joint-paper', 'Joint Paper / Soldering Sheet', 'Thin soldering alloy sheet.', 850, 750, 5, '/images/products/joint-paper.png', 'Consumables', true, NULL, NULL),
+('c-copper-alloy', 'Copper Alloy Balls', 'Pure copper alloy for alloying gold.', 600, 450, 5, '/images/products/copper-ball-alloy.png', 'Consumables', true, NULL, NULL),
+('c-cloth-buff', 'Polishing Cloth Buff', 'Soft cloth wheel for jewelry polishing.', 80, 40, 50, '/images/products/cloth-buff.png', 'Consumables', true, NULL, NULL),
+('m-dust-collector', 'Sand Blast Dust Collector', 'Heavy duty dust collector machine for sandblasting units.', 15500, 12000, 1, '/images/products/sand-blasting-dust-collector-machine.png', 'Machinery', true, NULL, NULL),
+('p-coin-card', 'Silver Coin Card Pack', 'Premium packaging card for silver coins.', 25, 12, 100, '/images/packaging/silver-coins-5gms.png', 'Packaging', true, NULL, NULL),
+('p-tags', 'Jewellery Price Tags', 'Durable tags for jewelry pricing and labeling.', 150, 80, 10, '/images/products/jewellery-tags.png', 'Packaging', true, NULL, NULL),
+('p-pasa', 'Pasa / Die Plate', 'Precision die plate.', 1200, 900, 2, '/images/products/pasa.png', 'Tools', true, NULL, NULL),
+('b-gold-bar-1g', 'Gold Bar (1g)', '24K Gold Bar - 1 Gram.', 7500, 7200, 1, '/images/products/gold-bar-1gms.png', 'Bullion', true, NULL, NULL),
+('b-gold-bar-5g', 'Gold Bar (5g)', '24K Gold Bar - 5 Grams.', 37500, 36000, 1, '/images/products/gold-bar-5gms.png', 'Bullion', true, NULL, NULL),
+('b-silver-coin-20g', 'Silver Coin (20g)', '999 Pure Silver Coin - 20 Grams.', 2000, 1800, 5, '/images/products/silver-coin-20g.png', 'Bullion', true, NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+    name = EXCLUDED.name,
+    description = EXCLUDED.description,
+    retail_price = EXCLUDED.retail_price,
+    wholesale_price = EXCLUDED.wholesale_price,
+    wholesale_moq = EXCLUDED.wholesale_moq,
+    image = EXCLUDED.image,
+    category = EXCLUDED.category,
+    in_stock = EXCLUDED.in_stock;
