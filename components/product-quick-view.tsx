@@ -9,10 +9,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-<<<<<<< Updated upstream
-=======
 import { Currency } from '@/components/currency';
->>>>>>> Stashed changes
 
 export function ProductQuickView({ product, isOpen, onClose }: { product: Product, isOpen: boolean, onClose: () => void }) {
     const { mode, language, cart, addToCart, wishlist, toggleWishlist } = useAppStore();
@@ -209,11 +206,7 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                             </p>
                                             <div className="flex items-baseline gap-3">
                                                 <span className={`text-3xl md:text-4xl font-black ${isRetail ? 'text-amber-500' : 'text-blue-500'}`}>
-<<<<<<< Updated upstream
-                                                    {isRetail ? `₹${currentPrice.toLocaleString()}` : 'Bulk Query'}
-=======
                                                     {isRetail ? <Currency value={currentPrice} /> : 'Bulk Query'}
->>>>>>> Stashed changes
                                                 </span>
                                             </div>
                                         </div>

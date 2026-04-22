@@ -50,10 +50,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 .or(`name.ilike.%${query}%,category.ilike.%${query}%,description.ilike.%${query}%`)
                 .limit(6);
 
-<<<<<<< Updated upstream
-            if (!error && data) {
-                setResults(data);
-=======
             if (!error && data && data.length > 0) {
                 setResults(data);
             } else {
@@ -68,7 +64,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         image_url: p.image || p.primaryImage
                     })));
                 });
->>>>>>> Stashed changes
             }
             setIsSearching(false);
         };

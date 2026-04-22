@@ -36,9 +36,6 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
                 .ilike('name', `%${query}%`)
                 .limit(4);
 
-<<<<<<< Updated upstream
-            if (data) setProducts(data);
-=======
             if (data && data.length > 0) {
                 setProducts(data);
             } else {
@@ -52,7 +49,6 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
                     })));
                 });
             }
->>>>>>> Stashed changes
         }
 
         const debounce = setTimeout(fetchSuggestions, 200);
@@ -97,11 +93,7 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
             initial={{ opacity: 0, y: 10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
-<<<<<<< Updated upstream
-            className="absolute top-full left-0 right-0 bg-white/[0.04] backdrop-blur-3xl border border-white/10 rounded-3xl shadow-[0_30px_100px_rgba(0,0,0,0.8)] mt-4 overflow-hidden z-[100] animate-in fade-in duration-300"
-=======
             className="absolute top-full left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-[0_30px_100px_rgba(0,0,0,0.8)] mt-4 overflow-hidden z-[100] animate-in fade-in duration-300"
->>>>>>> Stashed changes
         >
             <div className="p-8">
                 {query.length === 0 ? (

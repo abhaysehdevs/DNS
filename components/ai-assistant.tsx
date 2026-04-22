@@ -7,10 +7,7 @@ import { MessageCircle, X, Send, Sparkles, ShoppingBag, Truck, Info, Settings } 
 import { Button } from '@/components/ui/button';
 import { products } from '@/lib/data';
 import Link from 'next/link';
-<<<<<<< Updated upstream
-=======
 import { Currency } from '@/components/currency';
->>>>>>> Stashed changes
 
 interface Message {
     id: string;
@@ -120,11 +117,7 @@ export function AIAssistant() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="text-sm font-bold truncate group-hover:text-amber-500 transition-colors">{p.name}</div>
-<<<<<<< Updated upstream
-                                    <div className="text-xs text-gray-400">₹{p.retailPrice.toLocaleString()}</div>
-=======
                                     <div className="text-xs text-gray-400"><Currency value={p.retailPrice} /></div>
->>>>>>> Stashed changes
                                 </div>
                             </Link>
                         ))}

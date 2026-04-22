@@ -121,6 +121,7 @@ export function Preloader() {
                                 />
                             </div>
                         </div>
+                        </div>
                     </div>
                 </motion.div>
             )}

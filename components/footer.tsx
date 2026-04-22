@@ -1,11 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-<<<<<<< Updated upstream
-import { Facebook, Instagram, Twitter, Globe, ShieldCheck, ArrowUpRight } from 'lucide-react';
-=======
 import { Facebook, Instagram, Twitter, Globe, ShieldCheck, ArrowUpRight, MapPin } from 'lucide-react';
->>>>>>> Stashed changes
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
@@ -100,16 +96,6 @@ export function Footer() {
                 <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
 
                     <div className="flex items-center gap-4">
-<<<<<<< Updated upstream
-                        <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all">
-                            <Facebook size={18} />
-                        </a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all">
-                            <Instagram size={18} />
-                        </a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all">
-                            <Twitter size={18} />
-=======
                         <a href="https://www.facebook.com/p/Dinanath-Sons-100065199592427/" target="_blank" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all">
                             <Facebook size={18} />
                         </a>
@@ -118,7 +104,6 @@ export function Footer() {
                         </a>
                         <a href="https://share.google/wSmib47LIiARVrWT4" target="_blank" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-amber-500 hover:text-black hover:border-amber-500 transition-all">
                             <MapPin size={18} />
->>>>>>> Stashed changes
                         </a>
                     </div>
 

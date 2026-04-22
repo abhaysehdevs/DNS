@@ -2,18 +2,11 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
-<<<<<<< Updated upstream
-import { Loader2, CheckCircle, Package, ArrowRight, Home } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-=======
 import { Loader2, CheckCircle, Package, ArrowRight, Home, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Currency } from '@/components/currency';
->>>>>>> Stashed changes
 
 function OrderConfirmationContent() {
     const searchParams = useSearchParams();
@@ -24,17 +17,6 @@ function OrderConfirmationContent() {
     useEffect(() => {
         async function fetchOrder() {
             if (!id) return;
-<<<<<<< Updated upstream
-            const { data, error } = await supabase
-                .from('orders')
-                .select('*, order_items(*)')
-                .eq('id', id)
-                .single();
-
-            if (data) {
-                setOrder(data);
-=======
-            
             try {
                 const { data, error } = await supabase
                     .from('orders')
@@ -55,7 +37,6 @@ function OrderConfirmationContent() {
             const localData = localStorage.getItem(`order_${id}`);
             if (localData) {
                 setOrder(JSON.parse(localData));
->>>>>>> Stashed changes
             }
             setLoading(false);
         }
@@ -100,8 +81,6 @@ function OrderConfirmationContent() {
                         <p className="text-gray-400 text-lg">Thank you for your purchase. Your order ID is <span className="font-mono text-amber-500 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">{order.id.slice(0, 18)}...</span></p>
                     </div>
 
-<<<<<<< Updated upstream
-=======
                     {/* Order Tracking Pipeline */}
                     <div className="mb-10 pt-8 border-t border-gray-800/50">
                         <h3 className="text-lg font-bold mb-10 text-white text-center">Track Your Package</h3>
@@ -159,8 +138,6 @@ function OrderConfirmationContent() {
                             </div>
                         )}
                     </div>
-
->>>>>>> Stashed changes
                     <div className="bg-black/40 border border-gray-800/50 rounded-2xl p-6 mb-8">
                         <h2 className="text-xl font-bold flex items-center gap-3 mb-6 pb-4 border-b border-gray-800/50">
                             <Package size={22} className="text-amber-500" /> Order Details
@@ -172,11 +149,7 @@ function OrderConfirmationContent() {
                                         <div className="font-medium text-white group-hover:text-amber-400 transition-colors">{item.product_name}</div>
                                         <div className="text-gray-500 mt-0.5">Qty: <span className="text-gray-300 font-medium">{item.quantity}</span> {item.variant_name && <span className="bg-gray-800 px-2 py-0.5 rounded ml-2 text-xs">{item.variant_name}</span>}</div>
                                     </div>
-<<<<<<< Updated upstream
-                                    <div className="text-gray-300 font-medium">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</div>
-=======
                                     <div className="text-gray-300 font-medium"><Currency value={((item.price || 0) * (item.quantity || 1))} /></div>
->>>>>>> Stashed changes
                                 </div>
                             ))}
                         </div>
@@ -185,11 +158,7 @@ function OrderConfirmationContent() {
                                 <span className="text-base font-medium text-gray-400 block">Total Amount</span>
                                 <span className="text-xs text-gray-600 block">Including taxes</span>
                             </div>
-<<<<<<< Updated upstream
-                            <span className="text-2xl font-bold text-amber-500">₹{(order.total_amount || 0).toLocaleString()}</span>
-=======
                             <span className="text-2xl font-bold text-amber-500"><Currency value={(order.total_amount || 0)} /></span>
->>>>>>> Stashed changes
                         </div>
                     </div>
 

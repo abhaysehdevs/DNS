@@ -10,15 +10,10 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Truck, ArrowRight, ShoppingBag, Loader2, Minus, Plus, CreditCard, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-<<<<<<< Updated upstream
-import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-=======
 import { Currency } from '@/components/currency';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { generateShiprocketDetails } from '@/lib/shiprocket';
->>>>>>> Stashed changes
 
 export default function CartPage() {
     const { cart, mode, language, removeFromCart, clearCart, updateQuantity, user } = useAppStore();
@@ -64,11 +59,7 @@ export default function CartPage() {
                 .select('*')
                 .in('id', ids);
 
-<<<<<<< Updated upstream
-            if (data) {
-=======
             if (data && data.length > 0) {
->>>>>>> Stashed changes
                 const mappedProductsPromises: Promise<Product>[] = data.map(async (p: any) => {
                     const localMatch = (await import('@/lib/data')).products.find(lp => lp.id === p.id);
                     return {
@@ -90,14 +81,11 @@ export default function CartPage() {
 
                 const mappedProducts = await Promise.all(mappedProductsPromises);
                 setCartProducts(mappedProducts);
-<<<<<<< Updated upstream
-=======
             } else {
                 import('@/lib/data').then((module) => {
                     const localProducts = module.products.filter(p => ids.includes(p.id));
                     setCartProducts(localProducts);
                 });
->>>>>>> Stashed changes
             }
             setLoading(false);
         }
@@ -117,16 +105,12 @@ export default function CartPage() {
         e.preventDefault();
         setIsSubmitting(true);
 
-<<<<<<< Updated upstream
-=======
         // Generate Shiprocket API Details
         const isBulk = mode === 'wholesale';
         const shiprocketData = generateShiprocketDetails(pincode, isBulk);
 
         const fallbackId = 'ORD-' + Math.floor(Math.random() * 100000000);
         let finalOrderId = fallbackId;
-
->>>>>>> Stashed changes
         try {
             // 1. Insert Order
             const { data: orderData, error: orderError } = await supabase
@@ -145,20 +129,13 @@ export default function CartPage() {
                 .single();
 
             if (orderError) throw orderError;
-<<<<<<< Updated upstream
-=======
             finalOrderId = orderData.id;
->>>>>>> Stashed changes
 
             // 2. Insert Order Items
             const orderItems = cart.map(item => {
                 const product = cartProducts.find(p => p.id === item.productId);
                 return {
-<<<<<<< Updated upstream
-                    order_id: orderData.id,
-=======
                     order_id: finalOrderId,
->>>>>>> Stashed changes
                     product_id: item.productId,
                     product_name: product?.name || 'Unknown Product',
                     variant_name: item.variantName || null,
@@ -168,23 +145,6 @@ export default function CartPage() {
                 };
             });
 
-<<<<<<< Updated upstream
-            const { error: itemsError } = await supabase
-                .from('order_items')
-                .insert(orderItems);
-
-            if (itemsError) throw itemsError;
-
-            // 3. Success
-            clearCart();
-            router.push(`/order-confirmation?id=${orderData.id}`);
-
-        } catch (error: any) {
-            console.error('Checkout Error:', error);
-            alert(`Failed to place order: ${error.message}`);
-            setIsSubmitting(false);
-        }
-=======
             await supabase.from('order_items').insert(orderItems);
         } catch (error: any) {
             console.warn('Supabase checkout failed, falling back to local memory:', error.message);
@@ -216,7 +176,6 @@ export default function CartPage() {
 
         clearCart();
         router.push(`/order-confirmation?id=${finalOrderId}`);
->>>>>>> Stashed changes
     };
 
     if (loading) {
@@ -277,34 +236,6 @@ export default function CartPage() {
                                         const displayImage = variantFn?.image || product.primaryImage || product.image || '/placeholder.jpg';
 
                                         return (
-<<<<<<< Updated upstream
-                                            <div key={`${item.productId}-${item.variantId}`} className="bg-gray-900/40 border border-gray-800/60 rounded-2xl p-4 flex gap-5 transition-all hover:bg-gray-800/40 hover:border-gray-700/60 group shadow-lg">
-                                                <div className="w-28 h-28 bg-white/5 rounded-xl overflow-hidden flex-shrink-0 border border-white/5 relative">
-                                                    <img src={displayImage} alt={product.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                                </div>
-                                                <div className="flex-1 flex flex-col justify-between py-1">
-                                                    <div>
-                                                        <div className="flex justify-between items-start">
-                                                            <div>
-                                                                <h3 className="font-bold text-lg text-white group-hover:text-amber-500 transition-colors leading-tight mb-1">{product.name}</h3>
-                                                                {item.variantName && <p className="text-sm border border-gray-700 bg-gray-800/50 text-gray-300 inline-block px-2 py-0.5 rounded-md mt-1 mb-2">Variant: {item.variantName}</p>}
-                                                            </div>
-                                                            <button onClick={() => removeFromCart(item.productId, item.variantId)} className="text-gray-500 hover:bg-red-500/10 hover:text-red-500 p-2 rounded-lg transition-colors">
-                                                                <Trash2 size={18} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex justify-between items-end">
-                                                        <div className="flex items-center bg-black/50 rounded-lg border border-gray-700/50 h-9 p-1">
-                                                            <button onClick={() => updateQuantity(item.productId, item.variantId, item.mode, item.quantity - 1)} className="w-8 h-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors"><Minus size={14} /></button>
-                                                            <span className="w-10 text-center text-sm font-bold text-white">{item.quantity}</span>
-                                                            <button onClick={() => updateQuantity(item.productId, item.variantId, item.mode, item.quantity + 1)} className="w-8 h-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors"><Plus size={14} /></button>
-                                                        </div>
-                                                        <div className="text-right">
-                                                            <p className="text-sm text-gray-500 mb-0.5">{item.quantity} x ₹{item.price.toLocaleString()}</p>
-                                                            <span className="font-bold text-xl text-white">₹{(item.price * item.quantity).toLocaleString()}</span>
-                                                        </div>
-=======
                                             <div key={`${item.productId}-${item.variantId}`} className="bg-gray-900 border border-gray-800 rounded-xl p-4 md:p-6 flex flex-col md:flex-row gap-6 relative shadow-md transition-all hover:border-gray-700">
                                                 {/* Image */}
                                                 <div className="w-full md:w-40 h-40 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/5 relative cursor-pointer">
@@ -367,7 +298,6 @@ export default function CartPage() {
                                                         <button className="text-sm font-medium text-amber-500 hover:text-amber-400 transition-colors">
                                                             Save for later
                                                         </button>
->>>>>>> Stashed changes
                                                     </div>
                                                 </div>
                                             </div>
@@ -376,16 +306,11 @@ export default function CartPage() {
                                 </motion.div>
                             ) : (
                                 <motion.div key="details-form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
-<<<<<<< Updated upstream
-                                    <h2 className="text-2xl font-bold mb-6">Shipping Details</h2>
-                                    <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
-=======
                                                     <div className="mb-8">
                                                         <h2 className="text-3xl font-bold mb-2">Checkout Details</h2>
                                                         <p className="text-gray-400">Please provide your shipping details securely below.</p>
                                                     </div>
                                                     <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-6">
->>>>>>> Stashed changes
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="text-sm font-medium text-gray-400">Full Name</label>
@@ -441,30 +366,18 @@ export default function CartPage() {
                             <div className="space-y-4 mb-6">
                                 <div className="flex justify-between text-gray-300">
                                     <span>Subtotal</span>
-<<<<<<< Updated upstream
-                                    <span className="font-medium">₹{total.toLocaleString()}</span>
-=======
                                     <span className="font-medium"><Currency value={total} /></span>
->>>>>>> Stashed changes
                                 </div>
                                 <div className="flex justify-between text-gray-300">
                                     <span>Shipping</span>
                                     <span className={`font-medium ${shippingCost === 0 ? 'text-green-400' : 'text-white'}`}>
-<<<<<<< Updated upstream
-                                        {shippingCost === 0 ? 'Free' : `₹${shippingCost.toLocaleString()}`}
-=======
                                         {shippingCost === 0 ? 'Free' : <Currency value={shippingCost} />}
->>>>>>> Stashed changes
                                     </span>
                                 </div>
                                 {step === 'details' && (
                                     <div className="flex justify-between text-gray-400">
                                         <span>Tax (Included)</span>
-<<<<<<< Updated upstream
-                                        <span>₹{Math.round(total * 0.18).toLocaleString()}</span>
-=======
                                         <span><Currency value={Math.round(total * 0.18)} /></span>
->>>>>>> Stashed changes
                                     </div>
                                 )}
                             </div>
@@ -475,34 +388,12 @@ export default function CartPage() {
                                         <span className="text-lg font-medium text-white block">Total</span>
                                         <span className="text-xs text-gray-500">Including all taxes</span>
                                     </div>
-<<<<<<< Updated upstream
-                                    <span className="text-3xl font-bold text-amber-500">₹{finalTotal.toLocaleString()}</span>
-=======
                                     <span className="text-3xl font-bold text-amber-500"><Currency value={finalTotal} /></span>
->>>>>>> Stashed changes
                                 </div>
                             </div>
 
                             {step === 'cart' ? (
                                 <>
-<<<<<<< Updated upstream
-                                    <div className="mb-6 bg-black rounded-lg p-3 border border-gray-800 flex gap-2">
-                                        <input
-                                            value={pincode}
-                                            onChange={(e) => setPincode(e.target.value)}
-                                            placeholder="Pincode"
-                                            className="bg-transparent w-full outline-none text-white text-sm"
-                                            maxLength={6}
-                                        />
-                                        <button onClick={checkDelivery} className="text-amber-500 text-sm font-bold hover:text-amber-400 uppercase">Check</button>
-                                    </div>
-                                    {deliveryStatus && (
-                                        <div className={`mb-6 text-xs p-2 rounded ${deliveryStatus.type === 'instant' ? 'bg-green-900/30 text-green-400' : 'bg-blue-900/30 text-blue-400'}`}>
-                                            {deliveryStatus.type === 'instant' ? '⚡ Instant Delivery Available' : 'Standard Shipping Applies'}
-                                        </div>
-                                    )}
-                                    <Button onClick={() => setStep('details')} className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold h-12 rounded-xl text-lg shadow-lg shadow-amber-900/20">
-=======
                                     <div className="mb-6 bg-gray-900 rounded-lg p-1 border border-gray-800 flex flex-col gap-3">
                                         <div className="flex px-3 py-2">
                                             <input
@@ -524,7 +415,6 @@ export default function CartPage() {
                                         </div>
                                     )}
                                     <Button onClick={() => setStep('details')} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold h-14 rounded-xl text-lg shadow-xl shadow-amber-900/20 transition-all hover:-translate-y-0.5">
->>>>>>> Stashed changes
                                         Proceed to Checkout
                                     </Button>
                                 </>
