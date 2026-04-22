@@ -52,11 +52,7 @@ function ShopContent() {
             try {
                 const { data } = await supabase.from('products').select('*');
 
-<<<<<<< Updated upstream
-                if (data) {
-=======
                 if (data && data.length > 0) {
->>>>>>> Stashed changes
                     const mappedProducts: Product[] = data.map((p: any) => {
                         const localMatch = localProducts.find(lp =>
                             lp.id === p.id ||
@@ -81,13 +77,10 @@ function ShopContent() {
                     const uniqueCats = ['All', ...Array.from(new Set(mappedProducts.map(p => p.category)))];
                     setCategories(uniqueCats);
                     setProducts(mappedProducts);
-<<<<<<< Updated upstream
-=======
                 } else {
                     const uniqueCats = ['All', ...Array.from(new Set(localProducts.map(p => p.category)))];
                     setCategories(uniqueCats);
                     setProducts(localProducts);
->>>>>>> Stashed changes
                 }
             } catch (err) {
                 console.error("Fetch failed", err);
@@ -254,17 +247,10 @@ function ShopContent() {
                                             onChange={(e) => setSortBy(e.target.value)}
                                             className="w-full bg-transparent text-sm font-semibold text-white appearance-none pr-8 cursor-pointer outline-none md:pl-2"
                                         >
-<<<<<<< Updated upstream
-                                            <option value="featured">Featured</option>
-                                            <option value="priceAsc">Price: Low to High</option>
-                                            <option value="priceDesc">Price: High to Low</option>
-                                            <option value="nameAsc">Name: A-Z</option>
-=======
                                             <option value="featured" className="bg-gray-900 text-white">Featured</option>
                                             <option value="priceAsc" className="bg-gray-900 text-white">Price: Low to High</option>
                                             <option value="priceDesc" className="bg-gray-900 text-white">Price: High to Low</option>
                                             <option value="nameAsc" className="bg-gray-900 text-white">Name: A-Z</option>
->>>>>>> Stashed changes
                                         </select>
                                         <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                     </div>
@@ -286,10 +272,7 @@ function ShopContent() {
                                 products={filteredProducts}
                                 loading={loading}
                                 onClearFilters={handleClearFilters}
-<<<<<<< Updated upstream
-=======
                                 displayMode={displayMode}
->>>>>>> Stashed changes
                             />
                         </div>
 

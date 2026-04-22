@@ -34,7 +34,6 @@ function FloatingElement({ children, delay = 0, x, y, rotate, scale = 1, classNa
 }
 
 
-<<<<<<< Updated upstream
 function VideoFloatingElement({ src, delay = 0, x, y, rotate, scale = 1, className, speed = 6 }: any) {
     return (
         <motion.div
@@ -76,10 +75,6 @@ function VideoFloatingElement({ src, delay = 0, x, y, rotate, scale = 1, classNa
         </motion.div>
     );
 }
-
-
-=======
->>>>>>> Stashed changes
 function GridBackground({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
     const gridX = useTransform(mouseX, [-0.5, 0.5], ['-2%', '2%']);
     const gridY = useTransform(mouseY, [-0.5, 0.5], ['-2%', '2%']);
@@ -149,7 +144,6 @@ export function Hero() {
 
             {/* Floating 3D Elements */}
             <div className="absolute inset-0 z-0 overflow-hidden">
-<<<<<<< Updated upstream
                 {/* 3D Product Videos */}
                 <VideoFloatingElement
                     src="/videos/nipper-cutter.webm"
@@ -194,9 +188,6 @@ export function Hero() {
                     speed={11}
                     className="opacity-60 md:opacity-85"
                 />
-
-=======
->>>>>>> Stashed changes
                 {/* Icons and Shapes */}
                 <FloatingElement delay={0} x="10%" y="80%" rotate={-10} scale={1} speed={7}>
                     <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
