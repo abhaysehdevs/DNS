@@ -2,10 +2,18 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
+<<<<<<< Updated upstream
 import { Loader2, CheckCircle, Package, ArrowRight, Home } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+=======
+import { Loader2, CheckCircle, Package, ArrowRight, Home, Truck } from 'lucide-react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Currency } from '@/components/currency';
+>>>>>>> Stashed changes
 
 function OrderConfirmationContent() {
     const searchParams = useSearchParams();
@@ -16,6 +24,7 @@ function OrderConfirmationContent() {
     useEffect(() => {
         async function fetchOrder() {
             if (!id) return;
+<<<<<<< Updated upstream
             const { data, error } = await supabase
                 .from('orders')
                 .select('*, order_items(*)')
@@ -24,6 +33,29 @@ function OrderConfirmationContent() {
 
             if (data) {
                 setOrder(data);
+=======
+            
+            try {
+                const { data, error } = await supabase
+                    .from('orders')
+                    .select('*, order_items(*)')
+                    .eq('id', id)
+                    .single();
+
+                if (data) {
+                    setOrder(data);
+                    setLoading(false);
+                    return;
+                }
+            } catch (err) {
+                console.warn('Failed to fetch from Supabase, checking local memory.');
+            }
+
+            // Fallback to localStorage if Supabase fails
+            const localData = localStorage.getItem(`order_${id}`);
+            if (localData) {
+                setOrder(JSON.parse(localData));
+>>>>>>> Stashed changes
             }
             setLoading(false);
         }
@@ -68,6 +100,67 @@ function OrderConfirmationContent() {
                         <p className="text-gray-400 text-lg">Thank you for your purchase. Your order ID is <span className="font-mono text-amber-500 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">{order.id.slice(0, 18)}...</span></p>
                     </div>
 
+<<<<<<< Updated upstream
+=======
+                    {/* Order Tracking Pipeline */}
+                    <div className="mb-10 pt-8 border-t border-gray-800/50">
+                        <h3 className="text-lg font-bold mb-10 text-white text-center">Track Your Package</h3>
+                        <div className="relative flex justify-between items-center max-w-2xl mx-auto px-6 md:px-12">
+                            {/* Line connecting the dots */}
+                            <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-800 -translate-y-1/2 z-0 px-6 md:px-12">
+                                <div className="h-full bg-amber-500 w-1/3 transition-all duration-1000 ease-in-out" />
+                            </div>
+                            
+                            {/* Steps */}
+                            {[
+                                { label: 'Placed', icon: Package, status: 'completed' },
+                                { label: 'Processing', icon: CheckCircle, status: 'current' },
+                                { label: 'Shipped', icon: Truck, status: 'pending' },
+                                { label: 'Delivered', icon: Home, status: 'pending' },
+                            ].map((step, idx) => (
+                                <div key={idx} className="relative z-10 flex flex-col items-center gap-3">
+                                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border-[4px] transition-all duration-500 ${step.status === 'completed' ? 'bg-amber-500 border-amber-500 text-black' : step.status === 'current' ? 'bg-black border-amber-500 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.4)] scale-110' : 'bg-gray-900 text-gray-600 border-gray-800'}`}>
+                                        <step.icon className="w-5 h-5 md:w-7 md:h-7" />
+                                    </div>
+                                    <span className={`text-[10px] md:text-xs font-bold absolute -bottom-8 whitespace-nowrap ${step.status === 'pending' ? 'text-gray-600' : 'text-white'}`}>{step.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                        {order?.shiprocket && (
+                            <div className="max-w-2xl mx-auto mt-12 bg-gray-900/50 rounded-xl p-4 md:p-6 border border-gray-800">
+                                <h4 className="text-amber-500 font-bold mb-4 flex items-center gap-2"><Truck size={18} /> Logistics & Tracking Information</h4>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                    <div>
+                                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Courier</p>
+                                        <p className="text-white text-sm font-medium">{order.shiprocket.courier_name}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Tracking AWB</p>
+                                        <p className="text-white text-sm font-mono bg-black px-2 py-0.5 rounded border border-gray-800 inline-block">{order.shiprocket.awb_code}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Shiprocket ID</p>
+                                        <p className="text-gray-400 text-sm font-mono">{order.shiprocket.shiprocket_order_id}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Est. Delivery</p>
+                                        <p className="text-green-400 text-sm font-bold">{order.shiprocket.estimated_delivery}</p>
+                                    </div>
+                                </div>
+                                {order.shiprocket.bulk_freight_info && (
+                                    <div className="bg-blue-900/10 border border-blue-900/50 p-3 rounded-lg flex items-start gap-3 mt-4">
+                                        <Package className="text-blue-500 mt-0.5 shrink-0" size={16} />
+                                        <div>
+                                            <p className="text-xs font-bold text-blue-400 mb-0.5">B2B Bulk Freight Instructions</p>
+                                            <p className="text-[11px] text-gray-400 leading-relaxed">{order.shiprocket.bulk_freight_info}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+>>>>>>> Stashed changes
                     <div className="bg-black/40 border border-gray-800/50 rounded-2xl p-6 mb-8">
                         <h2 className="text-xl font-bold flex items-center gap-3 mb-6 pb-4 border-b border-gray-800/50">
                             <Package size={22} className="text-amber-500" /> Order Details
@@ -79,7 +172,11 @@ function OrderConfirmationContent() {
                                         <div className="font-medium text-white group-hover:text-amber-400 transition-colors">{item.product_name}</div>
                                         <div className="text-gray-500 mt-0.5">Qty: <span className="text-gray-300 font-medium">{item.quantity}</span> {item.variant_name && <span className="bg-gray-800 px-2 py-0.5 rounded ml-2 text-xs">{item.variant_name}</span>}</div>
                                     </div>
+<<<<<<< Updated upstream
                                     <div className="text-gray-300 font-medium">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</div>
+=======
+                                    <div className="text-gray-300 font-medium"><Currency value={((item.price || 0) * (item.quantity || 1))} /></div>
+>>>>>>> Stashed changes
                                 </div>
                             ))}
                         </div>
@@ -88,7 +185,11 @@ function OrderConfirmationContent() {
                                 <span className="text-base font-medium text-gray-400 block">Total Amount</span>
                                 <span className="text-xs text-gray-600 block">Including taxes</span>
                             </div>
+<<<<<<< Updated upstream
                             <span className="text-2xl font-bold text-amber-500">₹{(order.total_amount || 0).toLocaleString()}</span>
+=======
+                            <span className="text-2xl font-bold text-amber-500"><Currency value={(order.total_amount || 0)} /></span>
+>>>>>>> Stashed changes
                         </div>
                     </div>
 

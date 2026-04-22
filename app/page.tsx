@@ -94,7 +94,11 @@ export default function Home() {
         .select('*')
         .limit(12); // Fetch enough for tabs logic
 
+<<<<<<< Updated upstream
       if (data) {
+=======
+      if (data && data.length > 0) {
+>>>>>>> Stashed changes
         const mappedProducts: Product[] = data.map((p: any) => {
           const localMatch = staticProducts.find(sp => sp.id === p.id || sp.name.toLowerCase() === p.name.toLowerCase());
           const primaryImage = p.image || localMatch?.primaryImage || '/placeholder.jpg';
@@ -117,6 +121,11 @@ export default function Home() {
           };
         });
         setFeaturedProducts(mappedProducts);
+<<<<<<< Updated upstream
+=======
+      } else {
+        setFeaturedProducts(staticProducts.slice(0, 12));
+>>>>>>> Stashed changes
       }
       setLoading(false);
     }
@@ -275,7 +284,11 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4 h-[500px] relative">
               <div className="absolute inset-0 bg-blue-500/10 blur-[100px] -z-10 rounded-full" />
               <div className="col-span-1 row-span-2 rounded-3xl overflow-hidden relative group">
+<<<<<<< Updated upstream
                 <img src="/placeholder.jpg" alt="Showcase" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60 mix-blend-luminosity hover:mix-blend-normal" />
+=======
+                <img src="/images/products/sand-blasting-dust-collector-machine.png" alt="Showcase" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60 mix-blend-luminosity hover:mix-blend-normal" />
+>>>>>>> Stashed changes
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6">
                   <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs font-bold text-white">New Machinery</span>
@@ -288,7 +301,11 @@ export default function Home() {
                 <p className="text-sm text-amber-200/60">Unlock bulk pricing instantly.</p>
               </div>
               <div className="col-span-1 row-span-1 rounded-3xl overflow-hidden relative group">
+<<<<<<< Updated upstream
                 <img src="/placeholder.jpg" alt="Showcase" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60" />
+=======
+                <img src="/images/products/gas-burner.png" alt="Showcase" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60" />
+>>>>>>> Stashed changes
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-12 h-12 rounded-full backdrop-blur-md bg-white/10 border border-white/20 flex items-center justify-center text-white">

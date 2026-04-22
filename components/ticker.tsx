@@ -1,10 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAppStore } from '@/lib/store';
 
 export function Ticker() {
+    const { currencyData } = useAppStore();
+    const threshold = 5000 * currencyData.rate;
+    const formattedThreshold = `${currencyData.symbol}${threshold.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+
     const messages = [
-        "🚚 Free Shipping on Orders Over ₹5,000",
+        `🚚 Free Shipping on Orders Over ${formattedThreshold}`,
         "🏭 Bulk Discounts Available for Wholesale Partners",
         "✨ New Casting Machinery Arrived - Check it Out!",
         "🛠️ Premium Hand Tools for Professional Jewelers"

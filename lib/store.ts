@@ -98,6 +98,10 @@ interface AppState {
     customerQuotes: CustomerQuote[];
     manualCustomers: CustomerProfile[];
     customerActivities: CustomerActivity[]; // New: Interaction Log
+<<<<<<< Updated upstream
+=======
+    currencyData: { code: string; symbol: string; rate: number };
+>>>>>>> Stashed changes
 
     // Actions
     setMode: (mode: AppMode) => void;
@@ -133,6 +137,12 @@ interface AppState {
     addCustomerActivity: (activity: Omit<CustomerActivity, 'id'>) => void;
     updateCustomerActivity: (id: string, activity: Partial<CustomerActivity>) => void;
     deleteCustomerActivity: (id: string) => void;
+<<<<<<< Updated upstream
+=======
+
+    // Currency
+    setCurrencyData: (data: { code: string; symbol: string; rate: number }) => void;
+>>>>>>> Stashed changes
 }
 
 export const useAppStore = create<AppState>()(
@@ -163,6 +173,10 @@ export const useAppStore = create<AppState>()(
             customerQuotes: [],
             manualCustomers: [],
             customerActivities: [],
+<<<<<<< Updated upstream
+=======
+            currencyData: { code: 'INR', symbol: '₹', rate: 1 },
+>>>>>>> Stashed changes
 
             setMode: (mode) => set({ mode }),
             setLanguage: (language) => set((state) => ({
@@ -319,6 +333,11 @@ export const useAppStore = create<AppState>()(
             deleteCustomerActivity: (id) => set((state) => ({
                 customerActivities: state.customerActivities.filter(a => a.id !== id)
             })),
+<<<<<<< Updated upstream
+=======
+
+            setCurrencyData: (currencyData) => set({ currencyData }),
+>>>>>>> Stashed changes
         }),
         {
             name: 'dinanath-store-storage',
@@ -334,7 +353,12 @@ export const useAppStore = create<AppState>()(
                 notifications: state.notifications,
                 customerQuotes: state.customerQuotes,
                 manualCustomers: state.manualCustomers,
+<<<<<<< Updated upstream
                 customerActivities: state.customerActivities // Persist activities
+=======
+                customerActivities: state.customerActivities, // Persist activities
+                currencyData: state.currencyData
+>>>>>>> Stashed changes
             }),
         }
     )

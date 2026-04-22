@@ -30,7 +30,11 @@ export default function WishlistPage() {
                 .select('*')
                 .in('id', wishlist);
 
+<<<<<<< Updated upstream
             if (data) {
+=======
+            if (data && data.length > 0) {
+>>>>>>> Stashed changes
                 const mappedProducts: Product[] = data.map((p: any) => ({
                     id: p.id,
                     name: p.name,
@@ -46,6 +50,14 @@ export default function WishlistPage() {
                     reviews: p.reviews || []
                 }));
                 setProducts(mappedProducts);
+<<<<<<< Updated upstream
+=======
+            } else {
+                import('@/lib/data').then((module) => {
+                    const localMatches = module.products.filter(p => wishlist.includes(p.id));
+                    setProducts(localMatches);
+                });
+>>>>>>> Stashed changes
             }
             setLoading(false);
         }

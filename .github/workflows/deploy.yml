@@ -32,9 +32,12 @@ jobs:
         
       - name: Build
         run: npm run build
+<<<<<<< Updated upstream
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://rdothiivupbtuprwknqk.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_Gf_PMWWcSgE_gD7fg94yww_ubrJ7M8X' }}
+=======
+>>>>>>> Stashed changes
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

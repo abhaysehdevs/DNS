@@ -4,6 +4,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ListFilter, X, Check, Search, Filter, SlidersHorizontal } from 'lucide-react';
+<<<<<<< Updated upstream
+=======
+import { Currency } from '@/components/currency';
+>>>>>>> Stashed changes
 
 interface FilterSidebarProps {
     categories: string[];
@@ -130,27 +134,44 @@ export function FilterSidebar({
                                         <div className="flex items-center justify-between text-sm">
                                             <div className="flex flex-col">
                                                 <span className="text-xs text-gray-500 mb-1">Min</span>
+<<<<<<< Updated upstream
                                                 <span className="font-semibold text-white">₹{minPrice.toLocaleString()}</span>
+=======
+                                                <span className="font-semibold text-white"><Currency value={minPrice} /></span>
+>>>>>>> Stashed changes
                                             </div>
                                             <div className="w-4 h-[1px] bg-gray-600" />
                                             <div className="flex flex-col text-right">
                                                 <span className="text-xs text-gray-500 mb-1">Max</span>
+<<<<<<< Updated upstream
                                                 <span className="font-semibold text-amber-500">₹{priceRange.toLocaleString()}</span>
+=======
+                                                <span className="font-semibold text-amber-500"><Currency value={priceRange} /></span>
+>>>>>>> Stashed changes
                                             </div>
                                         </div>
 
                                         <div className="space-y-5">
+<<<<<<< Updated upstream
                                             <div className="relative">
                                                 <input
                                                     type="range"
                                                     min="0"
                                                     max="50000"
+=======
+                                            <div className="relative h-4 mt-2 mb-4 flex items-center">
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="500000"
+>>>>>>> Stashed changes
                                                     step="1000"
                                                     value={minPrice}
                                                     onChange={(e) => {
                                                         const val = Number(e.target.value);
                                                         if (val <= priceRange) setMinPrice(val);
                                                     }}
+<<<<<<< Updated upstream
                                                     className="w-full accent-amber-500 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer"
                                                 />
                                             </div>
@@ -159,13 +180,27 @@ export function FilterSidebar({
                                                     type="range"
                                                     min="0"
                                                     max="100000"
+=======
+                                                    className="absolute w-full accent-amber-500 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
+                                                    style={{ zIndex: minPrice > priceRange - 1000 ? 5 : 3 }}
+                                                />
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="500000"
+>>>>>>> Stashed changes
                                                     step="1000"
                                                     value={priceRange}
                                                     onChange={(e) => {
                                                         const val = Number(e.target.value);
                                                         if (val >= minPrice) setPriceRange(val);
                                                     }}
+<<<<<<< Updated upstream
                                                     className="w-full accent-amber-500 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer"
+=======
+                                                    className="absolute w-full accent-amber-500 h-1 bg-transparent rounded-full appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
+                                                    style={{ zIndex: 4 }}
+>>>>>>> Stashed changes
                                                 />
                                             </div>
                                         </div>

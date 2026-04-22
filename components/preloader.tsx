@@ -9,6 +9,7 @@ export function Preloader() {
     const [counter, setCounter] = useState(0);
 
     useEffect(() => {
+<<<<<<< Updated upstream
         // Fast counter: 100% in ~800ms
         const interval = setInterval(() => {
             setCounter(prev => {
@@ -21,6 +22,20 @@ export function Preloader() {
         const timer = setTimeout(() => {
             setIsLoading(false);
         }, 1000); // Intro cut-off at exactly 1 second
+=======
+        // Faster counter: 100% in ~300ms
+        const interval = setInterval(() => {
+            setCounter(prev => {
+                if (prev < 100) return prev + 10;
+                clearInterval(interval);
+                return 100;
+            });
+        }, 15);
+
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 250); // Intro cut-off at 250ms
+>>>>>>> Stashed changes
 
         return () => {
             clearInterval(interval);
@@ -52,17 +67,26 @@ export function Preloader() {
 
                     <div className="relative z-10 flex flex-col items-center">
                         {/* Elegant Ambient Glow */}
+<<<<<<< Updated upstream
                         <motion.div
                             animate={{ opacity: [0.1, 0.2, 0.1] }}
                             transition={{ duration: 1, repeat: Infinity }}
                             className="absolute w-64 h-64 bg-amber-500 rounded-full blur-[120px] -z-10"
+=======
+                        <div
+                            className="absolute w-64 h-64 bg-amber-500/10 rounded-full blur-[120px] -z-10"
+>>>>>>> Stashed changes
                         />
 
                         {/* Logo Reveal */}
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0, y: 10 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
+<<<<<<< Updated upstream
                             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+=======
+                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+>>>>>>> Stashed changes
                             className="relative"
                         >
                             <img
@@ -71,12 +95,16 @@ export function Preloader() {
                                 className="h-16 md:h-20 w-auto object-contain"
                             />
 
+<<<<<<< Updated upstream
                             {/* Sharp Shine Sweep */}
                             <motion.div
                                 animate={{ left: ['-100%', '200%'] }}
                                 transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
                                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[30deg]"
                             />
+=======
+
+>>>>>>> Stashed changes
                         </motion.div>
 
                         {/* Brand Typography */}
@@ -84,7 +112,11 @@ export function Preloader() {
                             <motion.h1
                                 initial={{ opacity: 0, letterSpacing: '0.2em' }}
                                 animate={{ opacity: 1, letterSpacing: '0.4em' }}
+<<<<<<< Updated upstream
                                 transition={{ duration: 0.5 }}
+=======
+                                transition={{ duration: 0.3 }}
+>>>>>>> Stashed changes
                                 className="text-white text-lg md:text-xl font-black uppercase tracking-[0.4em]"
                             >
                                 DINANATH & SONS
@@ -94,14 +126,22 @@ export function Preloader() {
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: 40 }}
+<<<<<<< Updated upstream
                                 transition={{ delay: 0.2, duration: 0.4 }}
+=======
+                                transition={{ delay: 0.1, duration: 0.2 }}
+>>>>>>> Stashed changes
                                 className="h-[2px] bg-amber-500 my-3"
                             />
 
                             <motion.p
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 0.6 }}
+<<<<<<< Updated upstream
                                 transition={{ delay: 0.4 }}
+=======
+                                transition={{ delay: 0.2 }}
+>>>>>>> Stashed changes
                                 className="text-[9px] text-white font-bold uppercase tracking-[0.3em]"
                             >
                                 Precision • Power • Performance

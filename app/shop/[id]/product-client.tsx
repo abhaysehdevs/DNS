@@ -12,6 +12,10 @@ import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import { getDeliveryOptions } from '@/lib/delivery';
 import { Button } from '@/components/ui/button';
+<<<<<<< Updated upstream
+=======
+import { Currency } from '@/components/currency';
+>>>>>>> Stashed changes
 import { ShoppingCart, Truck, Check, Package, ArrowLeft, MessageCircle, Loader2, Heart, PlayCircle, Image as ImageIcon, Layers, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -389,11 +393,19 @@ export default function ProductClient({ id }: { id: string }) {
                                     </p>
                                     <div className="flex items-baseline gap-3">
                                         <span className="text-4xl font-bold text-amber-500">
+<<<<<<< Updated upstream
                                             {isRetail ? `₹${currentPrice.toLocaleString()}` : 'Contact for Price'}
                                         </span>
                                         {!isRetail && (
                                             <span className="text-lg text-gray-600 line-through">
                                                 ₹{currentRetailPrice.toLocaleString()}
+=======
+                                            {isRetail ? <Currency value={currentPrice} /> : 'Contact for Price'}
+                                        </span>
+                                        {!isRetail && (
+                                            <span className="text-lg text-gray-600 line-through">
+                                                <Currency value={currentRetailPrice} />
+>>>>>>> Stashed changes
                                             </span>
                                         )}
                                     </div>

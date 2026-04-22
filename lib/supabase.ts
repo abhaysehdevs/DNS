@@ -1,6 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+<<<<<<< Updated upstream
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
@@ -12,6 +13,17 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 export const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseKey || 'placeholder');
+=======
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+// Ensure these variables are set
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
+>>>>>>> Stashed changes
 
 // Data structure
 // Table: products

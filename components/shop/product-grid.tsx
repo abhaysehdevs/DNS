@@ -10,9 +10,16 @@ interface ProductGridProps {
     products: Product[];
     loading: boolean;
     onClearFilters: () => void;
+<<<<<<< Updated upstream
 }
 
 export function ProductGrid({ products, loading, onClearFilters }: ProductGridProps) {
+=======
+    displayMode?: 'grid' | 'list';
+}
+
+export function ProductGrid({ products, loading, onClearFilters, displayMode = 'grid' }: ProductGridProps) {
+>>>>>>> Stashed changes
 
     // Skeleton Loader Component
     const ProductSkeleton = () => (
@@ -33,7 +40,11 @@ export function ProductGrid({ products, loading, onClearFilters }: ProductGridPr
 
     if (loading) {
         return (
+<<<<<<< Updated upstream
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+=======
+            <div className={`grid gap-6 ${displayMode === 'list' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+>>>>>>> Stashed changes
                 {[...Array(8)].map((_, i) => (
                     <ProductSkeleton key={i} />
                 ))}
@@ -62,9 +73,15 @@ export function ProductGrid({ products, loading, onClearFilters }: ProductGridPr
     }
 
     return (
+<<<<<<< Updated upstream
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in-up">
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
+=======
+        <div className={`grid gap-6 animate-fade-in-up ${displayMode === 'list' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+            {products.map((product) => (
+                <ProductCard key={product.id} product={product} list={displayMode === 'list'} />
+>>>>>>> Stashed changes
             ))}
         </div>
     );

@@ -50,8 +50,25 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 .or(`name.ilike.%${query}%,category.ilike.%${query}%,description.ilike.%${query}%`)
                 .limit(6);
 
+<<<<<<< Updated upstream
             if (!error && data) {
                 setResults(data);
+=======
+            if (!error && data && data.length > 0) {
+                setResults(data);
+            } else {
+                import('@/lib/data').then((module) => {
+                    const matches = module.products.filter(p => 
+                        p.name.toLowerCase().includes(query.toLowerCase()) || 
+                        (typeof p.category === 'string' && p.category.toLowerCase().includes(query.toLowerCase())) ||
+                        p.description.toLowerCase().includes(query.toLowerCase())
+                    ).slice(0, 6);
+                    setResults(matches.map(p => ({
+                        ...p,
+                        image_url: p.image || p.primaryImage
+                    })));
+                });
+>>>>>>> Stashed changes
             }
             setIsSearching(false);
         };

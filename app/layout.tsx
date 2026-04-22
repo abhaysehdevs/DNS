@@ -9,6 +9,10 @@ import { cn } from '@/lib/utils';
 import { Preloader } from '@/components/preloader';
 import { Footer } from '@/components/footer';
 import { GoogleTranslate } from '@/components/google-translate';
+<<<<<<< Updated upstream
+=======
+import { CurrencyManager } from '@/components/currency-manager';
+>>>>>>> Stashed changes
 
 const inter = Inter({ subsets: ['latin'] });
 const notoSansDevanagari = Noto_Sans_Devanagari({
@@ -35,6 +39,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={cn(inter.className, notoSansDevanagari.variable, "bg-black min-h-screen flex flex-col")}>
+<<<<<<< Updated upstream
+=======
+        <CurrencyManager />
+>>>>>>> Stashed changes
         <GoogleTranslate />
         <Preloader />
         <Navbar />
