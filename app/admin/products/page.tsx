@@ -185,6 +185,18 @@ export default function ProductsAdminPage() {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to permanently delete this product? This action cannot be undone.')) return;
+
+        try {
+            const { error } = await supabase.from('products').delete().eq('id', id);
+            if (error) throw error;
+            fetchProducts();
+        } catch (error: any) {
+            alert('Error deleting: ' + error.message);
+        }
+    };
+
     const handleEdit = (p: ProductDB) => {
         setCurrentProduct({ 
             ...p, 
