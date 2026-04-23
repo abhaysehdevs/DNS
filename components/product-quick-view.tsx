@@ -41,7 +41,7 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
         ? product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length
         : 0;
 
-    const currentPrice = isRetail ? product.retailPrice : product.wholesalePrice;
+    const currentPrice = isRetail ? product.retailPrice : (product.wholesalePrice ?? 0);
 
     const handleAddToCart = () => {
         if (isRetail) {

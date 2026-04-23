@@ -122,12 +122,12 @@ function ShopContent() {
         })
         .sort((a, b) => {
             if (sortBy === 'priceAsc') {
-                const priceA = isRetail ? a.retailPrice : a.wholesalePrice;
-                const priceB = isRetail ? b.retailPrice : b.wholesalePrice;
+                const priceA = isRetail ? a.retailPrice : (a.wholesalePrice ?? 0);
+                const priceB = isRetail ? b.retailPrice : (b.wholesalePrice ?? 0);
                 return priceA - priceB;
             } else if (sortBy === 'priceDesc') {
-                const priceA = isRetail ? a.retailPrice : a.wholesalePrice;
-                const priceB = isRetail ? b.retailPrice : b.wholesalePrice;
+                const priceA = isRetail ? a.retailPrice : (a.wholesalePrice ?? 0);
+                const priceB = isRetail ? b.retailPrice : (b.wholesalePrice ?? 0);
                 return priceB - priceA;
             } else if (sortBy === 'nameAsc') return a.name.localeCompare(b.name);
             return 0;
