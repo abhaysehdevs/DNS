@@ -29,6 +29,13 @@ export function LanguagePopup() {
         }
     }, [hasSeenLanguagePopup]);
 
+    // Handle manual trigger from Navbar
+    useEffect(() => {
+        const handleOpen = () => setIsVisible(true);
+        window.addEventListener('open-language-popup', handleOpen);
+        return () => window.removeEventListener('open-language-popup', handleOpen);
+    }, []);
+
     const handleSelectLanguage = (langCode: string) => {
         setLanguage(langCode as Language);
         setIsVisible(false);

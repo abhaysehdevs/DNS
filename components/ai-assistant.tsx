@@ -3,11 +3,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Sparkles, ShoppingBag, Truck, Info, Settings } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles, ShoppingBag, Truck, Info, Settings, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { products } from '@/lib/data';
 import Link from 'next/link';
 import { Currency } from '@/components/currency';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 
 interface Message {
     id: string;
@@ -37,6 +38,13 @@ export function AIAssistant() {
         }
     }, [messages, isTyping, isOpen]);
 
+    // Handle custom open event from mobile nav
+    useEffect(() => {
+        const handleOpen = () => setIsOpen(true);
+        window.addEventListener('open-ai-assistant', handleOpen);
+        return () => window.removeEventListener('open-ai-assistant', handleOpen);
+    }, []);
+
     const handleSendMessage = async (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!input.trim()) return;
@@ -65,59 +73,74 @@ export function AIAssistant() {
         }, 1200);
     };
 
-    // Simple "AI" Logic (Rule-based + Search)
+    // Simple "AI" Logic (Descriptive & Professional)
+    // Advanced Industry Intelligence Logic
     const generateResponse = (query: string): React.ReactNode => {
         const lowerQuery = query.toLowerCase();
 
-        // 1. Greetings
-        if (lowerQuery.match(/\b(hi|hello|hey|namaste)\b/)) {
-            return "Hello! Looking for any specific tools or machinery?";
+        // 1. Jewelry Specific Categories
+        if (lowerQuery.includes('casting') || lowerQuery.includes('machine') || lowerQuery.includes('furnace')) {
+            return (
+                <div className="space-y-4">
+                    <p className="text-gray-200">Our <strong>High-Precision Casting Hub</strong> features state-of-the-art vacuum casting machines and gold-melting furnaces designed for zero-oxygen environments. This ensures maximum metal purity and minimal porosity in your master models.</p>
+                    <div className="grid grid-cols-2 gap-2">
+                        <Link href="/shop?category=Machinery" className="bg-gray-800 p-3 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-blue-600 transition-colors">Machinery</Link>
+                        <Link href="/shop?category=Consumables" className="bg-gray-800 p-3 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-amber-600 transition-colors">Consumables</Link>
+                    </div>
+                </div>
+            );
         }
 
-        // 2. Shipping / Delivery
+        // 2. Shipping / Delivery (Advanced Logistics)
         if (lowerQuery.includes('shipping') || lowerQuery.includes('delivery') || lowerQuery.includes('track')) {
             return (
-                <div>
-                    <p className="mb-2">We offer <strong>Instant Delivery</strong> in select areas and Standard Shipping nationwide.</p>
-                    <p>You can check delivery availability on any product page using your Pincode.</p>
+                <div className="space-y-4">
+                    <p className="text-gray-200">We utilize <strong>Enterprise-Grade Logistics</strong> for heavy machinery and precision tools. All shipments are insured and come with detailed calibration certificates where applicable.</p>
+                    <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-[1.5rem] flex items-center gap-4">
+                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shrink-0">
+                            <Truck className="text-white" size={20} />
+                        </div>
+                        <div>
+                            <div className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Global Dispatch</div>
+                            <div className="text-xs text-gray-400">Dispatch within 24h of verification.</div>
+                        </div>
+                    </div>
                 </div>
             );
         }
 
-        // 3. Contact
-        if (lowerQuery.includes('contact') || lowerQuery.includes('phone') || lowerQuery.includes('address')) {
+        // 3. Wholesale (B2B Priority)
+        if (lowerQuery.includes('wholesale') || lowerQuery.includes('bulk') || lowerQuery.includes('quote') || lowerQuery.includes('quotation')) {
             return (
-                <div>
-                    <p className="mb-2">You can reach us directly via:</p>
-                    <ul className="list-disc pl-4 space-y-1">
-                        <li>Phone: +91 99534 35647</li>
-                        <li>Address: 4346, Gali Bahuji, Pahari Dhiraj, Sadar Bazar, Delhi-110006</li>
-                    </ul>
+                <div className="space-y-4">
+                    <p className="text-gray-200">Dinanath & Sons specializes in <strong>B2B Fulfillment</strong>. We provide tiered pricing for large-scale jewelry manufacturing units and regional distributors.</p>
+                    <a href="https://wa.me/91XXXXXXXXXX?text=I'm interested in a wholesale quotation for jewelry tools." target="_blank" rel="noopener noreferrer" className="block w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-2xl text-center font-black uppercase text-xs tracking-widest shadow-xl shadow-green-900/20 transition-all">
+                        Connect with Trade Desk
+                    </a>
                 </div>
             );
         }
 
-        // 4. Product Search (The "AI" Part)
-        // Simple keyword matching against product name, description, category
+        // 4. Product Intelligence (Dynamic)
         const matches = products.filter(p =>
             p.name.toLowerCase().includes(lowerQuery) ||
             p.description.toLowerCase().includes(lowerQuery) ||
             p.category.toLowerCase().includes(lowerQuery)
-        ).slice(0, 3); // Limit to 3 suggestions
+        ).slice(0, 3);
 
         if (matches.length > 0) {
             return (
-                <div>
-                    <p className="mb-3">I found these items for you:</p>
+                <div className="space-y-4">
+                    <p className="text-gray-200">I've located these <strong>Professional-Grade Instruments</strong> matching your requirements:</p>
                     <div className="space-y-3">
                         {matches.map(p => (
-                            <Link href={`/shop/${p.id}`} key={p.id} className="flex gap-3 bg-gray-800 p-2 rounded-lg hover:bg-gray-700 transition-colors group">
-                                <div className="w-12 h-12 bg-white rounded flex-shrink-0 overflow-hidden">
-                                    <img src={p.primaryImage} alt={p.name} className="w-full h-full object-contain" />
+                            <Link href={`/shop/${p.id}`} key={p.id} className="flex gap-4 bg-gray-900/50 border border-gray-800 p-3 rounded-2xl hover:border-blue-500/50 transition-all group">
+                                <div className="w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0">
+                                    <img src={p.primaryImage} alt={p.name} className="w-full h-full object-contain p-1" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-bold truncate group-hover:text-amber-500 transition-colors">{p.name}</div>
-                                    <div className="text-xs text-gray-400"><Currency value={p.retailPrice} /></div>
+                                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                    <div className="text-xs font-black text-white truncate group-hover:text-blue-400 transition-colors">{p.name}</div>
+                                    <div className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{p.category}</div>
                                 </div>
                             </Link>
                         ))}
@@ -126,8 +149,27 @@ export function AIAssistant() {
             );
         }
 
-        // 5. Fallback
-        return "I'm not sure about that specific item. Check our 'Shop' page or try searching for keywords like 'pliers', 'flux', or 'gold bar'.";
+        // 5. Fallback (Expert Tone)
+        return (
+            <div className="space-y-2">
+                <p>I couldn't locate specific data for that request. However, as an <strong>Industry Specialist</strong>, I recommend exploring our 'Shop' for specialized stone-setting and polishing equipment.</p>
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Tip: Try searching for 'Machinery' or 'Hand Tools'.</p>
+            </div>
+        );
+    };
+
+    const isMobile = useIsMobile();
+    const suggestions = [
+        { label: '🔥 Best Selling Tools', icon: <TrendingUp size={12}/> },
+        { label: '📦 Shipping & Delivery', icon: <Truck size={12}/> },
+        { label: '💎 Wholesale Quotation', icon: <MessageCircle size={12}/> },
+        { label: '🛠️ New Arrivals', icon: <Sparkles size={12}/> }
+    ];
+
+    const handleSuggestionClick = (label: string) => {
+        setInput(label.replace(/^[^\s]+\s/, ''));
+        // We'll trigger send in the next tick
+        setTimeout(() => document.getElementById('ai-submit-btn')?.click(), 10);
     };
 
     return (
@@ -140,12 +182,16 @@ export function AIAssistant() {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
                         onClick={() => setIsOpen(true)}
-                        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-amber-600 to-amber-700 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:scale-110 transition-transform group"
+                        className="fixed bottom-6 right-6 z-[150] w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform group"
                     >
-                        <Sparkles className="text-white animate-pulse" />
-                        <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-transform bg-white text-black text-xs font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap">
-                            Ask AI Assistant
-                        </span>
+                        <Sparkles className="text-white" size={28} />
+                        {!isMobile && (
+                            <motion.div 
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="absolute inset-0 bg-blue-400 rounded-full -z-10"
+                            />
+                        )}
                     </motion.button>
                 )}
             </AnimatePresence>
@@ -154,81 +200,106 @@ export function AIAssistant() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                        initial={{ opacity: 0, y: 50, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 50, scale: 0.9 }}
-                        className="fixed bottom-6 right-6 z-50 w-[90vw] md:w-[400px] h-[500px] bg-black/80 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                        exit={{ opacity: 0, y: 50, scale: 0.95 }}
+                        className={`fixed bottom-6 right-6 z-[200] w-[95vw] md:w-[450px] h-[600px] bg-black border border-gray-800 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden ${isMobile ? '' : 'backdrop-blur-2xl bg-black/90'}`}
                     >
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-amber-900/30 rounded-full flex items-center justify-center border border-amber-500/50">
-                                    <Sparkles size={20} className="text-amber-500" />
+                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 border-b border-gray-800 flex justify-between items-center relative overflow-hidden">
+                            <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
+                                <Sparkles size={120} className="text-blue-500 translate-x-10 -translate-y-10" />
+                            </div>
+                            <div className="flex items-center gap-4 relative z-10">
+                                <div className="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center border border-blue-500/30">
+                                    <Sparkles size={24} className="text-blue-500" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-white text-sm">Dinanath AI</h3>
-                                    <span className="flex items-center gap-1.5 text-[10px] text-green-400">
-                                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                        Online
-                                    </span>
+                                    <h3 className="font-black text-white text-lg tracking-tight">Dinanath AI <span className="text-[10px] bg-blue-600 px-1.5 py-0.5 rounded ml-1 uppercase">Pro</span></h3>
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Intelligence Sync</span>
+                                    </div>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="text-gray-400 hover:text-white transition-colors"
+                                className="w-10 h-10 bg-black/40 hover:bg-black text-gray-500 hover:text-white rounded-full flex items-center justify-center transition-all border border-gray-800 relative z-10"
                             >
                                 <X size={20} />
                             </button>
                         </div>
-
+ 
                         {/* Messages Area */}
                         <div
-                            className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
+                            className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent"
                             ref={scrollRef}
                         >
                             {messages.map((msg) => (
-                                <div
+                                <motion.div
+                                    initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
                                     key={msg.id}
                                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
                                     <div
-                                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.role === 'user'
-                                                ? 'bg-amber-600 text-white rounded-br-none'
-                                                : 'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'
+                                        className={`max-w-[85%] rounded-3xl px-5 py-4 text-sm leading-relaxed ${msg.role === 'user'
+                                                ? 'bg-blue-600 text-white rounded-br-none shadow-lg shadow-blue-900/20'
+                                                : 'bg-gray-900 text-gray-200 rounded-bl-none border border-gray-800'
                                             }`}
                                     >
                                         {msg.content}
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                             {isTyping && (
                                 <div className="flex justify-start">
-                                    <div className="bg-gray-800 border border-gray-700 rounded-2xl rounded-bl-none px-4 py-3 flex gap-1">
-                                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                    <div className="bg-gray-900 border border-gray-800 rounded-3xl rounded-bl-none px-6 py-4 flex gap-1.5 items-center">
+                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }} />
+                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }} />
                                     </div>
                                 </div>
                             )}
-                        </div>
 
+                            {/* Suggestion Chips */}
+                            {!isTyping && messages.length < 3 && (
+                                <div className="pt-4 flex flex-wrap gap-2">
+                                    {suggestions.map((s, i) => (
+                                        <button 
+                                            key={i}
+                                            onClick={() => handleSuggestionClick(s.label)}
+                                            className="px-4 py-2 bg-black border border-gray-800 rounded-full text-[10px] font-black text-gray-400 uppercase tracking-widest hover:border-blue-500 hover:text-white hover:bg-blue-600/10 transition-all flex items-center gap-2"
+                                        >
+                                            {s.icon} {s.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+ 
                         {/* Input Area */}
-                        <form onSubmit={handleSendMessage} className="p-3 bg-gray-900 border-t border-gray-800 flex gap-2">
-                            <input
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask about tools..."
-                                className="flex-1 bg-black border border-gray-700 rounded-full px-4 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
-                            />
-                            <Button
-                                type="submit"
-                                size="icon"
-                                className="bg-amber-600 hover:bg-amber-700 text-white rounded-full w-10 h-10 flex-shrink-0"
-                                disabled={!input.trim() || isTyping}
-                            >
-                                <Send size={18} />
-                            </Button>
-                        </form>
+                        <div className="p-4 bg-gray-900 border-t border-gray-800">
+                            <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
+                                <input
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    placeholder="Ask Dinanath AI anything..."
+                                    className="flex-1 bg-black border border-gray-800 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-all shadow-inner"
+                                />
+                                <button
+                                    id="ai-submit-btn"
+                                    type="submit"
+                                    disabled={!input.trim() || isTyping}
+                                    className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/20 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+                                >
+                                    <Send size={24} />
+                                </button>
+                            </form>
+                            <p className="text-[9px] text-gray-600 text-center mt-3 font-bold uppercase tracking-widest">
+                                Dinanath Intelligence • V2.0 Global Cloud Sync
+                            </p>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

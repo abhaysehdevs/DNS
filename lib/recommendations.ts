@@ -1,5 +1,5 @@
 
-import { Product, products as staticProducts } from './data';
+import { Product } from './data';
 import { supabase } from './supabase';
 
 // Helper to calculate similarity score (0 to 1)
@@ -33,8 +33,7 @@ export async function getSmartRelatedProducts(currentProduct: Product, limit: nu
     if (!candidates) return [];
 
     const mappedCandidates: Product[] = candidates.map((p: any) => {
-        const localMatch = staticProducts.find(sp => sp.id === p.id || sp.name.toLowerCase() === p.name.toLowerCase());
-        const primaryImage = p.image || localMatch?.primaryImage || '/placeholder.jpg';
+        const primaryImage = p.image || p.image_url || '/placeholder.jpg';
         return {
             id: p.id,
             name: p.name,
@@ -43,8 +42,8 @@ export async function getSmartRelatedProducts(currentProduct: Product, limit: nu
             wholesalePrice: p.wholesale_price,
             wholesaleMOQ: p.wholesale_moq,
             primaryImage: primaryImage,
-            image: primaryImage, // Redundant but safe
-            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : (localMatch?.gallery || [{ id: '1', type: 'image', url: primaryImage }]),
+            image: primaryImage,
+            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
             category: p.category,
             inStock: p.in_stock,
             reviews: p.reviews || []
@@ -129,8 +128,7 @@ export async function getPersonalizedRecommendations(viewedProductIds: string[],
 
     // Map and return
     return filtered.slice(0, limit).map((p: any) => {
-        const localMatch = staticProducts.find(sp => sp.id === p.id || sp.name.toLowerCase() === p.name.toLowerCase());
-        const primaryImage = p.image || localMatch?.primaryImage || '/placeholder.jpg';
+        const primaryImage = p.image || p.image_url || '/placeholder.jpg';
         return {
             id: p.id,
             name: p.name,
@@ -140,7 +138,7 @@ export async function getPersonalizedRecommendations(viewedProductIds: string[],
             wholesaleMOQ: p.wholesale_moq,
             primaryImage: primaryImage,
             image: primaryImage,
-            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : (localMatch?.gallery || [{ id: '1', type: 'image', url: primaryImage }]),
+            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
             category: p.category,
             inStock: p.in_stock,
             reviews: p.reviews || []
@@ -158,8 +156,7 @@ export async function getTrendingProducts(limit: number = 4): Promise<Product[]>
     if (!data) return [];
 
     return data.map((p: any) => {
-        const localMatch = staticProducts.find(sp => sp.id === p.id || sp.name.toLowerCase() === p.name.toLowerCase());
-        const primaryImage = p.image || localMatch?.primaryImage || '/placeholder.jpg';
+        const primaryImage = p.image || p.image_url || '/placeholder.jpg';
         return {
             id: p.id,
             name: p.name,
@@ -169,7 +166,7 @@ export async function getTrendingProducts(limit: number = 4): Promise<Product[]>
             wholesaleMOQ: p.wholesale_moq,
             primaryImage: primaryImage,
             image: primaryImage,
-            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : (localMatch?.gallery || [{ id: '1', type: 'image', url: primaryImage }]),
+            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
             category: p.category,
             inStock: p.in_stock,
             reviews: p.reviews || []

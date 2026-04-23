@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Hero } from '@/components/hero';
 import { ProductCard } from '@/components/product-card';
-import { Product, products as staticProducts } from '@/lib/data';
+import { Product } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { Loader2, TrendingUp, ShieldCheck, Truck, Users, ArrowRight, Star, Quote, ChevronRight, PlayCircle, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 
 const testimonials = [
   {
@@ -78,6 +79,7 @@ const guideResources = [
 ];
 
 export default function Home() {
+  const isMobile = useIsMobile();
   const { language, mode } = useAppStore();
   const isRetail = mode === 'retail';
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -96,8 +98,7 @@ export default function Home() {
 
       if (data && data.length > 0) {
         const mappedProducts: Product[] = data.map((p: any) => {
-          const localMatch = staticProducts.find(sp => sp.id === p.id || sp.name.toLowerCase() === p.name.toLowerCase());
-          const primaryImage = p.image || localMatch?.primaryImage || '/placeholder.jpg';
+          const primaryImage = p.image || p.image_url || '/placeholder.jpg';
           return {
             id: p.id,
             name: p.name,
@@ -107,7 +108,7 @@ export default function Home() {
             wholesaleMOQ: p.wholesale_moq,
             primaryImage: primaryImage,
             image: primaryImage,
-            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : (localMatch?.gallery || [{ id: '1', type: 'image', url: primaryImage }]),
+            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
             category: p.category,
             inStock: p.in_stock,
             reviews: p.reviews || [],
@@ -118,7 +119,7 @@ export default function Home() {
         });
         setFeaturedProducts(mappedProducts);
       } else {
-        setFeaturedProducts(staticProducts.slice(0, 12));
+        setFeaturedProducts([]);
       }
       setLoading(false);
     }
@@ -155,9 +156,9 @@ export default function Home() {
             {features.map((f, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                transition={isMobile ? { duration: 0 } : { delay: i * 0.1 }}
                 viewport={{ once: true }}
                 className="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 group"
               >
@@ -211,7 +212,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative z-10"
             >
               {displayProducts.map((product, i) => (
                 <motion.div

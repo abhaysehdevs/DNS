@@ -32,22 +32,17 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
         async function fetchSuggestions() {
             const { data } = await supabase
                 .from('products')
-                .select('id, name, category, image')
+                .select('id, name, category, image, image_url')
                 .ilike('name', `%${query}%`)
                 .limit(4);
 
             if (data && data.length > 0) {
-                setProducts(data);
+                setProducts(data.map(p => ({
+                    ...p,
+                    image: p.image || p.image_url || '/placeholder.jpg'
+                })));
             } else {
-                import('@/lib/data').then((module) => {
-                    const matches = module.products.filter(p => p.name.toLowerCase().includes(query.toLowerCase())).slice(0, 4);
-                    setProducts(matches.map(p => ({
-                        id: p.id,
-                        name: p.name,
-                        category: p.category,
-                        image: p.image || p.primaryImage
-                    })));
-                });
+                setProducts([]);
             }
         }
 

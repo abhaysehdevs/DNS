@@ -3,7 +3,7 @@
 
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Product, products as localProducts } from '@/lib/data';
+import { Product } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import {
@@ -54,10 +54,7 @@ function ShopContent() {
 
                 if (data && data.length > 0) {
                     const mappedProducts: Product[] = data.map((p: any) => {
-                        const localMatch = localProducts.find(lp =>
-                            lp.id === p.id ||
-                            lp.name.toLowerCase() === p.name.toLowerCase()
-                        );
+                        const image = p.image || p.image_url || '/placeholder.jpg';
                         return {
                             id: p.id,
                             name: p.name,
@@ -65,9 +62,9 @@ function ShopContent() {
                             retailPrice: p.retail_price,
                             wholesalePrice: p.wholesale_price,
                             wholesaleMOQ: p.wholesale_moq,
-                            image: p.image || localMatch?.primaryImage || '/placeholder.jpg',
-                            primaryImage: p.image || localMatch?.primaryImage || '/placeholder.jpg',
-                            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : (localMatch?.gallery || [{ id: '1', type: 'image', url: p.image || localMatch?.primaryImage || '/placeholder.jpg' }]),
+                            image: image,
+                            primaryImage: image,
+                            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: image }],
                             category: p.category,
                             inStock: p.in_stock,
                             reviews: p.reviews || []
@@ -78,9 +75,8 @@ function ShopContent() {
                     setCategories(uniqueCats);
                     setProducts(mappedProducts);
                 } else {
-                    const uniqueCats = ['All', ...Array.from(new Set(localProducts.map(p => p.category)))];
-                    setCategories(uniqueCats);
-                    setProducts(localProducts);
+                    setCategories(['All']);
+                    setProducts([]);
                 }
             } catch (err) {
                 console.error("Fetch failed", err);

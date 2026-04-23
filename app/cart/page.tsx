@@ -60,8 +60,8 @@ export default function CartPage() {
                 .in('id', ids);
 
             if (data && data.length > 0) {
-                const mappedProductsPromises: Promise<Product>[] = data.map(async (p: any) => {
-                    const localMatch = (await import('@/lib/data')).products.find(lp => lp.id === p.id);
+                const mappedProducts: Product[] = data.map((p: any) => {
+                    const image = p.image || p.image_url || '/placeholder.jpg';
                     return {
                         id: p.id,
                         name: p.name,
@@ -69,9 +69,9 @@ export default function CartPage() {
                         retailPrice: p.retail_price,
                         wholesalePrice: p.wholesale_price,
                         wholesaleMOQ: p.wholesale_moq,
-                        primaryImage: p.image || localMatch?.primaryImage || '/placeholder.jpg',
-                        image: p.image || localMatch?.primaryImage || '/placeholder.jpg',
-                        gallery: p.gallery || localMatch?.gallery || [{ id: '1', type: 'image', url: p.image || localMatch?.primaryImage || '/placeholder.jpg' }],
+                        primaryImage: image,
+                        image: image,
+                        gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: image }],
                         category: p.category,
                         inStock: p.in_stock,
                         reviews: p.reviews || [],
@@ -79,13 +79,9 @@ export default function CartPage() {
                     };
                 });
 
-                const mappedProducts = await Promise.all(mappedProductsPromises);
                 setCartProducts(mappedProducts);
             } else {
-                import('@/lib/data').then((module) => {
-                    const localProducts = module.products.filter(p => ids.includes(p.id));
-                    setCartProducts(localProducts);
-                });
+                setCartProducts([]);
             }
             setLoading(false);
         }

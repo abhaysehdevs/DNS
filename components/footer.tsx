@@ -40,7 +40,7 @@ export function Footer() {
                     </div>
 
                     {/* Navigation Columns */}
-                    <div className="lg:w-3/5 grid grid-cols-2 md:grid-cols-3 gap-10">
+                    <div className="lg:w-3/5 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10">
                         {/* Catalog */}
                         <div>
                             <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-6">Catalog</h4>

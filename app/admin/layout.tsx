@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Package, ShoppingCart, Users, Settings, Home, LayoutDashboard, Database, Bell, Check, Trash2, LogOut, X, Menu } from 'lucide-react';
+import { Package, ShoppingCart, Users, Settings, Home, LayoutDashboard, Database, Bell, Check, Trash2, LogOut, X, Menu, Grid, Layout } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,6 +15,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const { isAdminAuthenticated, logoutAdmin, notifications, markNotificationAsRead, clearNotifications, addNotification, adminSettings } = useAppStore();
 
     const [showNotifications, setShowNotifications] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
 
     // Authentication Check
@@ -121,13 +122,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return null; // or a loading spinner while redirecting
     }
 
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
     const navItems = [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
         { name: 'Products', href: '/admin/products', icon: Package },
+        { name: 'Categories', href: '/admin/categories', icon: Grid },
         { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
         { name: 'Customers', href: '/admin/customers', icon: Users },
+        { name: 'Store CMS', href: '/admin/cms', icon: Layout },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];
 

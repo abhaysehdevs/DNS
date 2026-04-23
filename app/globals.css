@@ -2,6 +2,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-hindi: var(--font-hindi);
 
   --color-border: oklch(0.269 0 0);
@@ -11,7 +12,6 @@
   --color-foreground: oklch(0.985 0 0);
 
   --color-primary: oklch(0.669 0.205 60.187);
-  /* Amber-600 */
   --color-primary-foreground: oklch(0.985 0 0);
 
   --color-secondary: oklch(0.269 0 0);
@@ -35,30 +35,29 @@
   --radius: 0.5rem;
 }
 
-/* Utilities */
 @utility container {
   margin-inline: auto;
   padding-inline: 1rem;
 }
 
-/* Base styles */
 :root {
   color-scheme: dark;
 }
 
+html,
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
@@ -67,7 +66,7 @@ h6 {
 }
 
 .text-glow {
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(255, 255, 255, 0.1);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .translate-z-20 {
@@ -75,20 +74,11 @@ h6 {
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* --- Google Translate Overrides --- */
-body {
-  top: 0 !important;
-}
-
+/* Google Translate Overrides */
 .skiptranslate iframe,
 .goog-te-banner-frame {
   display: none !important;

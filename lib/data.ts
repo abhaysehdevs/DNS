@@ -22,26 +22,34 @@ export interface Product {
     name: string;
     description: string;
     retailPrice: number;
-    wholesalePrice: number;
     wholesaleMOQ: number;
 
     // Media
     primaryImage: string;
     image?: string;
+    videoUrl?: string; // New: Direct video field
     gallery: ProductMedia[];
 
-    category: 'Tools' | 'Machinery' | 'Consumables' | 'Packaging' | 'Chemicals' | 'Bullion';
+    category: string;
     inStock: boolean;
+    quantity?: number;
     reviews: Review[];
 
-    // Tech Specs
+    // NEW: Amazon-style Detailed Fields
+    brand?: string;
+    modelNumber?: string;
+    sku?: string;
+    weight?: string;
+    dimensions?: { length: string; width: string; height: string; };
+    warrantyInfo?: string;
+    features?: string[];
     specifications?: Record<string, string>;
 
     // NEW: Grouped Product System (Variants as separate products)
-    groupId?: string; // If set, this product is part of a variant group
-    variantAttributes?: Record<string, string>; // e.g. { "Color": "Red", "Size": "Large" }
+    groupId?: string; 
+    variantAttributes?: Record<string, string>; 
 
-    // Legacy / Alternative (Optional internal variants)
+    // Legacy / Alternative
     variants?: any[];
     variantType?: string;
 }
@@ -72,7 +80,6 @@ export const products: Product[] = [
         description: "High-quality 15F stainless steel tweezers for precision work.",
         category: 'Tools',
         retailPrice: 350,
-        wholesalePrice: 200,
         wholesaleMOQ: 12,
         inStock: true,
         primaryImage: '/images/products/15f-tweezers.png',
@@ -85,7 +92,6 @@ export const products: Product[] = [
         description: "Standard AA tweezers for general jewelry handling.",
         category: 'Tools',
         retailPrice: 250,
-        wholesalePrice: 150,
         wholesaleMOQ: 12,
         inStock: true,
         primaryImage: "/images/products/dinanath's-aa-tweezers.png",
@@ -98,7 +104,6 @@ export const products: Product[] = [
         description: "Comfort grip tweezers with red coating.",
         category: 'Tools',
         retailPrice: 280,
-        wholesalePrice: 160,
         wholesaleMOQ: 12,
         inStock: true,
         primaryImage: '/images/products/red-tweezers.png',
@@ -111,7 +116,6 @@ export const products: Product[] = [
         description: "Stainless Steel 10K series tweezers.",
         category: 'Tools',
         retailPrice: 400,
-        wholesalePrice: 250,
         wholesaleMOQ: 10,
         inStock: true,
         primaryImage: '/images/products/tweezer-ss-10k.png',
@@ -124,7 +128,6 @@ export const products: Product[] = [
         description: "Durable round nose plier for wire looping.",
         category: 'Tools',
         retailPrice: 450,
-        wholesalePrice: 280,
         wholesaleMOQ: 6,
         inStock: true,
         primaryImage: "/images/products/dinanath's-steel-nose-round-plier.png",
@@ -137,7 +140,6 @@ export const products: Product[] = [
         description: "Sharp nipper cutter for wire cutting.",
         category: 'Tools',
         retailPrice: 350,
-        wholesalePrice: 220,
         wholesaleMOQ: 6,
         inStock: true,
         primaryImage: '/images/products/nipper-cutter.png',
@@ -150,7 +152,6 @@ export const products: Product[] = [
         description: "Ergonomic red handle pliers.",
         category: 'Tools',
         retailPrice: 380,
-        wholesalePrice: 240,
         wholesaleMOQ: 6,
         inStock: true,
         primaryImage: '/images/products/red-plier.png',
@@ -163,7 +164,6 @@ export const products: Product[] = [
         description: "Full stainless steel plier for heavy duty use.",
         category: 'Tools',
         retailPrice: 500,
-        wholesalePrice: 350,
         wholesaleMOQ: 6,
         inStock: true,
         primaryImage: '/images/products/ss-plier.png',
@@ -176,7 +176,6 @@ export const products: Product[] = [
         description: "Traditional metal cutting shears (Katiya).",
         category: 'Tools',
         retailPrice: 600,
-        wholesalePrice: 400,
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/katiya.png',
@@ -189,7 +188,6 @@ export const products: Product[] = [
         description: "Heat resistant holding tool (Sandasi).",
         category: 'Tools',
         retailPrice: 300,
-        wholesalePrice: 180,
         wholesaleMOQ: 10,
         inStock: true,
         primaryImage: '/images/products/sandasi.png',
@@ -202,7 +200,6 @@ export const products: Product[] = [
         description: "Set of precision files for jewelry detailing.",
         category: 'Tools',
         retailPrice: 850,
-        wholesalePrice: 600,
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/file-set.png',
@@ -215,7 +212,6 @@ export const products: Product[] = [
         description: "Premium quality saw blades for metal cutting.",
         category: 'Tools',
         retailPrice: 200,
-        wholesalePrice: 120,
         wholesaleMOQ: 24, // Packs
         inStock: true,
         primaryImage: '/images/products/clarion-saw-blade.png',
@@ -228,7 +224,6 @@ export const products: Product[] = [
         description: "Ergonomic saw frame handle.",
         category: 'Tools',
         retailPrice: 450,
-        wholesalePrice: 300,
         wholesaleMOQ: 6,
         inStock: true,
         primaryImage: '/images/products/saw-handle.png',
@@ -241,7 +236,6 @@ export const products: Product[] = [
         description: "Standard aluminum ring mandrel.",
         category: 'Tools',
         retailPrice: 550,
-        wholesalePrice: 350,
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/ring-stick.png',
@@ -254,7 +248,6 @@ export const products: Product[] = [
         description: "Tool for stretching rings to increase size.",
         category: 'Tools',
         retailPrice: 2500,
-        wholesalePrice: 1800,
         wholesaleMOQ: 2,
         inStock: true,
         primaryImage: '/images/products/ring-extender.png',
@@ -267,7 +260,6 @@ export const products: Product[] = [
         description: "Heavy duty ring stretcher reducing machine.",
         category: 'Tools',
         retailPrice: 8500,
-        wholesalePrice: 6500,
         wholesaleMOQ: 1,
         inStock: true,
         primaryImage: '/images/products/heavy-duty-ring-extender.png',
@@ -280,7 +272,6 @@ export const products: Product[] = [
         description: "Oil stone for sharpening gravers and tools.",
         category: 'Tools',
         retailPrice: 350,
-        wholesalePrice: 200,
         wholesaleMOQ: 10,
         inStock: true,
         primaryImage: '/images/products/sharping-stone.png',
@@ -293,7 +284,6 @@ export const products: Product[] = [
         description: "Handheld gas torch with auto ignition.",
         category: 'Tools',
         retailPrice: 1200,
-        wholesalePrice: 800,
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/gas-torch-auto.png',
@@ -306,7 +296,6 @@ export const products: Product[] = [
         description: "Professional gas torch head for soldering.",
         category: 'Tools',
         retailPrice: 600,
-        wholesalePrice: 400,
         wholesaleMOQ: 10,
         inStock: true,
         primaryImage: '/images/products/gas-torch-manual.png',
@@ -319,7 +308,6 @@ export const products: Product[] = [
         description: "Heavy duty gas burner for melting furnaces.",
         category: 'Tools',
         retailPrice: 2800,
-        wholesalePrice: 2000,
         wholesaleMOQ: 2,
         inStock: true,
         primaryImage: '/images/products/gas-burner.png',
@@ -334,7 +322,6 @@ export const products: Product[] = [
         description: "Borax liquid flux for soldering gold and silver.",
         category: 'Chemicals',
         retailPrice: 150,
-        wholesalePrice: 90,
         wholesaleMOQ: 20,
         inStock: true,
         primaryImage: '/images/products/suhaga-goti.png', // Fallback/Representative
@@ -347,7 +334,6 @@ export const products: Product[] = [
         description: "Solid borax pieces for flux preparation.",
         category: 'Chemicals',
         retailPrice: 120,
-        wholesalePrice: 70,
         wholesaleMOQ: 25,
         inStock: true,
         primaryImage: '/images/products/suhaga-big.png',
@@ -360,7 +346,6 @@ export const products: Product[] = [
         description: "Dip and clean solution for silver jewelry.",
         category: 'Chemicals',
         retailPrice: 350,
-        wholesalePrice: 200,
         wholesaleMOQ: 12,
         inStock: true,
         primaryImage: '/images/products/silver-cleaner.png',
@@ -373,7 +358,6 @@ export const products: Product[] = [
         description: "Premium silver polishing liquid.",
         category: 'Chemicals',
         retailPrice: 450,
-        wholesalePrice: 280,
         wholesaleMOQ: 12,
         inStock: true,
         primaryImage: '/images/products/tik-tak-silver-cleaner.png',
@@ -386,7 +370,6 @@ export const products: Product[] = [
         description: "Refill canister for gas torches.",
         category: 'Consumables',
         retailPrice: 150,
-        wholesalePrice: 100,
         wholesaleMOQ: 24,
         inStock: true,
         primaryImage: '/images/products/gas-refill.png',
@@ -399,7 +382,6 @@ export const products: Product[] = [
         description: "Thin soldering alloy sheet.",
         category: 'Consumables',
         retailPrice: 850,
-        wholesalePrice: 750, // Expensive material
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/joint-paper.png',
@@ -412,7 +394,6 @@ export const products: Product[] = [
         description: "Pure copper alloy for alloying gold.",
         category: 'Consumables',
         retailPrice: 600,
-        wholesalePrice: 450,
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/copper-ball-alloy.png',
@@ -425,7 +406,6 @@ export const products: Product[] = [
         description: "Soft cloth wheel for jewelry polishing.",
         category: 'Consumables',
         retailPrice: 80,
-        wholesalePrice: 40,
         wholesaleMOQ: 50,
         inStock: true,
         primaryImage: '/images/products/cloth-buff.png',
@@ -440,7 +420,6 @@ export const products: Product[] = [
         description: "Heavy duty dust collector machine for sandblasting units.",
         category: 'Machinery',
         retailPrice: 15500,
-        wholesalePrice: 12000,
         wholesaleMOQ: 1,
         inStock: true,
         primaryImage: '/images/products/sand-blasting-dust-collector-machine.png',
@@ -455,7 +434,6 @@ export const products: Product[] = [
         description: "Premium packaging card for silver coins.",
         category: 'Packaging',
         retailPrice: 25,
-        wholesalePrice: 12,
         wholesaleMOQ: 100,
         inStock: true,
         primaryImage: '/images/packaging/silver-coins-5gms.png', // Kept from previous request
@@ -471,7 +449,6 @@ export const products: Product[] = [
         description: "Durable tags for jewelry pricing and labeling.",
         category: 'Packaging',
         retailPrice: 150,
-        wholesalePrice: 80,
         wholesaleMOQ: 10, // Packets
         inStock: true,
         primaryImage: '/images/products/jewellery-tags.png',
@@ -484,7 +461,6 @@ export const products: Product[] = [
         description: "Precision die plate.",
         category: 'Tools', // Re-categorized
         retailPrice: 1200,
-        wholesalePrice: 900,
         wholesaleMOQ: 2,
         inStock: true,
         primaryImage: '/images/products/pasa.png',
@@ -499,7 +475,6 @@ export const products: Product[] = [
         description: "24K Gold Bar - 1 Gram.",
         category: 'Bullion',
         retailPrice: 7500,
-        wholesalePrice: 7200,
         wholesaleMOQ: 1,
         inStock: true,
         primaryImage: '/images/products/gold-bar-1gms.png',
@@ -512,7 +487,6 @@ export const products: Product[] = [
         description: "24K Gold Bar - 5 Grams.",
         category: 'Bullion',
         retailPrice: 37500,
-        wholesalePrice: 36000,
         wholesaleMOQ: 1,
         inStock: true,
         primaryImage: '/images/products/gold-bar-5gms.png',
@@ -525,7 +499,6 @@ export const products: Product[] = [
         description: "999 Pure Silver Coin - 20 Grams.",
         category: 'Bullion',
         retailPrice: 2000,
-        wholesalePrice: 1800,
         wholesaleMOQ: 5,
         inStock: true,
         primaryImage: '/images/products/silver-coin-20g.png',
