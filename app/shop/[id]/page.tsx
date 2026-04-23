@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import ProductClient from './product-client';
+
+export const dynamicParams = true;
 export async function generateStaticParams() {
     let dbIds: string[] = [];
     try {
