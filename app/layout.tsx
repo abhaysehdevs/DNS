@@ -21,8 +21,45 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: 'Dinanath & Sons - Premium Jewelry Tools',
-  description: 'Wholesale and Retail Jewelry Making Tools & Machinery',
+  metadataBase: new URL('https://dinanathandsons.com'),
+  title: {
+    default: 'Dinanath & Sons | Premium Jewelry Tools & Machinery',
+    template: '%s | Dinanath & Sons'
+  },
+  description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables. Precision tooling for jewelers across India.',
+  keywords: ['jewelry tools', 'jewelry machinery', 'wholesale jewelry tools', 'precision tooling', 'goldsmith tools', 'jewelry manufacturing equipment', 'Dinanath & Sons'],
+  authors: [{ name: 'Dinanath & Sons' }],
+  creator: 'Dinanath & Sons',
+  publisher: 'Dinanath & Sons',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'Dinanath & Sons | Premium Jewelry Tools & Machinery',
+    description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables.',
+    url: 'https://dinanathandsons.com',
+    siteName: 'Dinanath & Sons',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dinanath & Sons | Premium Jewelry Tools & Machinery',
+    description: 'Leading wholesale and retail supplier of professional jewelry making tools.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',

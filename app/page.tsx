@@ -145,6 +145,52 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#020202] flex flex-col overflow-x-hidden selection:bg-amber-500/30">
+      
+      {/* SEO Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://dinanathandsons.com/#organization",
+                "name": "Dinanath & Sons",
+                "url": "https://dinanathandsons.com",
+                "logo": "https://dinanathandsons.com/logo.png",
+                "description": "Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables.",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressCountry": "IN"
+                },
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "contactType": "customer service",
+                  "availableLanguage": ["English", "Hindi"]
+                }
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://dinanathandsons.com/#website",
+                "url": "https://dinanathandsons.com",
+                "name": "Dinanath & Sons",
+                "publisher": {
+                  "@id": "https://dinanathandsons.com/#organization"
+                },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://dinanathandsons.com/shop?q={search_term_string}"
+                  },
+                  "query-input": "required name=search_term_string"
+                }
+              }
+            ]
+          })
+        }}
+      />
 
       {/* Hero Section */}
       <Hero />

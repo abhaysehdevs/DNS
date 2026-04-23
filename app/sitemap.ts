@@ -1,32 +1,57 @@
 import { MetadataRoute } from 'next'
+import { supabase } from '@/lib/supabase'
 
-export const dynamic = 'force-static'
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const baseUrl = 'https://dinanathandsons.com'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-    return [
+    // Static routes
+    const routes: MetadataRoute.Sitemap = [
         {
-            url: 'https://dinanathandsons.com',
+            url: baseUrl,
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 1,
         },
         {
-            url: 'https://dinanathandsons.com/about',
+            url: `${baseUrl}/shop`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/about`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
         },
         {
-            url: 'https://dinanathandsons.com/shop',
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.5,
-        },
-        {
-            url: 'https://dinanathandsons.com/contact',
+            url: `${baseUrl}/contact`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
-            priority: 0.5,
+            priority: 0.8,
         },
     ]
+
+    // Dynamic product routes
+    try {
+        const { data: products } = await supabase
+            .from('products')
+            .select('id, created_at')
+            .eq('in_stock', true)
+
+        if (products) {
+            const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
+                url: `${baseUrl}/shop/${product.id}`,
+                lastModified: new Date(product.created_at || new Date()),
+                changeFrequency: 'monthly',
+                priority: 0.7,
+            }))
+            
+            return [...routes, ...productRoutes]
+        }
+    } catch (error) {
+        console.error('Error generating dynamic sitemap:', error)
+    }
+
+    return routes
 }
