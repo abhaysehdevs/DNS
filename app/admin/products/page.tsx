@@ -25,6 +25,8 @@ interface ProductDB {
     name: string;
     description: string;
     retail_price: number;
+    wholesale_price: number;
+    wholesale_moq: number;
     image: string;
     category: string;
     in_stock: boolean;
@@ -216,6 +218,8 @@ export default function ProductsAdminPage() {
             name: '',
             category: 'Tools',
             retail_price: 0,
+            wholesale_price: 0,
+            wholesale_moq: 1,
             in_stock: true,
             quantity: 0,
             features: [],
@@ -489,7 +493,27 @@ export default function ProductsAdminPage() {
                                                         <ShieldCheck className="text-blue-500 shrink-0" size={24} />
                                                         <div>
                                                             <p className="text-blue-400 text-xs font-black uppercase tracking-widest mb-1">Wholesale Configuration</p>
-                                                            <p className="text-gray-400 text-[10px] leading-relaxed">Wholesale prices are HIDDEN by default. Customers requesting bulk quotations will be automatically routed to your professional WhatsApp channel.</p>
+                                                            <p className="text-gray-400 text-[10px] leading-relaxed mb-4">Wholesale prices are HIDDEN by default. Customers requesting bulk quotations will be automatically routed to your professional WhatsApp channel.</p>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <div className="space-y-2">
+                                                                    <label className="text-[9px] font-black text-gray-500 uppercase">Wholesale Price (₹)</label>
+                                                                    <input 
+                                                                        type="number"
+                                                                        value={currentProduct.wholesale_price || 0}
+                                                                        onChange={e => setCurrentProduct({...currentProduct, wholesale_price: parseFloat(e.target.value)})}
+                                                                        className="w-full bg-black border border-gray-800 rounded-xl p-3 text-xs text-white font-bold"
+                                                                    />
+                                                                </div>
+                                                                <div className="space-y-2">
+                                                                    <label className="text-[9px] font-black text-gray-500 uppercase">Min. Order Qty</label>
+                                                                    <input 
+                                                                        type="number"
+                                                                        value={currentProduct.wholesale_moq || 1}
+                                                                        onChange={e => setCurrentProduct({...currentProduct, wholesale_moq: parseInt(e.target.value)})}
+                                                                        className="w-full bg-black border border-gray-800 rounded-xl p-3 text-xs text-white font-bold"
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

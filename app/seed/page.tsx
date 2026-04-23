@@ -31,7 +31,7 @@ export default function SeedPage() {
                 name: p.name,
                 description: p.description,
                 retail_price: p.retailPrice,
-                wholesale_price: p.wholesalePrice,
+                wholesale_price: p.wholesalePrice || 0,
                 wholesale_moq: p.wholesaleMOQ,
                 image: p.image,
                 category: p.category,

@@ -22,6 +22,7 @@ export interface Product {
     name: string;
     description: string;
     retailPrice: number;
+    wholesalePrice?: number;
     wholesaleMOQ: number;
 
     // Media
