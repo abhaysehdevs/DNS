@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Loader2, Search, Filter, Eye, Truck, CheckCircle, XCircle, Clock, Save, X, Package, ChevronDown, CheckSquare, Square, Download, Printer, Phone, Mail, MapPin, Receipt, CreditCard } from 'lucide-react';
+import { Loader2, Search, Filter, Eye, Truck, CheckCircle, XCircle, Clock, Save, X, Package, ChevronDown, CheckSquare, Square, Download, Printer, Phone, Mail, MapPin, Receipt, CreditCard, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Order {

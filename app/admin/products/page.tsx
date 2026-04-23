@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { 
     Plus, Edit, Trash2, Search, X, Save, Image as ImageIcon, Loader2, 
-    Filter, AlertCircle, CheckCircle, Layers, Box, ChevronDown, 
+    Filter, AlertCircle, CheckCircle, XCircle, Layers, Box, ChevronDown, 
     CheckSquare, Square, MoreHorizontal, Download, Upload, Video, 
     Settings, Info, Zap, Scale, Ruler, ShieldCheck, Tag, Link as LinkIcon 
 } from 'lucide-react';
