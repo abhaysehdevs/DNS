@@ -63,7 +63,7 @@ export function ProductGrid({ products, loading, onClearFilters, displayMode = '
     }
 
     return (
-        <div className={`grid gap-6 animate-fade-in-up ${displayMode === 'list' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+        <div className={`grid gap-3 md:gap-6 animate-fade-in-up ${displayMode === 'list' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} list={displayMode === 'list'} />
             ))}

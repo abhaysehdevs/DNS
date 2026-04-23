@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, ShoppingBag, MessageSquare, User, Menu, Heart } from 'lucide-react';
+import { Home, ShoppingBag, MessageSquare, User, Menu, Heart, Languages } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -11,9 +11,9 @@ export function MobileBottomNav() {
     const navItems = [
         { icon: Home, label: 'Home', href: '/' },
         { icon: ShoppingBag, label: 'Shop', href: '/shop' },
+        { icon: Languages, label: 'Translate', href: '#', isLang: true },
         { icon: MessageSquare, label: 'AI Chat', href: '#', isAction: true },
         { icon: Heart, label: 'Wishlist', href: '/wishlist' },
-        { icon: User, label: 'Profile', href: '/profile' },
     ];
 
     return (
@@ -31,6 +31,9 @@ export function MobileBottomNav() {
                                     e.preventDefault();
                                     // Trigger AI assistant
                                     window.dispatchEvent(new CustomEvent('open-ai-assistant'));
+                                } else if (item.isLang) {
+                                    e.preventDefault();
+                                    window.dispatchEvent(new CustomEvent('open-language-popup'));
                                 }
                             }}
                         >

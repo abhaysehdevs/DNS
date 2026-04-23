@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   title: 'Dinanath & Sons - Premium Jewelry Tools',
   description: 'Wholesale and Retail Jewelry Making Tools & Machinery',
   icons: {
-    icon: '/logo.png',
-    shortcut: '/logo.png',
-    apple: '/logo.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   }
 };
 
