@@ -3,17 +3,15 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, User, ArrowRight, Search, Clock, Tag, Mail } from 'lucide-react';
+import { Calendar, ArrowRight, Search, Clock, Tag, Mail, Sparkles, Zap, ChevronRight } from 'lucide-react';
 import { BLOG_POSTS, BlogPost } from '@/lib/blog-data';
 
 export default function Blog() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState<string>('All');
 
-    // Extract unique categories
     const categories = ['All', ...Array.from(new Set(BLOG_POSTS.map(post => post.category)))];
 
-    // Filter posts
     const filteredPosts = useMemo(() => {
         return BLOG_POSTS.filter((post) => {
             const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -23,225 +21,248 @@ export default function Blog() {
         });
     }, [searchQuery, activeCategory]);
 
-    // Featured post (first one for now)
     const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null;
     const regularPosts = filteredPosts.slice(featuredPost ? 1 : 0);
 
     return (
-        <div className="min-h-screen bg-[#020202] text-white pt-24 pb-20 selection:bg-amber-500/30">
-            {/* Header / Hero */}
-            <div className="container mx-auto px-4 md:px-6 mb-16">
-                <div className="max-w-3xl mx-auto text-center">
+        <div className="min-h-screen bg-[#0A0A0F] text-[#F5F5F7] pt-32 md:pt-48 pb-24 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
+            
+            {/* Ambient Background */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/5 blur-[120px] rounded-full animate-pulse-glow" />
+                <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
+            </div>
+
+            <div className="container mx-auto px-6 relative z-10">
+                
+                {/* Header */}
+                <div className="max-w-4xl mx-auto text-center mb-24">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm font-bold mb-6 uppercase tracking-widest"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="inline-flex items-center gap-3 px-6 py-2 rounded-full glass-gold text-[#C9A84C] text-[9px] font-black uppercase tracking-[0.3em] mb-10"
                     >
-                        Journal & Insights
+                        <Sparkles size={14} /> Industrial Journal
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-black mb-6 tracking-tighter"
+                        className="text-6xl md:text-8xl font-black mb-8 tracking-tighter uppercase leading-[0.85]"
                     >
-                        Mastering <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">The Craft.</span>
+                        Mastering <br />
+                        <span style={{ background: 'linear-gradient(135deg, #F5F5F7, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>The Craft</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-gray-400 text-lg md:text-xl leading-relaxed"
+                        className="text-[#8E8E9A] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-medium"
                     >
-                        Discover expert tutorials, industry news, and cutting-edge machinery guides curated by Dinanath & Sons for jewelry professionals.
+                        Deep-dive technical analysis, metallurgical insights, and factory engineering protocols for the jewelry elite.
                     </motion.p>
                 </div>
-            </div>
 
-            <div className="container mx-auto px-4 md:px-6">
-
-                {/* Search & Filter Bar */}
-                <div className="flex flex-col md:flex-row gap-6 justify-between items-center mb-12 bg-white/5 p-4 rounded-3xl border border-white/10 backdrop-blur-md sticky top-24 z-30">
-
-                    {/* Category Tabs */}
-                    <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
+                {/* Control Bar */}
+                <div className="flex flex-col lg:flex-row gap-8 justify-between items-center mb-16 glass-strong p-4 rounded-[2.5rem] border border-white/[0.04] sticky top-32 z-30">
+                    <div className="flex gap-3 overflow-x-auto w-full lg:w-auto pb-4 lg:pb-0 scrollbar-hide px-2">
                         {categories.map(category => (
                             <button
                                 key={category}
                                 onClick={() => setActiveCategory(category)}
-                                className={`px-5 py-2.5 rounded-full text-sm font-bold capitalize whitespace-nowrap transition-all ${activeCategory === category ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'bg-black/50 text-gray-400 hover:text-white hover:bg-white/10'}`}
+                                className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap transition-all duration-500 ${activeCategory === category ? 'glass-gold text-[#C9A84C] shadow-xl' : 'glass text-[#5A5A6A] hover:text-[#F5F5F7] hover:bg-white/[0.05]'}`}
                             >
                                 {category}
                             </button>
                         ))}
                     </div>
 
-                    {/* Search Bar */}
-                    <div className="relative w-full md:w-80 group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-amber-500 transition-colors" size={18} />
+                    <div className="relative w-full lg:w-[400px] group px-2">
+                        <Search className={`absolute left-8 top-1/2 -translate-y-1/2 transition-all duration-500 ${searchQuery ? 'text-[#C9A84C]' : 'text-[#3A3A4A]'}`} size={18} />
                         <input
                             type="text"
-                            placeholder="Search articles..."
+                            placeholder="Query knowledge base..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-black/50 border border-white/10 rounded-full py-3 pl-12 pr-6 text-sm text-white focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-all placeholder:text-gray-600"
+                            className="w-full h-14 glass rounded-2xl pl-16 pr-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#F5F5F7] focus:outline-none focus:border-[#C9A84C]/30 transition-all placeholder-[#3A3A4A]"
                         />
                     </div>
                 </div>
 
-                {/* Content Area */}
+                {/* Posts Area */}
                 <div className="min-h-[600px]">
-                    {filteredPosts.length === 0 ? (
-                        <div className="text-center py-32 bg-white/5 rounded-3xl border border-white/10">
-                            <h3 className="text-2xl font-bold text-white mb-2">No articles found</h3>
-                            <p className="text-gray-500">Try adjusting your search or category filter.</p>
-                            <button
-                                onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
-                                className="mt-6 text-amber-500 font-bold hover:underline"
+                    <AnimatePresence mode="wait">
+                        {filteredPosts.length === 0 ? (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                className="text-center py-32 glass rounded-[3rem] border-dashed border-white/[0.06]"
                             >
-                                Clear all filters
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            {/* Featured Post (if trying to view all or specifically matching the first) */}
-                            {featuredPost && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="mb-12"
+                                <Zap size={48} className="mx-auto text-[#3A3A4A] mb-8" />
+                                <h3 className="text-2xl font-black text-[#F5F5F7] uppercase tracking-tight mb-4">No matching insights found</h3>
+                                <p className="text-[#5A5A6A] font-medium uppercase text-[10px] tracking-[0.2em]">Adjust your query parameters to find technical data</p>
+                                <button
+                                    onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
+                                    className="mt-8 text-[#C9A84C] font-black uppercase text-[10px] tracking-[0.3em] hover:opacity-70 transition-opacity"
                                 >
-                                    <Link href={`/blog/${featuredPost.id}`} className="group block relative rounded-3xl overflow-hidden bg-gray-900 border border-white/10 hover:border-amber-500/50 transition-all duration-500 hover:shadow-[0_0_40px_rgba(245,158,11,0.1)]">
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[400px]">
-                                            <div className="relative h-64 lg:h-full overflow-hidden">
-                                                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
-                                                <img
-                                                    src={featuredPost.image}
-                                                    alt={featuredPost.title}
-                                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-                                                />
-                                            </div>
-                                            <div className="p-8 md:p-12 flex flex-col justify-center relative bg-[url('/images/noise.png')] bg-repeat opacity-95">
-                                                <div className="flex items-center gap-3 mb-6">
-                                                    <span className="bg-amber-500 text-black text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-wider shadow-sm">
-                                                        {featuredPost.category}
-                                                    </span>
-                                                    <span className="text-amber-500 font-black text-xl leading-none">•</span>
-                                                    <span className="text-xs text-gray-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
-                                                        <Clock size={12} /> {featuredPost.readTime}
-                                                    </span>
-                                                </div>
-
-                                                <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight group-hover:text-amber-500 transition-colors">
-                                                    {featuredPost.title}
-                                                </h2>
-
-                                                <p className="text-gray-400 text-lg mb-8 leading-relaxed line-clamp-3">
-                                                    {featuredPost.excerpt}
-                                                </p>
-
-                                                <div className="mt-auto flex items-center justify-between pt-8 border-t border-white/10">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center font-bold text-white border border-white/10">
-                                                            {featuredPost.author.charAt(0)}
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-sm font-bold text-white">{featuredPost.author}</p>
-                                                            <p className="text-xs text-gray-500">{featuredPost.date}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-black group-hover:border-amber-500 transition-all group-hover:rotate-45">
-                                                        <ArrowRight size={20} />
+                                    Reset Protocol
+                                </button>
+                            </motion.div>
+                        ) : (
+                            <div className="space-y-12">
+                                {/* Featured Post */}
+                                {featuredPost && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="perspective-2000"
+                                    >
+                                        <Link href={`/blog/${featuredPost.id}`} className="group block relative rounded-[3rem] overflow-hidden glass-strong border border-white/[0.04] hover:border-[#C9A84C]/30 transition-all duration-700 hover:shadow-[0_40px_100px_rgba(0,0,0,0.5)]">
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
+                                                <div className="relative h-80 lg:h-auto overflow-hidden">
+                                                    <div className="absolute inset-0 bg-[#0A0A0F]/20 group-hover:bg-transparent transition-colors z-10" />
+                                                    <img
+                                                        src={featuredPost.image}
+                                                        alt={featuredPost.title}
+                                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[2000ms] ease-out"
+                                                    />
+                                                    <div className="absolute top-10 left-10 z-20">
+                                                        <span className="glass-gold text-[#C9A84C] text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-[0.3em] shadow-xl">
+                                                            Featured Content
+                                                        </span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                </motion.div>
-                            )}
+                                                <div className="p-10 md:p-16 flex flex-col justify-center relative">
+                                                    <div className="flex items-center gap-4 mb-8">
+                                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C9A84C]">{featuredPost.category}</span>
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#3A3A4A]" />
+                                                        <span className="text-[9px] text-[#5A5A6A] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                                                            <Clock size={14} /> {featuredPost.readTime}
+                                                        </span>
+                                                    </div>
 
-                            {/* Regular Posts Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                <AnimatePresence mode="popLayout">
+                                                    <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[0.9] uppercase tracking-tighter group-hover:text-[#C9A84C] transition-colors duration-500">
+                                                        {featuredPost.title}
+                                                    </h2>
+
+                                                    <p className="text-[#8E8E9A] text-lg mb-10 leading-relaxed font-medium line-clamp-3">
+                                                        {featuredPost.excerpt}
+                                                    </p>
+
+                                                    <div className="mt-auto flex items-center justify-between pt-10 border-t border-white/[0.04]">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-12 h-12 rounded-2xl glass-gold flex items-center justify-center font-black text-[#0A0A0F] text-sm">
+                                                                {featuredPost.author.charAt(0)}
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-[10px] font-black text-[#F5F5F7] uppercase tracking-[0.2em]">{featuredPost.author}</p>
+                                                                <p className="text-[9px] text-[#5A5A6A] font-black uppercase tracking-[0.2em] mt-1">{featuredPost.date}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="w-16 h-16 rounded-full glass flex items-center justify-center group-hover:bg-[#C9A84C] group-hover:text-[#0A0A0F] transition-all duration-500 group-hover:rotate-45">
+                                                            <ArrowRight size={24} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                )}
+
+                                {/* Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {regularPosts.map((post, i) => (
                                         <motion.div
-                                            layout
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            transition={{ duration: 0.3, delay: i * 0.05 }}
                                             key={post.id}
+                                            initial={{ opacity: 0, y: 30 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: i * 0.1 }}
                                         >
-                                            <Link href={`/blog/${post.id}`} className="group flex flex-col h-full bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden hover:border-amber-500/50 hover:-translate-y-2 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(245,158,11,0.1)]">
-
-                                                <div className="aspect-[16/10] relative overflow-hidden bg-gray-900 shrink-0">
+                                            <Link href={`/blog/${post.id}`} className="group flex flex-col h-full glass rounded-[2.5rem] border border-white/[0.04] overflow-hidden hover:border-[#C9A84C]/30 hover:-translate-y-4 transition-all duration-700">
+                                                <div className="aspect-[16/10] relative overflow-hidden bg-[#0A0A0F] shrink-0">
                                                     <img
                                                         src={post.image}
                                                         alt={post.title}
-                                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                                                     />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
-
-                                                    <div className="absolute top-4 left-4">
-                                                        <span className="bg-black/80 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-wider">
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-transparent to-transparent opacity-60" />
+                                                    <div className="absolute top-6 left-6">
+                                                        <span className="glass-strong text-[#F5F5F7] text-[8px] font-black px-4 py-2 rounded-full uppercase tracking-[0.3em] shadow-xl border border-white/[0.04]">
                                                             {post.category}
                                                         </span>
                                                     </div>
                                                 </div>
 
-                                                <div className="p-6 md:p-8 flex flex-col flex-1 relative">
-                                                    <h3 className="text-xl md:text-2xl font-bold mb-4 group-hover:text-amber-500 transition-colors leading-snug line-clamp-2">
+                                                <div className="p-10 flex flex-col flex-1 relative">
+                                                    <div className="flex items-center gap-4 mb-6">
+                                                        <div className="flex items-center gap-2 text-[8px] font-black text-[#5A5A6A] uppercase tracking-[0.25em]">
+                                                            <Calendar size={14} className="text-[#C9A84C]" /> {post.date}
+                                                        </div>
+                                                        <div className="w-1 h-1 rounded-full bg-[#3A3A4A]" />
+                                                        <div className="flex items-center gap-2 text-[8px] font-black text-[#5A5A6A] uppercase tracking-[0.25em]">
+                                                            <Clock size={14} className="text-[#C9A84C]" /> {post.readTime}
+                                                        </div>
+                                                    </div>
+
+                                                    <h3 className="text-2xl font-black text-[#F5F5F7] mb-6 group-hover:text-[#C9A84C] transition-colors leading-tight uppercase tracking-tight line-clamp-2">
                                                         {post.title}
                                                     </h3>
 
-                                                    <p className="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                                                    <p className="text-[#8E8E9A] text-sm mb-10 line-clamp-3 leading-relaxed font-medium">
                                                         {post.excerpt}
                                                     </p>
 
-                                                    <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
-                                                        <div className="flex items-center gap-2 text-xs text-gray-500 font-semibold uppercase tracking-widest">
-                                                            <Calendar size={14} className="text-amber-500" />
-                                                            {post.date}
-                                                        </div>
-                                                        <div className="text-xs text-gray-500 font-semibold uppercase tracking-widest flex items-center gap-1.5">
-                                                            <Clock size={14} className="text-amber-500" />
-                                                            {post.readTime}
-                                                        </div>
+                                                    <div className="mt-auto pt-6 flex items-center justify-between border-t border-white/[0.04]">
+                                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C] group-hover:translate-x-2 transition-transform duration-500">Read Journal</span>
+                                                        <ChevronRight size={16} className="text-[#5A5A6A] group-hover:text-[#C9A84C] group-hover:translate-x-1 transition-all" />
                                                     </div>
                                                 </div>
                                             </Link>
                                         </motion.div>
                                     ))}
-                                </AnimatePresence>
+                                </div>
                             </div>
-                        </>
-                    )}
+                        )}
+                    </AnimatePresence>
                 </div>
 
-                {/* Newsletter Box */}
-                <div className="mt-24 p-8 md:p-12 rounded-3xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-transparent relative overflow-hidden text-center max-w-4xl mx-auto">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/20 blur-[100px] rounded-full pointer-events-none" />
-                    <Mail size={40} className="mx-auto text-amber-500 mb-6" />
-                    <h3 className="text-3xl md:text-4xl font-black text-white mb-4">Stay at the Forefront</h3>
-                    <p className="text-gray-400 max-w-lg mx-auto mb-8 text-lg">
-                        Get the latest metallurgical insights, machinery reviews, and exclusive factory tours delivered directly to your inbox.
-                    </p>
+                {/* Premium Newsletter */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="mt-40 glass-strong p-12 md:p-20 rounded-[4rem] border border-[#C9A84C]/10 relative overflow-hidden text-center max-w-5xl mx-auto"
+                >
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-[#C9A84C]/10 blur-[120px] rounded-full pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+                    
+                    <div className="relative z-10">
+                        <div className="w-20 h-20 glass-gold rounded-3xl flex items-center justify-center mx-auto mb-10 shadow-2xl">
+                            <Mail size={32} className="text-[#0A0A0F]" />
+                        </div>
+                        <h3 className="text-4xl md:text-6xl font-black text-[#F5F5F7] mb-6 uppercase tracking-tighter leading-none">Stay at the <br /><span style={{ background: 'linear-gradient(135deg, #E8D48B, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Forefront</span></h3>
+                        <p className="text-[#8E8E9A] max-w-xl mx-auto mb-12 text-lg font-medium leading-relaxed">
+                            Acquire the latest metallurgical insights, machinery reviews, and exclusive factory protocols delivered directly to your workstation.
+                        </p>
 
-                    <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-                        <input
-                            type="email"
-                            placeholder="Your email address"
-                            required
-                            className="flex-1 bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-amber-500 transition-colors"
-                        />
-                        <button
-                            type="submit"
-                            className="bg-amber-500 hover:bg-amber-400 text-black font-black px-8 py-4 rounded-xl transition-colors whitespace-nowrap"
-                        >
-                            Subscribe
-                        </button>
-                    </form>
-                </div>
+                        <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
+                            <input
+                                type="email"
+                                placeholder="DIGITAL ADDRESS"
+                                required
+                                className="flex-1 h-18 bg-white/[0.02] border border-white/[0.06] rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] text-[#F5F5F7] focus:outline-none focus:border-[#C9A84C]/30 transition-all placeholder-[#3A3A4A]"
+                            />
+                            <button
+                                type="submit"
+                                className="h-18 glass-gold text-[#0A0A0F] font-black px-10 rounded-2xl text-[10px] uppercase tracking-[0.3em] transition-all hover:shadow-2xl hover:-translate-y-1 active:scale-95"
+                            >
+                                Synchronize
+                            </button>
+                        </form>
+                    </div>
+                </motion.div>
 
             </div>
         </div>

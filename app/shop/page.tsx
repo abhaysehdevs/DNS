@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, Suspense, useRef } from 'react';
@@ -7,8 +6,8 @@ import { Product } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import {
-    Search, Filter, ArrowUpDown, X, LayoutGrid, List, Sparkles,
-    ChevronRight, SlidersHorizontal, Settings2, ChevronDown
+    Search, X, LayoutGrid, List,
+    ChevronRight, Settings2, ChevronDown, Sparkles
 } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -16,7 +15,7 @@ import { PersonalizedRecommendations } from '@/components/personalized-grid';
 import { SearchAutocomplete } from '@/components/search-autocomplete';
 import { FilterSidebar } from '@/components/shop/filter-sidebar';
 import { ProductGrid } from '@/components/shop/product-grid';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 
 function ShopContent() {
     const { mode, language } = useAppStore();
@@ -34,7 +33,7 @@ function ShopContent() {
     // Filter & Search State
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-    const [priceRange, setPriceRange] = useState(100000);
+    const [priceRange, setPriceRange] = useState(500000);
     const [minPrice, setMinPrice] = useState(0);
     const [sortBy, setSortBy] = useState('featured');
 
@@ -44,6 +43,8 @@ function ShopContent() {
     const [displayMode, setDisplayMode] = useState<'grid' | 'list'>('grid');
 
     const searchContainerRef = useRef<HTMLDivElement>(null);
+    const { scrollY } = useScroll();
+    const headerY = useTransform(scrollY, [0, 200], [0, -20]);
 
     // Initial Data Fetch
     useEffect(() => {
@@ -81,7 +82,6 @@ function ShopContent() {
             } catch (err) {
                 console.error("Fetch failed", err);
             } finally {
-                await new Promise(r => setTimeout(r, 600));
                 setLoading(false);
             }
         }
@@ -108,7 +108,7 @@ function ShopContent() {
     const handleClearFilters = () => {
         setSelectedCategory('All');
         setSearchQuery('');
-        setPriceRange(100000);
+        setPriceRange(500000);
         setMinPrice(0);
         router.push('/shop', { scroll: false });
     };
@@ -134,36 +134,52 @@ function ShopContent() {
         });
 
     return (
-        <div className="min-h-screen bg-[#020202] text-white pt-24 md:pt-32 pb-24 selection:bg-amber-500/30 overflow-x-hidden">
-
-            {/* Elegant Background Accents */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-500/5 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
+        <div className="min-h-screen bg-[#FFFFFF] text-[#1D1D1F] pt-40 md:pt-60 pb-24 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
+            
+            {/* Ambient Background Elements */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/5 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
             </div>
 
-            <div className="container mx-auto px-4 md:px-6 relative z-10">
-
-                {/* Top Section: Breadcrumbs & Mode */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                    <div className="flex items-center gap-2">
-                        <Link href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Home</Link>
-                        <ChevronRight size={14} className="text-gray-600" />
-                        <span className="text-sm font-medium text-amber-500">Shop</span>
+            <div className="container mx-auto px-4 md:px-8 relative z-10">
+                
+                {/* Header Section */}
+                <motion.div style={{ y: headerY }} className="mb-16">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Link href="/" className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A5A6A] hover:text-[#C9A84C] transition-colors">Home</Link>
+                        <ChevronRight size={12} className="text-[#3A3A4A]" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A84C]">Technical Inventory</span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-400">
-                            {isRetail ? 'Retail Mode' : 'B2B Wholesale Mode'}
-                        </span>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div>
+                            <motion.div 
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm"
+                            >
+                                <Sparkles size={12} className="animate-pulse" /> Global Standard Equipment
+                            </motion.div>
+                            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[0.9] uppercase text-[#1D1D1F]">
+                                Our <span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Collection</span>
+                            </h1>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <div className={`px-5 py-2 rounded-2xl glass border border-black/[0.04] text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-sm ${isRetail ? 'text-[#C9A84C]' : 'text-blue-600'}`}>
+                                <div className={`w-2 h-2 rounded-full animate-pulse ${isRetail ? 'bg-[#C9A84C]' : 'bg-blue-600'}`} />
+                                {isRetail ? 'Retail Shop' : 'Wholesale Shop'}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-
-                    {/* Left Column: Fixed Categories & Filters on Desktop */}
-                    <aside className="hidden lg:block lg:w-[280px] shrink-0" style={{ width: '280px', flexShrink: 0 }}>
-                        <div className="sticky top-28 space-y-8">
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                    
+                    {/* Left Sidebar */}
+                    <aside className="hidden lg:block w-[320px] shrink-0">
+                        <div className="sticky top-40 space-y-8">
                             <FilterSidebar
                                 categories={categories}
                                 selectedCategories={[selectedCategory]}
@@ -174,36 +190,45 @@ function ShopContent() {
                                 setMinPrice={setMinPrice}
                                 isRetail={isRetail}
                             />
+
+                            {/* Additional Info Block */}
+                            <div className="glass-strong rounded-3xl p-8 relative overflow-hidden shadow-xl">
+                                <div className="absolute -right-8 -top-8 w-24 h-24 bg-[#C9A84C]/10 rounded-full blur-2xl" />
+                                <h4 className="text-sm font-black text-[#1D1D1F] mb-4 uppercase tracking-[0.1em]">Factory Direct</h4>
+                                <p className="text-xs text-[#6E6E73] leading-relaxed mb-6 font-medium">
+                                    All machinery is certified for high-precision manufacturing. Contact our technical team for custom factory layouts.
+                                </p>
+                                <button className="text-[10px] font-black text-[#C9A84C] uppercase tracking-[0.2em] flex items-center gap-2 group">
+                                    Technical Specs <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
                         </div>
                     </aside>
 
-                    {/* Right Column: Content */}
-                    <main className="flex-1 min-w-0" style={{ flex: 1, minWidth: 0 }}>
-
-                        {/* Header & Search */}
-                        <div className="mb-8">
-                            <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-white">
-                                Shop <span className="text-amber-500 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Products</span>
-                            </h1>
-
-                            <div className="flex flex-col md:flex-row gap-4 items-center bg-gray-900/50 p-2 rounded-2xl border border-white/10">
-                                {/* Search Entry */}
-                                <div className="flex-1 relative group h-12 w-full" ref={searchContainerRef}>
-                                    <div className="relative h-full flex items-center">
-                                        <Search className={`absolute left-4 transition-colors duration-300 ${isSearchFocused ? 'text-amber-500' : 'text-gray-500'}`} size={20} />
+                    {/* Main Content Area */}
+                    <main className="flex-1 min-w-0">
+                        
+                        {/* Search & Sort Bar */}
+                        <div className="mb-12">
+                            <div className="flex flex-col md:flex-row gap-4 items-center glass-strong p-3 rounded-[2rem] border border-black/[0.04] shadow-2xl relative z-50 bg-white/80">
+                                
+                                {/* Refined Search */}
+                                <div className="flex-1 relative w-full" ref={searchContainerRef}>
+                                    <div className="relative h-14 flex items-center">
+                                        <Search className={`absolute left-6 transition-all duration-500 ${isSearchFocused ? 'text-[#C9A84C] scale-110' : 'text-[#86868B]'}`} size={20} />
                                         <input
                                             type="text"
-                                            placeholder="Search products..."
+                                            placeholder="Query inventory (e.g. Casting, Polishing, Pliers)..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             onFocus={() => setIsSearchFocused(true)}
                                             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                            className="w-full h-full bg-transparent pl-12 pr-12 text-base placeholder-gray-500 text-white focus:outline-none transition-all"
+                                            className="w-full h-full bg-transparent pl-16 pr-12 text-sm font-black placeholder-[#86868B] text-[#1D1D1F] focus:outline-none transition-all"
                                         />
                                         {searchQuery && (
                                             <button
                                                 onClick={() => setSearchQuery('')}
-                                                className="absolute right-4 p-1.5 rounded-lg bg-white/5 text-gray-400 hover:text-white transition-colors"
+                                                className="absolute right-6 w-8 h-8 rounded-full glass flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] transition-all"
                                             > <X size={14} /> </button>
                                         )}
                                     </div>
@@ -214,56 +239,57 @@ function ShopContent() {
                                     />
                                 </div>
 
-                                {/* Control Actions */}
-                                <div className="flex items-center gap-3 w-full md:w-auto px-2 border-t md:border-t-0 md:border-l border-white/10 md:pl-4 pt-2 md:pt-0">
-                                    {/* Mobile Filter Trigger */}
+                                {/* Controls */}
+                                <div className="flex items-center gap-3 w-full md:w-auto md:pl-4 md:border-l border-black/[0.04]">
+                                    {/* Mobile Toggle */}
                                     <button
                                         onClick={() => setShowFilters(true)}
-                                        className="lg:hidden flex-1 h-10 px-4 bg-amber-500 text-black rounded-lg font-bold text-sm tracking-wide hover:bg-amber-400 transition-all flex items-center justify-center gap-2"
+                                        className="lg:hidden flex-1 h-14 px-6 glass-gold text-[#0A0A0F] rounded-2xl font-black text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-3 uppercase shadow-lg"
+                                        style={{ background: 'linear-gradient(135deg, #E8D48B, #C9A84C)' }}
                                     >
                                         <Settings2 size={16} /> Filters
                                     </button>
 
-                                    {/* Layout Toggle (Desktop) */}
-                                    <div className="hidden md:flex items-center bg-black/40 rounded-lg p-1 border border-white/5">
+                                    {/* View Toggles */}
+                                    <div className="hidden md:flex items-center glass rounded-2xl p-1.5 border border-black/[0.04]">
                                         <button
                                             onClick={() => setDisplayMode('grid')}
-                                            className={`p-1.5 rounded-md transition-all ${displayMode === 'grid' ? 'bg-amber-500 text-black shadow-sm shadow-amber-500/20' : 'text-gray-600 hover:text-white'}`}
-                                        > <LayoutGrid size={16} /> </button>
+                                            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${displayMode === 'grid' ? 'glass-gold text-[#C9A84C] shadow-lg' : 'text-[#86868B] hover:text-[#1D1D1F]'}`}
+                                        > <LayoutGrid size={18} /> </button>
                                         <button
                                             onClick={() => setDisplayMode('list')}
-                                            className={`p-1.5 rounded-md transition-all ${displayMode === 'list' ? 'bg-amber-500 text-black shadow-sm shadow-amber-500/20' : 'text-gray-600 hover:text-white'}`}
-                                        > <List size={16} /> </button>
+                                            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${displayMode === 'list' ? 'glass-gold text-[#C9A84C] shadow-lg' : 'text-[#86868B] hover:text-[#1D1D1F]'}`}
+                                        > <List size={18} /> </button>
                                     </div>
 
-                                    {/* Sort logic */}
-                                    <div className="flex relative group min-w-[140px] h-10 items-center bg-gray-800 rounded-lg px-4 md:px-0 md:bg-transparent">
+                                    {/* Sort Custom Select */}
+                                    <div className="relative min-w-[180px] h-14 flex items-center glass rounded-2xl px-6 border border-black/[0.04] bg-white">
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="w-full bg-transparent text-sm font-semibold text-white appearance-none pr-8 cursor-pointer outline-none md:pl-2"
+                                            className="w-full bg-transparent text-[10px] font-black uppercase tracking-[0.15em] text-[#1D1D1F] appearance-none cursor-pointer outline-none"
                                         >
-                                            <option value="featured" className="bg-gray-900 text-white">Featured</option>
-                                            <option value="priceAsc" className="bg-gray-900 text-white">Price: Low to High</option>
-                                            <option value="priceDesc" className="bg-gray-900 text-white">Price: High to Low</option>
-                                            <option value="nameAsc" className="bg-gray-900 text-white">Name: A-Z</option>
+                                            <option value="featured" className="bg-white text-[#1D1D1F]">Featured</option>
+                                            <option value="priceAsc" className="bg-white text-[#1D1D1F]">Price: ASC</option>
+                                            <option value="priceDesc" className="bg-white text-[#1D1D1F]">Price: DESC</option>
+                                            <option value="nameAsc" className="bg-white text-[#1D1D1F]">Name: A-Z</option>
                                         </select>
-                                        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                        <ChevronDown size={14} className="absolute right-6 text-[#86868B] pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Status Strip */}
-                        <div className="flex items-center justify-between mb-6 px-1">
-                            <span className="text-sm font-medium text-gray-400">
-                                Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
-                                {selectedCategory !== 'All' && <span> in <span className="text-amber-500">{selectedCategory}</span></span>}
+                        {/* Status Line */}
+                        <div className="flex items-center justify-between mb-10 px-4">
+                            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#86868B]">
+                                Results Found: <span className="text-[#1D1D1F] ml-2">{filteredProducts.length} Items</span>
+                                {selectedCategory !== 'All' && <span className="ml-4">Category: <span className="text-[#C9A84C]">{selectedCategory}</span></span>}
                             </span>
                         </div>
 
-                        {/* Product Workspace */}
-                        <div className="relative">
+                        {/* Grid */}
+                        <div className="relative pb-24">
                             <ProductGrid
                                 products={filteredProducts}
                                 loading={loading}
@@ -272,9 +298,9 @@ function ShopContent() {
                             />
                         </div>
 
-                        {/* Deep Recommendations */}
+                        {/* Deep Content */}
                         {selectedCategory === 'All' && !searchQuery && !loading && (
-                            <div className="mt-32 pt-24 border-t border-white/5 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                            <div className="mt-20 pt-20 border-t border-white/[0.04]">
                                 <PersonalizedRecommendations />
                             </div>
                         )}
@@ -282,7 +308,7 @@ function ShopContent() {
                 </div>
             </div>
 
-            {/* Mobile Selection Drawer */}
+            {/* Mobile Filter Layer */}
             <AnimatePresence>
                 {showFilters && (
                     <>
@@ -291,22 +317,22 @@ function ShopContent() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowFilters(false)}
-                            className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[200]"
+                            className="fixed inset-0 bg-[#06060C]/90 backdrop-blur-2xl z-[200]"
                         />
                         <motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 35, stiffness: 400 }}
-                            className="fixed inset-y-0 right-0 w-full max-w-sm bg-[#050505] border-l border-white/10 z-[210] shadow-[0_0_100px_rgba(0,0,0,1)] flex flex-col pt-24"
+                            className="fixed inset-y-0 right-0 w-full max-w-sm bg-[#0A0A0F] border-l border-white/[0.06] z-[210] shadow-[0_0_100px_rgba(0,0,0,1)] flex flex-col pt-24"
                         >
-                            <div className="p-6 flex items-center justify-between border-b border-gray-800">
-                                <h3 className="text-xl font-bold text-white">Filters</h3>
-                                <button onClick={() => setShowFilters(false)} className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-white hover:bg-gray-800 transition-all">
-                                    <X size={20} />
+                            <div className="p-8 flex items-center justify-between border-b border-white/[0.04]">
+                                <h3 className="text-2xl font-black text-[#F5F5F7] uppercase tracking-tight">Parameters</h3>
+                                <button onClick={() => setShowFilters(false)} className="w-12 h-12 rounded-full glass flex items-center justify-center text-[#5A5A6A] hover:text-[#F5F5F7] transition-all">
+                                    <X size={24} />
                                 </button>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                            <div className="flex-1 overflow-y-auto p-8 scrollbar-hide">
                                 <FilterSidebar
                                     categories={categories}
                                     selectedCategories={[selectedCategory]}
@@ -319,34 +345,30 @@ function ShopContent() {
                                     className="bg-transparent border-none shadow-none"
                                 />
                             </div>
-                            <div className="p-6 bg-gray-900 border-t border-gray-800">
+                            <div className="p-8 glass border-t border-white/[0.04]">
                                 <button
                                     onClick={() => setShowFilters(false)}
-                                    className="w-full py-4 bg-amber-500 text-black font-bold rounded-xl hover:bg-amber-400 transition-all shadow-lg"
+                                    className="w-full h-16 glass-gold text-[#C9A84C] font-black rounded-[1.5rem] hover:bg-[#C9A84C]/10 transition-all shadow-xl uppercase tracking-[0.2em] text-[10px]"
                                 >
-                                    Apply Filters
+                                    Confirm Configuration
                                 </button>
                             </div>
                         </motion.div>
                     </>
                 )}
             </AnimatePresence>
-
-            <style jsx global>{`
-                .selection\\:bg-amber-500\\/30 ::selection { background-color: rgba(245, 158, 11, 0.3); }
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
-            `}</style>
         </div>
     );
 }
 
 export default function ShopPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#020202] flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-amber-500/20 border-t-amber-500 animate-spin" />
-        </div>}>
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#0A0A0F] flex flex-col items-center justify-center gap-6">
+                <div className="w-12 h-12 rounded-full border-2 border-[#C9A84C]/10 border-t-[#C9A84C] animate-spin" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C]">Accessing Inventory</span>
+            </div>
+        }>
             <ShopContent />
         </Suspense>
     );

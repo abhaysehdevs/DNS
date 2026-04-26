@@ -25,15 +25,19 @@ export function Ticker() {
     }, []);
 
     return (
-        <div className="bg-amber-900/20 border-b border-amber-900/10 h-10 overflow-hidden relative flex items-center justify-center">
+        <div className="h-9 overflow-hidden relative flex items-center justify-center"
+            style={{
+                background: 'rgba(201, 168, 76, 0.04)',
+                borderBottom: '1px solid rgba(201, 168, 76, 0.06)'
+            }}>
             <AnimatePresence mode="wait">
                 <motion.div
                     key={index}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -20, opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-xs md:text-sm font-medium text-amber-500 flex items-center gap-2"
+                    transition={{ duration: 0.4 }}
+                    className="text-[11px] md:text-xs font-medium text-[#C9A84C] flex items-center gap-2"
                 >
                     {messages[index]}
                 </motion.div>

@@ -82,7 +82,7 @@ export function AIAssistant() {
         if (lowerQuery.includes('casting') || lowerQuery.includes('machine') || lowerQuery.includes('furnace')) {
             return (
                 <div className="space-y-4">
-                    <p className="text-gray-200">Our <strong>High-Precision Casting Hub</strong> features state-of-the-art vacuum casting machines and gold-melting furnaces designed for zero-oxygen environments. This ensures maximum metal purity and minimal porosity in your master models.</p>
+                    <p className="text-gray-200">Our <strong>Professional Casting Tools</strong> include high-quality vacuum casting machines and gold melting furnaces. These are designed to ensure your metals are melted perfectly with minimal waste.</p>
                     <div className="grid grid-cols-2 gap-2">
                         <Link href="/shop?category=Machinery" className="bg-gray-800 p-3 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-blue-600 transition-colors">Machinery</Link>
                         <Link href="/shop?category=Consumables" className="bg-gray-800 p-3 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-amber-600 transition-colors">Consumables</Link>
@@ -95,7 +95,7 @@ export function AIAssistant() {
         if (lowerQuery.includes('shipping') || lowerQuery.includes('delivery') || lowerQuery.includes('track')) {
             return (
                 <div className="space-y-4">
-                    <p className="text-gray-200">We utilize <strong>Enterprise-Grade Logistics</strong> for heavy machinery and precision tools. All shipments are insured and come with detailed calibration certificates where applicable.</p>
+                    <p className="text-gray-200">We provide <strong>Reliable Shipping</strong> for all our tools and machinery. Every order is carefully packed and insured to ensure it reaches you in perfect condition.</p>
                     <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-[1.5rem] flex items-center gap-4">
                         <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shrink-0">
                             <Truck className="text-white" size={20} />
@@ -113,7 +113,7 @@ export function AIAssistant() {
         if (lowerQuery.includes('wholesale') || lowerQuery.includes('bulk') || lowerQuery.includes('quote') || lowerQuery.includes('quotation')) {
             return (
                 <div className="space-y-4">
-                    <p className="text-gray-200">Dinanath & Sons specializes in <strong>B2B Fulfillment</strong>. We provide tiered pricing for large-scale jewelry manufacturing units and regional distributors.</p>
+                    <p className="text-gray-200">Dinanath & Sons offers special <strong>Wholesale Pricing</strong> for bulk orders. We support jewelry factories and distributors with the best rates in the industry.</p>
                     <a href="https://wa.me/91XXXXXXXXXX?text=I'm interested in a wholesale quotation for jewelry tools." target="_blank" rel="noopener noreferrer" className="block w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-2xl text-center font-black uppercase text-xs tracking-widest shadow-xl shadow-green-900/20 transition-all">
                         Connect with Trade Desk
                     </a>
@@ -131,7 +131,7 @@ export function AIAssistant() {
         if (matches.length > 0) {
             return (
                 <div className="space-y-4">
-                    <p className="text-gray-200">I've located these <strong>Professional-Grade Instruments</strong> matching your requirements:</p>
+                    <p className="text-gray-200">I found these <strong>High-Quality Tools</strong> that match what you're looking for:</p>
                     <div className="space-y-3">
                         {matches.map(p => (
                             <Link href={`/shop/${p.id}`} key={p.id} className="flex gap-4 bg-gray-900/50 border border-gray-800 p-3 rounded-2xl hover:border-blue-500/50 transition-all group">
@@ -152,7 +152,7 @@ export function AIAssistant() {
         // 5. Fallback (Expert Tone)
         return (
             <div className="space-y-2">
-                <p>I couldn't locate specific data for that request. However, as an <strong>Industry Specialist</strong>, I recommend exploring our 'Shop' for specialized stone-setting and polishing equipment.</p>
+                <p>I couldn't find exactly what you're looking for. However, as your <strong>Expert Guide</strong>, I recommend checking our Shop for the latest jewelry tools and machinery.</p>
                 <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Tip: Try searching for 'Machinery' or 'Hand Tools'.</p>
             </div>
         );
@@ -161,9 +161,9 @@ export function AIAssistant() {
     const isMobile = useIsMobile();
     const suggestions = [
         { label: '🔥 Best Selling Tools', icon: <TrendingUp size={12}/> },
-        { label: '📦 Shipping & Delivery', icon: <Truck size={12}/> },
-        { label: '💎 Wholesale Quotation', icon: <MessageCircle size={12}/> },
-        { label: '🛠️ New Arrivals', icon: <Sparkles size={12}/> }
+        { label: '📦 Shipping Info', icon: <Truck size={12}/> },
+        { label: '💎 Wholesale Price', icon: <MessageCircle size={12}/> },
+        { label: '🛠️ New Tools', icon: <Sparkles size={12}/> }
     ];
 
     const handleSuggestionClick = (label: string) => {
@@ -218,7 +218,7 @@ export function AIAssistant() {
                                     <h3 className="font-black text-white text-lg tracking-tight">Dinanath AI <span className="text-[10px] bg-blue-600 px-1.5 py-0.5 rounded ml-1 uppercase">Pro</span></h3>
                                     <div className="flex items-center gap-1.5 mt-0.5">
                                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Intelligence Sync</span>
+                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Online and Ready to Help</span>
                                     </div>
                                 </div>
                             </div>
@@ -297,7 +297,7 @@ export function AIAssistant() {
                                 </button>
                             </form>
                             <p className="text-[9px] text-gray-600 text-center mt-3 font-bold uppercase tracking-widest">
-                                Dinanath Intelligence • V2.0 Global Cloud Sync
+                                Dinanath Support • Always Online
                             </p>
                         </div>
                     </motion.div>

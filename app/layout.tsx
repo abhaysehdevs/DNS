@@ -23,30 +23,30 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinanathandsons.com'),
   title: {
-    default: 'Dinanath & Sons | Premium Jewelry Tools & Machinery',
-    template: '%s | Dinanath & Sons'
+    default: "Dinanath's | Premium Jewelry Tools & Machinery",
+    template: "%s | Dinanath's"
   },
   description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables. Precision tooling for jewelers across India.',
-  keywords: ['jewelry tools', 'jewelry machinery', 'wholesale jewelry tools', 'precision tooling', 'goldsmith tools', 'jewelry manufacturing equipment', 'Dinanath & Sons'],
-  authors: [{ name: 'Dinanath & Sons' }],
-  creator: 'Dinanath & Sons',
-  publisher: 'Dinanath & Sons',
+  keywords: ['jewelry tools', 'jewelry machinery', 'wholesale jewelry tools', 'precision tooling', 'goldsmith tools', 'jewelry manufacturing equipment', "Dinanath's"],
+  authors: [{ name: "Dinanath's" }],
+  creator: "Dinanath's",
+  publisher: "Dinanath's",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: 'Dinanath & Sons | Premium Jewelry Tools & Machinery',
+    title: "Dinanath's | Premium Jewelry Tools & Machinery",
     description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables.',
     url: 'https://dinanathandsons.com',
-    siteName: 'Dinanath & Sons',
+    siteName: "Dinanath's",
     locale: 'en_IN',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dinanath & Sons | Premium Jewelry Tools & Machinery',
+    title: "Dinanath's | Premium Jewelry Tools & Machinery",
     description: 'Leading wholesale and retail supplier of professional jewelry making tools.',
   },
   robots: {
@@ -70,9 +70,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: '#000000',
-  userScalable: false,
+  themeColor: '#FFFFFF',
 };
 
 export default function RootLayout({
@@ -81,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="light">
       <head>
         {/* Google tag (gtag.js) */}
         <Script
@@ -97,7 +95,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={cn(inter.variable, notoSansDevanagari.variable, "font-sans antialiased bg-black min-h-screen flex flex-col")}>
+      <body className={cn(inter.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col")} style={{ background: '#FFFFFF' }}>
         <CurrencyManager />
         <GoogleTranslate />
         <Preloader />

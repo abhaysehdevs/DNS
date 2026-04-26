@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Package, ShoppingCart, Users, Settings, Home, LayoutDashboard, Database, Bell, Check, Trash2, LogOut, X, Menu, Grid, Layout } from 'lucide-react';
+import { Package, ShoppingCart, Users, Settings, Home, LayoutDashboard, Database, Bell, Check, Trash2, LogOut, X, Menu, Grid, Layout, Tag } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -129,6 +129,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Products', href: '/admin/products', icon: Package },
         { name: 'Categories', href: '/admin/categories', icon: Grid },
         { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+        { name: 'Coupons', href: '/admin/coupons', icon: Tag },
         { name: 'Customers', href: '/admin/customers', icon: Users },
         { name: 'Store CMS', href: '/admin/cms', icon: Layout },
         { name: 'Settings', href: '/admin/settings', icon: Settings },

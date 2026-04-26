@@ -1,26 +1,27 @@
-
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { ShieldCheck, Sparkles } from 'lucide-react';
 
 export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
     const [counter, setCounter] = useState(0);
+    const [isComplete, setIsComplete] = useState(false);
 
     useEffect(() => {
-        // Faster counter: 100% in ~300ms
         const interval = setInterval(() => {
             setCounter(prev => {
-                if (prev < 100) return prev + 10;
+                if (prev < 100) return prev + 2;
                 clearInterval(interval);
                 return 100;
             });
         }, 15);
 
         const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 250); // Intro cut-off at 250ms
+            setIsComplete(true);
+            setTimeout(() => setIsLoading(false), 800);
+        }, 2200);
 
         return () => {
             clearInterval(interval);
@@ -32,97 +33,90 @@ export function Preloader() {
         <AnimatePresence>
             {isLoading && (
                 <motion.div
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#FFFFFF] overflow-hidden"
                     initial={{ opacity: 1 }}
-                    exit={{
-                        opacity: 0,
-                        transition: { duration: 0.3, ease: 'easeInOut' }
-                    }}
-                    className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050505] overflow-hidden"
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                 >
-                    {/* Minimalist Tech Background */}
-                    <div className="absolute inset-0 z-0 pointer-events-none">
-                        <div
-                            className="absolute inset-0 opacity-[0.03]"
-                            style={{
-                                backgroundImage: `radial-gradient(circle at center, #ffffff 1px, transparent 1px)`,
-                                backgroundSize: '40px 40px'
-                            }}
-                        />
+                    {/* Dynamic Background */}
+                    <div className="absolute inset-0">
+                        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#C9A84C]/5 blur-[120px] rounded-full" />
+                        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-500/5 blur-[120px] rounded-full" />
                     </div>
 
                     <div className="relative z-10 flex flex-col items-center">
-                        {/* Elegant Ambient Glow */}
-                        <motion.div
-                            animate={{ opacity: [0.1, 0.2, 0.1] }}
-                            transition={{ duration: 1, repeat: Infinity }}
-                            className="absolute w-64 h-64 bg-amber-500 rounded-full blur-[120px] -z-10"
-                        />
-
-                        {/* Logo Reveal */}
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 10 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative"
-                        >
-                            <img
-                                src="/images/logo.png"
-                                alt="Dinanath Logo"
-                                className="h-16 md:h-20 w-auto object-contain"
-                            />
-
-                            {/* Sharp Shine Sweep */}
+                        <div className="mb-12 relative">
                             <motion.div
-                                animate={{ left: ['-100%', '200%'] }}
-                                transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[30deg]"
-                            />
-                        </motion.div>
-
-                        {/* Brand Typography */}
-                        <div className="mt-6 text-center flex flex-col items-center">
-                            <motion.h1
-                                initial={{ opacity: 0, letterSpacing: '0.2em' }}
-                                animate={{ opacity: 1, letterSpacing: '0.4em' }}
-                                transition={{ duration: 0.3 }}
-                                className="text-white text-lg md:text-xl font-black uppercase tracking-[0.4em]"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 1, ease: "easeOut" }}
+                                className="w-24 h-24 md:w-32 md:h-32 rounded-3xl glass-strong border border-black/10 flex items-center justify-center shadow-2xl bg-white"
                             >
-                                DINANATH & SONS
-                            </motion.h1>
-
-                            {/* Accent Line */}
-                            <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: 40 }}
-                                transition={{ delay: 0.1, duration: 0.2 }}
-                                className="h-[2px] bg-amber-500 my-3"
+                                <img src="/images/logo.png" alt="Dinanath's" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                            </motion.div>
+                            
+                            {/* Scanning line effect */}
+                            <motion.div 
+                                animate={{ top: ['0%', '100%', '0%'] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                className="absolute left-0 right-0 h-0.5 bg-[#C9A84C]/30 z-20 blur-[1px]"
                             />
-
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 0.6 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-[9px] text-white font-bold uppercase tracking-[0.3em]"
-                            >
-                                Precision • Power • Performance
-                            </motion.p>
-
-                        {/* Minimalist Progress Indicator */}
-                        <div className="mt-10 w-40 flex flex-col items-center">
-                            <div className="flex justify-between w-full mb-1 text-[8px] font-mono text-gray-500 uppercase tracking-widest">
-                                <span>Syncing</span>
-                                <span className="text-amber-500">{counter}%</span>
-                            </div>
-                            <div className="h-[1px] w-full bg-white/5 relative overflow-hidden">
-                                <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${counter}%` }}
-                                    className="h-full bg-amber-500"
-                                />
-                            </div>
                         </div>
+
+                        <div className="flex flex-col items-center overflow-hidden">
+                            <motion.h2 
+                                className="text-3xl md:text-5xl font-black text-[#1D1D1F] tracking-tighter uppercase mb-4"
+                                initial={{ y: 100 }}
+                                animate={{ y: 0 }}
+                                transition={{ duration: 0.8, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
+                            >
+                                Dinanath's
+                            </motion.h2>
+                            <motion.div 
+                                className="h-px bg-gradient-to-r from-transparent via-[#C9A84C] to-transparent w-64 md:w-96"
+                                initial={{ scaleX: 0 }}
+                                animate={{ scaleX: 1 }}
+                                transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
+                            />
+                            <motion.p
+                                className="text-[9px] font-black uppercase tracking-[0.5em] text-[#86868B] mt-6"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1 }}
+                            >
+                                Opening Shop • {counter}%
+                            </motion.p>
+                        </div>
+
+                        {/* Progress Status dots */}
+                        <div className="mt-16 flex flex-col items-center gap-4">
+                            <div className="flex gap-3">
+                                {[0, 1, 2, 3].map((i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="w-1.5 h-1.5 rounded-full bg-[#C9A84C]"
+                                        animate={{
+                                            scale: [1, 1.5, 1],
+                                            opacity: [0.2, 1, 0.2],
+                                        }}
+                                        transition={{
+                                            duration: 1,
+                                            repeat: Infinity,
+                                            delay: i * 0.2,
+                                        }}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
+
+                    {/* Reveal Mask */}
+                    <motion.div
+                        className="absolute inset-0 bg-[#FFFFFF] z-50 origin-top"
+                        initial={{ scaleY: 0 }}
+                        animate={{ scaleY: isComplete ? 1 : 0 }}
+                        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                    />
                 </motion.div>
             )}
         </AnimatePresence>

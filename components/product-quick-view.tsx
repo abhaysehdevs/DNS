@@ -3,7 +3,7 @@
 import { Product, getProductGallery } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
-import { X, ShoppingCart, MessageCircle, Star, Heart, Package, PlayCircle, Eye, Layers, Truck } from 'lucide-react';
+import { X, ShoppingCart, MessageCircle, Star, Heart, Eye, PlayCircle, Layers, ShieldCheck, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -21,12 +21,10 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
     const gallery = getProductGallery(product);
     const [mounted, setMounted] = useState(false);
 
-    // Prevent body scroll when modal is open
     useEffect(() => {
         setMounted(true);
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-            // Auto reset state when opened
             setQty(isRetail ? 1 : product.wholesaleMOQ);
             setSelectedMediaIndex(0);
         } else {
@@ -51,7 +49,7 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                 price: currentPrice,
                 mode: mode,
             });
-            onClose(); // Optional: Close after adding or show success!
+            onClose();
         } else {
             let message = `Hi Dinanath & Sons, I am interested in wholesale pricing for: ${product.name} (ID: ${product.id}). Qty: ${qty}`;
             const url = `https://wa.me/919953435647?text=${encodeURIComponent(message)}`;
@@ -62,83 +60,97 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
     const modalContent = (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 lg:p-12">
-                    {/* Backdrop */}
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 overflow-hidden">
+                    {/* Backdrop with sophisticated blur */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-xl cursor-pointer"
+                        className="absolute inset-0 bg-[#06060C]/90 backdrop-blur-2xl cursor-pointer"
                     />
 
                     {/* Modal Content */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative w-full max-w-5xl max-h-full bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden"
+                        initial={{ opacity: 0, scale: 0.9, rotateX: 10, y: 40 }}
+                        animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, rotateX: -10, y: 40 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="relative w-full max-w-6xl max-h-[90vh] bg-[#0A0A0F] border border-white/[0.04] rounded-[2.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col md:flex-row noise-overlay perspective-2000"
                     >
+                        {/* Ambient Glows */}
+                        <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-20"
+                            style={{ background: 'radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, transparent 70%)' }}
+                        />
+                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-10"
+                            style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)' }}
+                        />
+
                         {/* Close button */}
                         <button
                             onClick={onClose}
-                            className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/50 hover:bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-all border border-white/10"
+                            className="absolute top-6 right-6 z-50 w-12 h-12 glass hover:bg-white/10 rounded-full flex items-center justify-center text-[#5A5A6A] hover:text-[#F5F5F7] transition-all group"
                         >
-                            <X size={20} />
+                            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 min-h-[600px]">
-
+                        <div className="flex flex-col md:flex-row w-full overflow-y-auto md:overflow-hidden">
+                            
                             {/* Left: Interactive Media Gallery */}
-                            <div className="bg-white/5 p-6 md:p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 relative group">
-
+                            <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col items-center justify-center relative overflow-hidden bg-white/[0.01]">
+                                
                                 {/* Badges */}
-                                <div className="absolute top-6 left-6 flex flex-col gap-2 z-10 text-left">
-                                    <span className="bg-amber-500 text-black text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-wider shadow-sm w-fit">
+                                <div className="absolute top-8 left-8 flex flex-col gap-3 z-10">
+                                    <span className="glass-gold text-[#C9A84C] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg">
                                         {product.category}
                                     </span>
                                     {!product.inStock && (
-                                        <span className="bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-wider shadow-sm w-fit">
+                                        <span className="bg-red-500/10 text-red-500 border border-red-500/20 text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg">
                                             Out of Stock
                                         </span>
                                     )}
                                 </div>
 
-                                {/* Main Media */}
+                                {/* Main Media with floating animation */}
                                 <motion.div
                                     key={selectedMediaIndex}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="w-full aspect-square relative flex items-center justify-center mb-8"
+                                    initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
+                                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                                    className="w-full aspect-square relative flex items-center justify-center mb-10 translate-z-60 preserve-3d"
                                 >
-                                    {gallery[selectedMediaIndex]?.type === 'video' ? (
-                                        <video
-                                            src={gallery[selectedMediaIndex].url}
-                                            controls
-                                            autoPlay
-                                            loop
-                                            muted
-                                            className="w-full h-full object-contain mix-blend-screen"
-                                            poster={gallery[selectedMediaIndex].thumbnailUrl}
-                                        />
-                                    ) : (
-                                        <img
-                                            src={gallery[selectedMediaIndex]?.url || product.primaryImage}
-                                            alt={product.name}
-                                            className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
-                                        />
-                                    )}
+                                    <motion.div
+                                        animate={{ y: [0, -10, 0] }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                        className="w-full h-full flex items-center justify-center"
+                                    >
+                                        {gallery[selectedMediaIndex]?.type === 'video' ? (
+                                            <video
+                                                src={gallery[selectedMediaIndex].url}
+                                                controls
+                                                autoPlay
+                                                loop
+                                                muted
+                                                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_40px_rgba(201,168,76,0.15)]"
+                                                poster={gallery[selectedMediaIndex].thumbnailUrl}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={gallery[selectedMediaIndex]?.url || product.primaryImage}
+                                                alt={product.name}
+                                                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+                                            />
+                                        )}
+                                    </motion.div>
                                 </motion.div>
 
                                 {/* Thumbnails */}
                                 {gallery.length > 1 && (
-                                    <div className="flex gap-4 overflow-x-auto w-full pb-4 scrollbar-hide justify-center">
+                                    <div className="flex gap-4 overflow-x-auto w-full pb-2 scrollbar-hide justify-center px-4">
                                         {gallery.map((media, idx) => (
                                             <button
                                                 key={media.id || idx}
                                                 onClick={() => setSelectedMediaIndex(idx)}
-                                                className={`relative flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${selectedMediaIndex === idx ? 'border-amber-500 scale-110 shadow-[0_0_15px_rgba(245,158,11,0.3)]' : 'border-white/10 opacity-50 hover:opacity-100 hover:scale-105 bg-white/5'}`}
+                                                className={`relative flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden transition-all duration-500 glass ${selectedMediaIndex === idx ? 'border-[#C9A84C]/50 scale-110 shadow-[0_0_20px_rgba(201,168,76,0.2)]' : 'opacity-40 hover:opacity-80'}`}
                                             >
                                                 <img
                                                     src={media.type === 'video' ? (media.thumbnailUrl || media.url) : media.url}
@@ -146,8 +158,8 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                     className="w-full h-full object-cover"
                                                 />
                                                 {media.type === 'video' && (
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-                                                        <PlayCircle size={20} className="text-white" />
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                                        <PlayCircle size={24} className="text-[#C9A84C]" />
                                                     </div>
                                                 )}
                                             </button>
@@ -157,103 +169,111 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                             </div>
 
                             {/* Right: Detailed Info */}
-                            <div className="p-6 md:p-10 flex flex-col bg-[#0a0a0a]">
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-full border border-white/10">
-                                            <Star size={12} className="text-amber-500 fill-amber-500" />
-                                            <span className="text-[10px] text-white font-bold">{rating > 0 ? rating.toFixed(1) : 'NEW'}</span>
+                            <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center relative z-10 border-l border-white/[0.04]">
+                                
+                                <div className="space-y-8">
+                                    <div>
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="flex items-center gap-1.5 glass px-3 py-1.5 rounded-full">
+                                                <Star size={14} className="text-[#C9A84C] fill-[#C9A84C]" />
+                                                <span className="text-xs text-[#F5F5F7] font-black">{rating > 0 ? rating.toFixed(1) : 'NEW'}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-[#5A5A6A] text-[10px] font-black uppercase tracking-[0.2em]">
+                                                <ShieldCheck size={14} /> Professional Grade
+                                            </div>
                                         </div>
-                                        {product.reviews && product.reviews.length > 0 && (
-                                            <span className="text-[11px] text-gray-500 uppercase tracking-widest font-semibold">{product.reviews.length} Reviews</span>
+
+                                        <h2 className="text-4xl md:text-5xl font-black text-[#F5F5F7] leading-tight mb-6 tracking-tight uppercase">
+                                            {product.name}
+                                        </h2>
+
+                                        <p className="text-[#8E8E9A] text-base leading-relaxed mb-8 font-medium">
+                                            {product.description}
+                                        </p>
+
+                                        {/* Attributes */}
+                                        {product.variantAttributes && Object.keys(product.variantAttributes).length > 0 && (
+                                            <div className="flex flex-wrap gap-3 mb-10">
+                                                {Object.entries(product.variantAttributes).map(([key, value]) => (
+                                                    <div key={key} className="glass rounded-xl px-4 py-2 flex flex-col">
+                                                        <span className="text-[9px] uppercase tracking-[0.2em] text-[#5A5A6A] font-bold mb-0.5">{key}</span>
+                                                        <span className="text-xs text-[#F5F5F7] font-black uppercase">{value as string}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         )}
-                                        <div className="ml-auto">
-                                            <button
-                                                onClick={() => toggleWishlist(product.id)}
-                                                className={`w-10 h-10 flex items-center justify-center rounded-full border transition-all ${isWishlisted ? 'border-red-500/30 bg-red-500/10 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 md:hover:border-red-500/30 md:hover:text-red-500'}`}
-                                            >
-                                                <Heart size={18} className={isWishlisted ? "fill-red-500" : ""} />
-                                            </button>
-                                        </div>
                                     </div>
-                                    <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-4 tracking-tight">
-                                        {product.name}
-                                    </h2>
 
-                                    <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
-                                        {product.description}
-                                    </p>
+                                    {/* Action Box */}
+                                    <div className="glass-strong rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            <Zap size={100} className="text-[#C9A84C]" />
+                                        </div>
 
-                                    {/* Attributes (if any) */}
-                                    {product.variantAttributes && Object.keys(product.variantAttributes).length > 0 && (
-                                        <div className="flex flex-wrap gap-2 mb-6">
-                                            {Object.entries(product.variantAttributes).map(([key, value]) => (
-                                                <div key={key} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 flex flex-col">
-                                                    <span className="text-[9px] uppercase tracking-widest text-gray-500 font-bold">{key}</span>
-                                                    <span className="text-xs text-white font-semibold">{value as string}</span>
+                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8 relative z-10">
+                                            <div>
+                                                <p className="text-[10px] text-[#5A5A6A] uppercase tracking-[0.25em] font-black mb-2">
+                                                    {isRetail ? 'Investment Value' : 'B2B Wholesale Supply'}
+                                                </p>
+                                                <div className="flex items-baseline gap-4">
+                                                    <span className={`text-4xl font-black ${isRetail ? 'text-[#C9A84C]' : 'text-blue-400'}`}>
+                                                        {isRetail ? <Currency value={currentPrice} /> : 'Industrial Quote'}
+                                                    </span>
                                                 </div>
-                                            ))}
+                                            </div>
+                                            {!isRetail && (
+                                                <div className="glass px-5 py-3 rounded-2xl flex flex-col items-center">
+                                                    <span className="text-[9px] text-[#5A5A6A] uppercase tracking-[0.25em] font-bold mb-1">Min Order</span>
+                                                    <span className="text-xl font-black text-[#F5F5F7]">{product.wholesaleMOQ} <span className="text-xs text-[#5A5A6A]">UNITS</span></span>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
 
-                                {/* Price & Action Area */}
-                                <div className="mt-auto bg-white/5 border border-white/10 rounded-2xl p-6">
-                                    <div className="flex justify-between items-end mb-6">
-                                        <div>
-                                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">
-                                                {isRetail ? 'Retail Price' : 'Wholesale B2B'}
-                                            </p>
-                                            <div className="flex items-baseline gap-3">
-                                                <span className={`text-3xl md:text-4xl font-black ${isRetail ? 'text-amber-500' : 'text-blue-500'}`}>
-                                                    {isRetail ? <Currency value={currentPrice} /> : 'Bulk Query'}
-                                                </span>
+                                        <div className="flex flex-col sm:flex-row gap-4 relative z-10">
+                                            <div className="flex items-center glass rounded-2xl overflow-hidden h-16 w-full sm:w-auto p-1">
+                                                <button
+                                                    onClick={() => setQty(Math.max(isRetail ? 1 : product.wholesaleMOQ, qty - 1))}
+                                                    className="w-12 h-full hover:bg-white/5 text-[#5A5A6A] hover:text-[#F5F5F7] transition-colors flex items-center justify-center font-black text-xl"
+                                                >-</button>
+                                                <div className="flex-1 sm:w-16 flex items-center justify-center font-black text-[#F5F5F7] text-xl tabular-nums">
+                                                    {qty}
+                                                </div>
+                                                <button
+                                                    onClick={() => setQty(qty + 1)}
+                                                    className="w-12 h-full hover:bg-white/5 text-[#5A5A6A] hover:text-[#F5F5F7] transition-colors flex items-center justify-center font-black text-xl"
+                                                >+</button>
                                             </div>
+                                            
+                                            <Button
+                                                onClick={handleAddToCart}
+                                                disabled={!product.inStock}
+                                                className={`flex-1 h-16 text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all relative overflow-hidden group/btn ${!product.inStock ? 'opacity-50 grayscale' : ''}`}
+                                                style={{
+                                                    background: isRetail 
+                                                        ? 'linear-gradient(135deg, #E8D48B, #C9A84C, #8B6914)' 
+                                                        : 'linear-gradient(135deg, #60A5FA, #3B82F6, #1D4ED8)',
+                                                    color: isRetail ? '#0A0A0F' : '#F5F5F7'
+                                                }}
+                                            >
+                                                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700 skew-x-[20deg]" />
+                                                {isRetail ?
+                                                    (product.inStock ? <div className="flex items-center justify-center gap-3"><ShoppingCart size={18} /> Add to Collection</div> : 'Out of Stock')
+                                                    : <div className="flex items-center justify-center gap-3"><MessageCircle size={18} /> Get Factory Quote</div>
+                                                }
+                                            </Button>
                                         </div>
-                                        {!isRetail && (
-                                            <div className="text-right">
-                                                <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">MOQ</div>
-                                                <div className="text-lg font-black text-white bg-white/10 px-3 py-1 rounded-lg border border-white/10">{product.wholesaleMOQ} Units</div>
-                                            </div>
-                                        )}
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row gap-4">
-                                        <div className="flex items-center border border-white/10 rounded-xl bg-black/50 overflow-hidden h-14 w-full sm:w-auto">
-                                            <button
-                                                onClick={() => setQty(Math.max(isRetail ? 1 : product.wholesaleMOQ, qty - 1))}
-                                                className="w-12 h-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors flex items-center justify-center font-bold text-lg"
-                                            >-</button>
-                                            <div className="w-16 flex flex-col items-center justify-center h-full border-x border-white/5 bg-white/5">
-                                                <span className="font-bold text-white text-lg leading-none">{qty}</span>
-                                            </div>
-                                            <button
-                                                onClick={() => setQty(qty + 1)}
-                                                className="w-12 h-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors flex items-center justify-center font-bold text-lg"
-                                            >+</button>
-                                        </div>
-                                        <Button
-                                            onClick={handleAddToCart}
-                                            disabled={!product.inStock}
-                                            className={`flex-1 h-14 text-white font-black text-sm uppercase tracking-widest rounded-xl transition-all shadow-lg ${!product.inStock ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700' : isRetail ? 'bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 border border-amber-500/50 shadow-amber-900/50' : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border border-blue-500/50 shadow-blue-900/50'}`}
+                                    {/* Footer Link */}
+                                    <div className="flex items-center justify-center pt-4">
+                                        <Link
+                                            href={`/shop/${product.id}`}
+                                            onClick={onClose}
+                                            className="text-[#5A5A6A] hover:text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 transition-all group/link"
                                         >
-                                            {isRetail ?
-                                                (product.inStock ? <div className="flex items-center gap-2"><ShoppingCart size={18} /> Add to Cart</div> : 'Out of Stock')
-                                                : <div className="flex items-center gap-2"><MessageCircle size={18} /> Get WhatsApp Quote</div>
-                                            }
-                                        </Button>
+                                            Analysis & Full Specifications <Eye size={16} className="group-hover/link:scale-110 transition-transform" />
+                                        </Link>
                                     </div>
-                                </div>
-
-                                {/* Full Details Link */}
-                                <div className="mt-6 flex items-center justify-center">
-                                    <Link
-                                        href={`/shop/${product.id}`}
-                                        onClick={onClose}
-                                        className="text-gray-400 hover:text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-colors group/link"
-                                    >
-                                        View Full Details <Eye size={14} className="group-hover/link:translate-x-1 transition-transform" />
-                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -265,4 +285,3 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
 
     return createPortal(modalContent, document.body);
 }
-

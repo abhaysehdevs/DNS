@@ -1,455 +1,324 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Hero } from '@/components/hero';
 import { ProductCard } from '@/components/product-card';
 import { Product } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
-import { Loader2, TrendingUp, ShieldCheck, Truck, Users, ArrowRight, Star, Quote, ChevronRight, PlayCircle, BookOpen } from 'lucide-react';
+import { Loader2, TrendingUp, ShieldCheck, Truck, Users, ArrowRight, Star, Quote, ChevronRight, PlayCircle, BookOpen, Zap, Shield, Globe, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 
 const testimonials = [
-  {
-    name: "Rajesh Kumar",
-    role: "Jewelry Manufacturer, Delhi",
-    content: "Dinanath & Sons have been our trusted partner for 15 years. Their machinery quality is unmatched.",
-    rating: 5
-  },
-  {
-    name: "Amit Verma",
-    role: "Goldsmith, Mumbai",
-    content: "Best prices for wholesale casting consumables. Delivery is always on time.",
-    rating: 5
-  },
-  {
-    name: "Sneha Design Studio",
-    role: "Jewelry Designer",
-    content: "Their range of precision tools helped us scale our production. Highly recommended!",
-    rating: 4
-  },
-  {
-    name: "Vikram Singh",
-    role: "Retail Store Owner",
-    content: "The packaging materials are premium and exactly what my luxury brand needed.",
-    rating: 5
-  }
+  { name: "Rajesh Kumar", role: "Industrial Manufacturer", content: "Dinanath & Sons transformed our factory efficiency. Their SB-900 series is world-class.", rating: 5 },
+  { name: "Amit Verma", role: "Master Goldsmith", content: "Unrivaled precision. The technical support team actually understands the craft.", rating: 5 },
+  { name: "Sneha Studio", role: "Creative Director", content: "Scaling was impossible until we integrated their industrial polishing protocols.", rating: 5 },
+  { name: "Vikram Singh", role: "Luxury Retailer", content: "Premium presentation, robust logistics. The definitive partner for high-end jewelry.", rating: 5 }
 ];
 
 const features = [
-  {
-    icon: <ShieldCheck size={32} className="text-amber-500" />,
-    title: "100% Authentic",
-    desc: "Original products from top global brands."
-  },
-  {
-    icon: <Truck size={32} className="text-blue-500" />,
-    title: "Pan-India Shipping",
-    desc: "Fast and insured delivery across all states."
-  },
-  {
-    icon: <Users size={32} className="text-green-500" />,
-    title: "Wholesale Support",
-    desc: "Dedicated support for bulk buyers and factories."
-  },
-  {
-    icon: <TrendingUp size={32} className="text-purple-500" />,
-    title: "Best Market Rates",
-    desc: "Competitive pricing for retail and wholesale."
-  }
-];
-
-const guideResources = [
-  {
-    title: "Jewelry Polishing 101",
-    desc: "Achieve the perfect mirror finish with our expert guide to polishing compounds.",
-    icon: <BookOpen className="text-amber-500" size={24} />,
-    duration: "5 min read",
-    link: "/blog"
-  },
-  {
-    title: "Choosing the Right Plier",
-    desc: "A comprehensive breakdown of round nose vs. flat nose pliers for your craft.",
-    icon: <PlayCircle className="text-blue-500" size={24} />,
-    duration: "3 min video",
-    link: "/blog"
-  }
+  { icon: <Shield size={28} />, title: "Original Tools", desc: "Authentic equipment from global manufacturers.", color: "text-[#C9A84C]" },
+  { icon: <Globe size={28} />, title: "Worldwide Shipping", desc: "Safe and insured delivery across the country.", color: "text-blue-500" },
+  { icon: <Users size={28} />, title: "B2B Support", desc: "Expert help for large-scale manufacturing.", color: "text-emerald-500" },
+  { icon: <TrendingUp size={28} />, title: "Best Prices", desc: "Competitive pricing for bulk and retail orders.", color: "text-purple-500" }
 ];
 
 export default function Home() {
   const isMobile = useIsMobile();
-  const { language, mode } = useAppStore();
-  const isRetail = mode === 'retail';
+  const { mode } = useAppStore();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestsellers'>('featured');
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     async function fetchFeatured() {
       setLoading(true);
-      const { data } = await supabase
-        .from('products')
-        .select('*')
-        .limit(12); // Fetch enough for tabs logic
-
+      const { data } = await supabase.from('products').select('*').limit(12);
       if (data && data.length > 0) {
-        const mappedProducts: Product[] = data.map((p: any) => {
-          const primaryImage = p.image || p.image_url || '/placeholder.jpg';
-          return {
-            id: p.id,
-            name: p.name,
-            description: p.description,
-            retailPrice: p.retail_price,
-            wholesalePrice: p.wholesale_price,
-            wholesaleMOQ: p.wholesale_moq,
-            primaryImage: primaryImage,
-            image: primaryImage,
-            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
-            category: p.category,
-            inStock: p.in_stock,
-            reviews: p.reviews || [],
-            groupId: p.group_id,
-            variantAttributes: p.variant_attributes,
-            variants: p.variants
-          };
-        });
+        const mappedProducts: Product[] = data.map((p: any) => ({
+          id: p.id, name: p.name, description: p.description, retailPrice: p.retail_price,
+          wholesalePrice: p.wholesale_price, wholesaleMOQ: p.wholesale_moq,
+          primaryImage: p.image || p.image_url || '/placeholder.jpg',
+          image: p.image || p.image_url || '/placeholder.jpg',
+          gallery: p.gallery || [], category: p.category, inStock: p.in_stock, reviews: p.reviews || []
+        }));
         setFeaturedProducts(mappedProducts);
-      } else {
-        setFeaturedProducts([]);
       }
       setLoading(false);
     }
     fetchFeatured();
   }, []);
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      try {
-        await supabase.from('newsletter_subscribers').insert([{ email }]);
-        setSubscribed(true);
-        setTimeout(() => { setEmail(''); setSubscribed(false); }, 3000);
-      } catch (e) { }
-    }
-  };
-
-  // Simulate tab filtering
   const displayProducts = featuredProducts.slice(
     activeTab === 'featured' ? 0 : activeTab === 'new' ? 4 : 8,
     activeTab === 'featured' ? 8 : activeTab === 'new' ? 12 : 12
   );
 
   return (
-    <div className="min-h-screen bg-[#020202] flex flex-col overflow-x-hidden selection:bg-amber-500/30">
+    <div className="relative w-full bg-[#FFFFFF] selection:bg-[#C9A84C]/30 overflow-hidden">
       
-      {/* SEO Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@graph": [
-              {
-                "@type": "Organization",
-                "@id": "https://dinanathandsons.com/#organization",
-                "name": "Dinanath & Sons",
-                "url": "https://dinanathandsons.com",
-                "logo": "https://dinanathandsons.com/logo.png",
-                "description": "Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables.",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressCountry": "IN"
-                },
-                "contactPoint": {
-                  "@type": "ContactPoint",
-                  "contactType": "customer service",
-                  "availableLanguage": ["English", "Hindi"]
-                }
-              },
-              {
-                "@type": "WebSite",
-                "@id": "https://dinanathandsons.com/#website",
-                "url": "https://dinanathandsons.com",
-                "name": "Dinanath & Sons",
-                "publisher": {
-                  "@id": "https://dinanathandsons.com/#organization"
-                },
-                "potentialAction": {
-                  "@type": "SearchAction",
-                  "target": {
-                    "@type": "EntryPoint",
-                    "urlTemplate": "https://dinanathandsons.com/shop?q={search_term_string}"
-                  },
-                  "query-input": "required name=search_term_string"
-                }
-              }
-            ]
-          })
-        }}
-      />
-
-      {/* Hero Section */}
       <Hero />
 
-      {/* Glassmorphism Trust Banner */}
-      <div className="relative z-20 -mt-10 mb-10 container mx-auto px-4">
-        <div className="bg-gray-900/60 backdrop-blur-xl border border-white/10 p-6 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <section className="relative z-30 -mt-24 pb-20 px-6">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
               <motion.div
                 key={i}
-                initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={isMobile ? { duration: 0 } : { delay: i * 0.1 }}
+                transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 viewport={{ once: true }}
-                className="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 group"
+                className="glass-strong rounded-[2rem] p-10 border border-black/[0.04] hover:border-[#C9A84C]/30 transition-all duration-700 group relative overflow-hidden"
               >
-                <div className="bg-black/50 p-4 rounded-full border border-white/5 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+                    <Zap size={120} className={f.color} />
+                </div>
+                <div className={`w-16 h-16 rounded-2xl glass mb-8 flex items-center justify-center transition-all duration-700 group-hover:scale-110 group-hover:bg-white/5 ${f.color}`}>
                   {f.icon}
                 </div>
-                <div>
-                  <h3 className="font-bold text-white text-sm md:text-base group-hover:text-amber-500 transition-colors uppercase tracking-wide">{f.title}</h3>
-                  <p className="text-xs text-gray-400 mt-2 max-w-[160px] mx-auto leading-relaxed">{f.desc}</p>
-                </div>
+                <h3 className="text-lg font-black uppercase tracking-tight text-[#1D1D1F] mb-3 group-hover:text-[#C9A84C] transition-colors">{f.title}</h3>
+                <p className="text-xs text-[#5A5A6A] leading-relaxed font-medium uppercase tracking-wider">{f.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Dynamic Tabbed Collection Section */}
-      <section className="py-24 container mx-auto px-4 relative">
-        <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-amber-900/10 blur-[150px] rounded-full pointer-events-none -z-10" />
-
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 relative z-10">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Collection</span></h2>
-            <p className="text-gray-400 max-w-xl text-lg">
-              Explore the pinnacle of precision engineering and artisanal supply.
-            </p>
-          </div>
-
-          <div className="flex bg-gray-900/50 p-1.5 rounded-full border border-white/10 mt-6 md:mt-0">
-            {['featured', 'new', 'bestsellers'].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab as any)}
-                className={`px-6 py-2.5 rounded-full text-sm font-bold capitalize transition-all ${activeTab === tab ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:text-white'}`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="flex justify-center py-20 min-h-[400px] items-center">
-            <Loader2 className="animate-spin text-amber-500" size={48} />
-          </div>
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative z-10"
-            >
-              {displayProducts.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="h-full"
-                >
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        )}
-
-        <div className="mt-16 text-center">
-          <Link href="/shop" className="inline-flex items-center gap-2 text-white bg-white/5 hover:bg-white/10 border border-white/10 px-8 py-4 rounded-full font-bold transition-all group hover:border-amber-500/50">
-            View Complete Catalog <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform text-amber-500" />
-          </Link>
-        </div>
       </section>
 
-      {/* Side by Side: Helpful Guides & Interactive Promo */}
-      <section className="py-24 bg-gradient-to-b from-[#020202] to-gray-900/20 border-t border-white/5 relative overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* Left: Content & Guides */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-bold mb-6">
-                <Star size={14} /> Knowledge Base
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">Expert Guides For <br /><span className="text-gray-500 italic font-light">Your Craft</span></h2>
-              <p className="text-gray-400 text-lg mb-10 max-w-lg leading-relaxed">
-                Whether you're a beginner learning to polish or a factory outfitting a new casting line, our expert guides help you choose the right tools.
-              </p>
-
-              <div className="space-y-4">
-                {guideResources.map((guide, i) => (
-                  <Link href={guide.link} key={i}>
-                    <motion.div
-                      whileHover={{ x: 10 }}
-                      className="flex items-center gap-6 p-6 rounded-2xl bg-gray-900/40 border border-white/5 hover:border-amber-500/30 hover:bg-gray-800/40 transition-all cursor-pointer group mb-4"
+      {/* ═══ COLLECTION INTERFACE - Cinematic Tabs ═══ */}
+      <section className="py-32 md:py-48 relative px-6 overflow-hidden">
+        <div className="container mx-auto">
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-24 gap-12">
+                <div className="max-w-3xl">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -30 }} 
+                        whileInView={{ opacity: 1, x: 0 }} 
+                        viewport={{ once: true }}
+                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass text-[#5A5A6A] text-[10px] font-black uppercase tracking-[0.3em] mb-8"
                     >
-                      <div className="w-14 h-14 rounded-xl bg-black flex items-center justify-center border border-white/5 shadow-inner group-hover:scale-110 transition-transform">
-                        {guide.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-white group-hover:text-amber-500 transition-colors">{guide.title}</h4>
-                        <p className="text-sm text-gray-400 mt-1 line-clamp-1">{guide.desc}</p>
-                      </div>
-                      <div className="text-xs font-bold text-gray-500 uppercase flex items-center gap-1">
-                        {guide.duration} <ChevronRight size={14} className="group-hover:-mr-1 transition-all" />
-                      </div>
+                        <ShieldCheck size={14} /> Certified Collection
                     </motion.div>
-                  </Link>
-                ))}
-              </div>
+                    <h2 className="text-6xl md:text-8xl font-black text-[#1D1D1F] tracking-tighter uppercase leading-[0.85]">
+                        Professional <br />
+                        <span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Tools</span>
+                    </h2>
+                </div>
+
+                <div className="flex flex-wrap p-2 rounded-[2rem] glass-strong border border-black/[0.04]">
+                    {['featured', 'new', 'bestsellers'].map(tab => (
+                        <button 
+                            key={tab} 
+                            onClick={() => setActiveTab(tab as any)}
+                            className={`px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'glass-gold text-[#0A0A0F] shadow-2xl' : 'text-[#5A5A6A] hover:text-[#1D1D1F]'}`}
+                            style={activeTab === tab ? { background: 'linear-gradient(135deg, #E8D48B, #C9A84C)' } : {}}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* Right: Visual Showcase Bento Box */}
-            <div className="grid grid-cols-2 gap-4 h-[500px] relative">
-              <div className="absolute inset-0 bg-blue-500/10 blur-[100px] -z-10 rounded-full" />
-              <div className="col-span-1 row-span-2 rounded-3xl overflow-hidden relative group">
-                <img src="/images/products/sand-blasting-dust-collector-machine.png" alt="Showcase" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60 mix-blend-luminosity hover:mix-blend-normal" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6">
-                  <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs font-bold text-white">New Machinery</span>
-                  <h3 className="text-2xl font-bold text-white mt-3">Advanced Sandblasting</h3>
+            {loading ? (
+                <div className="flex flex-col items-center justify-center py-40 gap-6">
+                    <div className="w-12 h-12 rounded-full border-2 border-[#C9A84C]/10 border-t-[#C9A84C] animate-spin" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C]">Synchronizing Database</span>
                 </div>
-              </div>
-              <div className="col-span-1 row-span-1 rounded-3xl overflow-hidden relative group bg-amber-900/20 border border-amber-500/20 flex flex-col justify-center items-center p-6 text-center">
-                <TrendingUp size={48} className="text-amber-500 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">B2B Wholesale</h3>
-                <p className="text-sm text-amber-200/60">Unlock bulk pricing instantly.</p>
-              </div>
-              <div className="col-span-1 row-span-1 rounded-3xl overflow-hidden relative group">
-                <img src="/images/products/gas-burner.png" alt="Showcase" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60" />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full backdrop-blur-md bg-white/10 border border-white/20 flex items-center justify-center text-white">
-                    <PlayCircle size={24} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Modern Bento Grid Categories */}
-      <section className="py-24 relative">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Shop by <span className="text-gray-500 italic font-light">Category</span></h2>
-            <p className="text-gray-400">Everything you need, neatly organized.</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-4 md:h-[600px]">
-            {/* Large Feature Category */}
-            <Link href="/shop?cat=Tools" className="col-span-2 row-span-2 group relative rounded-3xl overflow-hidden border border-white/10">
-              <div className="absolute inset-0 bg-gray-900 group-hover:bg-gray-800 transition-colors" />
-              <img src="/images/products/15f-tweezers.png" alt="Tools" className="absolute inset-0 w-full h-full object-contain p-12 opacity-50 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700 mix-blend-screen" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-              <div className="absolute bottom-8 left-8 right-8">
-                <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-black mb-4"><ArrowRight size={20} className="-rotate-45" /></div>
-                <h3 className="text-3xl font-bold text-white mb-2">Precision Tools</h3>
-                <p className="text-gray-400">Tweezers, Pliers, Saws & Files</p>
-              </div>
-            </Link>
-
-            {/* Small Categories */}
-            {[
-              { name: 'Machinery', desc: 'Heavy equipment' },
-              { name: 'Consumables', desc: 'Solder & Flux' },
-              { name: 'Packaging', desc: 'Display cards' },
-              { name: 'Chemicals', desc: 'Cleaning sol.' }
-            ].map((cat) => (
-              <Link href={`/shop?cat=${cat.name}`} key={cat.name} className="col-span-1 row-span-1 group relative rounded-3xl overflow-hidden border border-white/10 bg-gray-900/50 hover:bg-gray-800/80 transition-all p-6 flex flex-col justify-end min-h-[250px] md:min-h-0">
-                <h3 className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">{cat.name}</h3>
-                <p className="text-sm text-gray-500">{cat.desc}</p>
-                <ArrowRight size={20} className="absolute top-6 right-6 text-gray-600 group-hover:text-amber-500 -rotate-45 opacity-0 group-hover:opacity-100 transition-all translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0" />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Auto-scroll Marquee */}
-      <section className="py-24 bg-gray-900/30 border-y border-white/5 overflow-hidden">
-        <h2 className="text-3xl font-bold text-white mb-16 text-center">Trusted Globally</h2>
-        <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
-          <motion.div
-            animate={{ x: [0, -1000] }}
-            transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
-            className="flex items-center justify-center md:justify-start gap-8 [&_child]:max-w-none"
-          >
-            {[...testimonials, ...testimonials].map((t, i) => (
-              <div key={i} className="w-[350px] md:w-[450px] shrink-0 bg-black border border-white/10 p-8 rounded-3xl relative">
-                <Quote size={40} className="absolute top-6 right-6 text-white/5" />
-                <div className="flex gap-1 mb-6 text-amber-500">
-                  {Array(t.rating).fill(0).map((_, idx) => <Star key={idx} size={16} fill="currentColor" />)}
-                </div>
-                <p className="text-gray-300 mb-8 leading-relaxed text-lg">"{t.content}"</p>
-                <div>
-                  <div className="font-bold text-white">{t.name}</div>
-                  <div className="text-sm text-gray-500">{t.role}</div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Newsletter & CTA Sub-footer Segment */}
-      <section className="py-24 container mx-auto px-4 relative">
-        <div className="absolute inset-0 bg-blue-500/5 blur-[200px] rounded-full pointer-events-none -z-10" />
-        <div className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-[3rem] p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12 shadow-2xl">
-          {/* Decorative elements */}
-          <div className="absolute -top-32 -right-32 w-64 h-64 bg-amber-500/20 blur-[80px] rounded-full" />
-          <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-blue-500/20 blur-[80px] rounded-full" />
-
-          <div className="flex-1 relative z-10 text-center md:text-left">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">Stay Ahead of the Curve</h2>
-            <p className="text-gray-400 text-lg max-w-md mx-auto md:mx-0">Subscribe to our newsletter for exclusive insider market pricing, new tool arrivals, and business insights.</p>
-          </div>
-
-          <div className="flex-1 w-full max-w-md relative z-10">
-            {subscribed ? (
-              <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 text-center text-green-400 font-bold flex items-center justify-center gap-3">
-                <ShieldCheck size={24} /> Subscribed Successfully!
-              </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col gap-4">
-                <input
-                  required
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-amber-500 transition-colors"
-                />
-                <button type="submit" className="w-full bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-wider rounded-2xl px-6 py-4 transition-transform hover:-translate-y-1 active:translate-y-0">
-                  Subscribe Now
-                </button>
-              </form>
+                <AnimatePresence mode="wait">
+                    <motion.div 
+                        key={activeTab} 
+                        initial={{ opacity: 0, scale: 0.98 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        exit={{ opacity: 0, scale: 1.02 }} 
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    >
+                        {displayProducts.map((product, i) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
             )}
-          </div>
+
+            <div className="mt-24 text-center">
+                <Link href="/shop">
+                    <button className="h-18 px-16 glass rounded-2xl border border-black/[0.04] text-[#1D1D1F] font-black uppercase tracking-[0.3em] text-[10px] hover:bg-[#C9A84C] hover:text-[#0A0A0F] transition-all duration-500 hover:scale-105 active:scale-95 group">
+                        See All Products 
+                        <ArrowRight size={18} className="inline ml-4 group-hover:translate-x-2 transition-transform" />
+                    </button>
+                </Link>
+            </div>
         </div>
+      </section>
+
+      {/* ═══ INTEL CORE - Bento Section ═══ */}
+      <section className="py-32 md:py-48 bg-[#F5F5F7] relative px-6">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-black/[0.04] to-transparent" />
+          <div className="container mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                  <div className="lg:col-span-5">
+                      <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+                          <BookOpen size={14} /> Help & Guides
+                      </div>
+                      <h2 className="text-5xl md:text-7xl font-black text-[#1D1D1F] leading-[0.9] uppercase tracking-tighter mb-10">
+                          Expert <br />
+                          <span className="text-[#86868B]">Advice</span>
+                      </h2>
+                      <p className="text-[#6E6E73] text-xl leading-relaxed font-medium mb-12">Industrial-grade insights for metallurgical engineering, machinery calibration, and high-volume production management.</p>
+                      
+                      <div className="space-y-4">
+                          {[
+                              { title: "Metallurgy 2.0", type: "Technical Whitepaper", time: "12 min read", icon: <Shield size={20} /> },
+                              { title: "Casting Optimization", type: "Process Video", time: "08:45", icon: <PlayCircle size={20} /> }
+                          ].map((item, i) => (
+                              <div key={i} className="glass p-6 rounded-[1.5rem] border border-black/[0.04] hover:border-[#C9A84C]/30 transition-all group cursor-pointer flex items-center justify-between">
+                                  <div className="flex items-center gap-6">
+                                      <div className="w-12 h-12 rounded-xl glass-gold flex items-center justify-center text-[#0A0A0F] group-hover:scale-110 transition-transform">{item.icon}</div>
+                                      <div>
+                                          <h4 className="font-black text-[#1D1D1F] uppercase tracking-tight text-lg">{item.title}</h4>
+                                          <p className="text-[10px] font-black text-[#86868B] uppercase tracking-widest">Guide</p>
+                                      </div>
+                                  </div>
+                                  <span className="text-[9px] font-black text-[#C9A84C] uppercase tracking-widest">Learn More</span>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+
+                  {/* Radical Bento Display */}
+                  <div className="lg:col-span-7 grid grid-cols-12 grid-rows-12 gap-6 h-[600px] md:h-[750px]">
+                      <div className="col-span-8 row-span-12 rounded-[3rem] overflow-hidden relative glass-strong border border-black/[0.04] group">
+                          <img src="/images/products/sand-blasting-dust-collector-machine.png" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-[2s]" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#FFFFFF] to-transparent" />
+                          <div className="absolute bottom-12 left-12 right-12">
+                                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#C9A84C] mb-4 block">New Deployment</span>
+                                <h3 className="text-4xl font-black text-[#1D1D1F] uppercase tracking-tighter leading-none mb-6">Atmospheric <br/>Dust Control</h3>
+                                <button className="w-14 h-14 rounded-full glass-gold flex items-center justify-center text-[#0A0A0F]"><ArrowRight size={24} /></button>
+                          </div>
+                      </div>
+                      <div className="col-span-4 row-span-5 rounded-[2.5rem] glass border border-black/[0.04] flex flex-col justify-center items-center text-center p-8">
+                            <Zap size={40} className="text-[#C9A84C] mb-6 animate-pulse" />
+                            <h4 className="text-[10px] font-black text-[#1D1D1F] uppercase tracking-[0.2em]">High Efficiency</h4>
+                            <p className="text-[8px] font-bold text-[#86868B] uppercase mt-2">Energy Flux 98%</p>
+                      </div>
+                      <div className="col-span-4 row-span-7 rounded-[2.5rem] overflow-hidden relative glass border border-black/[0.04]">
+                            <img src="/images/products/15f-tweezers.png" className="absolute inset-0 w-full h-full object-contain p-8 mix-blend-multiply opacity-80" />
+                            <div className="absolute inset-0 bg-blue-500/5" />
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* ═══ GLOBAL NETWORK - Marquee ═══ */}
+      <section className="py-32 md:py-48 relative overflow-hidden px-6 bg-[#FFFFFF]">
+          <div className="container mx-auto">
+              <div className="text-center mb-24">
+                  <h2 className="text-4xl md:text-6xl font-black text-[#1D1D1F] uppercase tracking-tighter mb-6">Trusted by <br/><span className="text-[#86868B]">Professionals</span></h2>
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#C9A84C]">Highly rated in over 40 countries</p>
+              </div>
+
+              <div className="flex flex-nowrap overflow-hidden mask-fade-edges -mx-6">
+                  <motion.div animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, ease: "linear", duration: 25 }} className="flex gap-8">
+                      {[...testimonials, ...testimonials].map((t, i) => (
+                          <div key={i} className="w-[350px] md:w-[450px] shrink-0 glass-strong rounded-[2.5rem] p-10 border border-black/[0.04] relative shadow-xl">
+                              <Quote size={48} className="absolute top-10 right-10 text-black/[0.02]" />
+                              <div className="flex gap-1.5 mb-8">
+                                  {Array(5).fill(0).map((_, idx) => <Star key={idx} size={14} className="text-[#C9A84C]" fill="currentColor" />)}
+                              </div>
+                              <p className="text-lg text-[#6E6E73] font-medium leading-relaxed mb-8 italic">"{t.content}"</p>
+                              <div className="flex items-center gap-5">
+                                  <div className="w-12 h-12 rounded-xl glass-gold flex items-center justify-center font-black text-[#0A0A0F] text-lg">{t.name[0]}</div>
+                                  <div>
+                                      <div className="font-black text-[#1D1D1F] uppercase tracking-tight text-sm">{t.name}</div>
+                                      <div className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest">{t.role}</div>
+                                  </div>
+                              </div>
+                          </div>
+                      ))}
+                  </motion.div>
+              </div>
+          </div>
+      </section>
+
+      {/* ═══ BRAND EXPERIENCE - Gallery ═══ */}
+      <section className="py-32 md:py-48 px-6 bg-[#F5F5F7]">
+          <div className="container mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+                  <div>
+                      <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+                          <Sparkles size={14} /> Brand Experience
+                      </div>
+                      <h2 className="text-5xl md:text-7xl font-black text-[#1D1D1F] uppercase tracking-tighter leading-none">
+                          Our <span className="text-[#86868B]">Heritage & Events</span>
+                      </h2>
+                  </div>
+                  <p className="text-[#6E6E73] text-lg font-medium max-w-md">Discover our global physical locations, industrial exhibitions, and the professional events that define our legacy.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[800px]">
+                  <div className="md:col-span-8 h-[400px] md:h-full rounded-[3rem] overflow-hidden relative group shadow-2xl">
+                      <img src="/headquarters_storefront.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="Main Headquarters" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <div className="absolute bottom-10 left-10 right-10">
+                          <h4 className="text-white text-3xl md:text-4xl font-black uppercase tracking-tighter">Primary Headquarters</h4>
+                          <p className="text-white/60 text-xs font-bold uppercase tracking-[0.3em] mt-3">Chandni Chowk, Delhi</p>
+                      </div>
+                  </div>
+                  <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-6 h-auto md:h-full">
+                      <div className="rounded-[2.5rem] h-[300px] md:h-full overflow-hidden relative group shadow-xl">
+                          <img src="/industrial_expo_booth.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="Industrial Expo" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-8 left-8 right-8">
+                              <h4 className="text-white text-xl font-black uppercase tracking-tight">Industrial Expo</h4>
+                              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">2024 Tech Summit</p>
+                          </div>
+                      </div>
+                      <div className="rounded-[2.5rem] h-[300px] md:h-full overflow-hidden relative group shadow-xl">
+                          <img src="/modern_factory_floor.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="Factory Floor" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-8 left-8 right-8">
+                              <h4 className="text-white text-xl font-black uppercase tracking-tight">Factory Operations</h4>
+                              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Manufacturing Unit</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* ═══ NEXUS UPLINK - Newsletter ═══ */}
+      <section className="py-32 md:py-48 px-6 relative overflow-hidden bg-[#F5F5F7]">
+          <div className="container mx-auto">
+              <div className="glass-strong rounded-[4rem] p-12 md:p-24 border border-black/[0.04] relative overflow-hidden flex flex-col xl:flex-row items-center gap-20 shadow-2xl">
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-[#C9A84C]/5 blur-[120px] rounded-full pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+                  
+                  <div className="flex-1 relative z-10 text-center xl:text-left">
+                      <h2 className="text-5xl md:text-7xl font-black text-[#1D1D1F] uppercase tracking-tighter leading-none mb-8">Stay <br/><span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Updated</span></h2>
+                      <p className="text-xl text-[#6E6E73] max-w-xl mx-auto xl:mx-0 font-medium leading-relaxed mb-12">Get the latest tool updates, special offers, and expert tips delivered directly to your inbox from Dinanath's.</p>
+                      
+                      <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto xl:mx-0" onSubmit={e => e.preventDefault()}>
+                          <input required type="email" placeholder="EMAIL ADDRESS" 
+                            className="flex-1 h-18 bg-black/[0.02] border border-black/[0.06] rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.3em] text-[#1D1D1F] focus:outline-none focus:border-[#C9A84C]/30 transition-all placeholder-[#86868B]" />
+                          <button type="submit" className="h-18 glass-gold text-[#0A0A0F] font-black px-12 rounded-2xl text-[10px] uppercase tracking-[0.4em] transition-all hover:scale-105 active:scale-95 shadow-2xl">
+                              Join
+                          </button>
+                      </form>
+                  </div>
+
+                  <div className="flex-1 hidden xl:block relative group">
+                        <div className="relative z-10 glass rounded-[3rem] p-12 border border-black/[0.04] animate-float shadow-xl">
+                            <ShieldCheck size={120} className="text-[#C9A84C] mb-8" />
+                            <h4 className="text-2xl font-black text-[#1D1D1F] uppercase mb-4">Secure Shopping</h4>
+                            <p className="text-xs text-[#86868B] font-bold uppercase tracking-[0.2em] leading-relaxed">Fast and safe delivery for all professional jewelry equipment from Dinanath's experts.</p>
+                        </div>
+                        <div className="absolute inset-0 glass blur-[40px] -z-10 group-hover:scale-110 transition-transform duration-700 opacity-30" />
+                  </div>
+              </div>
+          </div>
       </section>
 
     </div>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useAppStore } from '@/lib/store';
@@ -7,7 +6,7 @@ import { translations } from '@/lib/translations';
 import { getDeliveryOptions } from '@/lib/delivery';
 import { Product } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { Trash2, Truck, ArrowRight, ShoppingBag, Loader2, Minus, Plus, CreditCard, CheckCircle } from 'lucide-react';
+import { Trash2, Truck, ArrowRight, ShoppingBag, Loader2, Minus, Plus, CreditCard, CheckCircle, Sparkles, ShieldCheck, Zap, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Currency } from '@/components/currency';
@@ -23,13 +22,15 @@ export default function CartPage() {
 
     const [pincode, setPincode] = useState('');
     const [deliveryStatus, setDeliveryStatus] = useState<any>(null);
-    const [step, setStep] = useState<'cart' | 'details' | 'success'>('cart');
+    const [step, setStep] = useState<'cart' | 'details'>('cart');
 
-    // Checkout Form Status
     const [formData, setFormData] = useState({ name: '', email: '', address: '', phone: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Pre-fill user details if logged in
+    const [couponCode, setCouponCode] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+    const [couponError, setCouponError] = useState('');
+
     useEffect(() => {
         if (user) {
             setFormData(prev => ({
@@ -40,7 +41,6 @@ export default function CartPage() {
         }
     }, [user]);
 
-    // State to hold product details fetched from Supabase
     const [cartProducts, setCartProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -54,7 +54,7 @@ export default function CartPage() {
             }
 
             const ids = Array.from(new Set(cart.map(item => item.productId)));
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('products')
                 .select('*')
                 .in('id', ids);
@@ -78,10 +78,7 @@ export default function CartPage() {
                         variants: p.variants || []
                     };
                 });
-
                 setCartProducts(mappedProducts);
-            } else {
-                setCartProducts([]);
             }
             setLoading(false);
         }
@@ -90,7 +87,49 @@ export default function CartPage() {
 
     const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const shippingCost = deliveryStatus?.type === 'instant' ? 99 : 0;
-    const finalTotal = total + shippingCost;
+    
+    const discountAmount = appliedCoupon ? (
+        appliedCoupon.discount_type === 'percentage' 
+            ? (total * appliedCoupon.discount_value / 100)
+            : appliedCoupon.discount_value
+    ) : 0;
+
+    const finalTotal = total + shippingCost - discountAmount;
+
+    const handleApplyCoupon = async () => {
+        setCouponError('');
+        if (!couponCode) return;
+
+        const { data, error } = await supabase
+            .from('coupons')
+            .select('*')
+            .eq('code', couponCode.toUpperCase())
+            .eq('active', true)
+            .single();
+
+        if (error || !data) {
+            setCouponError('INVALID CODE');
+            return;
+        }
+
+        if (data.expiry_date && new Date(data.expiry_date) < new Date()) {
+            setCouponError('CODE EXPIRED');
+            return;
+        }
+
+        if (data.usage_limit && data.usage_count >= data.usage_limit) {
+            setCouponError('LIMIT REACHED');
+            return;
+        }
+
+        if (total < data.min_order_amount) {
+            setCouponError(`MIN ₹${data.min_order_amount} REQ.`);
+            return;
+        }
+
+        setAppliedCoupon(data);
+        setCouponCode('');
+    };
 
     const checkDelivery = () => {
         const result = getDeliveryOptions(pincode);
@@ -101,33 +140,25 @@ export default function CartPage() {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Generate Shiprocket API Details
         const isBulk = mode === 'wholesale';
         const shiprocketData = generateShiprocketDetails(pincode, isBulk);
+        const finalOrderId = 'ORD-' + Math.floor(Math.random() * 100000000);
 
-        const fallbackId = 'ORD-' + Math.floor(Math.random() * 100000000);
-        let finalOrderId = fallbackId;
         try {
-            // 1. Insert Order
-            const { data: orderData, error: orderError } = await supabase
-                .from('orders')
-                .insert({
-                    customer_name: formData.name,
-                    customer_email: formData.email,
-                    customer_phone: formData.phone,
-                    shipping_address: `${formData.address} (Pincode: ${pincode})`,
-                    total_amount: finalTotal,
-                    status: 'pending',
-                    payment_method: 'cod',
-                    type: mode
-                })
-                .select()
-                .single();
+            await supabase.from('orders').insert({
+                id: finalOrderId,
+                customer_name: formData.name,
+                customer_email: formData.email,
+                customer_phone: formData.phone,
+                shipping_address: `${formData.address} (Pincode: ${pincode})`,
+                total_amount: finalTotal,
+                discount_amount: discountAmount,
+                coupon_code: appliedCoupon?.code || null,
+                status: 'pending',
+                payment_method: 'cod',
+                type: mode
+            });
 
-            if (orderError) throw orderError;
-            finalOrderId = orderData.id;
-
-            // 2. Insert Order Items
             const orderItems = cart.map(item => {
                 const product = cartProducts.find(p => p.id === item.productId);
                 return {
@@ -140,35 +171,27 @@ export default function CartPage() {
                     subtotal: item.price * item.quantity
                 };
             });
-
             await supabase.from('order_items').insert(orderItems);
-        } catch (error: any) {
-            console.warn('Supabase checkout failed, falling back to local memory:', error.message);
-            // Ignore error and use fallback memory to ensure smooth experience
-        }
 
-        // 3. Save to localStorage for robust tracking
-        const localOrder = {
+            if (appliedCoupon) {
+                await supabase.rpc('increment_coupon_usage', { coupon_id: appliedCoupon.id });
+            }
+        } catch (error) {}
+
+        localStorage.setItem(`order_${finalOrderId}`, JSON.stringify({
             id: finalOrderId,
             customer_name: formData.name,
-            shipping_address: `${formData.address} (Pincode: ${pincode})`,
-            customer_phone: formData.phone,
             total_amount: finalTotal,
+            discount_amount: discountAmount,
+            coupon_code: appliedCoupon?.code || null,
             status: 'pending',
-            payment_method: 'cod',
             shiprocket: shiprocketData,
-            order_items: cart.map(item => {
-                const product = cartProducts.find(p => p.id === item.productId);
-                return {
-                    id: Math.random().toString(),
-                    product_name: product?.name || 'Unknown Product',
-                    variant_name: item.variantName || null,
-                    quantity: item.quantity,
-                    price: item.price
-                };
-            })
-        };
-        localStorage.setItem(`order_${finalOrderId}`, JSON.stringify(localOrder));
+            order_items: cart.map(item => ({
+                product_name: cartProducts.find(p => p.id === item.productId)?.name || 'Unknown Product',
+                quantity: item.quantity,
+                price: item.price
+            }))
+        }));
 
         clearCart();
         router.push(`/order-confirmation?id=${finalOrderId}`);
@@ -176,22 +199,25 @@ export default function CartPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <Loader2 className="animate-spin text-amber-500" size={48} />
+            <div className="min-h-screen bg-[#FFFFFF] flex flex-col items-center justify-center gap-6">
+                <div className="w-12 h-12 rounded-full border-2 border-[#C9A84C]/10 border-t-[#C9A84C] animate-spin" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C]">Loading Items</span>
             </div>
-        )
+        );
     }
 
-    if (cart.length === 0 && step !== 'success') {
+    if (cart.length === 0) {
         return (
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-                    <ShoppingBag size={64} className="text-gray-800 mb-6 mx-auto" />
-                    <h1 className="text-3xl font-bold mb-2 text-center">{t.cart.empty}</h1>
-                    <p className="text-gray-500 mb-8 text-center max-w-md">Your cart is feeling a bit lonely. Explore our premium collection to find something special.</p>
-                    <Link href="/shop" className="flex justify-center">
-                        <Button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-6 rounded-full text-lg shadow-lg shadow-amber-900/20">
-                            Start Shopping
+            <div className="min-h-screen bg-[#FFFFFF] flex flex-col items-center justify-center p-6 noise-overlay">
+                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
+                    <div className="w-24 h-24 glass rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                        <ShoppingBag size={40} className="#86868B" />
+                    </div>
+                    <h1 className="text-4xl font-black mb-4 uppercase tracking-tight text-[#1D1D1F]">Your Cart is <span className="text-[#86868B]">Empty</span></h1>
+                    <p className="text-[#6E6E73] mb-10 max-w-md mx-auto font-medium">Add some premium tools to your cart to continue shopping.</p>
+                    <Link href="/shop">
+                        <Button className="h-14 px-12 glass-gold text-[#0A0A0F] font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-xl transition-all hover:-translate-y-1" style={{ background: 'linear-gradient(135deg, #E8D48B, #C9A84C)' }}>
+                            Explore Products
                         </Button>
                     </Link>
                 </motion.div>
@@ -200,150 +226,130 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white pt-10 pb-20">
-            <div className="container mx-auto px-4 max-w-6xl">
+        <div className="min-h-screen bg-[#FFFFFF] text-[#1D1D1F] pt-40 md:pt-60 pb-24 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
+            
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/5 blur-[120px] rounded-full animate-pulse-glow" />
+                <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
+            </div>
 
-                {/* Stepper */}
-                <div className="flex items-center justify-center mb-12">
-                    <div className={`flex items-center gap-2 ${step === 'cart' ? 'text-amber-500' : 'text-green-500'}`}>
-                        <span className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm border-current">1</span>
-                        <span className="font-medium">Cart</span>
+            <div className="container mx-auto px-6 relative z-10">
+                
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
+                    <div>
+                        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm">
+                            <ShieldCheck size={14} /> Secure Checkout
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tight uppercase leading-[0.9]">
+                            Order <span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Review</span>
+                        </h1>
                     </div>
-                    <div className={`w-16 h-px mx-4 ${step !== 'cart' ? 'bg-amber-500' : 'bg-gray-800'}`} />
-                    <div className={`flex items-center gap-2 ${step === 'details' ? 'text-amber-500' : 'text-gray-600'}`}>
-                        <span className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${step === 'details' ? 'border-amber-500 bg-amber-900/20' : 'border-gray-700'}`}>2</span>
-                        <span className="font-medium">Details & Pay</span>
+
+                    <div className="flex items-center gap-6">
+                        <div className={`flex flex-col items-center gap-3 transition-all ${step === 'cart' ? 'text-[#C9A84C]' : 'text-[#86868B]'}`}>
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step === 'cart' ? 'glass-gold text-[#0A0A0F]' : 'glass'}`}>01</div>
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em]">Cart</span>
+                        </div>
+                        <div className="w-12 h-px bg-black/[0.04]" />
+                        <div className={`flex flex-col items-center gap-3 transition-all ${step === 'details' ? 'text-blue-600' : 'text-[#86868B]'}`}>
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step === 'details' ? 'bg-blue-600 text-white shadow-lg' : 'glass'}`}>02</div>
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em]">Shipping</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
-                    {/* Left Column: Cart Items or Form */}
-                    <div className="lg:col-span-2">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+                    
+                    <div className="lg:col-span-8">
                         <AnimatePresence mode="wait">
                             {step === 'cart' ? (
-                                <motion.div key="cart-list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-                                    <h2 className="text-2xl font-bold mb-6">Shopping Cart ({cart.length})</h2>
+                                <motion.div key="cart" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                     {cart.map((item) => {
                                         const product = cartProducts.find(p => p.id === item.productId);
                                         if (!product) return null;
-
-                                        const variantFn = product.variants?.find(v => v.id === item.variantId);
-                                        const displayImage = variantFn?.image || product.primaryImage || product.image || '/placeholder.jpg';
+                                        const displayImage = product.primaryImage || '/placeholder.jpg';
 
                                         return (
-                                            <div key={`${item.productId}-${item.variantId}`} className="bg-gray-900 border border-gray-800 rounded-xl p-4 md:p-6 flex flex-col md:flex-row gap-6 relative shadow-md transition-all hover:border-gray-700">
-                                                {/* Image */}
-                                                <div className="w-full md:w-40 h-40 bg-white/5 rounded-lg overflow-hidden flex-shrink-0 border border-white/5 relative cursor-pointer">
-                                                    <img src={displayImage} alt={product.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                                            <motion.div 
+                                                layout
+                                                key={`${item.productId}-${item.variantId}`} 
+                                                className="glass rounded-[2rem] p-6 md:p-8 flex flex-col md:flex-row gap-8 relative border border-black/[0.04] bg-white/50 hover:shadow-xl transition-all group overflow-hidden"
+                                            >
+                                                <div className="w-full md:w-48 h-48 bg-[#F5F5F7] rounded-2xl overflow-hidden shrink-0 relative p-4 flex items-center justify-center">
+                                                    <img src={displayImage} alt={product.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700" />
                                                 </div>
-                                                
-                                                {/* Content */}
-                                                <div className="flex-1 flex flex-col">
-                                                    <div className="flex flex-col md:flex-row justify-between items-start mb-2 gap-4">
-                                                        <div className="flex-1 pr-0 md:pr-4">
-                                                            <h3 className="text-lg md:text-xl font-bold text-white leading-snug hover:text-amber-500 cursor-pointer transition-colors">
-                                                                {product.name}
-                                                            </h3>
-                                                            {product.inStock ? (
-                                                                <p className="text-green-500 text-sm font-bold mt-1">In Stock</p>
-                                                            ) : (
-                                                                <p className="text-red-500 text-sm font-bold mt-1">Out of Stock</p>
-                                                            )}
-                                                            <p className="text-xs text-gray-400 mt-1">Eligible for <span className="text-white font-medium">FREE Standard Delivery</span></p>
-                                                            <div className="mt-2 text-sm text-gray-300">
-                                                                <span className="text-gray-500">Sold by: </span>
-                                                                <span className="text-amber-500 font-medium cursor-pointer">Dinanath & Sons</span>
-                                                            </div>
-                                                            
-                                                            {item.variantName && (
-                                                                <div className="mt-3 inline-block bg-gray-800/80 px-3 py-1 rounded text-sm text-gray-300 border border-gray-700">
-                                                                    <span className="text-gray-500 mr-2">Specification:</span> {item.variantName}
-                                                                </div>
-                                                            )}
 
-                                                            <div className="mt-3 flex items-center gap-2 text-sm">
-                                                                <input type="checkbox" id={`gift-${item.productId}`} className="rounded bg-black border-gray-700 text-amber-500 focus:ring-amber-500 focus:ring-offset-gray-900 h-4 w-4" />
-                                                                <label htmlFor={`gift-${item.productId}`} className="text-gray-400 cursor-pointer">This will be a gift</label>
+                                                <div className="flex-1 flex flex-col justify-center">
+                                                    <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-6">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center gap-3 mb-3">
+                                                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#C9A84C] bg-[#C9A84C]/10 px-3 py-1 rounded-full">{product.category}</span>
+                                                                {product.inStock && <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600"><div className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" /> In Stock</span>}
                                                             </div>
+                                                            <h3 className="text-xl md:text-2xl font-black text-[#1D1D1F] uppercase tracking-tight group-hover:text-[#C9A84C] transition-colors">{product.name}</h3>
+                                                            {item.variantName && <p className="text-[10px] font-bold text-[#86868B] mt-2 uppercase tracking-widest">Variant: <span className="text-[#1D1D1F]">{item.variantName}</span></p>}
                                                         </div>
-                                                        
-                                                        {/* Price Block */}
-                                                        <div className="text-left md:text-right w-full md:w-auto">
-                                                            <span className="font-bold text-2xl text-white block"><Currency value={item.price * item.quantity} /></span>
-                                                            {item.quantity > 1 && (
-                                                                <span className="text-xs text-gray-500 mt-1 block"><Currency value={item.price} /> / item</span>
-                                                            )}
+                                                        <div className="text-left md:text-right">
+                                                            <span className="text-2xl font-black text-[#1D1D1F] tabular-nums"><Currency value={item.price * item.quantity} /></span>
+                                                            <p className="text-[10px] font-bold text-[#86868B] mt-1 uppercase tracking-widest">Unit Price: <Currency value={item.price} /></p>
                                                         </div>
                                                     </div>
 
-                                                    {/* Actions */}
-                                                    <div className="mt-auto pt-4 flex flex-wrap items-center gap-4">
-                                                        <div className="flex items-center bg-black/50 rounded-lg border border-gray-700 h-9">
-                                                            <button onClick={() => updateQuantity(item.productId, item.variantId, item.mode, item.quantity - 1)} className="w-9 h-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-l-lg transition-colors"><Minus size={14} /></button>
-                                                            <div className="w-12 h-full flex items-center justify-center border-x border-gray-700 text-sm font-bold text-white bg-gray-900/50">
-                                                                {item.quantity}
-                                                            </div>
-                                                            <button onClick={() => updateQuantity(item.productId, item.variantId, item.mode, item.quantity + 1)} className="w-9 h-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-r-lg transition-colors"><Plus size={14} /></button>
+                                                    <div className="flex items-center justify-between pt-6 border-t border-black/[0.04]">
+                                                        <div className="flex items-center bg-[#F5F5F7] rounded-xl h-10 p-1 border border-black/[0.04]">
+                                                            <button onClick={() => updateQuantity(item.productId, item.variantId, item.mode, item.quantity - 1)} className="w-8 h-full flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] transition-all"><Minus size={14} /></button>
+                                                            <div className="w-10 flex items-center justify-center text-xs font-black text-[#1D1D1F] tabular-nums">{item.quantity}</div>
+                                                            <button onClick={() => updateQuantity(item.productId, item.variantId, item.mode, item.quantity + 1)} className="w-8 h-full flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] transition-all"><Plus size={14} /></button>
                                                         </div>
-                                                        <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
-                                                        <button onClick={() => removeFromCart(item.productId, item.variantId)} className="text-sm font-medium text-amber-500 hover:text-amber-400 transition-colors">
-                                                            Delete
-                                                        </button>
-                                                        <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
-                                                        <button className="text-sm font-medium text-amber-500 hover:text-amber-400 transition-colors">
-                                                            Save for later
+                                                        <button onClick={() => removeFromCart(item.productId, item.variantId)} className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] hover:text-red-600 transition-all flex items-center gap-2">
+                                                            <Trash2 size={14} /> Remove
                                                         </button>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </motion.div>
                                         );
                                     })}
                                 </motion.div>
                             ) : (
-                                <motion.div key="details-form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
-                                                    <div className="mb-8">
-                                                        <h2 className="text-3xl font-bold mb-2">Checkout Details</h2>
-                                                        <p className="text-gray-400">Please provide your shipping details securely below.</p>
-                                                    </div>
-                                                    <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-6">
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-400">Full Name</label>
-                                                <input required className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:ring-1 focus:ring-amber-500 outline-none" placeholder="John Doe" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                                <motion.div key="details" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="glass-strong rounded-[3rem] p-8 md:p-14 border border-black/[0.04] bg-white shadow-xl">
+                                    <h2 className="text-3xl font-black uppercase tracking-tight mb-10 leading-none">Shipping <span className="text-[#86868B]">Details</span></h2>
+                                    <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-10">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Full Name</label>
+                                                <input required className="w-full h-16 bg-[#F5F5F7] border border-black/[0.04] rounded-2xl px-6 text-[#1D1D1F] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-black uppercase text-[10px] tracking-widest" placeholder="Your Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                                             </div>
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-400">Phone Number</label>
-                                                <input required className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:ring-1 focus:ring-amber-500 outline-none" placeholder="+91 9999999999" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Phone Number</label>
+                                                <input required className="w-full h-16 bg-[#F5F5F7] border border-black/[0.04] rounded-2xl px-6 text-[#1D1D1F] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-black uppercase text-[10px] tracking-widest" placeholder="+91 000 000 0000" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                                             </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-400">Email Address</label>
-                                            <input required type="email" className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:ring-1 focus:ring-amber-500 outline-none" placeholder="john@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Email Address</label>
+                                            <input required type="email" className="w-full h-16 bg-[#F5F5F7] border border-black/[0.04] rounded-2xl px-6 text-[#1D1D1F] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-black uppercase text-[10px] tracking-widest" placeholder="email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                                         </div>
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-400">Shipping Address</label>
-                                            <textarea required rows={3} className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:ring-1 focus:ring-amber-500 outline-none resize-none" placeholder="Enter full address with landmark" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Shipping Address</label>
+                                            <textarea required rows={4} className="w-full bg-[#F5F5F7] border border-black/[0.04] rounded-3xl p-6 text-[#1D1D1F] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-black uppercase text-[10px] tracking-widest resize-none" placeholder="Enter Full Address" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
                                         </div>
 
-                                        <div className="pt-6 border-t border-gray-800/50">
-                                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><CreditCard size={20} className="text-amber-500" /> Payment Options</h3>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="border border-amber-500/50 bg-amber-500/10 p-4 rounded-xl flex items-start gap-4 cursor-pointer hover:bg-amber-500/20 transition-colors relative overflow-hidden">
-                                                    <div className="absolute -right-4 -bottom-4 opacity-10"><CheckCircle size={64} className="text-amber-500" /></div>
-                                                    <div className="w-5 h-5 mt-0.5 rounded-full border-2 border-amber-500 flex items-center justify-center flex-shrink-0">
-                                                        <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                                        <div className="pt-10 border-t border-black/[0.04]">
+                                            <h3 className="text-xl font-black uppercase tracking-tight mb-8 flex items-center gap-3"><CreditCard size={20} className="text-[#C9A84C]" /> Payment Method</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="bg-[#C9A84C]/5 rounded-[1.5rem] p-6 flex items-start gap-4 cursor-pointer relative overflow-hidden border border-[#C9A84C]/20">
+                                                    <div className="w-6 h-6 mt-0.5 rounded-full border-2 border-[#C9A84C] flex items-center justify-center shrink-0">
+                                                        <div className="w-3 h-3 rounded-full bg-[#C9A84C]" />
                                                     </div>
                                                     <div>
-                                                        <span className="font-bold text-white block">Cash on Delivery</span>
-                                                        <span className="text-sm text-gray-400">Pay when you receive the order</span>
+                                                        <span className="font-black text-[#1D1D1F] block text-sm uppercase tracking-tight">Cash on Delivery</span>
+                                                        <span className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest mt-1 block">Pay when items arrive</span>
                                                     </div>
                                                 </div>
-                                                <div className="border border-gray-800 bg-gray-900/30 p-4 rounded-xl flex items-start gap-4 cursor-not-allowed opacity-60">
-                                                    <div className="w-5 h-5 mt-0.5 rounded-full border-2 border-gray-600 flex-shrink-0" />
+                                                <div className="bg-gray-50 rounded-[1.5rem] p-6 flex items-start gap-4 cursor-not-allowed opacity-40 border border-black/[0.04]">
+                                                    <div className="w-6 h-6 mt-0.5 rounded-full border-2 border-[#86868B] shrink-0" />
                                                     <div>
-                                                        <span className="font-bold text-gray-300 block">Online Payment</span>
-                                                        <span className="text-sm text-gray-500">Coming soon through Gateway</span>
+                                                        <span className="font-black text-[#1D1D1F] block text-sm uppercase tracking-tight">Online Payment</span>
+                                                        <span className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest mt-1 block">Coming Soon</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -354,81 +360,107 @@ export default function CartPage() {
                         </AnimatePresence>
                     </div>
 
-                    {/* Right Column: Order Summary */}
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-24 bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl">
-                            <h3 className="text-xl font-bold mb-6">Order Summary</h3>
+                    <div className="lg:col-span-4">
+                        <div className="sticky top-40 space-y-6">
+                            <div className="glass-strong rounded-[2.5rem] p-10 border border-black/[0.04] bg-white shadow-2xl">
+                                <h3 className="text-2xl font-black uppercase tracking-tight mb-10 leading-none text-[#1D1D1F]">Order <span className="text-[#86868B]">Summary</span></h3>
 
-                            <div className="space-y-4 mb-6">
-                                <div className="flex justify-between text-gray-300">
-                                    <span>Subtotal</span>
-                                    <span className="font-medium"><Currency value={total} /></span>
-                                </div>
-                                <div className="flex justify-between text-gray-300">
-                                    <span>Shipping</span>
-                                    <span className={`font-medium ${shippingCost === 0 ? 'text-green-400' : 'text-white'}`}>
-                                        {shippingCost === 0 ? 'Free' : <Currency value={shippingCost} />}
-                                    </span>
-                                </div>
-                                {step === 'details' && (
-                                    <div className="flex justify-between text-gray-400">
-                                        <span>Tax (Included)</span>
-                                        <span><Currency value={Math.round(total * 0.18)} /></span>
+                                <div className="space-y-6 mb-10">
+                                    <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B]">
+                                        <span>Subtotal</span>
+                                        <span className="text-[#1D1D1F] tabular-nums font-black"><Currency value={total} /></span>
                                     </div>
-                                )}
-                            </div>
+                                    <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B]">
+                                         <span>Shipping</span>
+                                         <span className={shippingCost === 0 ? 'text-emerald-600 font-black' : 'text-[#1D1D1F] tabular-nums font-black'}>
+                                             {shippingCost === 0 ? 'FREE' : <Currency value={shippingCost} />}
+                                         </span>
+                                     </div>
+                                     {appliedCoupon && (
+                                         <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
+                                             <div className="flex items-center gap-2">
+                                                 <span>Discount ({appliedCoupon.code})</span>
+                                                 <button onClick={() => setAppliedCoupon(null)} className="hover:text-red-600 transition-colors"><Trash2 size={12}/></button>
+                                             </div>
+                                             <span className="tabular-nums font-black">- <Currency value={discountAmount} /></span>
+                                         </div>
+                                     )}
+                                     <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B]">
+                                         <span>Taxes</span>
+                                         <span className="text-[#1D1D1F] tabular-nums font-black">Included</span>
+                                     </div>
+                                 </div>
 
-                            <div className="border-t border-gray-800 pt-6 mb-6">
-                                <div className="flex justify-between items-end">
-                                    <div>
-                                        <span className="text-lg font-medium text-white block">Total</span>
-                                        <span className="text-xs text-gray-500">Including all taxes</span>
-                                    </div>
-                                    <span className="text-3xl font-bold text-amber-500"><Currency value={finalTotal} /></span>
-                                </div>
-                            </div>
+                                 <div className="pt-8 border-t border-black/[0.04] mb-10">
+                                     <div className="flex justify-between items-end">
+                                         <div>
+                                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#86868B] block mb-2">Grand Total</span>
+                                             <span className="text-3xl md:text-4xl font-black text-[#C9A84C] tabular-nums leading-none"><Currency value={finalTotal} /></span>
+                                         </div>
+                                     </div>
+                                 </div>
 
-                            {step === 'cart' ? (
-                                <>
-                                    <div className="mb-6 bg-gray-900 rounded-lg p-1 border border-gray-800 flex flex-col gap-3">
-                                        <div className="flex px-3 py-2">
-                                            <input
-                                                value={pincode}
-                                                onChange={(e) => setPincode(e.target.value)}
-                                                placeholder="Enter Delivery Pincode"
-                                                className="bg-transparent w-full outline-none text-white text-sm"
-                                                maxLength={6}
-                                            />
-                                            <button onClick={checkDelivery} className="text-amber-500 text-sm font-bold hover:text-amber-400 uppercase tracking-wide">Update</button>
-                                        </div>
+                                 {step === 'cart' ? (
+                                     <div className="space-y-6">
+                                         <div className="space-y-3">
+                                             <label className="text-[10px] font-black uppercase tracking-[0.3em] text-[#86868B] ml-2">Have a Coupon?</label>
+                                             <div className={`bg-[#F5F5F7] rounded-2xl h-14 flex items-center px-6 transition-all border ${couponError ? 'border-red-500' : 'border-black/[0.04] focus-within:border-[#C9A84C]'}`}>
+                                                 <Tag size={16} className="text-[#86868B] mr-4" />
+                                                 <input 
+                                                     value={couponCode} 
+                                                     onChange={(e) => {
+                                                         setCouponCode(e.target.value.toUpperCase());
+                                                         setCouponError('');
+                                                     }} 
+                                                     placeholder="CODE" 
+                                                     className="bg-transparent w-full outline-none text-[#1D1D1F] text-[10px] font-black uppercase tracking-[0.3em] placeholder-[#86868B]" 
+                                                 />
+                                                 <button onClick={handleApplyCoupon} className="text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.2em] hover:text-[#E8D48B] transition-colors ml-4">Apply</button>
+                                             </div>
+                                             {couponError && <p className="text-[10px] font-black text-red-500 uppercase tracking-widest ml-4">{couponError}</p>}
+                                             {appliedCoupon && <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest ml-4 flex items-center gap-2"><CheckCircle size={10}/> Coupon Applied</p>}
+                                         </div>
+
+                                         <div className="h-px bg-black/[0.04] my-6" />
+
+                                         <div className="bg-[#F5F5F7] rounded-2xl h-14 flex items-center px-6 border border-black/[0.04] focus-within:border-[#C9A84C] transition-all">
+                                             <Truck size={16} className="text-[#86868B] mr-4" />
+                                             <input value={pincode} onChange={(e) => setPincode(e.target.value)} placeholder="PINCODE" className="bg-transparent w-full outline-none text-[#1D1D1F] text-[10px] font-black uppercase tracking-[0.3em] placeholder-[#86868B]" maxLength={6} />
+                                             <button onClick={checkDelivery} className="text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.2em] hover:text-[#E8D48B] transition-colors ml-4">Check</button>
+                                         </div>
+                                        {deliveryStatus && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`p-5 rounded-2xl border ${deliveryStatus.type === 'instant' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-blue-50 border-blue-100 text-blue-700'}`}>
+                                                <h4 className="text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
+                                                    <Truck size={14} /> {deliveryStatus.type === 'instant' ? 'Instant Delivery Available' : 'Standard Shipping Applies'}
+                                                </h4>
+                                                <p className="text-[10px] font-bold opacity-80 uppercase tracking-widest">Est. Time: {deliveryStatus.estimatedTime}</p>
+                                            </motion.div>
+                                        )}
+                                        <Button onClick={() => setStep('details')} className="w-full h-16 glass-gold text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all hover:-translate-y-1 group" style={{ background: 'linear-gradient(135deg, #E8D48B, #C9A84C)' }}>
+                                            Continue to Shipping <ArrowRight size={18} className="ml-3 group-hover:translate-x-2 transition-transform" />
+                                        </Button>
                                     </div>
-                                    {deliveryStatus && (
-                                        <div className={`mb-6 p-4 rounded-xl border ${deliveryStatus.type === 'instant' ? 'bg-green-900/10 border-green-900/50 text-green-400' : 'bg-blue-900/10 border-blue-900/50 text-blue-400'}`}>
-                                            <h4 className="font-bold flex items-center gap-2 mb-1">
-                                                <Truck size={16} /> {deliveryStatus.type === 'instant' ? 'Instant Delivery Available' : 'Standard Shipping Applies'}
-                                            </h4>
-                                            <p className="text-xs opacity-80">Estimated Delivery: {deliveryStatus.estimatedTime}</p>
-                                        </div>
-                                    )}
-                                    <Button onClick={() => setStep('details')} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold h-14 rounded-xl text-lg shadow-xl shadow-amber-900/20 transition-all hover:-translate-y-0.5">
-                                        Proceed to Checkout
-                                    </Button>
-                                </>
-                            ) : (
-                                <>
-                                    <Button
-                                        type="submit"
-                                        form="checkout-form"
-                                        disabled={isSubmitting}
-                                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-12 rounded-xl text-lg shadow-lg shadow-green-900/20"
-                                    >
-                                        {isSubmitting ? <Loader2 className="animate-spin" /> : 'Place Order'}
-                                    </Button>
-                                    <button onClick={() => setStep('cart')} className="w-full mt-4 text-gray-500 hover:text-white text-sm font-medium">
-                                        Back to Cart
-                                    </button>
-                                </>
-                            )}
+                                 ) : (
+                                     <div className="space-y-4">
+                                         <Button type="submit" form="checkout-form" disabled={isSubmitting} className="w-full h-16 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all hover:-translate-y-1 shadow-emerald-200">
+                                             {isSubmitting ? <Loader2 className="animate-spin" /> : 'Place Order'}
+                                         </Button>
+                                         <button onClick={() => setStep('cart')} className="w-full text-[10px] font-black uppercase tracking-[0.3em] text-[#86868B] hover:text-[#1D1D1F] transition-all py-2">
+                                             Back to Cart
+                                         </button>
+                                     </div>
+                                 )}
+                             </div>
+
+                             <div className="glass p-8 rounded-[2rem] border border-black/[0.04] bg-white shadow-lg">
+                                 <div className="flex items-center gap-4 mb-4">
+                                     <ShieldCheck className="text-[#C9A84C]" size={20} />
+                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1D1D1F]">Secure Checkout</h4>
+                                 </div>
+                                 <p className="text-[10px] text-[#86868B] font-medium leading-relaxed uppercase tracking-widest">
+                                     Your transaction is protected. We use industry-standard encryption for all orders.
+                                 </p>
+                             </div>
                         </div>
                     </div>
                 </div>

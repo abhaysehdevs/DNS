@@ -103,7 +103,7 @@ export default function ProductClient({ id }: { id: string }) {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white pb-20 overflow-x-hidden">
+        <div className="min-h-screen bg-black text-white pt-40 md:pt-60 pb-20 overflow-x-hidden">
             <div className="max-w-[1400px] mx-auto px-4 md:px-8">
                 
                 <div className="pt-8 mb-8">
