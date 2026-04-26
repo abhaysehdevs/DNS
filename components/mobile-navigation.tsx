@@ -9,11 +9,11 @@ export function MobileBottomNav() {
     const pathname = usePathname();
 
     const navItems = [
-        { icon: Home, label: 'Home', href: '/' },
-        { icon: ShoppingBag, label: 'Shop', href: '/shop' },
-        { icon: User, label: 'Account', href: '/account' },
-        { icon: MessageSquare, label: 'AI Chat', href: '#', isAction: true },
-        { icon: Heart, label: 'Wishlist', href: '/wishlist' },
+        { icon: Home, label: 'Home', href: '/', isAction: false, isLang: false },
+        { icon: ShoppingBag, label: 'Shop', href: '/shop', isAction: false, isLang: false },
+        { icon: User, label: 'Account', href: '/account', isAction: false, isLang: false },
+        { icon: MessageSquare, label: 'AI Chat', href: '#', isAction: true, isLang: false },
+        { icon: Heart, label: 'Wishlist', href: '/wishlist', isAction: false, isLang: false },
     ];
 
     return (

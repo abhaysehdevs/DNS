@@ -1,3 +1,23 @@
+'use client';
+
+import { Suspense, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import { 
+    CheckCircle, 
+    Sparkles, 
+    Package, 
+    Truck, 
+    Zap, 
+    ShieldCheck, 
+    Home, 
+    ArrowRight 
+} from 'lucide-react';
+import { Currency } from '@/components/currency';
+
 export default function OrderConfirmationPage() {
     return (
         <Suspense fallback={
