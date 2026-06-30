@@ -90,6 +90,7 @@ interface AppState {
     hasSeenLanguagePopup: boolean;
     viewedProducts: string[];
     wishlist: string[];
+    theme: 'light' | 'dark';
 
     // Admin Settings State
     adminSettings: AdminSettings;
@@ -105,6 +106,7 @@ interface AppState {
     setLanguage: (lang: Language) => void;
     setUser: (user: User | null) => void; // New
     setHasSeenLanguagePopup: (seen: boolean) => void;
+    setTheme: (theme: 'light' | 'dark') => void;
     addToCart: (item: CartItem) => void;
     updateQuantity: (productId: string, variantId: string | undefined, mode: AppMode, quantity: number) => void;
     removeFromCart: (productId: string, variantId?: string) => void;
@@ -148,6 +150,7 @@ export const useAppStore = create<AppState>()(
             hasSeenLanguagePopup: false,
             viewedProducts: [],
             wishlist: [],
+            theme: 'light',
 
             // Default Admin Settings
             adminSettings: {
@@ -175,6 +178,7 @@ export const useAppStore = create<AppState>()(
             })),
             setUser: (user) => set({ user }), // New
             setHasSeenLanguagePopup: (hasSeenLanguagePopup) => set({ hasSeenLanguagePopup }),
+            setTheme: (theme) => set({ theme }),
 
             viewProduct: (productId) => set((state) => {
                 const newViewed = [productId, ...state.viewedProducts.filter(id => id !== productId)].slice(0, 6);
@@ -331,6 +335,7 @@ export const useAppStore = create<AppState>()(
                 cart: state.cart,
                 mode: state.mode,
                 language: state.language,
+                theme: state.theme,
                 hasSeenLanguagePopup: state.hasSeenLanguagePopup,
                 viewedProducts: state.viewedProducts,
                 wishlist: state.wishlist,

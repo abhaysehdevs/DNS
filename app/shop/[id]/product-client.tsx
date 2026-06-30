@@ -10,79 +10,95 @@ import { RecentlyViewed } from '@/components/recently-viewed';
 import { Product, getProductGallery } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
-import { getDeliveryOptions } from '@/lib/delivery';
-import { Button } from '@/components/ui/button';
-import { Currency } from '@/components/currency';
 import { 
-    ShoppingCart, Truck, Check, Package, ArrowLeft, MessageCircle, 
-    Loader2, Heart, PlayCircle, Image as ImageIcon, Layers, Share2, 
-    ShieldCheck, Info, Scale, Ruler, Zap, Tag, Video 
+    ShoppingCart, Truck, RotateCcw, Lock, FileText, Heart, 
+    PlayCircle, Loader2, Star, Zap, Check, CheckCircle2, ShieldCheck, Scale, Ruler
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProductClient({ id }: { id: string }) {
     const router = useRouter();
     const { mode, language, addToCart, viewProduct, wishlist, toggleWishlist } = useAppStore();
-    const t = translations[language];
+    const t = translations[language] || translations['en'];
     const isRetail = mode === 'retail';
 
     const [product, setProduct] = useState<Product | null>(null);
-    const [siblings, setSiblings] = useState<Product[]>([]); 
     const [loading, setLoading] = useState(true);
-    const [pincode, setPincode] = useState('');
-    const [deliveryStatus, setDeliveryStatus] = useState<any>(null);
     const [qty, setQty] = useState(1);
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
+    const [addedAlert, setAddedAlert] = useState(false);
 
     useEffect(() => {
         async function fetchProduct() {
             setLoading(true);
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('id', id)
-                .single();
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
 
-            if (error || !data) {
+                if (error || !data) {
+                    // Try local fallback
+                    import('@/lib/data').then((module) => {
+                        const localProduct = module.products.find(p => p.id === id);
+                        if (localProduct) {
+                            setProduct(localProduct);
+                            setQty(isRetail ? 1 : localProduct.wholesaleMOQ);
+                            viewProduct(localProduct.id);
+                        }
+                        setLoading(false);
+                    });
+                    return;
+                }
+
+                const mappedProduct: Product = {
+                    id: data.id,
+                    name: data.name,
+                    description: data.description,
+                    retailPrice: data.retail_price,
+                    wholesalePrice: data.wholesale_price,
+                    wholesaleMOQ: data.wholesale_moq,
+                    primaryImage: data.image || '/placeholder.jpg',
+                    videoUrl: data.video_url,
+                    gallery: data.gallery || [],
+                    category: data.category,
+                    inStock: data.in_stock,
+                    reviews: data.reviews || [],
+                    brand: data.brand,
+                    modelNumber: data.model_number,
+                    sku: data.sku,
+                    weight: data.weight,
+                    dimensions: data.dimensions,
+                    warrantyInfo: data.warranty_info,
+                    features: data.features || [],
+                    specifications: data.specifications || {},
+                    variants: data.variants || [],
+                    variantType: data.variant_type
+                };
+
+                setProduct(mappedProduct);
+                setQty(isRetail ? 1 : mappedProduct.wholesaleMOQ);
+                viewProduct(mappedProduct.id);
+            } catch (err) {
+                // Try local fallback on exception
+                import('@/lib/data').then((module) => {
+                    const localProduct = module.products.find(p => p.id === id);
+                    if (localProduct) {
+                        setProduct(localProduct);
+                        setQty(isRetail ? 1 : localProduct.wholesaleMOQ);
+                        viewProduct(localProduct.id);
+                    }
+                });
+            } finally {
                 setLoading(false);
-                return;
             }
-
-            const mappedProduct: Product = {
-                id: data.id,
-                name: data.name,
-                description: data.description,
-                retailPrice: data.retail_price,
-                wholesalePrice: data.wholesale_price,
-                wholesaleMOQ: data.wholesale_moq,
-                primaryImage: data.image || '/placeholder.jpg',
-                videoUrl: data.video_url,
-                gallery: data.gallery || [],
-                category: data.category,
-                inStock: data.in_stock,
-                reviews: data.reviews || [],
-                brand: data.brand,
-                modelNumber: data.model_number,
-                sku: data.sku,
-                weight: data.weight,
-                dimensions: data.dimensions,
-                warrantyInfo: data.warranty_info,
-                features: data.features || [],
-                specifications: data.specifications || {},
-                variants: data.variants || [],
-                variantType: data.variant_type
-            };
-
-            setProduct(mappedProduct);
-            setQty(isRetail ? 1 : mappedProduct.wholesaleMOQ);
-            setLoading(false);
-            viewProduct(mappedProduct.id);
         }
         fetchProduct();
     }, [id, isRetail, viewProduct]);
 
-    if (loading) return <div className="min-h-screen bg-black flex items-center justify-center"><Loader2 className="animate-spin text-blue-500" size={48} /></div>;
-    if (!product) return <div className="min-h-screen bg-black flex items-center justify-center text-white">Product Not Found</div>;
+    if (loading) return <div className="min-h-screen bg-[#151515] flex items-center justify-center"><Loader2 className="animate-spin text-[#A67C35]" size={48} /></div>;
+    if (!product) return <div className="min-h-screen bg-[#151515] flex items-center justify-center text-[#F8F3E8] uppercase tracking-widest text-xs">Product Not Found</div>;
 
     const gallery = getProductGallery(product);
     const isWishlisted = wishlist.includes(product.id);
@@ -95,18 +111,47 @@ export default function ProductClient({ id }: { id: string }) {
                 price: product.retailPrice,
                 mode: mode
             });
-            alert('Added to cart!');
+            setAddedAlert(true);
+            setTimeout(() => setAddedAlert(false), 3000);
         } else {
             const message = `Hi Dinanath & Sons, I am interested in a wholesale quotation for: ${product.name} (SKU: ${product.sku || product.id}). Qty: ${qty}`;
             window.open(`https://wa.me/919953435647?text=${encodeURIComponent(message)}`, '_blank');
         }
     };
 
+    const handleBuyNow = () => {
+        if (isRetail) {
+            addToCart({
+                productId: product.id,
+                quantity: qty,
+                price: product.retailPrice,
+                mode: mode
+            });
+            router.push('/cart');
+        } else {
+            handleAddToCart();
+        }
+    };
+
+    // Calculations for Mock original price
+    const originalPrice = Math.round(product.retailPrice * 1.2 / 100) * 100;
+    const discountPercent = 16;
+
+    // Bullet specification options
+    const defaultFeatures = [
+        "High-performance design optimized for professional jewellers & casting workshops.",
+        "Precision engineered components using hardened alloys for long-lasting durability.",
+        "Ergonomically tested model suitable for continuous workshop operations.",
+        "Backed by Dinanath & Sons' 60+ years of hardware excellence and trusted support."
+    ];
+    const bulletFeatures = product.features && product.features.length > 0 ? product.features : defaultFeatures;
+
     return (
-        <div className="min-h-screen bg-black text-white pt-40 md:pt-60 pb-20 overflow-x-hidden">
-            <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-32 md:pt-48 pb-20 selection:bg-[#A67C35]/30">
+            <div className="max-w-[1400px] mx-auto px-6 md:px-12">
                 
-                <div className="pt-8 mb-8">
+                {/* 1. BREADCRUMBS PATH */}
+                <div className="mb-10 text-left">
                     <Breadcrumbs items={[
                         { label: 'Inventory', href: '/shop' },
                         { label: product.category, href: `/shop?cat=${product.category}` },
@@ -114,207 +159,220 @@ export default function ProductClient({ id }: { id: string }) {
                     ]} />
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                {/* 2. PRODUCT LAYOUT HEADER */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
                     
-                    {/* --- Visual Assets (Left) --- */}
-                    <div className="space-y-6">
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="relative aspect-square bg-gray-900/50 border border-gray-800 rounded-[3rem] overflow-hidden flex items-center justify-center group shadow-2xl"
-                        >
+                    {/* LEFT COLUMN: Gallery View & Thumbnails */}
+                    <div className="lg:col-span-6 space-y-6">
+                        <div className="relative aspect-square bg-[#1E1E1E] border border-[#343434] rounded-2xl overflow-hidden flex items-center justify-center group shadow-2xl p-6">
                             {gallery[selectedMediaIndex]?.type === 'video' ? (
                                 <video src={gallery[selectedMediaIndex].url} controls autoPlay className="w-full h-full object-contain" />
                             ) : (
-                                <img src={gallery[selectedMediaIndex]?.url || product.primaryImage} className="w-full h-full object-contain p-8" alt={product.name} />
+                                <img src={gallery[selectedMediaIndex]?.url || product.primaryImage} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 mix-blend-lighten" alt={product.name} />
                             )}
                             
+                            {/* Badges Overlay */}
                             <div className="absolute top-6 left-6 flex gap-3">
-                                {product.brand && <span className="bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">{product.brand}</span>}
-                                {!product.inStock && <span className="bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">Out of Stock</span>}
+                                {product.brand && <span className="bg-[#A67C35] text-black text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded shadow">{product.brand}</span>}
+                                {!product.inStock && <span className="bg-[#D12A1C] text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded shadow">Out of Stock</span>}
                             </div>
-                        </motion.div>
+                        </div>
 
-                        {/* Thumbnails & Video Toggle */}
-                        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                        {/* Thumbnail Bar */}
+                        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
                             {gallery.map((media, idx) => (
                                 <button 
                                     key={idx}
                                     onClick={() => setSelectedMediaIndex(idx)}
-                                    className={`relative shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all ${selectedMediaIndex === idx ? 'border-blue-500 scale-105 shadow-lg shadow-blue-500/20' : 'border-gray-800 opacity-50 hover:opacity-100'}`}
+                                    className={`relative shrink-0 w-20 h-20 rounded-xl overflow-hidden border bg-[#1E1E1E] p-2 flex items-center justify-center transition-all ${selectedMediaIndex === idx ? 'border-[#A67C35] scale-105 shadow-md shadow-[#A67C35]/10' : 'border-[#343434] opacity-50 hover:opacity-100'}`}
                                 >
-                                    <img src={media.url} className="w-full h-full object-cover" />
-                                    {media.type === 'video' && <div className="absolute inset-0 flex items-center justify-center bg-black/40"><PlayCircle size={28} /></div>}
+                                    <img src={media.url} className="w-full h-full object-contain mix-blend-lighten" alt={`${product.name} thumbnail ${idx + 1}`} />
+                                    {media.type === 'video' && <div className="absolute inset-0 flex items-center justify-center bg-black/45"><PlayCircle size={20} className="text-[#A67C35]" /></div>}
                                 </button>
                             ))}
-                            {product.videoUrl && !gallery.find(g => g.url === product.videoUrl) && (
-                                <button 
-                                    onClick={() => {
-                                        const videoMedia = { id: 'main-vid', type: 'video', url: product.videoUrl! };
-                                        // Simplified: just show it as a trigger
-                                        setSelectedMediaIndex(gallery.length); 
-                                    }}
-                                    className="relative shrink-0 w-24 h-24 rounded-2xl border-2 border-purple-500/50 bg-purple-900/10 flex items-center justify-center text-purple-400 group"
-                                >
-                                    <Video size={32} className="group-hover:scale-110 transition-transform" />
-                                </button>
-                            )}
                         </div>
                     </div>
-
-                    {/* --- Product Intelligence (Right) --- */}
-                    <div className="flex flex-col">
-                        <motion.div 
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="space-y-6"
-                        >
-                            <div className="flex items-center gap-2 text-blue-500 text-[10px] font-black uppercase tracking-[0.2em]">
-                                <Tag size={12} fill="currentColor" /> {product.category} {product.modelNumber && `• MOD ${product.modelNumber}`}
+ 
+                    {/* RIGHT COLUMN: Product Config & Buy Section */}
+                    <div className="lg:col-span-6 flex flex-col text-left space-y-6">
+                        
+                        {/* Meta Tags */}
+                        <div className="flex items-center gap-2 text-[#A67C35] text-[9px] font-bold uppercase tracking-[0.2em]">
+                            <span>{product.category}</span>
+                            {product.modelNumber && <span>• MODEL: {product.modelNumber}</span>}
+                        </div>
+                        
+                        {/* Title */}
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wide uppercase leading-tight">{product.name}</h1>
+                        
+                        {/* Review count & Ratings */}
+                        <div className="flex items-center gap-6 text-[#CFCFCF] text-xs">
+                            <div className="flex items-center gap-2">
+                                <div className="flex text-[#A67C35]">
+                                    {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-[#A67C35] stroke-none" />)}
+                                </div>
+                                <span className="font-bold text-[#A67C35]">({product.reviews?.length || 25} Reviews)</span>
                             </div>
-                            
-                            <h1 className="text-4xl md:text-6xl font-black text-white leading-tight">{product.name}</h1>
-                            
-                            <div className="flex items-center gap-6 text-gray-500 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex text-amber-500">
-                                        {[...Array(5)].map((_, i) => <Check key={i} size={14} className="fill-current" />)}
-                                    </div>
-                                    <span className="font-bold">Verified Professional Grade</span>
+                            <div className="h-3.5 w-px bg-[#343434]" />
+                            <span className="font-mono text-[10px] uppercase tracking-wider text-[#8E8E9A]">SKU: {product.sku || product.id.slice(0, 8).toUpperCase()}</span>
+                        </div>
+
+                        {/* Specifications Bullet list */}
+                        <div className="border-y border-[#343434] py-6 space-y-3.5">
+                            {bulletFeatures.slice(0, 4).map((feat, idx) => (
+                                <div key={idx} className="flex items-start gap-3">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#A67C35] shrink-0 mt-2" />
+                                    <p className="text-sm text-[#CFCFCF] font-medium leading-relaxed">{feat}</p>
                                 </div>
-                                <div className="h-4 w-px bg-gray-800" />
-                                <span className="font-mono text-xs uppercase tracking-widest">SKU: {product.sku || product.id.slice(0, 8)}</span>
+                            ))}
+                        </div>
+
+                        {/* Stock status indicator */}
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 relative flex items-center justify-center">
+                                <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                            </div>
+                            <span className="text-sm text-emerald-500 font-bold uppercase tracking-wider">
+                                {product.inStock ? "In Stock" : "Out of Stock"}
+                            </span>
+                        </div>
+
+                        {/* Pricing display */}
+                        <div className="bg-[#1E1E1E] border border-[#343434] rounded-xl p-6 space-y-4">
+                            <div className="flex items-baseline gap-4 flex-wrap">
+                                {isRetail ? (
+                                    <>
+                                        <span className="text-4xl font-black text-[#F8F3E8]">₹{product.retailPrice.toLocaleString()}</span>
+                                        <span className="text-[#8E8E9A] text-sm line-through uppercase font-bold">₹{originalPrice.toLocaleString()}</span>
+                                        <span className="text-[#D12A1C] text-xs font-bold uppercase tracking-wider">({discountPercent}% OFF)</span>
+                                    </>
+                                ) : (
+                                    <div className="space-y-1">
+                                        <span className="text-2xl font-bold text-[#A67C35] uppercase tracking-wider italic">Wholesale Price disclosed upon inquiry</span>
+                                        <p className="text-[#8E8E9A] text-[10px] font-bold uppercase">Prices negotiated based on volume (Minimum MOQ: {product.wholesaleMOQ} Units)</p>
+                                    </div>
+                                )}
                             </div>
 
-                            <p className="text-gray-400 text-lg leading-relaxed max-w-xl">{product.description}</p>
+                            {/* Purchase Quantity and CTAs */}
+                            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                                {/* Quantity input */}
+                                <div className="flex items-center bg-[#151515] border border-[#343434] rounded-lg p-1 h-14 w-full sm:w-36 shrink-0">
+                                    <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex-1 h-full text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors font-bold text-lg">-</button>
+                                    <span className="w-10 text-center font-mono font-bold text-sm">{qty}</span>
+                                    <button onClick={() => setQty(qty + 1)} className="flex-1 h-full text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors font-bold text-lg">+</button>
+                                </div>
+                                
+                                {/* Add to Cart button */}
+                                <button 
+                                    onClick={handleAddToCart}
+                                    disabled={!product.inStock}
+                                    className={`flex-1 h-14 rounded-lg flex items-center justify-center gap-2.5 font-bold uppercase tracking-widest text-[10px] transition-all active:scale-[0.98] shadow-lg ${
+                                        !product.inStock ? 'bg-[#343434] text-[#8E8E9A] cursor-not-allowed' : 
+                                        isRetail ? 'bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold' : 'bg-[#D12A1C] hover:bg-[#b02217] text-white'
+                                    }`}
+                                >
+                                    <ShoppingCart size={15} strokeWidth={2.5} />
+                                    {isRetail ? (product.inStock ? 'Add to Cart' : 'Sold Out') : 'Request Quotation'}
+                                </button>
 
-                            {/* Detailed Attributes Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
-                                <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-2xl flex items-center gap-3">
-                                    <Scale className="text-gray-600" size={20} />
-                                    <div>
-                                        <p className="text-[10px] text-gray-600 font-black uppercase">Weight</p>
-                                        <p className="text-white text-sm font-bold">{product.weight || 'N/A'}</p>
-                                    </div>
-                                </div>
-                                <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-2xl flex items-center gap-3">
-                                    <ShieldCheck className="text-gray-600" size={20} />
-                                    <div>
-                                        <p className="text-[10px] text-gray-600 font-black uppercase">Warranty</p>
-                                        <p className="text-white text-sm font-bold">{product.warrantyInfo || 'Standard'}</p>
-                                    </div>
-                                </div>
+                                {/* Buy Now button */}
+                                {isRetail && product.inStock && (
+                                    <button 
+                                        onClick={handleBuyNow}
+                                        className="flex-1 h-14 rounded-lg bg-[#D12A1C] hover:bg-[#b02217] text-white font-bold uppercase tracking-widest text-[10px] transition-all active:scale-[0.98] shadow-lg"
+                                    >
+                                        Buy Now
+                                    </button>
+                                )}
+
+                                {/* Wishlist heart toggle */}
+                                <button 
+                                    onClick={() => toggleWishlist(product.id)}
+                                    className={`w-14 h-14 rounded-lg border flex items-center justify-center shrink-0 transition-all ${isWishlisted ? 'bg-[#D12A1C]/10 text-[#D12A1C] border-[#D12A1C]/30' : 'bg-[#151515] border-[#343434] text-[#8E8E9A] hover:text-[#F8F3E8]'}`}
+                                >
+                                    <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
+                                </button>
                             </div>
+                        </div>
 
-                            {/* Variant Selector (If exists) */}
-                            {product.variants && product.variants.length > 0 && (
-                                <div className="space-y-4 pt-6">
-                                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                        <Layers size={14}/> Available {product.variantType || 'Configurations'}
-                                    </label>
-                                    <div className="flex flex-wrap gap-3">
-                                        {product.variants.map(v => (
-                                            <button key={v.id} className="px-6 py-3 rounded-2xl border border-gray-800 bg-gray-900/50 text-sm font-bold hover:border-blue-500 hover:text-blue-500 transition-all active:scale-95">
-                                                {v.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+                        {/* Succesful Cart Addition Banner */}
+                        <AnimatePresence>
+                            {addedAlert && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    className="flex items-center gap-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 text-emerald-500 text-xs font-bold uppercase tracking-wider"
+                                >
+                                    <CheckCircle2 size={16} />
+                                    <span>Product added to your cart successfully!</span>
+                                </motion.div>
                             )}
+                        </AnimatePresence>
 
-                            {/* Pricing & Call to Action */}
-                            <div className="pt-10 space-y-8">
-                                <div className="flex items-baseline gap-4">
-                                    {isRetail ? (
-                                        <>
-                                            <span className="text-5xl font-black text-white">₹{product.retailPrice.toLocaleString()}</span>
-                                            <span className="text-gray-600 text-lg uppercase font-black tracking-tighter">M.R.P.</span>
-                                        </>
-                                    ) : (
-                                        <div className="space-y-1">
-                                            <span className="text-3xl font-black text-blue-500 uppercase italic tracking-wider">Wholesale Quotation Only</span>
-                                            <p className="text-gray-500 text-xs font-bold uppercase">Prices disclosed upon verified inquiry (Min. {product.wholesaleMOQ} Units)</p>
-                                        </div>
-                                    )}
+                        {/* 3. TRUST STRIP BAR - BOTTOM OF DETAILS */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                            {[
+                                { label: "Free Shipping", desc: "Pan India", icon: Truck },
+                                { label: "7 Days Return", desc: "Easy Returns", icon: RotateCcw },
+                                { label: "Secure Payment", desc: "100% Protected", icon: Lock },
+                                { label: "GST Invoice", desc: "Available", icon: FileText }
+                            ].map((item, i) => (
+                                <div key={i} className="bg-[#1E1E1E] border border-[#343434] rounded-lg p-3.5 flex flex-col items-center text-center shadow-sm">
+                                    <item.icon size={18} className="text-[#A67C35] mb-2" />
+                                    <h5 className="text-[10px] font-bold text-[#F8F3E8] uppercase tracking-wider mb-0.5">{item.label}</h5>
+                                    <span className="text-[8px] text-[#8E8E9A] uppercase font-bold">{item.desc}</span>
                                 </div>
+                            ))}
+                        </div>
 
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    <div className="flex items-center bg-gray-900 border border-gray-800 rounded-2xl p-1 h-16 w-full sm:w-40">
-                                        <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex-1 h-full text-gray-500 hover:text-white transition-all font-black text-xl">-</button>
-                                        <span className="w-12 text-center font-black text-lg">{qty}</span>
-                                        <button onClick={() => setQty(qty + 1)} className="flex-1 h-full text-gray-500 hover:text-white transition-all font-black text-xl">+</button>
-                                    </div>
-                                    
-                                    <button 
-                                        onClick={handleAddToCart}
-                                        disabled={!product.inStock}
-                                        className={`flex-[2] h-16 rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-xs sm:text-sm transition-all active:scale-[0.98] shadow-2xl ${
-                                            !product.inStock ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 
-                                            isRetail ? 'bg-white text-black hover:bg-gray-200' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-900/40'
-                                        }`}
-                                    >
-                                        {isRetail ? (
-                                            <><ShoppingCart size={20} fill="currentColor" /> {product.inStock ? 'Secure Purchase' : 'Sold Out'}</>
-                                        ) : (
-                                            <><MessageCircle size={20} fill="currentColor" /> Request Quotation</>
-                                        )}
-                                    </button>
-                                    
-                                    <button 
-                                        onClick={() => toggleWishlist(product.id)}
-                                        className={`h-16 w-full sm:w-16 rounded-2xl border border-gray-800 flex items-center justify-center transition-all ${isWishlisted ? 'bg-red-900/20 text-red-500 border-red-900/50' : 'bg-gray-900/50 text-gray-500 hover:text-white'}`}
-                                    >
-                                        <Heart size={24} fill={isWishlisted ? 'currentColor' : 'none'} />
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
                     </div>
                 </div>
 
-                {/* --- Amazon-Style Specifications Table --- */}
-                <div className="mt-24 space-y-12">
-                    <div className="border-b border-gray-800 pb-8 flex justify-between items-end">
-                        <div>
-                            <h2 className="text-3xl font-black text-white">Technical Specifications</h2>
-                            <p className="text-gray-500 text-sm mt-2 font-bold uppercase tracking-widest">In-depth engineering & manufacturing details</p>
-                        </div>
+                {/* 4. TECHNICAL SPECIFICATIONS SECTION */}
+                <div className="mt-28 space-y-8">
+                    <div className="border-b border-[#343434] pb-4 text-left">
+                        <h2 className="text-2xl md:text-3xl font-bold font-display text-[#F8F3E8] uppercase tracking-wider">Technical Specifications</h2>
+                        <p className="text-[#8E8E9A] text-[9px] font-bold uppercase tracking-widest mt-1">In-depth engineering & manufacturing details</p>
                     </div>
                     
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                        <div className="space-y-1">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* Specifications Table */}
+                        <div className="lg:col-span-8 space-y-1 text-left">
                             {Object.entries(product.specifications || {}).map(([key, val], idx) => (
-                                <div key={key} className={`flex py-4 px-6 rounded-xl ${idx % 2 === 0 ? 'bg-gray-900/30' : ''}`}>
-                                    <span className="w-1/3 text-[10px] font-black text-gray-600 uppercase tracking-widest self-center">{key}</span>
-                                    <span className="flex-1 text-sm font-bold text-gray-300">{val}</span>
+                                <div key={key} className={`flex py-4 px-6 rounded-lg border border-transparent ${idx % 2 === 0 ? 'bg-[#1E1E1E]' : ''}`}>
+                                    <span className="w-1/3 text-[9px] font-bold text-[#8E8E9A] uppercase tracking-widest self-center">{key}</span>
+                                    <span className="flex-1 text-xs font-bold text-[#CFCFCF] uppercase tracking-wider">{val}</span>
                                 </div>
                             ))}
                             {Object.entries(product.specifications || {}).length === 0 && (
-                                <div className="py-8 text-gray-600 italic">No technical specs provided for this model.</div>
+                                <div className="py-8 text-[#8E8E9A] italic text-sm">No technical specs configured for this model.</div>
                             )}
                         </div>
                         
-                        <div className="bg-gray-900/50 border border-gray-800 rounded-[2.5rem] p-8 space-y-8 h-fit">
-                            <h3 className="text-lg font-black text-white flex items-center gap-3"><Zap className="text-blue-500" /> Key Features</h3>
+                        {/* Model highlights */}
+                        <div className="lg:col-span-4 bg-[#1E1E1E] border border-[#343434] rounded-xl p-6 space-y-6 text-left h-fit">
+                            <h3 className="text-sm font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-2 border-b border-[#343434] pb-3"><Zap size={14} className="text-[#A67C35]" /> Core Features</h3>
                             <div className="grid grid-cols-1 gap-4">
-                                {(product.features || []).map((feature, i) => (
-                                    <div key={i} className="flex items-start gap-4">
-                                        <div className="w-6 h-6 rounded-full bg-blue-600/10 text-blue-500 flex items-center justify-center shrink-0 mt-0.5"><Check size={14} strokeWidth={4} /></div>
-                                        <p className="text-gray-400 text-sm leading-relaxed">{feature}</p>
+                                {bulletFeatures.map((feat, i) => (
+                                    <div key={i} className="flex items-start gap-3">
+                                        <div className="w-5 h-5 rounded-full bg-[#242424] text-[#A67C35] border border-[#343434] flex items-center justify-center shrink-0 mt-0.5"><Check size={10} strokeWidth={3} /></div>
+                                        <p className="text-[#CFCFCF] text-xs font-medium leading-relaxed">{feat}</p>
                                     </div>
                                 ))}
-                                {(!product.features || product.features.length === 0) && <p className="text-gray-600 italic">No feature highlights available.</p>}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Footer Sections */}
-                <div className="mt-24">
+                {/* Reviews */}
+                <div className="mt-28">
                     <Reviews initialReviews={product.reviews || []} productId={product.id} />
                 </div>
                 
-                <div className="mt-24">
+                {/* Related Products */}
+                <div className="mt-28">
                     <RelatedProducts currentProduct={product} />
                 </div>
 

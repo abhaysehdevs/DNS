@@ -41,17 +41,29 @@ export function LanguagePopup() {
         setIsVisible(false);
         setHasSeenLanguagePopup(true);
 
+        const domain = window.location.hostname;
+        const rootDomain = domain.split('.').slice(-2).join('.');
+
         if (langCode === 'en') {
             document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-            document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+            document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+            document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${domain}`;
+            if (rootDomain !== domain) {
+                document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${rootDomain}`;
+            }
         } else {
             document.cookie = `googtrans=/en/${langCode}; path=/;`;
+            document.cookie = `googtrans=/en/${langCode}; path=/; domain=${domain}`;
+            document.cookie = `googtrans=/en/${langCode}; path=/; domain=.${domain}`;
+            if (rootDomain !== domain) {
+                document.cookie = `googtrans=/en/${langCode}; path=/; domain=.${rootDomain}`;
+            }
         }
 
         // Short delay to let the state save before reload
         setTimeout(() => {
             window.location.reload();
-        }, 100);
+        }, 150);
     };
 
     const handleDismiss = () => {

@@ -125,58 +125,101 @@ function OrderConfirmationContent() {
                     <div className="mb-20 pt-12 border-t border-black/[0.04] relative">
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F5F5F7] border border-black/[0.04] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-[#86868B]">Delivery Status</div>
                         
-                        <div className="relative flex justify-between items-center max-w-2xl mx-auto px-4 py-10">
-                            <div className="absolute top-[40%] left-0 right-0 h-[2px] bg-black/[0.04] -translate-y-1/2 z-0 px-10">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: '33%' }}
-                                    transition={{ duration: 1.5, delay: 0.8 }}
-                                    className="h-full bg-gradient-to-r from-emerald-500 to-[#C9A84C]"
-                                />
-                            </div>
-                            
-                            {[
-                                { label: 'Processing', icon: Package, active: true, completed: true },
-                                { label: 'Shipped', icon: Truck, active: true, completed: false },
-                                { label: 'In Transit', icon: Zap, active: false, completed: false },
-                                { label: 'Delivered', icon: ShieldCheck, active: false, completed: false },
-                            ].map((step, idx) => (
-                                <div key={idx} className="relative z-10 flex flex-col items-center gap-4">
-                                    <motion.div 
-                                        initial={{ scale: 0, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        transition={{ delay: 1 + idx * 0.1 }}
-                                        className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 ${step.completed ? 'bg-[#C9A84C] border-[#C9A84C] text-[#0A0A0F] shadow-lg' : step.active ? 'bg-emerald-50 border-emerald-500 text-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'bg-[#F5F5F7] border-black/[0.04] text-[#86868B]'}`}
-                                    >
-                                        <step.icon size={step.active ? 24 : 20} />
-                                    </motion.div>
-                                    <span className={`text-[9px] font-black uppercase tracking-[0.2em] transition-colors ${step.active ? 'text-[#1D1D1F]' : 'text-[#86868B]'}`}>{step.label}</span>
-                                </div>
-                            ))}
-                        </div>
+                        {(() => {
+                            const lowerStatus = (order.status || 'pending').toLowerCase();
+                            const trackingSteps = [
+                                { 
+                                    label: 'Processing', 
+                                    icon: Package, 
+                                    active: ['pending', 'processing', 'shipped', 'delivered'].includes(lowerStatus), 
+                                    completed: ['processing', 'shipped', 'delivered'].includes(lowerStatus) 
+                                },
+                                { 
+                                    label: 'Shipped', 
+                                    icon: Truck, 
+                                    active: ['processing', 'shipped', 'delivered'].includes(lowerStatus), 
+                                    completed: ['shipped', 'delivered'].includes(lowerStatus) 
+                                },
+                                { 
+                                    label: 'In Transit', 
+                                    icon: Zap, 
+                                    active: ['shipped', 'delivered'].includes(lowerStatus), 
+                                    completed: ['delivered'].includes(lowerStatus) 
+                                },
+                                { 
+                                    label: 'Delivered', 
+                                    icon: ShieldCheck, 
+                                    active: ['delivered'].includes(lowerStatus), 
+                                    completed: lowerStatus === 'delivered' 
+                                }
+                            ];
 
-                        {order?.shiprocket && (
-                            <motion.div 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 1.5 }}
-                                className="max-w-3xl mx-auto mt-6 bg-[#F5F5F7] p-8 rounded-[2rem] border border-emerald-500/10 shadow-sm"
-                            >
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                                    {[
-                                        { label: "Courier", value: order.shiprocket.courier_name },
-                                        { label: "Tracking Number", value: order.shiprocket.awb_code, mono: true },
-                                        { label: "Reference ID", value: order.shiprocket.shiprocket_order_id, mono: true },
-                                        { label: "Est. Delivery", value: order.shiprocket.estimated_delivery, highlight: true }
-                                    ].map((stat, i) => (
-                                        <div key={i}>
-                                            <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-2">{stat.label}</p>
-                                            <p className={`text-xs font-black uppercase tracking-tight ${stat.highlight ? 'text-emerald-600' : 'text-[#1D1D1F]'} ${stat.mono ? 'font-mono' : ''}`}>{stat.value}</p>
+                            const getProgressWidth = () => {
+                                if (lowerStatus === 'delivered') return '100%';
+                                if (lowerStatus === 'shipped') return '66%';
+                                if (lowerStatus === 'processing') return '33%';
+                                return '0%';
+                            };
+
+                            const trackingInfo = order.shiprocket || (order.awb_code ? {
+                                courier_name: order.payment_method === 'cod' ? 'Speed Post' : 'BlueDart Express',
+                                awb_code: order.awb_code,
+                                shiprocket_order_id: order.shiprocket_order_id || 'SR-' + order.id,
+                                estimated_delivery: '3-5 Days'
+                            } : null);
+
+                            return (
+                                <>
+                                    <div className="relative flex justify-between items-center max-w-2xl mx-auto px-4 py-10">
+                                        <div className="absolute top-[40%] left-0 right-0 h-[2px] bg-black/[0.04] -translate-y-1/2 z-0 px-10">
+                                            <motion.div 
+                                                initial={{ width: 0 }}
+                                                animate={{ width: getProgressWidth() }}
+                                                transition={{ duration: 1.5, delay: 0.8 }}
+                                                className="h-full bg-gradient-to-r from-emerald-500 to-[#C9A84C]"
+                                            />
                                         </div>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        )}
+                                        
+                                        {trackingSteps.map((step, idx) => (
+                                            <div key={idx} className="relative z-10 flex flex-col items-center gap-4">
+                                                <motion.div 
+                                                    initial={{ scale: 0, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    transition={{ delay: 1 + idx * 0.1 }}
+                                                    className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 ${step.completed ? 'bg-[#C9A84C] border-[#C9A84C] text-[#0A0A0F] shadow-lg' : step.active ? 'bg-emerald-50 border-emerald-500 text-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'bg-[#F5F5F7] border-black/[0.04] text-[#86868B]'}`}
+                                                >
+                                                    <step.icon size={step.active ? 24 : 20} />
+                                                </motion.div>
+                                                <span className={`text-[9px] font-black uppercase tracking-[0.2em] transition-colors ${step.active ? 'text-[#1D1D1F]' : 'text-[#86868B]'}`}>{step.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {trackingInfo && (
+                                        <motion.div 
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 1.5 }}
+                                            className="max-w-3xl mx-auto mt-6 bg-[#F5F5F7] p-8 rounded-[2rem] border border-emerald-500/10 shadow-sm"
+                                        >
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                                {[
+                                                    { label: "Courier", value: trackingInfo.courier_name },
+                                                    { label: "Tracking Number", value: trackingInfo.awb_code, mono: true },
+                                                    { label: "Reference ID", value: trackingInfo.shiprocket_order_id, mono: true },
+                                                    { label: "Est. Delivery", value: trackingInfo.estimated_delivery, highlight: true }
+                                                ].map((stat, i) => (
+                                                    <div key={i}>
+                                                        <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-2">{stat.label}</p>
+                                                        <p className={`text-xs font-black uppercase tracking-tight ${stat.highlight ? 'text-emerald-600' : 'text-[#1D1D1F]'} ${stat.mono ? 'font-mono' : ''}`}>{stat.value}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </>
+                            );
+                        })()}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">

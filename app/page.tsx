@@ -1,326 +1,258 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Hero } from '@/components/hero';
 import { ProductCard } from '@/components/product-card';
 import { Product } from '@/lib/data';
-import { useAppStore } from '@/lib/store';
-import { Loader2, TrendingUp, ShieldCheck, Truck, Users, ArrowRight, Star, Quote, ChevronRight, PlayCircle, BookOpen, Zap, Shield, Globe, Sparkles } from 'lucide-react';
+import { 
+    Loader2, ArrowRight, Star, Clock, ShieldCheck, Layers, 
+    Truck, Lock, ThumbsUp, ChevronRight 
+} from 'lucide-react';
 import Link from 'next/link';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useIsMobile } from '@/hooks/use-is-mobile';
+import { motion } from 'framer-motion';
 
-const testimonials = [
-  { name: "Rajesh Kumar", role: "Industrial Manufacturer", content: "Dinanath & Sons transformed our factory efficiency. Their SB-900 series is world-class.", rating: 5 },
-  { name: "Amit Verma", role: "Master Goldsmith", content: "Unrivaled precision. The technical support team actually understands the craft.", rating: 5 },
-  { name: "Sneha Studio", role: "Creative Director", content: "Scaling was impossible until we integrated their industrial polishing protocols.", rating: 5 },
-  { name: "Vikram Singh", role: "Luxury Retailer", content: "Premium presentation, robust logistics. The definitive partner for high-end jewelry.", rating: 5 }
+const trustStripItems = [
+    { icon: Clock, title: "60+ Years", desc: "of Trust & Excellence" },
+    { icon: ShieldCheck, title: "Premium Quality", desc: "Industrial Grade Products" },
+    { icon: Layers, title: "Wide Range", desc: "A to Z Workshop Solutions" },
+    { icon: Truck, title: "Fast Delivery", desc: "Pan India Secure Shipping" },
+    { icon: Lock, title: "Secure Payments", desc: "100% Protected Checkouts" },
+    { icon: ThumbsUp, title: "Trusted by Professionals", desc: "Manufacturers & Goldsmiths" }
 ];
 
-const features = [
-  { icon: <Shield size={28} />, title: "Original Tools", desc: "Authentic equipment from global manufacturers.", color: "text-[#C9A84C]" },
-  { icon: <Globe size={28} />, title: "Worldwide Shipping", desc: "Safe and insured delivery across the country.", color: "text-blue-500" },
-  { icon: <Users size={28} />, title: "B2B Support", desc: "Expert help for large-scale manufacturing.", color: "text-emerald-500" },
-  { icon: <TrendingUp size={28} />, title: "Best Prices", desc: "Competitive pricing for bulk and retail orders.", color: "text-purple-500" }
+const homeCategories = [
+    { name: 'Hand Tools', count: '120+ Products', img: '/images/products/ss-plier.png', href: '/shop?cat=Tools' },
+    { name: 'Machines', count: '45+ Products', img: '/images/products/sand-blasting-dust-collector-machine.png', href: '/shop?cat=Machinery' },
+    { name: 'Polishing & Buffs', count: '60+ Products', img: '/images/products/cloth-buff.png', href: '/shop?cat=Consumables' },
+    { name: 'Cleaning Solutions', count: '25+ Products', img: '/images/products/tik-tak-silver-cleaner.png', href: '/shop?cat=Chemicals' },
+    { name: 'Engraving Tools', count: '30+ Products', img: '/images/products/gas-torch-auto.png', href: '/shop?cat=Tools' },
+    { name: 'Accessories', count: '50+ Products', img: '/images/products/tweezer-ss-10k.png', href: '/shop?cat=Packaging' }
+];
+
+const whyChooseUsItems = [
+    { title: "60+ Years of Trust", desc: "Serving Indian jewellers since 1960." },
+    { title: "Premium Quality Products", desc: "Tested and verified for industrial standards." },
+    { title: "A to Z Solutions for Jewellery Making", desc: "Complete workshop catalog under one roof." },
+    { title: "Trusted by Thousands of Professionals", desc: "Preferred choice of master goldsmiths." },
+    { title: "Excellent Customer Support", desc: "Dedicated expert advice for machine calibration." }
 ];
 
 export default function Home() {
-  const isMobile = useIsMobile();
-  const { mode } = useAppStore();
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'featured' | 'new' | 'bestsellers'>('featured');
+    const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchFeatured() {
-      setLoading(true);
-      const { data } = await supabase.from('products').select('*').limit(12);
-      if (data && data.length > 0) {
-        const mappedProducts: Product[] = data.map((p: any) => ({
-          id: p.id, name: p.name, description: p.description, retailPrice: p.retail_price,
-          wholesalePrice: p.wholesale_price, wholesaleMOQ: p.wholesale_moq,
-          primaryImage: p.image || p.image_url || '/placeholder.jpg',
-          image: p.image || p.image_url || '/placeholder.jpg',
-          gallery: p.gallery || [], category: p.category, inStock: p.in_stock, reviews: p.reviews || []
-        }));
-        setFeaturedProducts(mappedProducts);
-      }
-      setLoading(false);
-    }
-    fetchFeatured();
-  }, []);
+    useEffect(() => {
+        async function fetchProducts() {
+            setLoading(true);
+            try {
+                const { data } = await supabase.from('products').select('*').limit(6);
+                if (data && data.length > 0) {
+                    const mappedProducts: Product[] = data.map((p: any) => ({
+                        id: p.id,
+                        name: p.name,
+                        description: p.description,
+                        retailPrice: p.retail_price,
+                        wholesalePrice: p.wholesale_price,
+                        wholesaleMOQ: p.wholesale_moq,
+                        primaryImage: p.image || p.image_url || '/placeholder.jpg',
+                        image: p.image || p.image_url || '/placeholder.jpg',
+                        gallery: p.gallery || [],
+                        category: p.category,
+                        inStock: p.in_stock,
+                        reviews: p.reviews || []
+                    }));
+                    setNewArrivals(mappedProducts);
+                } else {
+                    import('@/lib/data').then((module) => {
+                        setNewArrivals(module.products.slice(0, 6));
+                    });
+                }
+            } catch (err) {
+                import('@/lib/data').then((module) => {
+                    setNewArrivals(module.products.slice(0, 6));
+                });
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchProducts();
+    }, []);
 
-  const displayProducts = featuredProducts.slice(
-    activeTab === 'featured' ? 0 : activeTab === 'new' ? 4 : 8,
-    activeTab === 'featured' ? 8 : activeTab === 'new' ? 12 : 12
-  );
+    return (
+        <div className="relative w-full bg-[#151515] text-[#F8F3E8] selection:bg-[#A67C35]/30 overflow-hidden">
+            
+            {/* Cinematic Hero */}
+            <Hero />
 
-  return (
-    <div className="relative w-full bg-[#FFFFFF] selection:bg-[#C9A84C]/30 overflow-hidden">
-      
-      <Hero />
-
-      <section className="relative z-30 -mt-24 pb-20 px-6">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                viewport={{ once: true }}
-                className="glass-strong rounded-[2rem] p-10 border border-black/[0.04] hover:border-[#C9A84C]/30 transition-all duration-700 group relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-                    <Zap size={120} className={f.color} />
-                </div>
-                <div className={`w-16 h-16 rounded-2xl glass mb-8 flex items-center justify-center transition-all duration-700 group-hover:scale-110 group-hover:bg-white/5 ${f.color}`}>
-                  {f.icon}
-                </div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-[#1D1D1F] mb-3 group-hover:text-[#C9A84C] transition-colors">{f.title}</h3>
-                <p className="text-xs text-[#5A5A6A] leading-relaxed font-medium uppercase tracking-wider">{f.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ COLLECTION INTERFACE - Cinematic Tabs ═══ */}
-      <section className="py-32 md:py-48 relative px-6 overflow-hidden">
-        <div className="container mx-auto">
-            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-24 gap-12">
-                <div className="max-w-3xl">
-                    <motion.div 
-                        initial={{ opacity: 0, x: -30 }} 
-                        whileInView={{ opacity: 1, x: 0 }} 
-                        viewport={{ once: true }}
-                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass text-[#5A5A6A] text-[10px] font-black uppercase tracking-[0.3em] mb-8"
-                    >
-                        <ShieldCheck size={14} /> Certified Collection
-                    </motion.div>
-                    <h2 className="text-6xl md:text-8xl font-black text-[#1D1D1F] tracking-tighter uppercase leading-[0.85]">
-                        Professional <br />
-                        <span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Tools</span>
-                    </h2>
-                </div>
-
-                <div className="flex flex-wrap p-2 rounded-[2rem] glass-strong border border-black/[0.04]">
-                    {['featured', 'new', 'bestsellers'].map(tab => (
-                        <button 
-                            key={tab} 
-                            onClick={() => setActiveTab(tab as any)}
-                            className={`px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'glass-gold text-[#0A0A0F] shadow-2xl' : 'text-[#5A5A6A] hover:text-[#1D1D1F]'}`}
-                            style={activeTab === tab ? { background: 'linear-gradient(135deg, #E8D48B, #C9A84C)' } : {}}
-                        >
-                            {tab}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {loading ? (
-                <div className="flex flex-col items-center justify-center py-40 gap-6">
-                    <div className="w-12 h-12 rounded-full border-2 border-[#C9A84C]/10 border-t-[#C9A84C] animate-spin" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C]">Synchronizing Database</span>
-                </div>
-            ) : (
-                <AnimatePresence mode="wait">
-                    <motion.div 
-                        key={activeTab} 
-                        initial={{ opacity: 0, scale: 0.98 }} 
-                        animate={{ opacity: 1, scale: 1 }} 
-                        exit={{ opacity: 0, scale: 1.02 }} 
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-                    >
-                        {displayProducts.map((product, i) => (
-                            <ProductCard key={product.id} product={product} />
+            {/* 1. TRUST STRIP */}
+            <section className="relative z-30 bg-[#1E1E1E] border-y border-[#343434] py-8 px-6">
+                <div className="container mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                        {trustStripItems.map((item, i) => (
+                            <div key={i} className="flex flex-col items-center text-center p-3 group">
+                                <div className="w-10 h-10 rounded-lg bg-[#242424] border border-[#343434] flex items-center justify-center mb-3 text-[#A67C35] group-hover:scale-110 transition-transform">
+                                    <item.icon size={18} strokeWidth={2} />
+                                </div>
+                                <h4 className="text-[10px] font-bold text-[#F8F3E8] uppercase tracking-wider mb-0.5">{item.title}</h4>
+                                <p className="text-[8px] text-[#CFCFCF] tracking-wide uppercase font-semibold">{item.desc}</p>
+                            </div>
                         ))}
-                    </motion.div>
-                </AnimatePresence>
-            )}
+                    </div>
+                </div>
+            </section>
 
-            <div className="mt-24 text-center">
-                <Link href="/shop">
-                    <button className="h-18 px-16 glass rounded-2xl border border-black/[0.04] text-[#1D1D1F] font-black uppercase tracking-[0.3em] text-[10px] hover:bg-[#C9A84C] hover:text-[#0A0A0F] transition-all duration-500 hover:scale-105 active:scale-95 group">
-                        See All Products 
-                        <ArrowRight size={18} className="inline ml-4 group-hover:translate-x-2 transition-transform" />
-                    </button>
-                </Link>
-            </div>
-        </div>
-      </section>
+            {/* 2. CATEGORIES SECTION (Ivory theme background) */}
+            <section className="py-24 px-6 bg-warm-ivory border-b border-[#E2DCD0] relative">
+                <div className="container mx-auto">
+                    <div className="text-center mb-16">
+                        <div className="h-0.5 w-16 bg-[#A67C35] mx-auto mb-4" />
+                        <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-2">Shop By Category</h2>
+                        <p className="text-[10px] font-bold text-[#8A6232] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
+                    </div>
 
-      {/* ═══ INTEL CORE - Bento Section ═══ */}
-      <section className="py-32 md:py-48 bg-[#F5F5F7] relative px-6">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-black/[0.04] to-transparent" />
-          <div className="container mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                  <div className="lg:col-span-5">
-                      <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] mb-8">
-                          <BookOpen size={14} /> Help & Guides
-                      </div>
-                      <h2 className="text-5xl md:text-7xl font-black text-[#1D1D1F] leading-[0.9] uppercase tracking-tighter mb-10">
-                          Expert <br />
-                          <span className="text-[#86868B]">Advice</span>
-                      </h2>
-                      <p className="text-[#6E6E73] text-xl leading-relaxed font-medium mb-12">Industrial-grade insights for metallurgical engineering, machinery calibration, and high-volume production management.</p>
-                      
-                      <div className="space-y-4">
-                          {[
-                              { title: "Metallurgy 2.0", type: "Technical Whitepaper", time: "12 min read", icon: <Shield size={20} /> },
-                              { title: "Casting Optimization", type: "Process Video", time: "08:45", icon: <PlayCircle size={20} /> }
-                          ].map((item, i) => (
-                              <div key={i} className="glass p-6 rounded-[1.5rem] border border-black/[0.04] hover:border-[#C9A84C]/30 transition-all group cursor-pointer flex items-center justify-between">
-                                  <div className="flex items-center gap-6">
-                                      <div className="w-12 h-12 rounded-xl glass-gold flex items-center justify-center text-[#0A0A0F] group-hover:scale-110 transition-transform">{item.icon}</div>
-                                      <div>
-                                          <h4 className="font-black text-[#1D1D1F] uppercase tracking-tight text-lg">{item.title}</h4>
-                                          <p className="text-[10px] font-black text-[#86868B] uppercase tracking-widest">Guide</p>
-                                      </div>
-                                  </div>
-                                  <span className="text-[9px] font-black text-[#C9A84C] uppercase tracking-widest">Learn More</span>
-                              </div>
-                          ))}
-                      </div>
-                  </div>
+                    <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
+                        {homeCategories.map((cat, i) => (
+                            <Link href={cat.href} key={i} className="group flex flex-col bg-[#242424] border border-[#343434] hover:border-[#A67C35] rounded-xl overflow-hidden shadow-lg transition-all hover:-translate-y-1">
+                                <div className="aspect-[4/3] w-full bg-[#1E1E1E] p-4 flex items-center justify-center overflow-hidden relative">
+                                    <img 
+                                        src={cat.img} 
+                                        alt={cat.name} 
+                                        className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 mix-blend-lighten"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = '/placeholder.jpg';
+                                        }}
+                                    />
+                                </div>
+                                <div className="p-4 flex items-center justify-between gap-2 border-t border-[#343434]">
+                                    <div className="flex flex-col text-left">
+                                        <h4 className="text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider">{cat.name}</h4>
+                                        <span className="text-[8px] text-[#8E8E9A] uppercase font-bold mt-0.5">{cat.count}</span>
+                                    </div>
+                                    <div className="w-6 h-6 rounded-full bg-[#343434] group-hover:bg-[#A67C35] group-hover:text-black flex items-center justify-center text-[#CFCFCF] transition-colors">
+                                        <ChevronRight size={12} strokeWidth={2.5} />
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-                  {/* Radical Bento Display */}
-                  <div className="lg:col-span-7 grid grid-cols-12 grid-rows-12 gap-6 h-[600px] md:h-[750px]">
-                      <div className="col-span-8 row-span-12 rounded-[3rem] overflow-hidden relative glass-strong border border-black/[0.04] group">
-                          <img src="/images/products/sand-blasting-dust-collector-machine.png" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-[2s]" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#FFFFFF] to-transparent" />
-                          <div className="absolute bottom-12 left-12 right-12">
-                                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#C9A84C] mb-4 block">New Deployment</span>
-                                <h3 className="text-4xl font-black text-[#1D1D1F] uppercase tracking-tighter leading-none mb-6">Atmospheric <br/>Dust Control</h3>
-                                <button className="w-14 h-14 rounded-full glass-gold flex items-center justify-center text-[#0A0A0F]"><ArrowRight size={24} /></button>
-                          </div>
-                      </div>
-                      <div className="col-span-4 row-span-5 rounded-[2.5rem] glass border border-black/[0.04] flex flex-col justify-center items-center text-center p-8">
-                            <Zap size={40} className="text-[#C9A84C] mb-6 animate-pulse" />
-                            <h4 className="text-[10px] font-black text-[#1D1D1F] uppercase tracking-[0.2em]">High Efficiency</h4>
-                            <p className="text-[8px] font-bold text-[#86868B] uppercase mt-2">Energy Flux 98%</p>
-                      </div>
-                      <div className="col-span-4 row-span-7 rounded-[2.5rem] overflow-hidden relative glass border border-black/[0.04]">
-                            <img src="/images/products/15f-tweezers.png" className="absolute inset-0 w-full h-full object-contain p-8 mix-blend-multiply opacity-80" />
-                            <div className="absolute inset-0 bg-blue-500/5" />
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </section>
-
-      {/* ═══ GLOBAL NETWORK - Marquee ═══ */}
-      <section className="py-32 md:py-48 relative overflow-hidden px-6 bg-[#FFFFFF]">
-          <div className="container mx-auto">
-              <div className="text-center mb-24">
-                  <h2 className="text-4xl md:text-6xl font-black text-[#1D1D1F] uppercase tracking-tighter mb-6">Trusted by <br/><span className="text-[#86868B]">Professionals</span></h2>
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#C9A84C]">Highly rated in over 40 countries</p>
-              </div>
-
-              <div className="flex flex-nowrap overflow-hidden mask-fade-edges -mx-6">
-                  <motion.div animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, ease: "linear", duration: 25 }} className="flex gap-8">
-                      {[...testimonials, ...testimonials].map((t, i) => (
-                          <div key={i} className="w-[350px] md:w-[450px] shrink-0 glass-strong rounded-[2.5rem] p-10 border border-black/[0.04] relative shadow-xl">
-                              <Quote size={48} className="absolute top-10 right-10 text-black/[0.02]" />
-                              <div className="flex gap-1.5 mb-8">
-                                  {Array(5).fill(0).map((_, idx) => <Star key={idx} size={14} className="text-[#C9A84C]" fill="currentColor" />)}
-                              </div>
-                              <p className="text-lg text-[#6E6E73] font-medium leading-relaxed mb-8 italic">"{t.content}"</p>
-                              <div className="flex items-center gap-5">
-                                  <div className="w-12 h-12 rounded-xl glass-gold flex items-center justify-center font-black text-[#0A0A0F] text-lg">{t.name[0]}</div>
-                                  <div>
-                                      <div className="font-black text-[#1D1D1F] uppercase tracking-tight text-sm">{t.name}</div>
-                                      <div className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest">{t.role}</div>
-                                  </div>
-                              </div>
-                          </div>
-                      ))}
-                  </motion.div>
-              </div>
-          </div>
-      </section>
-
-      {/* ═══ BRAND EXPERIENCE - Gallery ═══ */}
-      <section className="py-32 md:py-48 px-6 bg-[#F5F5F7]">
-          <div className="container mx-auto">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
-                  <div>
-                      <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] mb-8">
-                          <Sparkles size={14} /> Brand Experience
-                      </div>
-                      <h2 className="text-5xl md:text-7xl font-black text-[#1D1D1F] uppercase tracking-tighter leading-none">
-                          Our <span className="text-[#86868B]">Heritage & Events</span>
-                      </h2>
-                  </div>
-                  <p className="text-[#6E6E73] text-lg font-medium max-w-md">Discover our global physical locations, industrial exhibitions, and the professional events that define our legacy.</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[800px]">
-                  <div className="md:col-span-8 h-[400px] md:h-full rounded-[3rem] overflow-hidden relative group shadow-2xl">
-                      <img src="/headquarters_storefront.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="Main Headquarters" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute bottom-10 left-10 right-10">
-                          <h4 className="text-white text-3xl md:text-4xl font-black uppercase tracking-tighter">Primary Headquarters</h4>
-                          <p className="text-white/60 text-xs font-bold uppercase tracking-[0.3em] mt-3">Chandni Chowk, Delhi</p>
-                      </div>
-                  </div>
-                  <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-6 h-auto md:h-full">
-                      <div className="rounded-[2.5rem] h-[300px] md:h-full overflow-hidden relative group shadow-xl">
-                          <img src="/industrial_expo_booth.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="Industrial Expo" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                          <div className="absolute bottom-8 left-8 right-8">
-                              <h4 className="text-white text-xl font-black uppercase tracking-tight">Industrial Expo</h4>
-                              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">2024 Tech Summit</p>
-                          </div>
-                      </div>
-                      <div className="rounded-[2.5rem] h-[300px] md:h-full overflow-hidden relative group shadow-xl">
-                          <img src="/modern_factory_floor.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="Factory Floor" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                          <div className="absolute bottom-8 left-8 right-8">
-                              <h4 className="text-white text-xl font-black uppercase tracking-tight">Factory Operations</h4>
-                              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Manufacturing Unit</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </section>
-
-      {/* ═══ NEXUS UPLINK - Newsletter ═══ */}
-      <section className="py-32 md:py-48 px-6 relative overflow-hidden bg-[#F5F5F7]">
-          <div className="container mx-auto">
-              <div className="glass-strong rounded-[4rem] p-12 md:p-24 border border-black/[0.04] relative overflow-hidden flex flex-col xl:flex-row items-center gap-20 shadow-2xl">
-                  <div className="absolute top-0 right-0 w-96 h-96 bg-[#C9A84C]/5 blur-[120px] rounded-full pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
-                  
-                  <div className="flex-1 relative z-10 text-center xl:text-left">
-                      <h2 className="text-5xl md:text-7xl font-black text-[#1D1D1F] uppercase tracking-tighter leading-none mb-8">Stay <br/><span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Updated</span></h2>
-                      <p className="text-xl text-[#6E6E73] max-w-xl mx-auto xl:mx-0 font-medium leading-relaxed mb-12">Get the latest tool updates, special offers, and expert tips delivered directly to your inbox from Dinanath's.</p>
-                      
-                      <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto xl:mx-0" onSubmit={e => e.preventDefault()}>
-                          <input required type="email" placeholder="EMAIL ADDRESS" 
-                            className="flex-1 h-18 bg-black/[0.02] border border-black/[0.06] rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.3em] text-[#1D1D1F] focus:outline-none focus:border-[#C9A84C]/30 transition-all placeholder-[#86868B]" />
-                          <button type="submit" className="h-18 glass-gold text-[#0A0A0F] font-black px-12 rounded-2xl text-[10px] uppercase tracking-[0.4em] transition-all hover:scale-105 active:scale-95 shadow-2xl">
-                              Join
-                          </button>
-                      </form>
-                  </div>
-
-                  <div className="flex-1 hidden xl:block relative group">
-                        <div className="relative z-10 glass rounded-[3rem] p-12 border border-black/[0.04] animate-float shadow-xl">
-                            <ShieldCheck size={120} className="text-[#C9A84C] mb-8" />
-                            <h4 className="text-2xl font-black text-[#1D1D1F] uppercase mb-4">Secure Shopping</h4>
-                            <p className="text-xs text-[#86868B] font-bold uppercase tracking-[0.2em] leading-relaxed">Fast and safe delivery for all professional jewelry equipment from Dinanath's experts.</p>
+            {/* 3. NEW ARRIVALS (Ivory theme background) */}
+            <section className="py-24 px-6 bg-[#FAF6EE] relative border-b border-[#E2DCD0]">
+                <div className="container mx-auto">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#E2DCD0] pb-6 gap-4 text-center sm:text-left">
+                        <div>
+                            <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-1">New Arrivals</h2>
+                            <p className="text-[9px] font-bold text-[#8A6232] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
                         </div>
-                        <div className="absolute inset-0 glass blur-[40px] -z-10 group-hover:scale-110 transition-transform duration-700 opacity-30" />
-                  </div>
-              </div>
-          </div>
-      </section>
+                        <Link href="/shop" className="group text-[10px] font-bold text-matte-black hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                            <span>View All Products</span>
+                            <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
 
-    </div>
-  );
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-4">
+                            <Loader2 className="w-8 h-8 animate-spin text-[#A67C35]" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#A67C35]">Loading inventory...</span>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+                            {newArrivals.map((product) => (
+                                <ProductCard key={product.id} product={product} lightTheme={true} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* 4. ABOUT & WHY CHOOSE US (Dark theme background) */}
+            <section className="py-24 px-6 bg-[#151515] border-b border-[#343434] relative">
+                <div className="container mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                        
+                        {/* About Us Description */}
+                        <div className="lg:col-span-7 flex flex-col text-left space-y-6">
+                            <h4 className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#A67C35] border-b border-[#343434] pb-2">About Dinanath & Sons</h4>
+                            <h2 className="text-3xl md:text-5xl font-bold font-display tracking-wider uppercase text-[#F8F3E8] leading-tight">
+                                India's Trusted Jewelry Tool <br/> Experts Since 1960
+                            </h2>
+                            <div className="text-sm text-[#CFCFCF] font-medium leading-relaxed space-y-4">
+                                <p>
+                                    Established in 1960 by <strong>Mr. Dinanath Sehdev</strong>, our company began with a humble workshop in Maliwara, Chandni Chowk, Delhi. We set out with a singular target: to supply master jewellers with precision tools that match their artistry.
+                                </p>
+                                <p>
+                                    Through three generations of dedication, Dinanath & Sons has evolved into India's trusted authority for jewelry-making machinery, metallurgical equipment, and finishing consumables. We partner directly with casting workshops and manufacturers nationwide to raise production efficiency.
+                                </p>
+                            </div>
+                            <div className="pt-4">
+                                <Link href="/about">
+                                    <button className="h-12 px-8 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9px] rounded-lg transition-all hover:scale-105 active:scale-95 shadow-md">
+                                        Know More About Us
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Why Choose Us */}
+                        <div className="lg:col-span-5 flex flex-col space-y-8 text-left bg-[#1E1E1E] border border-[#343434] rounded-xl p-8 shadow-xl">
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-bold font-display text-[#A67C35] uppercase tracking-wider mb-2">Why Choose Us?</h3>
+                                <p className="text-[9px] text-[#8E8E9A] uppercase tracking-widest font-bold border-b border-[#343434] pb-4">Our legacy directives</p>
+                            </div>
+
+                            <div className="space-y-6">
+                                {whyChooseUsItems.map((item, i) => (
+                                    <div key={i} className="flex gap-4 items-start">
+                                        <div className="w-7 h-7 rounded-full bg-[#242424] border border-[#343434] text-[#A67C35] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow">
+                                            {i + 1}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <h4 className="text-xs font-bold text-[#F8F3E8] uppercase tracking-wider mb-1">{item.title}</h4>
+                                            <p className="text-[10px] text-[#CFCFCF] font-medium leading-normal">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            {/* 5. NEWSLETTER FORM (Rich Charcoal background) */}
+            <section className="py-20 px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
+                <div className="absolute right-0 bottom-0 w-[25vw] h-[25vw] bg-[#A67C35]/5 blur-[90px] rounded-full pointer-events-none opacity-40" />
+                <div className="container mx-auto max-w-4xl">
+                    <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+                        <div className="flex-1 text-center md:text-left space-y-4">
+                            <h2 className="text-2xl md:text-4xl font-bold font-display uppercase tracking-wider text-[#F8F3E8]">Newsletter</h2>
+                            <p className="text-xs text-[#CFCFCF] font-semibold leading-relaxed uppercase tracking-wide">
+                                Subscribe to get updates on new arrivals, offers, and technical logs.
+                            </p>
+                        </div>
+                        <div className="flex-1 w-full max-w-md">
+                            <form className="flex flex-col sm:flex-row gap-3.5" onSubmit={e => e.preventDefault()}>
+                                <input 
+                                    required 
+                                    type="email" 
+                                    placeholder="ENTER YOUR EMAIL" 
+                                    className="flex-1 h-12 bg-[#151515] border border-[#343434] rounded-lg px-4 text-xs font-semibold tracking-wider text-[#F8F3E8] focus:outline-none focus:border-[#A67C35] transition-all placeholder-[#8E8E9A]" 
+                                />
+                                <button 
+                                    type="submit" 
+                                    className="h-12 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold px-8 rounded-lg text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow"
+                                >
+                                    Subscribe
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    );
 }

@@ -7,7 +7,7 @@ import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import {
     Search, X, LayoutGrid, List,
-    ChevronRight, Settings2, ChevronDown, Sparkles
+    ChevronRight, Settings2, ChevronDown, Sparkles, Loader2
 } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -24,6 +24,7 @@ function ShopContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const initialCategory = searchParams.get('cat') || 'All';
+    const initialSearch = searchParams.get('search') || searchParams.get('q') || '';
 
     // Data State
     const [products, setProducts] = useState<Product[]>([]);
@@ -31,7 +32,7 @@ function ShopContent() {
     const [categories, setCategories] = useState<string[]>(['All']);
 
     // Filter & Search State
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
     const [priceRange, setPriceRange] = useState(500000);
     const [minPrice, setMinPrice] = useState(0);
@@ -76,11 +77,21 @@ function ShopContent() {
                     setCategories(uniqueCats);
                     setProducts(mappedProducts);
                 } else {
-                    setCategories(['All']);
-                    setProducts([]);
+                    import('@/lib/data').then((module) => {
+                        const localProducts = module.products;
+                        const uniqueCats = ['All', ...Array.from(new Set(localProducts.map(p => p.category)))];
+                        setCategories(uniqueCats);
+                        setProducts(localProducts);
+                    });
                 }
             } catch (err) {
-                console.error("Fetch failed", err);
+                console.error("Fetch failed, loading fallbacks", err);
+                import('@/lib/data').then((module) => {
+                    const localProducts = module.products;
+                    const uniqueCats = ['All', ...Array.from(new Set(localProducts.map(p => p.category)))];
+                    setCategories(uniqueCats);
+                    setProducts(localProducts);
+                });
             } finally {
                 setLoading(false);
             }
@@ -92,6 +103,9 @@ function ShopContent() {
         const cat = searchParams.get('cat');
         if (cat) setSelectedCategory(cat);
         else setSelectedCategory('All');
+
+        const search = searchParams.get('search') || searchParams.get('q') || '';
+        setSearchQuery(search);
     }, [searchParams]);
 
     const handleCategoryChange = (cat: string) => {
@@ -134,52 +148,52 @@ function ShopContent() {
         });
 
     return (
-        <div className="min-h-screen bg-[#FFFFFF] text-[#1D1D1F] pt-40 md:pt-60 pb-24 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
+        <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-44 pb-24 selection:bg-gold-primary/30 overflow-x-hidden">
             
-            {/* Ambient Background Elements */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/5 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
+            {/* Ambient Background Glows */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute top-[10%] left-[-5%] w-[40vw] h-[40vw] bg-gold-muted blur-[120px] rounded-full opacity-60" />
+                <div className="absolute bottom-[20%] right-[-5%] w-[40vw] h-[40vw] bg-cyan-glow/5 dark:bg-cyan-glow/3 blur-[120px] rounded-full" />
             </div>
 
             <div className="container mx-auto px-4 md:px-8 relative z-10">
                 
-                {/* Header Section */}
-                <motion.div style={{ y: headerY }} className="mb-16">
-                    <div className="flex items-center gap-3 mb-6">
-                        <Link href="/" className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5A5A6A] hover:text-[#C9A84C] transition-colors">Home</Link>
-                        <ChevronRight size={12} className="text-[#3A3A4A]" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A84C]">Technical Inventory</span>
+                {/* Breadcrumbs & Title */}
+                <motion.div style={{ y: headerY }} className="mb-12">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Link href="/" className="text-[9px] font-black uppercase tracking-[0.2em] text-text-tertiary hover:text-gold-primary transition-colors">Home</Link>
+                        <ChevronRight size={10} className="text-text-tertiary" />
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gold-primary">Technical Catalog</span>
                     </div>
 
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
                             <motion.div 
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm"
+                                className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-gold text-gold-primary text-[8px] font-black uppercase tracking-[0.2em] mb-4 shadow"
                             >
-                                <Sparkles size={12} className="animate-pulse" /> Global Standard Equipment
+                                <Sparkles size={11} className="animate-pulse" /> Precision Workshop Units
                             </motion.div>
-                            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[0.9] uppercase text-[#1D1D1F]">
-                                Our <span style={{ background: 'linear-gradient(135deg, #1D1D1F, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Collection</span>
+                            <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-none uppercase text-text-primary">
+                                Our <span className="text-transparent bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text">Hardware</span>
                             </h1>
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <div className={`px-5 py-2 rounded-2xl glass border border-black/[0.04] text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-sm ${isRetail ? 'text-[#C9A84C]' : 'text-blue-600'}`}>
-                                <div className={`w-2 h-2 rounded-full animate-pulse ${isRetail ? 'bg-[#C9A84C]' : 'bg-blue-600'}`} />
-                                {isRetail ? 'Retail Shop' : 'Wholesale Shop'}
+                            <div className={`px-4 py-1.5 rounded-full bg-surface-1 border border-glass-border text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 transition-all shadow-sm ${isRetail ? 'text-gold-primary' : 'text-blue-500'}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isRetail ? 'bg-gold-primary' : 'bg-blue-500'}`} />
+                                {isRetail ? 'Retail Node Active' : 'B2B Client Config'}
                             </div>
                         </div>
                     </div>
                 </motion.div>
 
-                <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
                     
-                    {/* Left Sidebar */}
-                    <aside className="hidden lg:block w-[320px] shrink-0">
-                        <div className="sticky top-40 space-y-8">
+                    {/* Left Filters Sidebar */}
+                    <aside className="hidden lg:block w-[280px] shrink-0">
+                        <div className="sticky top-32 space-y-6">
                             <FilterSidebar
                                 categories={categories}
                                 selectedCategories={[selectedCategory]}
@@ -189,18 +203,16 @@ function ShopContent() {
                                 minPrice={minPrice}
                                 setMinPrice={setMinPrice}
                                 isRetail={isRetail}
+                                className="bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-md"
                             />
 
-                            {/* Additional Info Block */}
-                            <div className="glass-strong rounded-3xl p-8 relative overflow-hidden shadow-xl">
-                                <div className="absolute -right-8 -top-8 w-24 h-24 bg-[#C9A84C]/10 rounded-full blur-2xl" />
-                                <h4 className="text-sm font-black text-[#1D1D1F] mb-4 uppercase tracking-[0.1em]">Factory Direct</h4>
-                                <p className="text-xs text-[#6E6E73] leading-relaxed mb-6 font-medium">
-                                    All machinery is certified for high-precision manufacturing. Contact our technical team for custom factory layouts.
+                            {/* Factory Direct Bento Block */}
+                            <div className="bg-surface-1 border border-glass-border rounded-2xl p-6 relative overflow-hidden shadow-md">
+                                <div className="absolute -right-6 -top-6 w-20 h-20 bg-gold-muted rounded-full blur-xl" />
+                                <h4 className="text-xs font-black text-text-primary mb-2 uppercase tracking-[0.1em]">Engineering Node</h4>
+                                <p className="text-[10px] text-text-secondary leading-relaxed mb-4 font-semibold">
+                                    All machinery is certified for micro-precision jewelry casting, rolling, and polishing. Reach out for technical consults.
                                 </p>
-                                <button className="text-[10px] font-black text-[#C9A84C] uppercase tracking-[0.2em] flex items-center gap-2 group">
-                                    Technical Specs <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                                </button>
                             </div>
                         </div>
                     </aside>
@@ -208,28 +220,28 @@ function ShopContent() {
                     {/* Main Content Area */}
                     <main className="flex-1 min-w-0">
                         
-                        {/* Search & Sort Bar */}
-                        <div className="mb-12">
-                            <div className="flex flex-col md:flex-row gap-4 items-center glass-strong p-3 rounded-[2rem] border border-black/[0.04] shadow-2xl relative z-50 bg-white/80">
+                        {/* Search & Sort Panel */}
+                        <div className="mb-8">
+                            <div className="flex flex-col md:flex-row gap-3 items-center bg-surface-1 border border-glass-border p-2.5 rounded-2xl shadow-xl relative z-50">
                                 
-                                {/* Refined Search */}
+                                {/* Search input */}
                                 <div className="flex-1 relative w-full" ref={searchContainerRef}>
-                                    <div className="relative h-14 flex items-center">
-                                        <Search className={`absolute left-6 transition-all duration-500 ${isSearchFocused ? 'text-[#C9A84C] scale-110' : 'text-[#86868B]'}`} size={20} />
+                                    <div className="relative h-12 flex items-center">
+                                        <Search className={`absolute left-5 transition-all duration-300 ${isSearchFocused ? 'text-gold-primary scale-110' : 'text-text-tertiary'}`} size={16} />
                                         <input
                                             type="text"
-                                            placeholder="Query inventory (e.g. Casting, Polishing, Pliers)..."
+                                            placeholder="Query inventory (e.g. casting, tweezers, rolling mill)..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             onFocus={() => setIsSearchFocused(true)}
                                             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                            className="w-full h-full bg-transparent pl-16 pr-12 text-sm font-black placeholder-[#86868B] text-[#1D1D1F] focus:outline-none transition-all"
+                                            className="w-full h-full bg-transparent pl-12 pr-10 text-xs font-black placeholder-text-tertiary text-text-primary focus:outline-none transition-all"
                                         />
                                         {searchQuery && (
                                             <button
                                                 onClick={() => setSearchQuery('')}
-                                                className="absolute right-6 w-8 h-8 rounded-full glass flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] transition-all"
-                                            > <X size={14} /> </button>
+                                                className="absolute right-5 w-6 h-6 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-tertiary hover:text-text-primary transition-all"
+                                            > <X size={12} /> </button>
                                         )}
                                     </div>
                                     <SearchAutocomplete
@@ -240,56 +252,56 @@ function ShopContent() {
                                 </div>
 
                                 {/* Controls */}
-                                <div className="flex items-center gap-3 w-full md:w-auto md:pl-4 md:border-l border-black/[0.04]">
-                                    {/* Mobile Toggle */}
+                                <div className="flex items-center gap-2 w-full md:w-auto md:pl-3 md:border-l border-glass-border">
+                                    {/* Mobile Filter toggle */}
                                     <button
                                         onClick={() => setShowFilters(true)}
-                                        className="lg:hidden flex-1 h-14 px-6 glass-gold text-[#0A0A0F] rounded-2xl font-black text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-3 uppercase shadow-lg"
-                                        style={{ background: 'linear-gradient(135deg, #E8D48B, #C9A84C)' }}
+                                        className="lg:hidden flex-1 h-12 px-5 text-black rounded-xl font-black text-[9px] tracking-[0.2em] transition-all flex items-center justify-center gap-2 uppercase shadow"
+                                        style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
                                     >
-                                        <Settings2 size={16} /> Filters
+                                        <Settings2 size={14} /> Filter
                                     </button>
 
-                                    {/* View Toggles */}
-                                    <div className="hidden md:flex items-center glass rounded-2xl p-1.5 border border-black/[0.04]">
+                                    {/* Grid view switcher */}
+                                    <div className="hidden md:flex items-center bg-surface-2 rounded-xl p-1 border border-glass-border">
                                         <button
                                             onClick={() => setDisplayMode('grid')}
-                                            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${displayMode === 'grid' ? 'glass-gold text-[#C9A84C] shadow-lg' : 'text-[#86868B] hover:text-[#1D1D1F]'}`}
-                                        > <LayoutGrid size={18} /> </button>
+                                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${displayMode === 'grid' ? 'bg-surface-1 text-gold-primary shadow-sm border border-glass-border' : 'text-text-tertiary hover:text-text-primary'}`}
+                                        > <LayoutGrid size={15} /> </button>
                                         <button
                                             onClick={() => setDisplayMode('list')}
-                                            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${displayMode === 'list' ? 'glass-gold text-[#C9A84C] shadow-lg' : 'text-[#86868B] hover:text-[#1D1D1F]'}`}
-                                        > <List size={18} /> </button>
+                                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${displayMode === 'list' ? 'bg-surface-1 text-gold-primary shadow-sm border border-glass-border' : 'text-text-tertiary hover:text-text-primary'}`}
+                                        > <List size={15} /> </button>
                                     </div>
 
-                                    {/* Sort Custom Select */}
-                                    <div className="relative min-w-[180px] h-14 flex items-center glass rounded-2xl px-6 border border-black/[0.04] bg-white">
+                                    {/* Custom Sort Selector */}
+                                    <div className="relative min-w-[150px] h-12 flex items-center bg-surface-2 rounded-xl px-5 border border-glass-border">
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="w-full bg-transparent text-[10px] font-black uppercase tracking-[0.15em] text-[#1D1D1F] appearance-none cursor-pointer outline-none"
+                                            className="w-full bg-transparent text-[9px] font-black uppercase tracking-[0.1em] text-text-primary appearance-none cursor-pointer outline-none"
                                         >
-                                            <option value="featured" className="bg-white text-[#1D1D1F]">Featured</option>
-                                            <option value="priceAsc" className="bg-white text-[#1D1D1F]">Price: ASC</option>
-                                            <option value="priceDesc" className="bg-white text-[#1D1D1F]">Price: DESC</option>
-                                            <option value="nameAsc" className="bg-white text-[#1D1D1F]">Name: A-Z</option>
+                                            <option value="featured" className="bg-surface-1 text-text-primary">Featured</option>
+                                            <option value="priceAsc" className="bg-surface-1 text-text-primary">Price: Low to High</option>
+                                            <option value="priceDesc" className="bg-surface-1 text-text-primary">Price: High to Low</option>
+                                            <option value="nameAsc" className="bg-surface-1 text-text-primary">Name: A-Z</option>
                                         </select>
-                                        <ChevronDown size={14} className="absolute right-6 text-[#86868B] pointer-events-none" />
+                                        <ChevronDown size={12} className="absolute right-5 text-text-tertiary pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Status Line */}
-                        <div className="flex items-center justify-between mb-10 px-4">
-                            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#86868B]">
-                                Results Found: <span className="text-[#1D1D1F] ml-2">{filteredProducts.length} Items</span>
-                                {selectedCategory !== 'All' && <span className="ml-4">Category: <span className="text-[#C9A84C]">{selectedCategory}</span></span>}
+                        {/* Status indicators */}
+                        <div className="flex items-center justify-between mb-6 px-2">
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-tertiary">
+                                Matches: <span className="text-text-primary ml-1.5">{filteredProducts.length} hardware units</span>
+                                {selectedCategory !== 'All' && <span className="ml-3">Node: <span className="text-gold-primary">{selectedCategory}</span></span>}
                             </span>
                         </div>
 
-                        {/* Grid */}
-                        <div className="relative pb-24">
+                        {/* Inventory Grid */}
+                        <div className="relative pb-20">
                             <ProductGrid
                                 products={filteredProducts}
                                 loading={loading}
@@ -298,9 +310,9 @@ function ShopContent() {
                             />
                         </div>
 
-                        {/* Deep Content */}
+                        {/* Personalized suggestions */}
                         {selectedCategory === 'All' && !searchQuery && !loading && (
-                            <div className="mt-20 pt-20 border-t border-white/[0.04]">
+                            <div className="mt-16 pt-16 border-t border-glass-border">
                                 <PersonalizedRecommendations />
                             </div>
                         )}
@@ -308,7 +320,7 @@ function ShopContent() {
                 </div>
             </div>
 
-            {/* Mobile Filter Layer */}
+            {/* Mobile filters drawer */}
             <AnimatePresence>
                 {showFilters && (
                     <>
@@ -317,22 +329,22 @@ function ShopContent() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowFilters(false)}
-                            className="fixed inset-0 bg-[#06060C]/90 backdrop-blur-2xl z-[200]"
+                            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[200]"
                         />
                         <motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 35, stiffness: 400 }}
-                            className="fixed inset-y-0 right-0 w-full max-w-sm bg-[#0A0A0F] border-l border-white/[0.06] z-[210] shadow-[0_0_100px_rgba(0,0,0,1)] flex flex-col pt-24"
+                            className="fixed inset-y-0 right-0 w-full max-w-xs bg-surface-1 border-l border-glass-border z-[210] shadow-2xl flex flex-col pt-20"
                         >
-                            <div className="p-8 flex items-center justify-between border-b border-white/[0.04]">
-                                <h3 className="text-2xl font-black text-[#F5F5F7] uppercase tracking-tight">Parameters</h3>
-                                <button onClick={() => setShowFilters(false)} className="w-12 h-12 rounded-full glass flex items-center justify-center text-[#5A5A6A] hover:text-[#F5F5F7] transition-all">
-                                    <X size={24} />
+                            <div className="p-6 flex items-center justify-between border-b border-glass-border">
+                                <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Configuration</h3>
+                                <button onClick={() => setShowFilters(false)} className="w-10 h-10 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-secondary hover:text-text-primary transition-all">
+                                    <X size={18} />
                                 </button>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-8 scrollbar-hide">
+                            <div className="flex-1 overflow-y-auto p-6">
                                 <FilterSidebar
                                     categories={categories}
                                     selectedCategories={[selectedCategory]}
@@ -342,15 +354,16 @@ function ShopContent() {
                                     minPrice={minPrice}
                                     setMinPrice={setMinPrice}
                                     isRetail={isRetail}
-                                    className="bg-transparent border-none shadow-none"
+                                    className="bg-transparent border-none shadow-none p-0"
                                 />
                             </div>
-                            <div className="p-8 glass border-t border-white/[0.04]">
+                            <div className="p-6 bg-surface-2 border-t border-glass-border">
                                 <button
                                     onClick={() => setShowFilters(false)}
-                                    className="w-full h-16 glass-gold text-[#C9A84C] font-black rounded-[1.5rem] hover:bg-[#C9A84C]/10 transition-all shadow-xl uppercase tracking-[0.2em] text-[10px]"
+                                    className="w-full h-12 text-black font-black rounded-xl hover:opacity-90 transition-all shadow-md uppercase tracking-[0.2em] text-[9px]"
+                                    style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
                                 >
-                                    Confirm Configuration
+                                    Confirm filters
                                 </button>
                             </div>
                         </motion.div>
@@ -364,9 +377,9 @@ function ShopContent() {
 export default function ShopPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#0A0A0F] flex flex-col items-center justify-center gap-6">
-                <div className="w-12 h-12 rounded-full border-2 border-[#C9A84C]/10 border-t-[#C9A84C] animate-spin" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C]">Accessing Inventory</span>
+            <div className="min-h-screen bg-surface-2 flex flex-col items-center justify-center gap-4">
+                <Loader2 className="w-10 h-10 animate-spin text-gold-primary" />
+                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-gold-primary">Accessing catalog database</span>
             </div>
         }>
             <ShopContent />

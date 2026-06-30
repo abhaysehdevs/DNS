@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { Inter, Noto_Sans_Devanagari } from 'next/font/google';
+import { Cinzel, Inter, Roboto, Noto_Sans_Devanagari } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/navbar';
 import { LanguagePopup } from '@/components/language-popup';
@@ -13,7 +13,9 @@ import { CurrencyManager } from '@/components/currency-manager';
 import { MobileBottomNav } from '@/components/mobile-navigation';
 import Script from 'next/script';
 
+const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-display' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const roboto = Roboto({ weight: ['400', '500', '700'], subsets: ['latin'], variable: '--font-technical' });
 const notoSansDevanagari = Noto_Sans_Devanagari({
   weight: ['400', '500', '700'],
   subsets: ['devanagari'],
@@ -27,7 +29,23 @@ export const metadata: Metadata = {
     template: "%s | Dinanath's"
   },
   description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables. Precision tooling for jewelers across India.',
-  keywords: ['jewelry tools', 'jewelry machinery', 'wholesale jewelry tools', 'precision tooling', 'goldsmith tools', 'jewelry manufacturing equipment', "Dinanath's"],
+  keywords: [
+    'jewelry tools', 
+    'jewelry machinery', 
+    'wholesale jewelry tools', 
+    'precision tooling', 
+    'goldsmith tools', 
+    'jewelry manufacturing equipment', 
+    "Dinanath's",
+    'jewelry making machinery', 
+    'goldsmith tools Chandni Chowk', 
+    'rolling mills wholesale Delhi', 
+    'precision jewelry scales', 
+    'polishing consumables', 
+    'micro-soldering jewelry', 
+    'jewelry workshop equipment', 
+    'wholesale precision engineering tools'
+  ],
   authors: [{ name: "Dinanath's" }],
   creator: "Dinanath's",
   publisher: "Dinanath's",
@@ -36,6 +54,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  alternates: {
+    canonical: './',
+  },
   openGraph: {
     title: "Dinanath's | Premium Jewelry Tools & Machinery",
     description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables.',
@@ -43,11 +64,20 @@ export const metadata: Metadata = {
     siteName: "Dinanath's",
     locale: 'en_IN',
     type: 'website',
+    images: [
+      {
+        url: 'https://dinanathandsons.com/icon.png',
+        width: 512,
+        height: 512,
+        alt: "Dinanath's Precision Jewelry Tools",
+      }
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: "Dinanath's | Premium Jewelry Tools & Machinery",
     description: 'Leading wholesale and retail supplier of professional jewelry making tools.',
+    images: ['https://dinanathandsons.com/icon.png'],
   },
   robots: {
     index: true,
@@ -70,7 +100,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#FFFFFF',
+  themeColor: '#151515',
 };
 
 export default function RootLayout({
@@ -79,8 +109,75 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="light">
+    <html lang="en">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Dinanath & Sons",
+              "image": "https://dinanathandsons.com/icon.png",
+              "@id": "https://dinanathandsons.com/#organization",
+              "url": "https://dinanathandsons.com",
+              "telephone": "+919953435647",
+              "priceRange": "$$",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "1914, Chatta Madan Gopal, Maliwara, Chandni Chowk",
+                "addressLocality": "Delhi",
+                "postalCode": "110006",
+                "addressCountry": "IN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 28.6562,
+                "longitude": 77.2309
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday"
+                ],
+                "opens": "11:00",
+                "closes": "20:00"
+              },
+              "sameAs": [
+                "https://www.facebook.com/dinanathandsons",
+                "https://www.instagram.com/dinanathandsons"
+              ]
+            })
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var storage = localStorage.getItem('dinanath-store-storage');
+                  if (storage) {
+                    var parsed = JSON.parse(storage);
+                    if (parsed && parsed.state && parsed.state.theme) {
+                      if (parsed.state.theme === 'light') {
+                        document.documentElement.classList.add('light');
+                        document.documentElement.classList.remove('dark');
+                        return;
+                      }
+                    }
+                  }
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.classList.remove('light');
+                } catch (e) {}
+              })();
+            `
+          }}
+        />
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-9HPF6NRR0W"
@@ -95,7 +192,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={cn(inter.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col")} style={{ background: '#FFFFFF' }}>
+      <body className={cn(inter.variable, cinzel.variable, roboto.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col bg-surface-2 text-text-primary")}>
         <CurrencyManager />
         <GoogleTranslate />
         <Preloader />
@@ -105,7 +202,7 @@ export default function RootLayout({
         {/* AI Assistant */}
         <AIAssistant />
         <MobileBottomNav />
-        <main className="flex-1 pt-20 md:pt-24 pb-20 md:pb-0">
+        <main className="flex-1 pt-20 md:pt-24 pb-28 md:pb-0">
           {children}
         </main>
         <Footer />

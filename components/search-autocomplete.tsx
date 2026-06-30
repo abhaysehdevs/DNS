@@ -157,7 +157,7 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
                                         >
                                             <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center overflow-hidden">
                                                 {p.image ? (
-                                                    <img src={p.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                    <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                 ) : (
                                                     <Search size={20} className="text-gray-600 group-hover:text-amber-500 transition-colors" />
                                                 )}

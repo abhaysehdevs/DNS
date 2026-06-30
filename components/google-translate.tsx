@@ -6,12 +6,6 @@ export function GoogleTranslate() {
     useEffect(() => {
         const id = 'google-translate-script';
         if (!document.getElementById(id)) {
-            const script = document.createElement('script');
-            script.id = id;
-            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            script.async = true;
-            document.body.appendChild(script);
-
             window.googleTranslateElementInit = () => {
                 new window.google.translate.TranslateElement({
                     pageLanguage: 'en',
@@ -19,6 +13,12 @@ export function GoogleTranslate() {
                     autoDisplay: false,
                 }, 'google_translate_element');
             };
+
+            const script = document.createElement('script');
+            script.id = id;
+            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.async = true;
+            document.body.appendChild(script);
         }
     }, []);
 

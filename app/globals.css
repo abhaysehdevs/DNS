@@ -3,19 +3,22 @@
 
 @theme {
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-hindi: var(--font-hindi);
+  --font-display: var(--font-display), serif;
+  --font-technical: var(--font-technical), sans-serif;
 
-  --color-border: oklch(0.92 0 0);
-  --color-input: oklch(0.92 0 0);
+  --color-border: var(--glass-border);
+  --color-input: var(--glass-border);
   --color-ring: oklch(0.439 0 0);
-  --color-background: oklch(0.99 0 0);
-  --color-foreground: oklch(0.1 0 0);
+  --color-background: var(--surface-2);
+  --color-foreground: var(--text-primary);
 
-  --color-primary: oklch(0.78 0.16 70);
-  --color-primary-foreground: oklch(0.99 0 0);
+  --color-primary: var(--gold-primary);
+  --color-primary-foreground: #151515;
 
-  --color-secondary: oklch(0.96 0 0);
-  --color-secondary-foreground: oklch(0.1 0 0);
+  --color-secondary: var(--gold-dark);
+  --color-secondary-foreground: #F8F3E8;
 
   --color-destructive: oklch(0.6 0.18 25);
   --color-destructive-foreground: oklch(0.99 0 0);
@@ -23,16 +26,30 @@
   --color-muted: oklch(0.96 0 0);
   --color-muted-foreground: oklch(0.45 0 0);
 
-  --color-accent: oklch(0.96 0 0);
-  --color-accent-foreground: oklch(0.1 0 0);
+  --color-accent: var(--gold-primary);
+  --color-accent-foreground: #151515;
 
-  --color-popover: oklch(1 0 0);
-  --color-popover-foreground: oklch(0.1 0 0);
+  --color-popover: #1E1E1E;
+  --color-popover-foreground: #F8F3E8;
 
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.1 0 0);
+  --color-card: #242424;
+  --color-card-foreground: #F8F3E8;
 
   --radius: 0.75rem;
+
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-gold-primary: var(--gold-primary);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-cyan-glow: var(--cyan-glow);
+  --color-glass-border: var(--glass-border);
+  --color-glass-bg: var(--glass-bg);
 }
 
 @utility container {
@@ -41,21 +58,64 @@
 }
 
 :root {
+  color-scheme: dark;
+  --gold-primary: #A67C35;
+  --gold-light: #DFCE9F;
+  --gold-dark: #8A6232;
+  --gold-muted: rgba(166, 124, 53, 0.08);
+  --cyan-glow: #A67C35;
+  --surface-1: #242424;
+  --surface-2: #151515;
+  --surface-3: #1E1E1E;
+  --surface-4: #343434;
+  --glass-bg: rgba(21, 21, 21, 0.7);
+  --glass-strong-bg: rgba(30, 30, 30, 0.9);
+  --glass-border: #343434;
+  --glass-strong-border: #343434;
+  --text-primary: #F8F3E8;
+  --text-secondary: #CFCFCF;
+  --text-tertiary: #8E8E9A;
+  --brand-name: "Dinanath & Sons";
+}
+
+html.dark {
+  color-scheme: dark;
+  --gold-primary: #A67C35;
+  --gold-light: #DFCE9F;
+  --gold-dark: #8A6232;
+  --gold-muted: rgba(166, 124, 53, 0.08);
+  --cyan-glow: #A67C35;
+  --surface-1: #242424;
+  --surface-2: #151515;
+  --surface-3: #1E1E1E;
+  --surface-4: #343434;
+  --glass-bg: rgba(21, 21, 21, 0.7);
+  --glass-strong-bg: rgba(30, 30, 30, 0.9);
+  --glass-border: #343434;
+  --glass-strong-border: #343434;
+  --text-primary: #F8F3E8;
+  --text-secondary: #CFCFCF;
+  --text-tertiary: #8E8E9A;
+}
+
+html.light {
   color-scheme: light;
-  --gold-primary: #C9A84C;
-  --gold-light: #E8D48B;
-  --gold-dark: #8B6914;
-  --gold-muted: rgba(201, 168, 76, 0.1);
-  --surface-1: #FFFFFF;
-  --surface-2: #F5F5F7;
-  --surface-3: #EFEFEF;
-  --surface-4: #E5E5E7;
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --gold-primary: #8A6232;
+  --gold-light: #A67C35;
+  --gold-dark: #5C401F;
+  --gold-muted: rgba(138, 98, 50, 0.08);
+  --cyan-glow: #8A6232;
+  --surface-1: #F5F5F7;
+  --surface-2: #EAE8E4;
+  --surface-3: #FFFFFF;
+  --surface-4: #E2DCD0;
+  --glass-bg: rgba(250, 248, 245, 0.75);
+  --glass-strong-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: #E2DCD0;
+  --glass-strong-border: #D5CDBE;
   --text-primary: #1D1D1F;
-  --text-secondary: #6E6E73;
+  --text-secondary: #4A4A4A;
   --text-tertiary: #86868B;
-  --brand-name: "Dinanath's";
 }
 
 /* ═══════════════════════════════════════
@@ -129,24 +189,50 @@ h1, h2, h3, h4, h5, h6 {
    ═══════════════════════════════════════ */
 
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--glass-border);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--glass-strong-bg);
   backdrop-filter: blur(30px) saturate(1.8);
   -webkit-backdrop-filter: blur(30px) saturate(1.8);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--glass-strong-border);
 }
 
 .glass-gold {
-  background: rgba(201, 168, 76, 0.1);
+  background: var(--gold-muted);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
   border: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.blueprint-grid {
+  background-image: radial-gradient(var(--glass-border) 1px, transparent 1px),
+                    linear-gradient(to right, var(--glass-border) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--glass-border) 1px, transparent 1px);
+  background-size: 20px 20px, 100px 100px, 100px 100px;
+  background-position: center center;
+}
+
+.tech-grid {
+  background-image: radial-gradient(var(--glass-border) 1.2px, transparent 1.2px),
+                    linear-gradient(to right, var(--glass-border) 0.8px, transparent 0.8px),
+                    linear-gradient(to bottom, var(--glass-border) 0.8px, transparent 0.8px);
+  background-size: 40px 40px, 100px 100px, 100px 100px;
+  background-position: center center;
+}
+
+.glow-gold-hover {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-gold-hover:hover {
+  box-shadow: 0 0 35px rgba(201, 168, 76, 0.2),
+              0 0 70px rgba(201, 168, 76, 0.08);
+  border-color: var(--gold-primary) !important;
 }
 
 /* ═══════════════════════════════════════
@@ -372,4 +458,102 @@ h1, h2, h3, h4, h5, h6 {
 .goog-tooltip,
 .goog-tooltip:hover {
   display: none !important;
+}
+
+/* ═══════════════════════════════════════
+   CYBER-HUD AND HIGH-TECH DESIGNS
+   ═══════════════════════════════════════ */
+
+.cyber-hud-border {
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 0 0 1px rgba(0, 242, 254, 0.03), 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .cyber-hud-border {
+  border: 1px solid rgba(223, 183, 88, 0.15);
+  box-shadow: 0 0 0 1px rgba(0, 242, 254, 0.08), 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-glow-effect {
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-glow-effect {
+  box-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glow-cyan-hover:hover {
+  border-color: var(--cyan-glow) !important;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
+}
+
+/* ═══════════════════════════════════════
+   PREMIUM REDESIGN ADDITIONS
+   ═══════════════════════════════════════ */
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), serif !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.font-technical {
+  font-family: var(--font-technical), sans-serif !important;
+}
+
+.bg-warm-ivory {
+  background-color: #F8F3E8 !important;
+}
+
+.text-matte-black {
+  color: #151515 !important;
+}
+
+.text-charcoal {
+  color: #1E1E1E !important;
+}
+
+.border-ivory-muted {
+  border-color: #E2DCD0 !important;
+}
+
+.bg-rich-charcoal {
+  background-color: #1E1E1E !important;
+}
+
+.bg-deep-black {
+  background-color: #151515 !important;
+}
+
+.bg-card-dark {
+  background-color: #242424 !important;
+}
+
+.border-custom-dark {
+  border-color: #343434 !important;
+}
+
+.text-light-grey {
+  color: #CFCFCF !important;
+}
+
+.text-gold-accent {
+  color: #A67C35 !important;
+}
+
+.bg-cta-red {
+  background-color: #D12A1C !important;
+}
+
+.text-cta-red {
+  color: #D12A1C !important;
+}
+
+.border-cta-red {
+  border-color: #D12A1C !important;
 }
