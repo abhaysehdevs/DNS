@@ -9,9 +9,10 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { usePathname, useRouter } from 'next/navigation';
 import { SearchAutocomplete } from './search-autocomplete';
+import { supabase } from '@/lib/supabase';
 
 export function Navbar() {
-    const { mode, language, cart, wishlist, setMode, user, theme, setTheme } = useAppStore();
+    const { mode, language, cart, wishlist, setMode, user, theme, setTheme, currencyData } = useAppStore();
     const t = translations[language] || translations['en'];
     const isMobile = useIsMobile();
     const pathname = usePathname();
@@ -23,6 +24,34 @@ export function Navbar() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
+    const [announcements, setAnnouncements] = useState<any[]>([]);
+    const [currentAnnIndex, setCurrentAnnIndex] = useState(0);
+
+    useEffect(() => {
+        const fetchAnnouncements = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .eq('active', true)
+                    .order('display_order');
+                if (!error && data) {
+                    setAnnouncements(data);
+                }
+            } catch (err) {
+                console.error('Error fetching announcements:', err);
+            }
+        };
+        fetchAnnouncements();
+    }, []);
+
+    useEffect(() => {
+        if (announcements.length <= 1) return;
+        const interval = setInterval(() => {
+            setCurrentAnnIndex(prev => (prev + 1) % announcements.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [announcements]);
 
     const searchRef = useRef<HTMLDivElement>(null);
     const { scrollY } = useScroll();
@@ -117,11 +146,21 @@ export function Navbar() {
                 className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-[#151515] border-b border-[#343434] transition-all animate-in fade-in duration-300"
             >
                 {/* 1. TOP ANNOUNCEMENT BAR */}
-                <div className="w-full bg-[#1E1E1E] border-b border-[#343434] py-2 px-4 md:px-6">
-                    <div className="container mx-auto flex justify-between items-center text-[8.5px] sm:text-[10px] text-[#CFCFCF] font-semibold uppercase tracking-wider">
-                        <div className="flex items-center gap-2 justify-center w-full md:w-auto text-center md:text-left">
+                <div 
+                    className="w-full border-b border-[#343434] py-2 px-4 md:px-6 transition-all duration-500"
+                    style={{
+                        backgroundColor: announcements.length > 0 ? announcements[currentAnnIndex].background_color : '#1E1E1E'
+                    }}
+                >
+                    <div className="container mx-auto flex justify-between items-center text-[8.5px] sm:text-[10px] font-semibold uppercase tracking-wider">
+                        <div 
+                            className="flex items-center gap-2 justify-center w-full md:w-auto text-center md:text-left"
+                            style={{
+                                color: announcements.length > 0 ? announcements[currentAnnIndex].text_color : '#CFCFCF'
+                            }}
+                        >
                             <span className="text-[#A67C35] font-bold">★</span>
-                            <span>India's Trusted Jewellery Tool Experts Since 1960</span>
+                            <span>{announcements.length > 0 ? announcements[currentAnnIndex].message : "India's Trusted Jewellery Tool Experts Since 1960"}</span>
                         </div>
                         <div className="hidden md:flex items-center gap-6">
                             <Link href="/about" className="hover:text-[#A67C35] transition-colors">About Us</Link>
@@ -133,7 +172,7 @@ export function Navbar() {
                                 className="flex items-center gap-1.5 cursor-pointer hover:text-[#A67C35] transition-colors"
                             >
                                 <Globe size={11} className="text-[#A67C35]" />
-                                <span>INR | {
+                                <span>{currencyData.code} | {
                                     language === 'en' ? 'English' :
                                     language === 'hi' ? 'हिन्दी' :
                                     language === 'mr' ? 'मराठी' :

@@ -15,6 +15,15 @@ export interface AdminSettings {
     stockAlerts: boolean;
     taxRate: number;
     theme: 'light' | 'dark' | 'system';
+    taxId?: string;
+    legalBusinessName?: string;
+    shippingOrigin?: string;
+    socialLinks?: {
+        facebook?: string;
+        twitter?: string;
+        instagram?: string;
+        linkedin?: string;
+    };
 }
 
 export interface CartItem {
@@ -162,7 +171,16 @@ export const useAppStore = create<AppState>()(
                 emailNotifications: true,
                 stockAlerts: true,
                 taxRate: 18,
-                theme: 'dark'
+                theme: 'dark',
+                taxId: 'GSTIN27AAAAA1111A1Z1',
+                legalBusinessName: 'Dinanath & Sons Private Limited',
+                shippingOrigin: 'Maliwara, Chandni Chowk, New Delhi, India',
+                socialLinks: {
+                    facebook: 'https://facebook.com/dinanathandsons',
+                    twitter: 'https://twitter.com/dinanathandsons',
+                    instagram: 'https://instagram.com/dinanathandsons',
+                    linkedin: 'https://linkedin.com/company/dinanathandsons'
+                }
             },
             isAdminAuthenticated: false,
             notifications: [],

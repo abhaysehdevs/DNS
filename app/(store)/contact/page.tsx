@@ -36,8 +36,21 @@ export default function Contact() {
                 category: opsClass,
                 message: message
             });
+
+            // Trigger Email Notification
+            await fetch('/api/notifications/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'contact',
+                    contactName: name,
+                    contactEmail: email,
+                    category: opsClass,
+                    message: message
+                })
+            });
         } catch (err) {
-            console.warn('Database save failed, continuing transition: ', err);
+            console.warn('Database save / email notification failed: ', err);
         }
 
         setFormStatus('success');

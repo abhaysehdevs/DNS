@@ -15,8 +15,16 @@ const LANGUAGES = [
     { code: 'te', name: 'Telugu', native: 'తెలుగు' },
 ];
 
+const CURRENCIES = [
+    { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'GBP', name: 'British Pound', symbol: '£' },
+    { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' }
+];
+
 export function LanguagePopup() {
-    const { language, setLanguage, hasSeenLanguagePopup, setHasSeenLanguagePopup } = useAppStore();
+    const { language, setLanguage, hasSeenLanguagePopup, setHasSeenLanguagePopup, currencyData, setCurrencyData } = useAppStore();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -64,6 +72,27 @@ export function LanguagePopup() {
         setTimeout(() => {
             window.location.reload();
         }, 150);
+    };
+
+    const handleSelectCurrency = async (currCode: string) => {
+        try {
+            if (currCode === 'INR') {
+                setCurrencyData({ code: 'INR', symbol: '₹', rate: 1 });
+                return;
+            }
+            const rateRes = await fetch('https://open.er-api.com/v6/latest/INR');
+            const rateData = await rateRes.json();
+            const rate = rateData.rates[currCode] || 1;
+            
+            const symbols: Record<string, string> = { 
+                USD: '$', EUR: '€', GBP: '£', AED: 'د.إ'
+            };
+            const symbol = symbols[currCode] || currCode + ' ';
+            
+            setCurrencyData({ code: currCode, symbol, rate });
+        } catch (err) {
+            console.error('Failed to change currency:', err);
+        }
     };
 
     const handleDismiss = () => {
@@ -133,6 +162,36 @@ export function LanguagePopup() {
                                         <span className="text-xs text-gray-500">{lang.name}</span>
                                     </button>
                                 ))}
+                            </div>
+
+                            {/* Currency Selector */}
+                            <div className="mt-8 border-t border-gray-800 pt-6">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="bg-amber-500/10 p-2.5 rounded-full text-amber-500">
+                                        <Globe size={20} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Choose Currency</h4>
+                                        <span className="text-[10px] text-gray-500 font-bold uppercase">Dynamic Exchange Conversion</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-2">
+                                    {CURRENCIES.map((curr) => (
+                                        <button
+                                            key={curr.code}
+                                            onClick={() => handleSelectCurrency(curr.code)}
+                                            className={`flex items-center justify-center gap-2 py-3 px-2 rounded-xl border text-xs font-black uppercase tracking-wider transition-all ${
+                                                currencyData.code === curr.code
+                                                    ? 'bg-amber-600/20 border-amber-600 text-amber-500'
+                                                    : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600 hover:text-white'
+                                            }`}
+                                        >
+                                            <span className="text-sm">{curr.symbol}</span>
+                                            <span>{curr.code}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </motion.div>

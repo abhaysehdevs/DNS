@@ -239,12 +239,12 @@ export default function AdminDashboard() {
     return (
         <div className="space-y-8 pb-20 max-w-[1600px] mx-auto p-4 md:p-8">
             {/* Intelligence Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-1 border border-glass-border p-8 rounded-[2.5rem] relative overflow-hidden blueprint-grid">
+            <div className="flex flex-col gap-4 bg-surface-1 border border-glass-border p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] relative overflow-hidden blueprint-grid">
                 <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
                     <Activity size={200} className="text-text-primary -translate-y-20 translate-x-20" />
                 </div>
                 <div className="relative z-10">
-                    <h2 className="text-3xl font-black text-text-primary flex items-center gap-3">
+                    <h2 className="text-2xl sm:text-3xl font-black text-text-primary flex items-center gap-3">
                         <Zap className="text-blue-500 dark:text-gold-primary" fill="currentColor" /> Store Intelligence
                     </h2>
                     <p className="text-text-secondary text-sm mt-2 max-w-xl">
@@ -252,7 +252,7 @@ export default function AdminDashboard() {
                     </p>
                 </div>
                 <div className="flex gap-3 relative z-10">
-                    <div className="flex flex-col items-end">
+                    <div className="flex flex-col sm:items-end">
                         <span className="text-[10px] font-black text-blue-500 dark:text-gold-primary uppercase tracking-widest mb-1">Global Storage Engine</span>
                         <div className="flex items-center gap-2 bg-surface-2 px-4 py-2 rounded-full border border-glass-border">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 {[
                     { label: 'Total Sales', value: `₹${stats.totalSales.toLocaleString()}`, color: 'text-emerald-500', sub: 'Revenue to date', icon: TrendingUp },
                     { label: 'Total Orders', value: stats.totalOrders, color: 'text-text-primary', sub: 'Successful checkouts', icon: Package },
@@ -275,20 +275,20 @@ export default function AdminDashboard() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
                         key={item.label} 
-                        className="bg-surface-1 border border-glass-border rounded-3xl p-8 shadow-xl relative overflow-hidden group hover:border-gold-primary/50 transition-all"
+                        className="bg-surface-1 border border-glass-border rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl relative overflow-hidden group hover:border-gold-primary/50 transition-all"
                     >
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                             <item.icon className="text-text-tertiary" size={64} />
                         </div>
-                        <p className="text-text-tertiary text-[10px] font-black uppercase tracking-widest mb-2">{item.label}</p>
-                        <h3 className={`text-4xl font-black ${item.color}`}>{item.value}</h3>
-                        <div className="mt-3 text-[10px] text-text-secondary uppercase tracking-wider font-bold">{item.sub}</div>
+                        <p className="text-text-tertiary text-[10px] font-black uppercase tracking-widest mb-1 sm:mb-2">{item.label}</p>
+                        <h3 className={`text-2xl sm:text-4xl font-black ${item.color}`}>{item.value}</h3>
+                        <div className="mt-2 sm:mt-3 text-[10px] text-text-secondary uppercase tracking-wider font-bold hidden sm:block">{item.sub}</div>
                     </motion.div>
                 ))}
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
                     { label: 'Add Product', icon: Plus, href: '/admin/products' },
                     { label: 'Categories', icon: Grid, href: '/admin/categories' },
@@ -298,67 +298,101 @@ export default function AdminDashboard() {
                     <Link 
                         key={action.label} 
                         href={action.href}
-                        className="bg-surface-1/50 border border-glass-border p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-surface-3 hover:border-gold-primary transition-all group"
+                        className="bg-surface-1/50 border border-glass-border p-4 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-2 sm:gap-3 hover:bg-surface-3 hover:border-gold-primary transition-all group"
                     >
-                        <action.icon className="text-text-tertiary group-hover:text-text-primary transition-colors" size={24} />
-                        <span className="text-[10px] font-black text-text-secondary group-hover:text-text-primary uppercase tracking-widest">{action.label}</span>
+                        <action.icon className="text-text-tertiary group-hover:text-text-primary transition-colors" size={20} />
+                        <span className="text-[10px] font-black text-text-secondary group-hover:text-text-primary uppercase tracking-widest text-center">{action.label}</span>
                     </Link>
                 ))}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Sales Chart (SVG-based gridline drawing) */}
+                {/* Real-time Sales & Operations Analytics */}
                 <div className="lg:col-span-2 bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-xl flex flex-col justify-between">
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-lg font-bold text-text-primary">Weekly Sales Performance</h3>
-                        <div className="text-xs text-text-secondary px-3 py-1 bg-surface-2 rounded-full border border-glass-border">Last 7 Days</div>
+                        <div>
+                            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                                <Activity className="text-emerald-500" size={18} /> Real-Time Analytics
+                            </h3>
+                            <p className="text-xs text-text-tertiary mt-1">Live metrics from your backend database</p>
+                        </div>
+                        <div className="text-xs text-text-secondary px-3 py-1 bg-surface-2 rounded-full border border-glass-border flex items-center gap-1.5">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            Live Updates
+                        </div>
                     </div>
                     
-                    <div className="space-y-4">
-                        {/* Chart Workspace */}
-                        <div className="h-56 w-full relative flex items-end justify-between gap-2 px-2 pb-2 border-b border-glass-border">
-                            {/* Gridlines in background */}
-                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                                {[0, 1, 2, 3].map((i) => {
-                                    const maxVal = Math.max(...stats.salesTrend.map(d => d.amount), 1000);
-                                    const gridVal = Math.round((maxVal * (3 - i)) / 3);
-                                    return (
-                                        <div key={i} className="w-full border-t border-glass-border/30 flex justify-end text-[9px] text-text-tertiary pt-0.5">
-                                            <span className="bg-surface-1/80 px-1.5 rounded font-mono">₹{gridVal.toLocaleString()}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Interactive Bars */}
-                            {stats.salesTrend.map((day, idx) => {
-                                const maxVal = Math.max(...stats.salesTrend.map(d => d.amount), 1);
-                                const height = (day.amount / maxVal) * 100;
-                                return (
-                                    <div key={day.date} className="flex-1 flex flex-col items-center group relative h-full justify-end z-10">
-                                        <div className="absolute bottom-full mb-2 bg-blue-600 dark:bg-gold-primary text-white dark:text-black text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 font-bold whitespace-nowrap shadow-lg">
-                                            ₹{day.amount.toLocaleString()}
-                                        </div>
-                                        <motion.div 
-                                            initial={{ height: 0 }}
-                                            animate={{ height: `${Math.max(height, 5)}%` }}
-                                            whileHover={{ scaleX: 1.05, scaleY: 1.02, originY: 1 }}
-                                            className="w-full max-w-[40px] bg-gradient-to-t from-blue-600 to-blue-400 dark:from-gold-dark dark:to-gold-primary rounded-t-lg transition-all shadow-md shadow-blue-500/10 dark:shadow-gold-500/10 cursor-pointer"
-                                        />
-                                    </div>
-                                );
-                            })}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="bg-surface-2 border border-glass-border/50 p-4 rounded-xl">
+                            <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1">Average Order Value (AOV)</span>
+                            <span className="text-2xl font-black text-text-primary">
+                                ₹{Math.round(stats.totalSales / (stats.totalOrders || 1)).toLocaleString()}
+                            </span>
+                            <span className="text-[10px] text-text-tertiary block mt-1">Across all checkouts</span>
                         </div>
+                        <div className="bg-surface-2 border border-glass-border/50 p-4 rounded-xl">
+                            <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1">Active Staff Sessions</span>
+                            <span className="text-2xl font-black text-text-primary">
+                                {sessions.length}
+                            </span>
+                            <span className="text-[10px] text-text-tertiary block mt-1">Authorized terminals</span>
+                        </div>
+                        <div className="bg-surface-2 border border-glass-border/50 p-4 rounded-xl">
+                            <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1">Sales (Last 24 Hours)</span>
+                            <span className="text-2xl font-black text-emerald-500">
+                                ₹{orders
+                                    .filter(o => new Date(o.created_at).getTime() > Date.now() - 24 * 60 * 60 * 1000)
+                                    .reduce((acc, o) => acc + (o.total_amount || 0), 0)
+                                    .toLocaleString()}
+                            </span>
+                            <span className="text-[10px] text-text-tertiary block mt-1">Recent conversion value</span>
+                        </div>
+                        <div className="bg-surface-2 border border-glass-border/50 p-4 rounded-xl">
+                            <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1">Orders (Last 24 Hours)</span>
+                            <span className="text-2xl font-black text-blue-500">
+                                {orders.filter(o => new Date(o.created_at).getTime() > Date.now() - 24 * 60 * 60 * 1000).length}
+                            </span>
+                            <span className="text-[10px] text-text-tertiary block mt-1">Order velocity</span>
+                        </div>
+                    </div>
 
-                        {/* Labels Row */}
-                        <div className="flex justify-between gap-2 px-2">
-                            {stats.salesTrend.map((day) => (
-                                <div key={day.date} className="flex-1 text-center">
-                                    <span className="text-[10px] text-text-secondary font-mono">
-                                        {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
-                                    </span>
+                    <div className="border-t border-glass-border/50 pt-4">
+                        <h4 className="text-xs font-black text-text-tertiary uppercase tracking-wider mb-3">Recent Conversion Stream</h4>
+                        <div className="space-y-3">
+                            {orders.slice(0, 3).map((order) => (
+                                <div key={order.id} className="flex justify-between items-center text-xs p-3 rounded-lg bg-surface-2/60 border border-glass-border/30">
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-bold text-text-primary truncate">{order.customer_name || 'Guest User'}</span>
+                                            <span className="text-[9px] text-text-tertiary font-mono">#{order.id.slice(0, 8)}</span>
+                                        </div>
+                                        <div className="text-[10px] text-text-secondary mt-0.5">
+                                            {order.customer_email || order.customer_phone || 'No contact info'} • {order.order_items?.length || 0} items
+                                        </div>
+                                    </div>
+                                    <div className="text-right shrink-0 ml-3">
+                                        <div className="font-black text-emerald-500 font-mono">₹{order.total_amount.toLocaleString()}</div>
+                                        <div className="text-[9px] text-text-tertiary mt-0.5">
+                                            {(() => {
+                                                const seconds = Math.floor((Date.now() - new Date(order.created_at).getTime()) / 1000);
+                                                if (seconds < 60) return 'just now';
+                                                const minutes = Math.floor(seconds / 60);
+                                                if (minutes < 60) return `${minutes}m ago`;
+                                                const hours = Math.floor(minutes / 60);
+                                                if (hours < 24) return `${hours}h ago`;
+                                                const days = Math.floor(hours / 24);
+                                                return `${days}d ago`;
+                                            })()}
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
+                            {orders.length === 0 && (
+                                <div className="text-center py-4 text-text-tertiary italic text-xs">No conversions recorded yet.</div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -432,7 +466,48 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        <div className="overflow-x-auto">
+                        {/* Mobile Card View */}
+                        <div className="md:hidden divide-y divide-glass-border">
+                            {filteredOrders.slice(0, 10).map((order) => (
+                                <div key={order.id} className="p-4 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <div className="min-w-0">
+                                            <div className="font-bold text-text-primary text-sm truncate">{order.customer_name}</div>
+                                            <div className="text-[10px] text-text-tertiary font-mono">#{order.id.slice(0, 8)} • {new Date(order.created_at).toLocaleDateString()}</div>
+                                        </div>
+                                        <div className="text-right shrink-0 ml-3">
+                                            <div className="font-bold text-text-primary">₹{order.total_amount.toLocaleString()}</div>
+                                            <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-black uppercase border ${
+                                                order.status === 'pending' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                                order.status === 'shipped' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                                                order.status === 'delivered' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                                order.status === 'cancelled' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
+                                                'bg-surface-3 text-text-secondary'
+                                            }`}>
+                                                {order.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2 justify-end">
+                                        {order.status === 'pending' && (
+                                            <button onClick={() => updateStatus(order.id, 'processing')} className="p-2 bg-surface-2 text-text-primary hover:bg-blue-600 hover:text-white rounded-lg transition-all"><Truck size={14} /></button>
+                                        )}
+                                        {order.status === 'processing' && (
+                                            <button onClick={() => updateStatus(order.id, 'shipped')} className="p-2 bg-surface-2 text-text-primary hover:bg-purple-600 hover:text-white rounded-lg transition-all"><Truck size={14} /></button>
+                                        )}
+                                        <Link href="/admin/orders" className="p-2 bg-surface-2 text-text-tertiary hover:bg-text-primary hover:text-surface-1 rounded-lg transition-all">
+                                            <ArrowRight size={14} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                            {filteredOrders.length === 0 && (
+                                <div className="px-4 py-16 text-center text-text-secondary italic">No orders found matching this filter.</div>
+                            )}
+                        </div>
+
+                        {/* Desktop Table View */}
+                        <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead className="bg-surface-2 text-text-tertiary text-[10px] uppercase tracking-widest font-bold">
                                     <tr>
@@ -468,7 +543,7 @@ export default function AdminDashboard() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex gap-2 justify-end md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                                                     {order.status === 'pending' && (
                                                         <button onClick={() => updateStatus(order.id, 'processing')} className="p-2 bg-surface-2 text-text-primary hover:bg-blue-600 hover:text-white dark:hover:bg-gold-primary dark:hover:text-black rounded-lg transition-all"><Truck size={14} /></button>
                                                     )}
@@ -543,8 +618,8 @@ export default function AdminDashboard() {
                                                     <span className="bg-blue-600 dark:bg-gold-primary text-white dark:text-black text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Current</span>
                                                 )}
                                             </div>
-                                            <p className="text-[10px] text-text-tertiary mt-0.5 font-mono truncate">
-                                                IP: {session.ip_address || '127.0.0.1'} • Active: {new Date(session.last_active).toLocaleTimeString()}
+                                            <p className="text-[10px] text-text-tertiary mt-0.5 font-mono truncate max-w-[140px] sm:max-w-none">
+                                                <span className="hidden sm:inline">IP: {session.ip_address || '127.0.0.1'} • </span>Active: {new Date(session.last_active).toLocaleTimeString()}
                                             </p>
                                         </div>
                                     </div>

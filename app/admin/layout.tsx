@@ -12,11 +12,51 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
-    const { isAdminAuthenticated, logoutAdmin, notifications, markNotificationAsRead, clearNotifications, addNotification, adminSettings } = useAppStore();
+    const { isAdminAuthenticated, logoutAdmin, notifications, markNotificationAsRead, clearNotifications, addNotification, adminSettings, updateAdminSettings } = useAppStore();
 
     const [showNotifications, setShowNotifications] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
+
+    // Load global settings from database
+    useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('site_settings')
+                    .select('settings')
+                    .eq('key', 'global')
+                    .single();
+                if (!error && data?.settings) {
+                    updateAdminSettings(data.settings);
+                }
+            } catch (err) {
+                console.error('Error loading settings from DB:', err);
+            }
+        };
+        loadSettings();
+    }, []);
+
+    // Apply active theme
+    useEffect(() => {
+        const currentTheme = adminSettings.theme || 'dark';
+        if (currentTheme === 'light') {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        } else if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else if (currentTheme === 'system') {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            if (systemTheme === 'light') {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            }
+        }
+    }, [adminSettings.theme]);
 
     // Authentication Check
     useEffect(() => {

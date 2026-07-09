@@ -20,6 +20,24 @@ export default function SettingsPage() {
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
     useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('site_settings')
+                    .select('settings')
+                    .eq('key', 'global')
+                    .single();
+                if (!error && data?.settings) {
+                    updateAdminSettings(data.settings);
+                }
+            } catch (err) {
+                console.error('Error loading settings from DB:', err);
+            }
+        };
+        loadSettings();
+    }, []);
+
+    useEffect(() => {
         if (activeTab === 'security') {
             fetchSessions();
             setCurrentSessionId(localStorage.getItem('admin_session_id'));
@@ -75,12 +93,22 @@ export default function SettingsPage() {
 
     const handleSaveSettings = async () => {
         setLoading(true);
-        // Simulate API call to save to backend if we had one
-        await new Promise(resolve => setTimeout(resolve, 800));
-        setLoading(false);
-        // Since we are using Zustand persist, data is already saved to localStorage
-        // This is just for user feedback
-        alert('Settings saved successfully!');
+        try {
+            const { error } = await supabase
+                .from('site_settings')
+                .upsert({
+                    key: 'global',
+                    settings: adminSettings,
+                    updated_at: new Date().toISOString()
+                });
+
+            if (error) throw error;
+            alert('Settings saved and synchronized with database successfully!');
+        } catch (err: any) {
+            alert('Failed to save to database: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleExportData = async () => {
@@ -304,6 +332,96 @@ export default function SettingsPage() {
                                                     className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors"
                                                 />
                                                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-400">Tax ID (GSTIN/VAT)</label>
+                                            <input
+                                                type="text"
+                                                value={adminSettings.taxId || ''}
+                                                onChange={(e) => updateAdminSettings({ taxId: e.target.value })}
+                                                placeholder="e.g. GSTIN27AAAAA1111A1Z1"
+                                                className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2 md:col-span-2">
+                                            <label className="text-sm font-medium text-gray-400">Legal Business Name</label>
+                                            <input
+                                                type="text"
+                                                value={adminSettings.legalBusinessName || ''}
+                                                onChange={(e) => updateAdminSettings({ legalBusinessName: e.target.value })}
+                                                placeholder="e.g. Dinanath & Sons Private Limited"
+                                                className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2 md:col-span-2">
+                                            <label className="text-sm font-medium text-gray-400">Global Shipping Origin</label>
+                                            <textarea
+                                                value={adminSettings.shippingOrigin || ''}
+                                                onChange={(e) => updateAdminSettings({ shippingOrigin: e.target.value })}
+                                                placeholder="e.g. Maliwara, Chandni Chowk, New Delhi, India"
+                                                rows={2}
+                                                className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors resize-none"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="h-px bg-gray-800 w-full mt-6"></div>
+
+                                    {/* Social Links */}
+                                    <div className="mt-6 space-y-4">
+                                        <h3 className="text-sm font-bold text-white uppercase tracking-wider">Social Profiles</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-gray-400">Facebook URL</label>
+                                                <input
+                                                    type="text"
+                                                    value={adminSettings.socialLinks?.facebook || ''}
+                                                    onChange={(e) => updateAdminSettings({
+                                                        socialLinks: { ...adminSettings.socialLinks, facebook: e.target.value }
+                                                    })}
+                                                    placeholder="https://facebook.com/..."
+                                                    className="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none transition-colors"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-gray-400">Instagram URL</label>
+                                                <input
+                                                    type="text"
+                                                    value={adminSettings.socialLinks?.instagram || ''}
+                                                    onChange={(e) => updateAdminSettings({
+                                                        socialLinks: { ...adminSettings.socialLinks, instagram: e.target.value }
+                                                    })}
+                                                    placeholder="https://instagram.com/..."
+                                                    className="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none transition-colors"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-gray-400">Twitter/X URL</label>
+                                                <input
+                                                    type="text"
+                                                    value={adminSettings.socialLinks?.twitter || ''}
+                                                    onChange={(e) => updateAdminSettings({
+                                                        socialLinks: { ...adminSettings.socialLinks, twitter: e.target.value }
+                                                    })}
+                                                    placeholder="https://twitter.com/..."
+                                                    className="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none transition-colors"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-gray-400">LinkedIn URL</label>
+                                                <input
+                                                    type="text"
+                                                    value={adminSettings.socialLinks?.linkedin || ''}
+                                                    onChange={(e) => updateAdminSettings({
+                                                        socialLinks: { ...adminSettings.socialLinks, linkedin: e.target.value }
+                                                    })}
+                                                    placeholder="https://linkedin.com/company/..."
+                                                    className="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none transition-colors"
+                                                />
                                             </div>
                                         </div>
                                     </div>

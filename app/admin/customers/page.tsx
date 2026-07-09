@@ -42,6 +42,7 @@ export default function CustomersPage() {
     // Data State
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [products, setProducts] = useState<any[]>([]); // Using any[] to match Supabase snake_case return
+    const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('All');
@@ -97,10 +98,13 @@ export default function CustomersPage() {
         setLoading(true);
 
         // 1. Fetch Orders for Derived Customers
-        const { data: orders } = await supabase
+        const { data: ordersData } = await supabase
             .from('orders')
-            .select('*')
+            .select('*, order_items(*)')
             .order('created_at', { ascending: false });
+        
+        if (ordersData) setOrders(ordersData);
+        const orders = ordersData || [];
 
         // 2. Fetch Products
         const { data: productsData } = await supabase
@@ -582,7 +586,7 @@ export default function CustomersPage() {
                                                         <span className="text-gray-400">Pipeline Value / Spent</span>
                                                         <span className="text-green-400 font-bold">₹{selectedCustomer.totalSpent.toLocaleString()}</span>
                                                     </div>
-                                                    <div className="flex justify-between py-2 border-b border-gray-800/50">
+                            <div className="flex justify-between py-2 border-b border-gray-800/50">
                                                         <span className="text-gray-400">Orders / Deals</span>
                                                         <span className="text-blue-400 font-bold">{selectedCustomer.totalOrders}</span>
                                                     </div>
@@ -604,6 +608,55 @@ export default function CustomersPage() {
                                                     </div>
                                                 </div>
                                             )}
+
+                                            {/* Lifetime Order History Section */}
+                                            <div className="bg-gray-800/30 rounded-xl p-5 border border-gray-800 md:col-span-2">
+                                                <h4 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-4 flex items-center gap-2">
+                                                    <ShoppingBag size={14} /> Lifetime Order History
+                                                </h4>
+                                                {(() => {
+                                                    const customerOrders = orders.filter(order => 
+                                                        (selectedCustomer.email && order.customer_email === selectedCustomer.email) ||
+                                                        (selectedCustomer.phone && order.customer_phone === selectedCustomer.phone)
+                                                    );
+
+                                                    if (customerOrders.length === 0) {
+                                                        return <p className="text-gray-500 text-sm italic py-2">No transaction history recorded for this customer.</p>;
+                                                    }
+
+                                                    return (
+                                                        <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                                                            {customerOrders.map(order => (
+                                                                <div key={order.id} className="flex justify-between items-center text-xs p-3 rounded-lg bg-black/40 border border-gray-800 hover:border-gray-700 transition-colors">
+                                                                    <div>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="font-bold text-white font-mono">#{order.id.slice(0, 12)}</span>
+                                                                            <span className="text-[10px] text-text-tertiary">
+                                                                                {new Date(order.created_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className="text-[10px] text-gray-400 mt-1">
+                                                                            {order.order_items?.map((item: any) => `${item.product_name} (x${item.quantity})`).join(', ') || 'No items listed'}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="text-right ml-4 shrink-0">
+                                                                        <div className="font-bold text-green-400">₹{order.total_amount.toLocaleString()}</div>
+                                                                        <span className={`inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase mt-1 border ${
+                                                                            order.status === 'pending' ? 'bg-amber-900/10 text-amber-500 border-amber-900/30' :
+                                                                            order.status === 'shipped' ? 'bg-blue-900/10 text-blue-500 border-blue-900/30' :
+                                                                            order.status === 'delivered' ? 'bg-green-900/10 text-green-500 border-green-900/30' :
+                                                                            order.status === 'cancelled' ? 'bg-red-900/10 text-red-500 border-red-900/30' :
+                                                                            'bg-gray-800 text-gray-400'
+                                                                        }`}>
+                                                                            {order.status}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                })()}
+                                            </div>
                                         </div>
                                     </div>
                                 )}

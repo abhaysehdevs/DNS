@@ -168,7 +168,61 @@ export default function CouponsAdminPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-3 p-3">
+                    {loading ? (
+                        <div className="py-20 text-center"><Loader2 className="animate-spin text-purple-500 mx-auto" size={48} /></div>
+                    ) : filteredCoupons.length === 0 ? (
+                        <div className="py-16 text-center text-gray-600 italic">No coupons found.</div>
+                    ) : filteredCoupons.map(coupon => (
+                        <div key={coupon.id} className="bg-black border border-gray-800 rounded-2xl p-4 space-y-3">
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${coupon.active ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'bg-gray-800 text-gray-600 border border-gray-700'}`}>
+                                        <Zap size={18} />
+                                    </div>
+                                    <div>
+                                        <div className="text-white font-black text-lg uppercase">{coupon.code}</div>
+                                        <div className="text-[10px] font-black uppercase text-gray-600">ID: {coupon.id.slice(0, 8)}</div>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-xl font-black text-white">
+                                        {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `₹${coupon.discount_value}`}
+                                    </div>
+                                    <div className="text-[10px] text-purple-500 font-bold uppercase">
+                                        {coupon.discount_type === 'percentage' ? 'Percentage' : 'Fixed'}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between gap-3 text-xs">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-gray-400">{coupon.usage_count} / {coupon.usage_limit || '∞'} uses</span>
+                                    <span className={`flex items-center gap-1 font-bold ${coupon.active ? 'text-green-500' : 'text-red-500'}`}>
+                                        {coupon.active ? <CheckCircle size={12}/> : <XCircle size={12}/>}
+                                        {coupon.active ? 'Active' : 'Halted'}
+                                    </span>
+                                </div>
+                                <span className="text-[10px] text-gray-500 flex items-center gap-1">
+                                    <Calendar size={10}/> {coupon.expiry_date ? new Date(coupon.expiry_date).toLocaleDateString() : 'No Expiry'}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2 pt-2 border-t border-gray-800">
+                                <button 
+                                    onClick={() => handleToggleActive(coupon)} 
+                                    className={`p-2 rounded-xl transition-all ${coupon.active ? 'bg-red-600/10 text-red-400' : 'bg-green-600/10 text-green-400'}`}
+                                >
+                                    {coupon.active ? <XCircle size={18} /> : <CheckCircle size={18} />}
+                                </button>
+                                <button onClick={() => handleEdit(coupon)} className="p-2 bg-purple-600/10 text-purple-400 rounded-xl transition-all"><Edit size={18} /></button>
+                                <button onClick={() => handleDelete(coupon.id)} className="p-2 bg-red-600/10 text-red-400 rounded-xl transition-all"><Trash2 size={18} /></button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-black text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
                             <tr>
@@ -234,7 +288,7 @@ export default function CouponsAdminPage() {
                                         </div>
                                     </td>
                                     <td className="px-8 py-6 text-right">
-                                        <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                                        <div className="flex justify-end gap-3 md:opacity-0 md:group-hover:opacity-100 transition-all md:translate-x-4 md:group-hover:translate-x-0">
                                             <button 
                                                 onClick={() => handleToggleActive(coupon)} 
                                                 className={`p-3 rounded-2xl transition-all ${coupon.active ? 'bg-red-600/10 text-red-400 hover:bg-red-600 hover:text-white' : 'bg-green-600/10 text-green-400 hover:bg-green-600 hover:text-white'}`}
@@ -256,7 +310,7 @@ export default function CouponsAdminPage() {
             {/* Modal Form */}
             <AnimatePresence>
                 {showForm && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center md:p-4">
                         <motion.div 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -268,19 +322,19 @@ export default function CouponsAdminPage() {
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-2xl bg-gray-900 border border-gray-800 rounded-[3rem] overflow-hidden shadow-2xl flex flex-col"
+                            className="relative w-full max-w-2xl bg-gray-900 border border-gray-800 rounded-t-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col max-h-[95vh] md:max-h-[90vh]"
                         >
-                            <div className="p-10 border-b border-gray-800 flex justify-between items-center">
+                            <div className="p-5 sm:p-10 border-b border-gray-800 flex justify-between items-center">
                                 <div>
                                     <div className="text-[10px] font-black text-purple-500 uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
                                         <Zap size={14} fill="currentColor" /> Discount Protocol
                                     </div>
-                                    <h2 className="text-4xl font-black text-white">{isEditing ? 'Modify Logic' : 'Initialize Logic'}</h2>
+                                    <h2 className="text-2xl sm:text-4xl font-black text-white">{isEditing ? 'Modify Logic' : 'Initialize Logic'}</h2>
                                 </div>
-                                <button onClick={() => setShowForm(false)} className="w-12 h-12 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white transition-all"><X size={24} /></button>
+                                <button onClick={() => setShowForm(false)} className="w-10 h-10 sm:w-12 sm:h-12 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white transition-all"><X size={20} /></button>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="p-10 space-y-8 bg-gradient-to-b from-gray-900 to-black">
+                            <form onSubmit={handleSubmit} className="p-5 sm:p-10 space-y-6 sm:space-y-8 bg-gradient-to-b from-gray-900 to-black overflow-y-auto flex-1">
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Coupon Identifier (Code)</label>
                                     <input 
@@ -292,7 +346,7 @@ export default function CouponsAdminPage() {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Discount Logic</label>
                                         <div className="flex bg-black border border-gray-800 rounded-2xl p-1">
@@ -324,7 +378,7 @@ export default function CouponsAdminPage() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Min. Cart Value (₹)</label>
                                         <input 
@@ -356,18 +410,18 @@ export default function CouponsAdminPage() {
                                     />
                                 </div>
 
-                                <div className="flex justify-end gap-6 pt-6 border-t border-gray-800">
+                                <div className="flex flex-col sm:flex-row justify-end gap-4 sm:gap-6 pt-6 border-t border-gray-800">
                                     <button 
                                         type="button" 
                                         onClick={() => setShowForm(false)}
-                                        className="px-10 py-4 rounded-2xl text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all"
+                                        className="px-8 py-4 rounded-2xl text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all text-center"
                                     >
                                         Abort
                                     </button>
                                     <button 
                                         type="submit" 
                                         disabled={formLoading}
-                                        className="px-16 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl shadow-purple-900/40 transition-all flex items-center gap-3"
+                                        className="px-10 sm:px-16 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl shadow-purple-900/40 transition-all flex items-center justify-center gap-3"
                                     >
                                         {formLoading ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                                         {isEditing ? 'Sync Logic' : 'Activate Campaign'}

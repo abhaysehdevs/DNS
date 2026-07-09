@@ -6,7 +6,8 @@ import {
     Plus, Edit, Trash2, Search, X, Save, Image as ImageIcon, Loader2, 
     Filter, AlertCircle, CheckCircle, XCircle, Layers, Box, ChevronDown, 
     CheckSquare, Square, MoreHorizontal, Download, Upload, Video, 
-    Settings, Info, Zap, Scale, Ruler, ShieldCheck, Tag, Link as LinkIcon 
+    Settings, Info, Zap, Scale, Ruler, ShieldCheck, Tag, Link as LinkIcon,
+    Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -43,6 +44,9 @@ interface ProductDB {
     specifications: Record<string, string>;
     dimensions: { length: string; width: string; height: string; };
     gallery: { id: string; type: 'image' | 'video'; url: string; }[];
+    seo_title?: string;
+    seo_description?: string;
+    seo_keywords?: string;
 }
 
 export default function ProductsAdminPage() {
@@ -62,7 +66,7 @@ export default function ProductsAdminPage() {
 
     // Sub-Editors
     const [showVariantEditor, setShowVariantEditor] = useState(false);
-    const [activeTab, setActiveTab] = useState<'basic' | 'details' | 'media' | 'variants'>('basic');
+    const [activeTab, setActiveTab] = useState<'basic' | 'details' | 'media' | 'variants' | 'seo'>('basic');
 
     const [dbCategories, setDbCategories] = useState<any[]>([]);
 
@@ -90,32 +94,53 @@ export default function ProductsAdminPage() {
 
     // --- Media Handlers ---
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'image' | 'gallery' | 'video') => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
 
         setUploading(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `product-media/${fileName}`;
+            const uploadSingleFile = async (file: File) => {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const filePath = `product-media/${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
-                .from('products')
-                .upload(filePath, file);
+                const { error: uploadError } = await supabase.storage
+                    .from('products')
+                    .upload(filePath, file);
 
-            if (uploadError) throw uploadError;
+                if (uploadError) throw uploadError;
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('products')
-                .getPublicUrl(filePath);
+                const { data: { publicUrl } } = supabase.storage
+                    .from('products')
+                    .getPublicUrl(filePath);
 
-            if (target === 'image') {
-                setCurrentProduct(prev => ({ ...prev, image: publicUrl }));
-            } else if (target === 'video') {
-                setCurrentProduct(prev => ({ ...prev, video_url: publicUrl }));
-            } else if (target === 'gallery') {
-                const newItem = { id: Date.now().toString(), type: file.type.startsWith('video') ? 'video' : 'image' as any, url: publicUrl };
-                setCurrentProduct(prev => ({ ...prev, gallery: [...(prev.gallery || []), newItem] }));
+                return {
+                    url: publicUrl,
+                    type: file.type.startsWith('video') ? 'video' : 'image'
+                };
+            };
+
+            if (target === 'gallery') {
+                const newItems: { id: string; type: 'image' | 'video'; url: string; }[] = [];
+                for (let i = 0; i < files.length; i++) {
+                    const result = await uploadSingleFile(files[i]);
+                    newItems.push({
+                        id: (Date.now() + i).toString(),
+                        type: result.type as any,
+                        url: result.url
+                    });
+                }
+                setCurrentProduct(prev => ({
+                    ...prev,
+                    gallery: [...(prev.gallery || []), ...newItems]
+                }));
+            } else {
+                const result = await uploadSingleFile(files[0]);
+                if (target === 'image') {
+                    setCurrentProduct(prev => ({ ...prev, image: result.url }));
+                } else if (target === 'video') {
+                    setCurrentProduct(prev => ({ ...prev, video_url: result.url }));
+                }
             }
         } catch (error: any) {
             alert('Upload failed: ' + error.message);
@@ -196,6 +221,46 @@ export default function ProductsAdminPage() {
             fetchProducts();
         } catch (error: any) {
             alert('Error deleting: ' + error.message);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (!confirm(`Are you sure you want to permanently delete ${selectedIds.length} products?`)) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .in('id', selectedIds);
+
+            if (error) throw error;
+            setSelectedIds([]);
+            fetchProducts();
+        } catch (err: any) {
+            alert('Bulk delete failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleBulkToggleStock = async () => {
+        setLoading(true);
+        try {
+            const firstProduct = products.find(p => p.id === selectedIds[0]);
+            const newStockStatus = !firstProduct?.in_stock;
+
+            const { error } = await supabase
+                .from('products')
+                .update({ in_stock: newStockStatus })
+                .in('id', selectedIds);
+
+            if (error) throw error;
+            setSelectedIds([]);
+            fetchProducts();
+        } catch (err: any) {
+            alert('Bulk update failed: ' + err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -302,10 +367,105 @@ export default function ProductsAdminPage() {
                     </select>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-3 p-3">
+                    {loading ? (
+                        <div className="py-20 text-center"><Loader2 className="animate-spin text-blue-500 mx-auto" size={48} /></div>
+                    ) : filteredProducts.length === 0 ? (
+                        <div className="py-16 text-center text-gray-600 italic">No products found.</div>
+                    ) : filteredProducts.map(p => (
+                        <div key={p.id} className="bg-black border border-gray-800 rounded-2xl p-4 space-y-4">
+                            <div className="flex items-start gap-4">
+                                <div className="w-16 h-16 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shrink-0">
+                                    {p.image ? <img src={p.image} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-800"><ImageIcon size={24} /></div>}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="text-white font-bold text-base truncate">{p.name}</div>
+                                        <button 
+                                            type="button"
+                                            onClick={() => {
+                                                if (selectedIds.includes(p.id)) {
+                                                    setSelectedIds(selectedIds.filter(id => id !== p.id));
+                                                } else {
+                                                    setSelectedIds([...selectedIds, p.id]);
+                                                }
+                                            }}
+                                            className="text-gray-500 hover:text-white shrink-0"
+                                        >
+                                            {selectedIds.includes(p.id) ? <CheckSquare size={18} className="text-blue-500" /> : <Square size={18} />}
+                                        </button>
+                                    </div>
+                                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                                        <span className="text-[9px] font-black uppercase text-gray-500 bg-gray-900 px-2 py-0.5 rounded border border-gray-800">{p.category}</span>
+                                        <span className="text-[9px] font-mono text-gray-600">SKU: {p.sku || p.id.slice(0, 8)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4 py-2 border-t border-b border-gray-800/50">
+                                <div>
+                                    <span className="text-[9px] text-gray-600 font-black uppercase tracking-wider block">Inventory</span>
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                        <span className={`text-base font-black ${p.quantity < 10 ? 'text-red-500' : 'text-green-500'}`}>{p.quantity}</span>
+                                        <span className="text-[9px] text-gray-500 font-bold uppercase">Units</span>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-[9px] text-gray-600 font-black uppercase tracking-wider block">Price</span>
+                                    <span className="text-base font-black text-white mt-0.5 block">₹{p.retail_price.toLocaleString()}</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 pt-1">
+                                <button 
+                                    onClick={() => {
+                                        const { id, sku, ...clone } = p;
+                                        setCurrentProduct({ ...clone, name: `${clone.name} (Copy)`, sku: '' });
+                                        setIsEditing(false);
+                                        setShowForm(true);
+                                    }} 
+                                    className="flex-1 py-2.5 bg-amber-600/10 hover:bg-amber-600 hover:text-white text-amber-400 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Layers size={14} /> Duplicate
+                                </button>
+                                <button 
+                                    onClick={() => handleEdit(p)} 
+                                    className="flex-1 py-2.5 bg-blue-600/10 hover:bg-blue-600 hover:text-white text-blue-400 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Edit size={14} /> Edit
+                                </button>
+                                <button 
+                                    onClick={() => handleDelete(p.id)} 
+                                    className="p-2.5 bg-red-600/10 hover:bg-red-600 hover:text-white text-red-400 rounded-xl transition-all"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-black text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
                             <tr>
+                                <th className="px-6 py-6 w-10">
+                                    <button 
+                                        type="button"
+                                        onClick={() => {
+                                            if (selectedIds.length === filteredProducts.length) {
+                                                setSelectedIds([]);
+                                            } else {
+                                                setSelectedIds(filteredProducts.map(p => p.id));
+                                            }
+                                        }}
+                                        className="text-gray-500 hover:text-white"
+                                    >
+                                        {selectedIds.length === filteredProducts.length ? <CheckSquare size={16} className="text-blue-500" /> : <Square size={16} />}
+                                    </button>
+                                </th>
                                 <th className="px-8 py-6">Product Information</th>
                                 <th className="px-8 py-6">Inventory Status</th>
                                 <th className="px-8 py-6 text-right">Retail Price</th>
@@ -314,9 +474,24 @@ export default function ProductsAdminPage() {
                         </thead>
                         <tbody className="divide-y divide-gray-800/50">
                             {loading ? (
-                                <tr><td colSpan={4} className="py-32 text-center"><Loader2 className="animate-spin text-blue-500 mx-auto" size={48} /></td></tr>
+                                <tr><td colSpan={5} className="py-32 text-center"><Loader2 className="animate-spin text-blue-500 mx-auto" size={48} /></td></tr>
                             ) : filteredProducts.map(p => (
                                 <tr key={p.id} className="group hover:bg-blue-900/5 transition-colors">
+                                    <td className="px-6 py-6">
+                                        <button 
+                                            type="button"
+                                            onClick={() => {
+                                                if (selectedIds.includes(p.id)) {
+                                                    setSelectedIds(selectedIds.filter(id => id !== p.id));
+                                                } else {
+                                                    setSelectedIds([...selectedIds, p.id]);
+                                                }
+                                            }}
+                                            className="text-gray-500 hover:text-white"
+                                        >
+                                            {selectedIds.includes(p.id) ? <CheckSquare size={16} className="text-blue-500" /> : <Square size={16} />}
+                                        </button>
+                                    </td>
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-5">
                                             <div className="w-16 h-16 bg-black border border-gray-800 rounded-2xl overflow-hidden shrink-0 group-hover:border-blue-500/50 transition-all">
@@ -345,7 +520,7 @@ export default function ProductsAdminPage() {
                                         <div className="text-[10px] text-gray-600 font-black uppercase tracking-tighter">Public Listing Price</div>
                                     </td>
                                     <td className="px-8 py-6 text-right">
-                                            <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                                            <div className="flex justify-end gap-3 md:opacity-0 md:group-hover:opacity-100 transition-all md:translate-x-4 md:group-hover:translate-x-0">
                                                 <button 
                                                     onClick={() => {
                                                         const { id, sku, ...clone } = p;
@@ -368,6 +543,45 @@ export default function ProductsAdminPage() {
                     </table>
                 </div>
             </div>
+
+            {/* Bulk Actions Floating Bar */}
+            <AnimatePresence>
+                {selectedIds.length > 0 && (
+                    <motion.div 
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 100, opacity: 0 }}
+                        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 border border-gray-800 px-6 py-4 rounded-3xl shadow-2xl flex items-center gap-6 max-w-lg w-[90vw] justify-between backdrop-blur"
+                    >
+                        <div className="flex items-center gap-3">
+                            <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center">
+                                {selectedIds.length}
+                            </span>
+                            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Selected</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button 
+                                onClick={handleBulkToggleStock}
+                                className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all"
+                            >
+                                Toggle Stock
+                            </button>
+                            <button 
+                                onClick={handleBulkDelete}
+                                className="px-3 py-2 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all"
+                            >
+                                Delete
+                            </button>
+                            <button 
+                                onClick={() => setSelectedIds([])}
+                                className="p-2 text-gray-500 hover:text-white rounded-xl transition-all"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* --- Professional Form Modal --- */}
             <AnimatePresence>
@@ -405,7 +619,8 @@ export default function ProductsAdminPage() {
                                     { id: 'basic', label: 'Identity & Pricing', icon: Info },
                                     { id: 'details', label: 'Detailed Specs', icon: Settings },
                                     { id: 'media', label: 'Media Assets', icon: ImageIcon },
-                                    { id: 'variants', label: 'Manage Variants', icon: Layers }
+                                    { id: 'variants', label: 'Manage Variants', icon: Layers },
+                                    { id: 'seo', label: 'SEO Metadata', icon: Globe }
                                 ].map(tab => (
                                     <button 
                                         key={tab.id}
@@ -681,14 +896,17 @@ export default function ProductsAdminPage() {
                                                 </div>
                                             </div>
                                         </div>
-
                                         {/* Gallery */}
                                         <div className="space-y-6">
                                             <h3 className="text-xs font-black text-white uppercase tracking-widest">Media Gallery</h3>
                                             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                                                 {currentProduct.gallery?.map(item => (
                                                     <div key={item.id} className="relative aspect-square bg-black border border-gray-800 rounded-3xl overflow-hidden group">
-                                                        <img src={item.url} className="w-full h-full object-cover" />
+                                                        {item.type === 'video' ? (
+                                                            <video src={item.url} className="w-full h-full object-cover" controls={false} muted playsInline />
+                                                        ) : (
+                                                            <img src={item.url} className="w-full h-full object-cover" />
+                                                        )}
                                                         <button type="button" onClick={() => setCurrentProduct({...currentProduct, gallery: currentProduct.gallery?.filter(g => g.id !== item.id)})} className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={12}/></button>
                                                     </div>
                                                 ))}
@@ -731,25 +949,33 @@ export default function ProductsAdminPage() {
 
                                             <div className="grid grid-cols-1 gap-4">
                                                 {currentProduct.variants?.map(v => (
-                                                    <div key={v.id} className="bg-black border border-gray-800 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                                                    <div key={v.id} className="bg-black border border-gray-800 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
                                                         <div className="space-y-2">
                                                             <label className="text-[10px] font-black text-gray-700 uppercase">Variant Name</label>
                                                             <input value={v.name} onChange={e => updateVariant(v.id, {name: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white" placeholder="e.g. XL or Stainless" />
                                                         </div>
                                                         <div className="space-y-2">
+                                                            <label className="text-[10px] font-black text-gray-700 uppercase">SKU Override</label>
+                                                            <input value={v.sku || ''} onChange={e => updateVariant(v.id, {sku: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white" placeholder="e.g. SKU-VAR-01" />
+                                                        </div>
+                                                        <div className="space-y-2">
                                                             <label className="text-[10px] font-black text-gray-700 uppercase">Specific Price (₹)</label>
-                                                            <input type="number" value={v.price} onChange={e => updateVariant(v.id, {price: parseFloat(e.target.value)})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white font-bold" />
+                                                            <input type="number" value={v.price} onChange={e => updateVariant(v.id, {price: parseFloat(e.target.value) || 0})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white font-bold" />
                                                         </div>
-                                                        <div className="flex items-center gap-4 pt-6">
-                                                            <div 
-                                                                onClick={() => updateVariant(v.id, {inStock: !v.inStock})}
-                                                                className={`w-12 h-6 rounded-full relative transition-all cursor-pointer ${v.inStock ? 'bg-green-600' : 'bg-gray-800'}`}
-                                                            >
-                                                                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${v.inStock ? 'left-7' : 'left-1'}`} />
+                                                        <div className="space-y-2">
+                                                            <label className="text-[10px] font-black text-gray-700 uppercase">Variant Image URL</label>
+                                                            <input value={v.image || ''} onChange={e => updateVariant(v.id, {image: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white" placeholder="https://..." />
+                                                        </div>
+                                                        <div className="flex items-center justify-between md:justify-end gap-6 pt-6">
+                                                            <div className="flex items-center gap-3">
+                                                                <div 
+                                                                    onClick={() => updateVariant(v.id, {inStock: !v.inStock})}
+                                                                    className={`w-12 h-6 rounded-full relative transition-all cursor-pointer ${v.inStock ? 'bg-green-600' : 'bg-gray-800'}`}
+                                                                >
+                                                                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${v.inStock ? 'left-7' : 'left-1'}`} />
+                                                                </div>
+                                                                <span className="text-[10px] font-black text-gray-500 uppercase">{v.inStock ? 'In Stock' : 'OOS'}</span>
                                                             </div>
-                                                            <span className="text-[10px] font-black text-gray-500 uppercase">{v.inStock ? 'Available' : 'Out of Stock'}</span>
-                                                        </div>
-                                                        <div className="text-right pt-6">
                                                             <button type="button" onClick={() => removeVariant(v.id)} className="p-3 bg-red-900/10 text-red-500 hover:bg-red-600 hover:text-white rounded-xl transition-all"><Trash2 size={16}/></button>
                                                         </div>
                                                     </div>
@@ -760,6 +986,51 @@ export default function ProductsAdminPage() {
                                                         <p className="text-gray-600 font-bold text-xs uppercase">No Variants Defined Yet</p>
                                                     </div>
                                                 )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* --- Tab Content: SEO Metadata --- */}
+                                {activeTab === 'seo' && (
+                                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+                                        <div>
+                                            <h3 className="text-xl font-black text-white">Search Engine Optimization</h3>
+                                            <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-1">Configure search engine visibility and previews</p>
+                                        </div>
+                                        
+                                        <div className="space-y-6">
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest block">Meta Title</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={currentProduct.seo_title || ''} 
+                                                    onChange={e => setCurrentProduct({...currentProduct, seo_title: e.target.value})} 
+                                                    className="w-full bg-black border border-gray-800 rounded-2xl p-4 text-xs text-white" 
+                                                    placeholder="e.g. Buy Premium Rolling Mill | Dinanath & Sons" 
+                                                />
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest block">Meta Description</label>
+                                                <textarea 
+                                                    rows={4} 
+                                                    value={currentProduct.seo_description || ''} 
+                                                    onChange={e => setCurrentProduct({...currentProduct, seo_description: e.target.value})} 
+                                                    className="w-full bg-black border border-gray-800 rounded-2xl p-4 text-xs text-white" 
+                                                    placeholder="Provide a search snippet summarizing the product..." 
+                                                />
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest block">Keywords (comma separated)</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={currentProduct.seo_keywords || ''} 
+                                                    onChange={e => setCurrentProduct({...currentProduct, seo_keywords: e.target.value})} 
+                                                    className="w-full bg-black border border-gray-800 rounded-2xl p-4 text-xs text-white" 
+                                                    placeholder="rolling mill, jewelry tools, wholesale Delhi" 
+                                                />
                                             </div>
                                         </div>
                                     </div>

@@ -183,6 +183,7 @@ export default function CartPage() {
                 discount_amount: discountAmount,
                 coupon_code: appliedCoupon?.code || null,
                 status: 'pending',
+                payment_status: 'pending',
                 payment_method: 'cod',
                 type: mode
             });
@@ -204,7 +205,31 @@ export default function CartPage() {
             if (appliedCoupon) {
                 await supabase.rpc('increment_coupon_usage', { coupon_id: appliedCoupon.id });
             }
-        } catch (error) {}
+            
+            // Trigger Email Notification
+            await fetch('/api/notifications/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'order',
+                    orderId: orderId,
+                    customerName: formData.name,
+                    customerEmail: formData.email,
+                    customerPhone: formData.phone,
+                    shippingAddress: `${formData.address} (Pincode: ${pincode})`,
+                    totalAmount: finalTotal,
+                    paymentMethod: 'cod',
+                    items: cart.map(item => ({
+                        product_name: cartProducts.find(p => p.id === item.productId)?.name || 'Unknown Product',
+                        variant_name: item.variantName || null,
+                        quantity: item.quantity,
+                        price: item.price
+                    }))
+                })
+            });
+        } catch (error) {
+            console.error('Checkout error / email failed:', error);
+        }
 
         localStorage.setItem(`order_${orderId}`, JSON.stringify({
             id: orderId,
@@ -213,6 +238,7 @@ export default function CartPage() {
             discount_amount: discountAmount,
             coupon_code: appliedCoupon?.code || null,
             status: 'pending',
+            payment_status: 'pending',
             shiprocket: shiprocketData,
             order_items: cart.map(item => ({
                 product_name: cartProducts.find(p => p.id === item.productId)?.name || 'Unknown Product',
@@ -242,7 +268,8 @@ export default function CartPage() {
                 total_amount: finalTotal,
                 discount_amount: discountAmount,
                 coupon_code: appliedCoupon?.code || null,
-                status: 'paid',
+                status: 'pending',
+                payment_status: 'paid',
                 payment_method: 'online',
                 type: mode
             });
@@ -264,7 +291,31 @@ export default function CartPage() {
             if (appliedCoupon) {
                 await supabase.rpc('increment_coupon_usage', { coupon_id: appliedCoupon.id });
             }
-        } catch (error) {}
+
+            // Trigger Email Notification
+            await fetch('/api/notifications/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'order',
+                    orderId: activeOrderId,
+                    customerName: formData.name,
+                    customerEmail: formData.email,
+                    customerPhone: formData.phone,
+                    shippingAddress: `${formData.address} (Pincode: ${pincode})`,
+                    totalAmount: finalTotal,
+                    paymentMethod: 'online',
+                    items: cart.map(item => ({
+                        product_name: cartProducts.find(p => p.id === item.productId)?.name || 'Unknown Product',
+                        variant_name: item.variantName || null,
+                        quantity: item.quantity,
+                        price: item.price
+                    }))
+                })
+            });
+        } catch (error) {
+            console.error('Checkout payment success error / email failed:', error);
+        }
 
         localStorage.setItem(`order_${activeOrderId}`, JSON.stringify({
             id: activeOrderId,
@@ -272,7 +323,8 @@ export default function CartPage() {
             total_amount: finalTotal,
             discount_amount: discountAmount,
             coupon_code: appliedCoupon?.code || null,
-            status: 'paid',
+            status: 'pending',
+            payment_status: 'paid',
             payment_method: 'online',
             transaction_id: transactionId,
             shiprocket: shiprocketData,

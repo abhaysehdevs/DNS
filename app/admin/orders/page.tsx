@@ -199,9 +199,9 @@ export default function OrdersPage() {
             </div>
 
             {/* Toolbar */}
-            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-4 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center sticky top-20 z-30 backdrop-blur shadow-xl">
-                <div className="flex flex-wrap gap-4 w-full md:w-auto">
-                    <div className="relative min-w-[300px]">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-3 sm:p-4 mb-6 flex flex-col md:flex-row gap-3 sm:gap-4 justify-between items-stretch md:items-center sticky top-16 md:top-20 z-30 backdrop-blur shadow-xl">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full md:w-auto">
+                    <div className="relative w-full sm:min-w-[300px]">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         <input
                             type="text"
@@ -211,7 +211,7 @@ export default function OrdersPage() {
                             className="w-full bg-black border border-gray-800 rounded-xl pl-12 pr-4 py-2.5 text-sm focus:border-blue-500 outline-none transition-all placeholder-gray-600"
                         />
                     </div>
-                    <div className="relative min-w-[180px]">
+                    <div className="relative w-full sm:w-auto sm:min-w-[180px]">
                         <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
                         <select
                             value={statusFilter}
@@ -256,8 +256,83 @@ export default function OrdersPage() {
                 </AnimatePresence>
             </div>
 
-            {/* Orders Table */}
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+            {/* Orders - Mobile Card View */}
+            <div className="md:hidden space-y-3">
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <Loader2 className="animate-spin text-blue-500" size={48} />
+                        <p className="mt-4 text-gray-500 font-medium">Syncing live orders...</p>
+                    </div>
+                ) : filteredOrders.length === 0 ? (
+                    <div className="py-20 text-center text-gray-600 italic bg-gray-900 rounded-2xl border border-gray-800">
+                        No active orders found matching your search.
+                    </div>
+                ) : (
+                    filteredOrders.map((order) => (
+                        <div
+                            key={order.id}
+                            className={`bg-gray-900 border rounded-2xl p-4 space-y-3 transition-colors ${selectedIds.includes(order.id) ? 'border-blue-500/50 bg-blue-900/10' : 'border-gray-800'}`}
+                        >
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <button onClick={() => setSelectedIds(prev => prev.includes(order.id) ? prev.filter(id => id !== order.id) : [...prev, order.id])} className="text-gray-600 shrink-0">
+                                        {selectedIds.includes(order.id) ? <CheckSquare size={18} className="text-blue-500" /> : <Square size={18} />}
+                                    </button>
+                                    <div className="min-w-0">
+                                        <div className="font-bold text-white truncate">{order.customer_name || 'Guest User'}</div>
+                                        <div className="font-mono text-[10px] text-gray-500">#{order.id.slice(0, 8)}</div>
+                                    </div>
+                                </div>
+                                <div className="text-right shrink-0">
+                                    <div className="text-lg font-black text-white">₹{order.total_amount?.toLocaleString() || 0}</div>
+                                    <div className="text-[10px] text-gray-600 font-bold uppercase">{order.payment_method || 'Prepaid'}</div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-2 text-[10px] text-gray-500">
+                                {order.customer_email && <span className="flex items-center gap-1"><Mail size={10} /> {order.customer_email}</span>}
+                                {order.customer_phone && <span className="flex items-center gap-1"><Phone size={10} /> {order.customer_phone}</span>}
+                            </div>
+
+                            <div className="flex items-center justify-between gap-3 pt-2 border-t border-gray-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="relative">
+                                        <select
+                                            value={order.status}
+                                            onChange={(e) => updateStatus(order.id, e.target.value)}
+                                            className={`text-[10px] px-3 py-1.5 rounded-full border cursor-pointer outline-none appearance-none font-black uppercase tracking-widest pr-7 ${getStatusColor(order.status)} transition-all`}
+                                        >
+                                            <option value="pending">Pending</option>
+                                            <option value="processing">Processing</option>
+                                            <option value="shipped">Shipped</option>
+                                            <option value="delivered">Delivered</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50" size={10} />
+                                    </div>
+                                    <span className="text-[10px] text-gray-600">{new Date(order.created_at).toLocaleDateString('en-IN', { dateStyle: 'medium' })}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handleViewOrder(order)}
+                                        className="p-2 bg-gray-800 text-gray-400 hover:bg-white hover:text-black rounded-xl transition-all"
+                                    >
+                                        <Eye size={16} />
+                                    </button>
+                                    {order.status === 'processing' && (
+                                        <button onClick={() => handleShiprocketPush(order.id)} className="p-2 bg-purple-900/20 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl transition-all">
+                                            <Truck size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Orders - Desktop Table View */}
+            <div className="hidden md:block bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-black/50 text-gray-500 uppercase text-[10px] tracking-widest font-black border-b border-gray-800">
@@ -328,7 +403,7 @@ export default function OrdersPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                            <div className="flex items-center justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-all md:translate-x-2 md:group-hover:translate-x-0">
                                                 <button
                                                     onClick={() => handleViewOrder(order)}
                                                     className="p-2.5 bg-gray-800 text-gray-400 hover:bg-white hover:text-black rounded-xl transition-all shadow-lg"
@@ -354,7 +429,7 @@ export default function OrdersPage() {
             {/* Enhanced Order Details Modal */}
             <AnimatePresence>
                 {selectedOrder && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center md:p-4">
                         <motion.div 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -363,29 +438,29 @@ export default function OrdersPage() {
                             className="absolute inset-0 bg-black/95 backdrop-blur-md"
                         />
                         <motion.div 
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            initial={{ scale: 0.95, opacity: 0, y: 40 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-4xl bg-gray-900 border border-gray-800 rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
+                            exit={{ scale: 0.95, opacity: 0, y: 40 }}
+                            className="relative w-full max-w-4xl bg-gray-900 border border-gray-800 rounded-t-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[95vh] md:max-h-[90vh] flex flex-col"
                         >
                             {/* Modal Header */}
-                            <div className="p-8 border-b border-gray-800 flex justify-between items-start bg-gray-900 shrink-0">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <h2 className="text-3xl font-black text-white">Order Invoice</h2>
-                                        <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${getStatusColor(selectedOrder.status)}`}>
+                            <div className="p-4 sm:p-8 border-b border-gray-800 flex justify-between items-start bg-gray-900 shrink-0">
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                                        <h2 className="text-xl sm:text-3xl font-black text-white">Order Invoice</h2>
+                                        <span className={`px-3 sm:px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${getStatusColor(selectedOrder.status)}`}>
                                             {selectedOrder.status}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-gray-500 font-mono">Reference: {selectedOrder.id}</p>
+                                    <p className="text-xs sm:text-sm text-gray-500 font-mono truncate">Ref: {selectedOrder.id}</p>
                                 </div>
-                                <div className="flex gap-3">
-                                    <button onClick={() => alert('Printing...')} className="w-12 h-12 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white hover:border-white transition-all"><Printer size={20} /></button>
-                                    <button onClick={() => setSelectedOrder(null)} className="w-12 h-12 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white hover:border-white transition-all"><X size={24} /></button>
+                                <div className="flex gap-2 sm:gap-3 shrink-0 ml-2">
+                                    <button onClick={() => alert('Printing...')} className="w-10 h-10 sm:w-12 sm:h-12 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white hover:border-white transition-all"><Printer size={18} /></button>
+                                    <button onClick={() => setSelectedOrder(null)} className="w-10 h-10 sm:w-12 sm:h-12 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white hover:border-white transition-all"><X size={20} /></button>
                                 </div>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-8 space-y-12">
+                            <div className="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 sm:space-y-12">
                                 {/* Grid: Customer & Shipping */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                                     <div className="space-y-6">
@@ -445,13 +520,41 @@ export default function OrdersPage() {
                                     </div>
                                 </div>
 
-                                {/* Order Items Table */}
+                                {/* Order Items */}
                                 <div className="space-y-6">
                                     <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-3">
                                         <span className="w-8 h-px bg-gray-800" /> Itemized Manifest
                                     </h3>
-                                    <div className="bg-black border border-gray-800 rounded-3xl overflow-hidden shadow-2xl">
-                                        <table className="w-full text-sm text-left">
+                                    <div className="bg-black border border-gray-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl">
+                                        {/* Mobile items list */}
+                                        <div className="sm:hidden divide-y divide-gray-800/50">
+                                            {itemsLoading ? (
+                                                <div className="px-4 py-12 text-center text-gray-500"><Loader2 className="animate-spin mx-auto mb-2" /> Loading manifest...</div>
+                                            ) : orderItems.length > 0 ? orderItems.map((item, idx) => (
+                                                <div key={idx} className="p-4 space-y-2">
+                                                    <div className="flex justify-between items-start">
+                                                        <div className="min-w-0">
+                                                            <div className="font-bold text-white text-sm truncate">{item.product_name}</div>
+                                                            <div className="text-[10px] text-gray-600 font-mono">{item.variant_name || 'Standard Unit'}</div>
+                                                        </div>
+                                                        <div className="text-right shrink-0 ml-3">
+                                                            <div className="text-white font-black font-mono">₹{(item.price * item.quantity).toLocaleString()}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-4 text-[10px] text-gray-500">
+                                                        <span>Qty: x{item.quantity}</span>
+                                                        <span>@ ₹{item.price?.toLocaleString()}</span>
+                                                    </div>
+                                                </div>
+                                            )) : (
+                                                <div className="px-4 py-16 text-center">
+                                                    <Package className="mx-auto text-gray-800 mb-2" size={32} />
+                                                    <p className="text-gray-600 italic text-sm">No item data recorded.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {/* Desktop items table */}
+                                        <table className="hidden sm:table w-full text-sm text-left">
                                             <thead className="bg-gray-900/50 text-gray-500 text-[10px] font-black uppercase tracking-widest">
                                                 <tr>
                                                     <th className="px-6 py-4">Line Item</th>
@@ -485,8 +588,8 @@ export default function OrdersPage() {
                                         </table>
                                         
                                         {/* Totals Section */}
-                                        <div className="p-8 bg-gray-900/30 border-t border-gray-800 flex justify-end">
-                                            <div className="w-full max-w-xs space-y-4">
+                                        <div className="p-4 sm:p-8 bg-gray-900/30 border-t border-gray-800 flex justify-end">
+                                            <div className="w-full sm:max-w-xs space-y-3 sm:space-y-4">
                                                 <div className="flex justify-between items-center text-gray-400">
                                                     <span className="text-xs font-bold uppercase tracking-widest">Subtotal</span>
                                                     <span className="font-mono">₹{selectedOrder.total_amount?.toLocaleString()}</span>
@@ -498,7 +601,7 @@ export default function OrdersPage() {
                                                 <div className="h-px bg-gray-800" />
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-sm font-black text-white uppercase tracking-[0.2em]">Total</span>
-                                                    <span className="text-2xl font-black text-green-400 font-mono">₹{selectedOrder.total_amount?.toLocaleString()}</span>
+                                                    <span className="text-xl sm:text-2xl font-black text-green-400 font-mono">₹{selectedOrder.total_amount?.toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -507,27 +610,25 @@ export default function OrdersPage() {
                             </div>
 
                             {/* Sticky Footer Actions */}
-                            <div className="p-8 border-t border-gray-800 bg-gray-900 flex justify-between items-center z-10 shrink-0">
-                                <div className="flex gap-4">
-                                    <button 
-                                        onClick={() => updateStatus(selectedOrder.id, 'cancelled')}
-                                        className="px-6 py-3 rounded-2xl border border-red-900/30 text-red-500 font-bold text-xs uppercase hover:bg-red-500 hover:text-white transition-all"
-                                    >
-                                        Void Order
-                                    </button>
-                                </div>
-                                <div className="flex gap-4">
+                            <div className="p-4 sm:p-8 border-t border-gray-800 bg-gray-900 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 z-10 shrink-0">
+                                <button 
+                                    onClick={() => updateStatus(selectedOrder.id, 'cancelled')}
+                                    className="px-5 py-3 rounded-2xl border border-red-900/30 text-red-500 font-bold text-xs uppercase hover:bg-red-500 hover:text-white transition-all text-center"
+                                >
+                                    Void Order
+                                </button>
+                                <div className="flex gap-3">
                                     <button 
                                         onClick={() => setSelectedOrder(null)}
-                                        className="px-8 py-3 rounded-2xl bg-gray-800 text-white font-bold transition-all"
+                                        className="flex-1 sm:flex-none px-6 py-3 rounded-2xl bg-gray-800 text-white font-bold transition-all text-center"
                                     >
                                         Close
                                     </button>
                                     <button 
                                         onClick={() => handleShiprocketPush(selectedOrder.id)}
-                                        className="px-8 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-black uppercase tracking-widest shadow-2xl shadow-purple-900/40 transition-all flex items-center gap-2"
+                                        className="flex-1 sm:flex-none px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs uppercase tracking-wider shadow-2xl shadow-purple-900/40 transition-all flex items-center justify-center gap-2"
                                     >
-                                        <Truck size={20} /> Deploy Shipment
+                                        <Truck size={18} /> <span className="hidden sm:inline">Deploy</span> Shipment
                                     </button>
                                 </div>
                             </div>

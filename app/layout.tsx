@@ -2,15 +2,7 @@
 import type { Metadata } from 'next';
 import { Cinzel, Inter, Roboto, Noto_Sans_Devanagari } from 'next/font/google';
 import './globals.css';
-import { Navbar } from '@/components/navbar';
-import { LanguagePopup } from '@/components/language-popup';
-import { AIAssistant } from '@/components/ai-assistant';
 import { cn } from '@/lib/utils';
-import { Preloader } from '@/components/preloader';
-import { Footer } from '@/components/footer';
-import { GoogleTranslate } from '@/components/google-translate';
-import { CurrencyManager } from '@/components/currency-manager';
-import { MobileBottomNav } from '@/components/mobile-navigation';
 import Script from 'next/script';
 
 const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-display' });
@@ -193,19 +185,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={cn(inter.variable, cinzel.variable, roboto.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col bg-surface-2 text-text-primary")}>
-        <CurrencyManager />
-        <GoogleTranslate />
-        <Preloader />
-        <Navbar />
-        {/* Language Popup */}
-        <LanguagePopup />
-        {/* AI Assistant */}
-        <AIAssistant />
-        <MobileBottomNav />
-        <main className="flex-1 pt-20 md:pt-24 pb-28 md:pb-0">
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

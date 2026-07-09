@@ -27,7 +27,7 @@ export default function AccountPage() {
                 setUser({
                     id: session.user.id,
                     email: session.user.email!,
-                    name: session.user.user_metadata.name,
+                    name: session.user.user_metadata.name || session.user.email?.split('@')[0],
                     created_at: session.user.created_at
                 });
             }
@@ -36,6 +36,26 @@ export default function AccountPage() {
 
         checkUser();
     }, [router, setUser, user]);
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            if (!user?.email) return;
+            try {
+                const { data, error } = await supabase
+                    .from('orders')
+                    .select('*, order_items(*)')
+                    .eq('customer_email', user.email)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                setOrders(data || []);
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+            }
+        };
+
+        fetchOrders();
+    }, [user]);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -186,7 +206,86 @@ export default function AccountPage() {
                                 </motion.div>
                             ) : (
                                 <div className="space-y-6">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] text-center py-12 glass rounded-3xl border border-dashed border-black/[0.04]">Data stream processing...</p>
+                                    {orders.map((order) => {
+                                        const lowerStatus = (order.status || 'pending').toLowerCase();
+                                        const getStatusColor = (status: string) => {
+                                            switch (status.toLowerCase()) {
+                                                case 'pending': return 'bg-amber-100 text-amber-800 border-amber-200';
+                                                case 'processing': return 'bg-blue-100 text-blue-800 border-blue-200';
+                                                case 'shipped': return 'bg-purple-100 text-purple-800 border-purple-200';
+                                                case 'delivered': return 'bg-green-100 text-green-800 border-green-200';
+                                                case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+                                                default: return 'bg-gray-100 text-gray-800 border-gray-200';
+                                            }
+                                        };
+
+                                        return (
+                                            <div key={order.id} className="glass rounded-[2.5rem] p-8 border border-black/[0.04] bg-white shadow-sm hover:shadow-md transition-shadow">
+                                                <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 pb-6 border-b border-black/[0.04]">
+                                                    <div>
+                                                        <div className="flex items-center gap-3 flex-wrap">
+                                                            <span className="text-[10px] font-black uppercase text-gray-500 tracking-wider">Order</span>
+                                                            <span className="text-sm font-black font-mono text-[#1D1D1F]">#{order.id.slice(0, 12)}</span>
+                                                            <span className={`px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border ${getStatusColor(order.status)}`}>
+                                                                {order.status}
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-[10px] text-gray-400 block mt-1">
+                                                            Placed on {new Date(order.created_at).toLocaleDateString(undefined, { dateStyle: 'long' })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-xl font-black text-[#C9A84C]">₹{order.total_amount?.toLocaleString()}</div>
+                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{order.payment_method}</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Items in order */}
+                                                <div className="py-6 space-y-4">
+                                                    {order.order_items?.map((item: any) => (
+                                                        <div key={item.id} className="flex justify-between items-center text-xs">
+                                                            <div className="min-w-0">
+                                                                <span className="font-bold text-[#1D1D1F] block truncate">{item.product_name}</span>
+                                                                <span className="text-[9px] text-gray-400">Qty: x{item.quantity} {item.variant_name ? `• ${item.variant_name}` : ''}</span>
+                                                            </div>
+                                                            <span className="font-bold text-gray-500 ml-4">₹{(item.price * item.quantity).toLocaleString()}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                {/* Shipment Tracker Section */}
+                                                {(order.status === 'shipped' || order.status === 'processing') && (
+                                                    <div className="pt-6 border-t border-black/[0.04] bg-[#C9A84C]/5 -mx-8 -mb-8 px-8 pb-8 rounded-b-[2.5rem]">
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <span className="relative flex h-2 w-2">
+                                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C9A84C] opacity-75"></span>
+                                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C9A84C]"></span>
+                                                            </span>
+                                                            <span className="text-[10px] font-black uppercase tracking-wider text-[#C9A84C]">Live Delivery Tracking</span>
+                                                        </div>
+                                                        {order.awb_code ? (
+                                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-[10px] mt-2">
+                                                                <div>
+                                                                    <span className="text-gray-400 uppercase tracking-wider font-bold">Courier</span>
+                                                                    <p className="font-black text-[#1D1D1F] mt-0.5">{order.payment_method === 'cod' ? 'Speed Post' : 'BlueDart Express'}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <span className="text-gray-400 uppercase tracking-wider font-bold">Tracking Code</span>
+                                                                    <p className="font-black text-[#1D1D1F] font-mono mt-0.5">{order.awb_code}</p>
+                                                                </div>
+                                                                <div className="col-span-2 sm:col-span-1">
+                                                                    <span className="text-gray-400 uppercase tracking-wider font-bold">Status</span>
+                                                                    <p className="font-black text-emerald-600 uppercase mt-0.5">{order.status === 'shipped' ? 'In Transit' : 'Processing'}</p>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <p className="text-[10px] text-gray-500 font-bold uppercase">Preparing shipment logic. Carrier details will populate here once dispatched.</p>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             )}
                         </AnimatePresence>
