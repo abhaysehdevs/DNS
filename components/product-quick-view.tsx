@@ -10,6 +10,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Currency } from '@/components/currency';
+import { SecureImage } from './secure-image';
 
 export function ProductQuickView({ product, isOpen, onClose }: { product: Product, isOpen: boolean, onClose: () => void }) {
     const { mode, language, cart, addToCart, wishlist, toggleWishlist } = useAppStore();
@@ -134,9 +135,10 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                 poster={gallery[selectedMediaIndex].thumbnailUrl}
                                             />
                                         ) : (
-                                            <img
+                                            <SecureImage
                                                 src={gallery[selectedMediaIndex]?.url || product.primaryImage}
                                                 alt={product.name}
+                                                containerClassName="w-full h-full"
                                                 className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
                                             />
                                         )}
@@ -152,9 +154,10 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                 onClick={() => setSelectedMediaIndex(idx)}
                                                 className={`relative flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden transition-all duration-500 glass ${selectedMediaIndex === idx ? 'border-[#C9A84C]/50 scale-110 shadow-[0_0_20px_rgba(201,168,76,0.2)]' : 'opacity-40 hover:opacity-80'}`}
                                             >
-                                                <img
+                                                <SecureImage
                                                     src={media.type === 'video' ? (media.thumbnailUrl || media.url) : media.url}
                                                     alt={media.altText || `Thumbnail ${idx + 1}`}
+                                                    containerClassName="w-full h-full"
                                                     className="w-full h-full object-cover"
                                                 />
                                                 {media.type === 'video' && (

@@ -135,6 +135,11 @@ function ShopContent() {
             return matchesSearch && matchesCategory && matchesPrice;
         })
         .sort((a, b) => {
+            // Push out-of-stock products to the bottom
+            if (a.inStock && !b.inStock) return -1;
+            if (!a.inStock && b.inStock) return 1;
+
+            // Apply selected sorting, defaulting to Top Sellers (highest review count)
             if (sortBy === 'priceAsc') {
                 const priceA = isRetail ? a.retailPrice : (a.wholesalePrice ?? 0);
                 const priceB = isRetail ? b.retailPrice : (b.wholesalePrice ?? 0);
@@ -143,8 +148,13 @@ function ShopContent() {
                 const priceA = isRetail ? a.retailPrice : (a.wholesalePrice ?? 0);
                 const priceB = isRetail ? b.retailPrice : (b.wholesalePrice ?? 0);
                 return priceB - priceA;
-            } else if (sortBy === 'nameAsc') return a.name.localeCompare(b.name);
-            return 0;
+            } else if (sortBy === 'nameAsc') {
+                return a.name.localeCompare(b.name);
+            } else {
+                const reviewsA = a.reviews?.length || 0;
+                const reviewsB = b.reviews?.length || 0;
+                return reviewsB - reviewsA; // Popularity sort
+            }
         });
 
     return (

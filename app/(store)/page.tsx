@@ -41,6 +41,38 @@ const whyChooseUsItems = [
 export default function Home() {
     const [newArrivals, setNewArrivals] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [featuredCollections, setFeaturedCollections] = useState<any[]>([]);
+    const [collectionsProducts, setCollectionsProducts] = useState<Record<string, Product[]>>({});
+    const [newsletterEmail, setNewsletterEmail] = useState('');
+    const [subscribed, setSubscribed] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleNewsletterSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newsletterEmail) return;
+        setSubmitting(true);
+        try {
+            const { error } = await supabase
+                .from('newsletter_subscribers')
+                .insert([{ email: newsletterEmail }]);
+            if (error) {
+                if (error.code === '23505') {
+                    alert('You are already subscribed to our newsletter!');
+                } else {
+                    throw error;
+                }
+            } else {
+                setSubscribed(true);
+                setNewsletterEmail('');
+                setTimeout(() => setSubscribed(false), 5000);
+            }
+        } catch (err: any) {
+            console.error(err);
+            alert('Failed to subscribe. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     useEffect(() => {
         async function fetchProducts() {
@@ -76,7 +108,58 @@ export default function Home() {
                 setLoading(false);
             }
         }
+
+        async function fetchFeaturedCollections() {
+            try {
+                const { data: cols, error: err1 } = await supabase
+                    .from('featured_collections')
+                    .select('*')
+                    .eq('active', true)
+                    .order('display_order');
+                if (cols && !err1) {
+                    setFeaturedCollections(cols);
+                    
+                    const prodsMap: Record<string, Product[]> = {};
+                    for (const col of cols) {
+                        let catVal = '';
+                        if (col.query.startsWith('category=')) {
+                            catVal = col.query.split('category=')[1];
+                        }
+                        
+                        if (catVal) {
+                            const { data: prods } = await supabase
+                                .from('products')
+                                .select('*')
+                                .eq('category', catVal)
+                                .limit(col.display_limit || 8);
+                            
+                            if (prods && prods.length > 0) {
+                                prodsMap[col.id] = prods.map((p: any) => ({
+                                    id: p.id,
+                                    name: p.name,
+                                    description: p.description,
+                                    retailPrice: p.retail_price,
+                                    wholesalePrice: p.wholesale_price,
+                                    wholesaleMOQ: p.wholesale_moq,
+                                    primaryImage: p.image || p.image_url || '/placeholder.jpg',
+                                    image: p.image || p.image_url || '/placeholder.jpg',
+                                    gallery: p.gallery || [],
+                                    category: p.category,
+                                    inStock: p.in_stock,
+                                    reviews: p.reviews || []
+                                }));
+                            }
+                        }
+                    }
+                    setCollectionsProducts(prodsMap);
+                }
+            } catch (e) {
+                console.error('Error fetching featured collections:', e);
+            }
+        }
+
         fetchProducts();
+        fetchFeaturedCollections();
     }, []);
 
     return (
@@ -139,34 +222,63 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 3. NEW ARRIVALS (Ivory theme background) */}
-            <section className="py-24 px-6 bg-[#FAF6EE] relative border-b border-[#E2DCD0]">
-                <div className="container mx-auto">
-                    <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#E2DCD0] pb-6 gap-4 text-center sm:text-left">
-                        <div>
-                            <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-1">New Arrivals</h2>
-                            <p className="text-[9px] font-bold text-[#8A6232] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
+            {/* 3. FEATURED COLLECTIONS (Ivory theme background) */}
+            {featuredCollections.length > 0 ? (
+                featuredCollections.map((col) => {
+                    const colProducts = collectionsProducts[col.id] || [];
+                    if (colProducts.length === 0) return null;
+                    return (
+                        <section key={col.id} className="py-24 px-6 bg-[#FAF6EE] relative border-b border-[#E2DCD0]">
+                            <div className="container mx-auto">
+                                <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#E2DCD0] pb-6 gap-4 text-center sm:text-left">
+                                    <div>
+                                        <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-1">{col.name}</h2>
+                                        <p className="text-[9px] font-bold text-[#8A6232] uppercase tracking-[0.2em]">Curated {col.name.toLowerCase()} catalog</p>
+                                    </div>
+                                    <Link href={`/shop?cat=${col.query.replace('category=', '')}`} className="group text-[10px] font-bold text-matte-black hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                                        <span>View Collection</span>
+                                        <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                                    </Link>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+                                    {colProducts.map((product) => (
+                                        <ProductCard key={product.id} product={product} lightTheme={true} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    );
+                })
+            ) : (
+                /* Fallback New Arrivals */
+                <section className="py-24 px-6 bg-[#FAF6EE] relative border-b border-[#E2DCD0]">
+                    <div className="container mx-auto">
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#E2DCD0] pb-6 gap-4 text-center sm:text-left">
+                            <div>
+                                <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-1">New Arrivals</h2>
+                                <p className="text-[9px] font-bold text-[#8A6232] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
+                            </div>
+                            <Link href="/shop" className="group text-[10px] font-bold text-matte-black hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                                <span>View All Products</span>
+                                <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
                         </div>
-                        <Link href="/shop" className="group text-[10px] font-bold text-matte-black hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
-                            <span>View All Products</span>
-                            <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </div>
 
-                    {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20 gap-4">
-                            <Loader2 className="w-8 h-8 animate-spin text-[#A67C35]" />
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#A67C35]">Loading inventory...</span>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-                            {newArrivals.map((product) => (
-                                <ProductCard key={product.id} product={product} lightTheme={true} />
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </section>
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center py-20 gap-4">
+                                <Loader2 className="w-8 h-8 animate-spin text-[#A67C35]" />
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A67C35]">Loading inventory...</span>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+                                {newArrivals.map((product) => (
+                                    <ProductCard key={product.id} product={product} lightTheme={true} />
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
 
             {/* 4. ABOUT & WHY CHOOSE US (Dark theme background) */}
             <section className="py-24 px-6 bg-[#151515] border-b border-[#343434] relative">
@@ -234,20 +346,29 @@ export default function Home() {
                             </p>
                         </div>
                         <div className="flex-1 w-full max-w-md">
-                            <form className="flex flex-col sm:flex-row gap-3.5" onSubmit={e => e.preventDefault()}>
-                                <input 
-                                    required 
-                                    type="email" 
-                                    placeholder="ENTER YOUR EMAIL" 
-                                    className="flex-1 h-12 bg-[#151515] border border-[#343434] rounded-lg px-4 text-xs font-semibold tracking-wider text-[#F8F3E8] focus:outline-none focus:border-[#A67C35] transition-all placeholder-[#8E8E9A]" 
-                                />
-                                <button 
-                                    type="submit" 
-                                    className="h-12 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold px-8 rounded-lg text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow"
-                                >
-                                    Subscribe
-                                </button>
-                            </form>
+                            {subscribed ? (
+                                <div className="text-emerald-500 font-bold uppercase tracking-wider text-sm text-center md:text-left bg-emerald-500/10 border border-emerald-500/20 px-6 py-4 rounded-xl">
+                                    Thanks for subscribing!
+                                </div>
+                            ) : (
+                                <form className="flex flex-col sm:flex-row gap-3.5" onSubmit={handleNewsletterSubmit}>
+                                    <input 
+                                        required 
+                                        type="email" 
+                                        placeholder="ENTER YOUR EMAIL" 
+                                        value={newsletterEmail}
+                                        onChange={e => setNewsletterEmail(e.target.value)}
+                                        className="flex-1 h-12 bg-[#151515] border border-[#343434] rounded-lg px-4 text-xs font-semibold tracking-wider text-[#F8F3E8] focus:outline-none focus:border-[#A67C35] transition-all placeholder-[#8E8E9A]" 
+                                    />
+                                    <button 
+                                        type="submit" 
+                                        disabled={submitting}
+                                        className="h-12 bg-[#A67C35] hover:bg-[#8A6232] disabled:opacity-50 text-black font-bold px-8 rounded-lg text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow flex items-center justify-center"
+                                    >
+                                        {submitting ? <Loader2 className="animate-spin" size={16} /> : 'Subscribe'}
+                                    </button>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </div>

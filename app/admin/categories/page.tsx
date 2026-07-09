@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Plus, Search, Edit2, Trash2, X, Save, Grid, Image as ImageIcon, Loader2, AlertCircle, Upload, Package } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { convertToWebP } from '@/lib/image-utils';
 
 interface Category {
     id: string;
@@ -71,14 +72,22 @@ export default function CategoriesPage() {
 
         setUploading(true);
         try {
-            const fileExt = file.name.split('.').pop();
+            let fileToUpload = file;
+            if (file.type.startsWith('image/') && file.type !== 'image/gif') {
+                try {
+                    fileToUpload = await convertToWebP(file);
+                } catch (e) {
+                    console.error('WebP conversion failed, using original file:', e);
+                }
+            }
+            const fileExt = fileToUpload.name.split('.').pop();
             const fileName = `${Math.random()}.${fileExt}`;
             const filePath = `category-images/${fileName}`;
 
             // Try to upload. Note: Ensure the bucket 'categories' is public and has proper policies.
             const { error: uploadError } = await supabase.storage
                 .from('categories')
-                .upload(filePath, file);
+                .upload(filePath, fileToUpload);
 
             if (uploadError) throw uploadError;
 

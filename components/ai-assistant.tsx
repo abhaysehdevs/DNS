@@ -24,7 +24,7 @@ export function AIAssistant() {
         {
             id: 'welcome',
             role: 'assistant',
-            content: "Namaste! I'm Dinanath AI. How can I help you find the perfect jewelry tool today?",
+            content: "Namaste! I'm Dinanath AI, your specialized guide for professional jewelry tools, workshop machinery, and order logistics. How can I assist you with our inventory today?",
             timestamp: new Date()
         }
     ]);
@@ -60,7 +60,7 @@ export function AIAssistant() {
         setInput('');
         setIsTyping(true);
 
-        // Simulate AI Thinking
+        // Simulated highly-responsive delay (400ms)
         setTimeout(() => {
             const botResponse = generateResponse(userMsg.content as string);
             setMessages(prev => [...prev, {
@@ -70,13 +70,47 @@ export function AIAssistant() {
                 timestamp: new Date()
             }]);
             setIsTyping(false);
-        }, 1200);
+        }, 400);
     };
 
     // Simple "AI" Logic (Descriptive & Professional)
     // Advanced Industry Intelligence Logic
     const generateResponse = (query: string): React.ReactNode => {
         const lowerQuery = query.toLowerCase();
+
+        // Strict focus check: only answer questions related to tools, jewelry, machinery, orders, shipping
+        const isRelated = 
+            lowerQuery.includes('tool') || 
+            lowerQuery.includes('machine') || 
+            lowerQuery.includes('mill') || 
+            lowerQuery.includes('cast') || 
+            lowerQuery.includes('furnace') || 
+            lowerQuery.includes('polish') || 
+            lowerQuery.includes('jewelry') || 
+            lowerQuery.includes('jewellery') || 
+            lowerQuery.includes('order') || 
+            lowerQuery.includes('ship') || 
+            lowerQuery.includes('deliver') || 
+            lowerQuery.includes('wholesale') || 
+            lowerQuery.includes('bulk') || 
+            lowerQuery.includes('price') || 
+            lowerQuery.includes('contact') || 
+            lowerQuery.includes('catalog') || 
+            lowerQuery.includes('how to') || 
+            lowerQuery.includes('help') ||
+            lowerQuery.includes('best') ||
+            lowerQuery.includes('hello') ||
+            lowerQuery.includes('hi') ||
+            lowerQuery.includes('hey');
+
+        if (!isRelated) {
+            return (
+                <div className="space-y-2">
+                    <p>I am Dinanath AI, an assistant dedicated exclusively to helping you with <strong>Dinanath & Sons' jewelry tools, workshop machinery, and store inventory</strong>.</p>
+                    <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Please ask me about our tools, casting machines, or shipping policies.</p>
+                </div>
+            );
+        }
 
         // 1. Jewelry Specific Categories
         if (lowerQuery.includes('casting') || lowerQuery.includes('machine') || lowerQuery.includes('furnace')) {
@@ -114,7 +148,7 @@ export function AIAssistant() {
             return (
                 <div className="space-y-4">
                     <p className="text-gray-200">Dinanath & Sons offers special <strong>Wholesale Pricing</strong> for bulk orders. We support jewelry factories and distributors with the best rates in the industry.</p>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=I'm interested in a wholesale quotation for jewelry tools." target="_blank" rel="noopener noreferrer" className="block w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-2xl text-center font-black uppercase text-xs tracking-widest shadow-xl shadow-green-900/20 transition-all">
+                    <a href="https://wa.me/919953435647?text=I'm interested in a wholesale quotation for jewelry tools." target="_blank" rel="noopener noreferrer" className="block w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-2xl text-center font-black uppercase text-xs tracking-widest shadow-xl shadow-green-900/20 transition-all">
                         Connect with Trade Desk
                     </a>
                 </div>

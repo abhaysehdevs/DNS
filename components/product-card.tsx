@@ -7,6 +7,7 @@ import { ShoppingCart, MessageCircle, Heart, Shield, Star, ChevronRight } from '
 import Link from 'next/link';
 import { useState } from 'react';
 import { ProductQuickView } from './product-quick-view';
+import { SecureImage } from './secure-image';
 import { Currency } from '@/components/currency';
 import { motion } from 'framer-motion';
 
@@ -50,10 +51,10 @@ export function ProductCard({
                 <div className="flex flex-col items-center flex-1">
                     {/* Centered Image */}
                     <div className="w-full aspect-square bg-[#FAF6EE] rounded-lg p-4 flex items-center justify-center mb-4 overflow-hidden relative">
-                        <img 
+                        <SecureImage 
                             src={product.image || product.primaryImage} 
                             alt={product.name} 
-                            onError={() => setImgError(true)}
+                            containerClassName="w-full h-full"
                             className="w-full h-full object-contain transition-transform duration-750 group-hover:scale-105 mix-blend-multiply" 
                         />
                     </div>
@@ -91,8 +92,12 @@ export function ProductCard({
             <Link href={`/shop/${product.id}`} className="block group">
                 <div className="bg-[#242424] border border-[#343434] rounded-xl overflow-hidden hover:border-[#A67C35] transition-all duration-500 h-full shadow-sm">
                     <div className="aspect-square bg-[#1E1E1E] flex items-center justify-center relative p-4 overflow-hidden">
-                        <img src={product.image || product.primaryImage} alt={product.name} onError={() => setImgError(true)}
-                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 mix-blend-lighten" />
+                        <SecureImage 
+                            src={product.image || product.primaryImage} 
+                            alt={product.name} 
+                            containerClassName="w-full h-full"
+                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 mix-blend-lighten" 
+                        />
                     </div>
                     <div className="p-3 border-t border-[#343434] text-left">
                         <h4 className="text-[9px] font-bold text-[#CFCFCF] truncate group-hover:text-[#A67C35] transition-colors uppercase tracking-[0.15em]">{product.name}</h4>
@@ -111,10 +116,10 @@ export function ProductCard({
             {/* Image Container */}
             <div className={`relative shrink-0 ${list ? 'w-full lg:w-72 border-b lg:border-b-0 lg:border-r border-[#343434]' : 'aspect-square w-full'} bg-[#1E1E1E] flex items-center justify-center overflow-hidden`}>
                 <Link href={`/shop/${product.id}`} className="block absolute inset-0 z-0 p-6">
-                    <img 
+                    <SecureImage 
                         src={product.image || product.primaryImage} 
                         alt={product.name} 
-                        onError={() => setImgError(true)}
+                        containerClassName="w-full h-full"
                         className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 mix-blend-lighten" 
                     />
                 </Link>

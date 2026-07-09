@@ -27,6 +27,18 @@ export function Navbar() {
     const [announcements, setAnnouncements] = useState<any[]>([]);
     const [currentAnnIndex, setCurrentAnnIndex] = useState(0);
 
+    const [hoveredTooltip, setHoveredTooltip] = useState<string | null>(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e: React.MouseEvent, text: string) => {
+        setMousePos({ x: e.clientX, y: e.clientY });
+        setHoveredTooltip(text);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredTooltip(null);
+    };
+
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
@@ -122,8 +134,8 @@ export function Navbar() {
         { href: '/shop?cat=Consumables', label: 'POLISHING' },
         { href: '/shop?cat=Packaging', label: 'PACKAGING' },
         { href: '/shop?cat=Packaging', label: 'DISPLAY' }, // maps to packaging
-        { href: '/shop?sort=newest', label: 'NEW ARRIVALS' },
-        { href: '/shop?sort=discount', label: 'OFFERS' },
+        { href: '/new-arrivals', label: 'NEW ARRIVALS' },
+        { href: '/offers', label: 'OFFERS' },
         { href: '/about', label: 'ABOUT' },
         { href: '/contact', label: 'CONTACT' }
     ];
@@ -162,13 +174,22 @@ export function Navbar() {
                             <span className="text-[#A67C35] font-bold">★</span>
                             <span>{announcements.length > 0 ? announcements[currentAnnIndex].message : "India's Trusted Jewellery Tool Experts Since 1960"}</span>
                         </div>
-                        <div className="hidden md:flex items-center gap-6">
+                        <div className="hidden md:flex items-center gap-6 text-[#F8F3E8]">
                             <Link href="/about" className="hover:text-[#A67C35] transition-colors">About Us</Link>
                             <Link href="/contact" className="hover:text-[#A67C35] transition-colors">Contact Us</Link>
-                            <Link href="/account" className="hover:text-[#A67C35] transition-colors">Track Order</Link>
+                            <Link 
+                                href="/track-order" 
+                                onMouseMove={(e) => handleMouseMove(e, "Live Dispatch Tracker: Input AWB codes or customer manifest credentials.")}
+                                onMouseLeave={handleMouseLeave}
+                                className="hover:text-[#A67C35] transition-colors"
+                            >
+                                Track Order
+                            </Link>
                             <div className="w-px h-3 bg-[#343434]" />
                             <div 
                                 onClick={() => window.dispatchEvent(new CustomEvent('open-language-popup'))}
+                                onMouseMove={(e) => handleMouseMove(e, "Language Settings: Toggle displays between 8 regional languages and currency presets.")}
+                                onMouseLeave={handleMouseLeave}
                                 className="flex items-center gap-1.5 cursor-pointer hover:text-[#A67C35] transition-colors"
                             >
                                 <Globe size={11} className="text-[#A67C35]" />
@@ -206,7 +227,12 @@ export function Navbar() {
 
                         {/* Search Bar - Center */}
                         <div className="hidden lg:block flex-1 max-w-xl relative" ref={searchRef}>
-                            <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full h-11 bg-[#1E1E1E] border border-[#343434] rounded-lg overflow-hidden focus-within:border-[#A67C35] transition-all">
+                            <form 
+                                onSubmit={handleSearchSubmit} 
+                                onMouseMove={(e) => handleMouseMove(e, "Search Catalog: Scan our collection of machinery, tools, and industrial accessories.")}
+                                onMouseLeave={handleMouseLeave}
+                                className="relative flex items-center w-full h-11 bg-[#1E1E1E] border border-[#343434] rounded-lg overflow-hidden focus-within:border-[#A67C35] transition-all"
+                            >
                                 <input
                                     type="text"
                                     placeholder="Search for tools, machines, equipment..."
@@ -230,18 +256,32 @@ export function Navbar() {
                         <div className="flex items-center gap-2.5 md:gap-6 shrink-0 text-[#F8F3E8]">
                             
                             {/* Wholesale Toggle */}
-                            <div className="hidden sm:flex items-center p-1 bg-[#1E1E1E] border border-[#343434] rounded-lg">
+                            <div 
+                                 onMouseMove={(e) => handleMouseMove(e, "Wholesale Switch: Toggle pricing catalog and minimum order quantities for bulk purchases.")}
+                                 onMouseLeave={handleMouseLeave}
+                                 className="hidden sm:flex items-center p-1 bg-[#1E1E1E] border border-[#343434] rounded-lg"
+                             >
                                 <button onClick={() => setMode('retail')} className={`px-3 py-1.5 rounded text-[8px] font-bold uppercase tracking-wider transition-all ${isRetail ? 'bg-[#A67C35] text-black shadow' : 'text-[#8E8E9A] hover:text-[#F8F3E8]'}`}>Retail</button>
                                 <button onClick={() => setMode('wholesale')} className={`px-3 py-1.5 rounded text-[8px] font-bold uppercase tracking-wider transition-all ${!isRetail ? 'bg-[#D12A1C] text-white shadow' : 'text-[#8E8E9A] hover:text-[#F8F3E8]'}`}>Wholesale</button>
                             </div>
 
                             {/* Theme Toggle */}
-                            <button onClick={toggleTheme} className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] hover:text-[#A67C35] hover:border-[#A67C35]/30 transition-all">
+                            <button 
+                                 onClick={toggleTheme} 
+                                 onMouseMove={(e) => handleMouseMove(e, "Theme Selector: Toggle interface environment between dark and light modes.")}
+                                 onMouseLeave={handleMouseLeave}
+                                 className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] hover:text-[#A67C35] hover:border-[#A67C35]/30 transition-all"
+                             >
                                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                             </button>
 
                             {/* Account Link */}
-                            <Link href="/account" className="hidden md:flex items-center gap-2.5 group">
+                            <Link 
+                                 href="/account" 
+                                 onMouseMove={(e) => handleMouseMove(e, "Account Gateway: Authenticate, register, or track order profiles.")}
+                                 onMouseLeave={handleMouseLeave}
+                                 className="hidden md:flex items-center gap-2.5 group"
+                            >
                                 <div className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
                                     <User size={16} />
                                 </div>
@@ -252,7 +292,12 @@ export function Navbar() {
                             </Link>
 
                             {/* Wishlist Link */}
-                            <Link href="/wishlist" className="hidden md:flex items-center gap-2.5 group">
+                            <Link 
+                                 href="/wishlist" 
+                                 onMouseMove={(e) => handleMouseMove(e, "Wishlist: Review your saved workshop machinery and tools.")}
+                                 onMouseLeave={handleMouseLeave}
+                                 className="hidden md:flex items-center gap-2.5 group"
+                            >
                                 <div className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] relative group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
                                     <Heart size={16} />
                                     {wishlist.length > 0 && (
@@ -266,7 +311,12 @@ export function Navbar() {
                             </Link>
 
                             {/* Cart Status Link */}
-                            <Link href="/cart" className="flex items-center gap-2.5 group">
+                            <Link 
+                                 href="/cart" 
+                                 onMouseMove={(e) => handleMouseMove(e, "Cart Checklist: Review products ready for purchase and proceed to secure checkout.")}
+                                 onMouseLeave={handleMouseLeave}
+                                 className="flex items-center gap-2.5 group"
+                            >
                                 <div className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] relative group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
                                     <ShoppingCart size={16} />
                                     {cart.length > 0 && (
@@ -292,6 +342,8 @@ export function Navbar() {
                         <div className="relative shrink-0 py-3 pr-6 border-r border-[#343434]">
                             <button 
                                 onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
+                                onMouseMove={(e) => handleMouseMove(e, "Category Taxonomy: Scan tool catalogs sorted by operational categories.")}
+                                onMouseLeave={handleMouseLeave}
                                 className="flex items-center gap-2 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9px] px-6 py-2.5 rounded-lg transition-colors shadow"
                             >
                                 <Menu size={12} strokeWidth={3} />
@@ -435,6 +487,17 @@ export function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            {hoveredTooltip && (
+                <div 
+                    className="fixed z-[9999] pointer-events-none bg-[#1E1E1E]/95 border border-[#A67C35] text-[#F8F3E8] text-[9px] font-black uppercase tracking-widest px-4 py-2.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg whitespace-normal max-w-xs transition-opacity duration-200 hidden md:block"
+                    style={{
+                        left: `${mousePos.x + 15}px`,
+                        top: `${mousePos.y + 15}px`
+                    }}
+                >
+                    {hoveredTooltip}
+                </div>
+            )}
         </>
     );
 }

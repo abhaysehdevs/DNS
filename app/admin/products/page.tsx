@@ -10,6 +10,7 @@ import {
     Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { convertToWebP } from '@/lib/image-utils';
 
 // --- Interfaces ---
 interface ProductVariant {
@@ -100,13 +101,21 @@ export default function ProductsAdminPage() {
         setUploading(true);
         try {
             const uploadSingleFile = async (file: File) => {
-                const fileExt = file.name.split('.').pop();
+                let fileToUpload = file;
+                if (file.type.startsWith('image/') && file.type !== 'image/gif') {
+                    try {
+                        fileToUpload = await convertToWebP(file);
+                    } catch (e) {
+                        console.error('WebP conversion failed, using original file:', e);
+                    }
+                }
+                const fileExt = fileToUpload.name.split('.').pop();
                 const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
                 const filePath = `product-media/${fileName}`;
 
                 const { error: uploadError } = await supabase.storage
                     .from('products')
-                    .upload(filePath, file);
+                    .upload(filePath, fileToUpload);
 
                 if (uploadError) throw uploadError;
 

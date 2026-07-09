@@ -6,7 +6,7 @@ export async function POST(req: Request) {
         const { type } = body;
 
         const resendApiKey = process.env.RESEND_API_KEY;
-        const supportEmail = 'support@dinanathanandsons.com';
+        const supportEmail = 'info@daridhinaathandsons.com';
 
         let subject = '';
         let htmlContent = '';
@@ -95,13 +95,13 @@ export async function POST(req: Request) {
         } else if (type === 'contact') {
             const { contactName, contactEmail, category, message } = body;
 
-            subject = `✉️ New Support Uplink: ${category} - From ${contactName}`;
+            subject = `✉️ New Support Query: ${category} - From ${contactName}`;
 
             htmlContent = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
                     <div style="background-color: #151515; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
                         <h1 style="color: #A67C35; margin: 0; font-size: 24px; letter-spacing: 2px;">DINANATH & SONS</h1>
-                        <p style="color: #8E8E9A; margin: 5px 0 0 0; font-size: 10px; text-transform: uppercase;">Nexus Support System</p>
+                        <p style="color: #8E8E9A; margin: 5px 0 0 0; font-size: 10px; text-transform: uppercase;">Customer Support System</p>
                     </div>
                     
                     <div style="padding: 20px;">

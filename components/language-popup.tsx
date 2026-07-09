@@ -118,61 +118,58 @@ export function LanguagePopup() {
                         initial={{ opacity: 0, y: 50, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="relative bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full max-w-md shadow-2xl pointer-events-auto overflow-hidden"
+                        className="relative bg-black border-4 border-[#F5D800] rounded-none p-6 w-full max-w-md shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] pointer-events-auto overflow-hidden text-white"
                     >
-                        {/* Decorative background glow */}
-                        <div className="absolute -top-20 -left-20 w-40 h-40 bg-amber-600/20 rounded-full blur-[50px]" />
-
                         <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-4">
+                            <div className="flex justify-between items-start mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-amber-500/10 p-2.5 rounded-full text-amber-500">
-                                        <Languages size={24} />
+                                    <div className="bg-[#F5D800] text-black p-2 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        <Languages size={22} strokeWidth={2.5} />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-white">Choose Language</h3>
-                                        <p className="text-sm text-amber-500 font-medium">अपनी भाषा चुनें</p>
+                                        <h3 className="text-xl font-black text-white uppercase tracking-wider">Choose Language</h3>
+                                        <p className="text-[10px] text-[#F5D800] font-bold uppercase tracking-widest mt-0.5">अपनी भाषा चुनें</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={handleDismiss}
-                                    className="text-gray-400 hover:text-white transition-colors p-1"
+                                    className="text-gray-400 hover:text-white transition-colors p-1 border border-transparent hover:border-white/20"
                                 >
                                     <X size={20} />
                                 </button>
                             </div>
 
-                            <p className="text-gray-300 mb-6 text-sm">
-                                You can view the website in your regional language.
+                            <p className="text-gray-300 mb-6 text-xs leading-relaxed font-semibold uppercase tracking-wide">
+                                Select your preferred language for precision browsing.
                                 <br />
-                                <span className="text-gray-400 text-xs">आप अपनी क्षेत्रीय भाषा में वेबसाइट देख सकते हैं।</span>
+                                <span className="text-gray-500 text-[10px] block mt-1">आप अपनी क्षेत्रीय भाषा में वेबसाइट देख सकते हैं।</span>
                             </p>
 
-                            <div className="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                            <div className="grid grid-cols-2 gap-3 max-h-[250px] overflow-y-auto pr-1 custom-scrollbar">
                                 {LANGUAGES.map((lang) => (
                                     <button
                                         key={lang.code}
                                         onClick={() => handleSelectLanguage(lang.code)}
-                                        className={`flex flex-col items-start p-3 rounded-xl border transition-all ${language === lang.code
-                                            ? 'bg-amber-600/20 border-amber-600 text-amber-500'
-                                            : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-600 hover:bg-gray-750'
+                                        className={`flex flex-col items-start p-3 rounded-none border-2 transition-all ${language === lang.code
+                                            ? 'bg-[#F5D800] border-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-black'
+                                            : 'bg-[#151515] border-white/10 text-gray-300 hover:border-[#F5D800] hover:text-white'
                                             }`}
                                     >
-                                        <span className="text-sm font-bold">{lang.native}</span>
-                                        <span className="text-xs text-gray-500">{lang.name}</span>
+                                        <span className="text-sm font-black">{lang.native}</span>
+                                        <span className={`text-[10px] font-bold ${language === lang.code ? 'text-black/60' : 'text-gray-500'}`}>{lang.name}</span>
                                     </button>
                                 ))}
                             </div>
 
                             {/* Currency Selector */}
-                            <div className="mt-8 border-t border-gray-800 pt-6">
+                            <div className="mt-6 border-t-2 border-white/15 pt-6">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="bg-amber-500/10 p-2.5 rounded-full text-amber-500">
-                                        <Globe size={20} />
+                                    <div className="bg-[#F5D800] text-black p-2 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        <Globe size={18} strokeWidth={2.5} />
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Choose Currency</h4>
-                                        <span className="text-[10px] text-gray-500 font-bold uppercase">Dynamic Exchange Conversion</span>
+                                        <h4 className="text-xs font-black text-white uppercase tracking-wider">Choose Currency</h4>
+                                        <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider block mt-0.5">Dynamic Exchange Conversion</span>
                                     </div>
                                 </div>
 
@@ -181,10 +178,10 @@ export function LanguagePopup() {
                                         <button
                                             key={curr.code}
                                             onClick={() => handleSelectCurrency(curr.code)}
-                                            className={`flex items-center justify-center gap-2 py-3 px-2 rounded-xl border text-xs font-black uppercase tracking-wider transition-all ${
+                                            className={`flex items-center justify-center gap-2.5 py-3 px-2 rounded-none border-2 text-xs font-black uppercase tracking-wider transition-all ${
                                                 currencyData.code === curr.code
-                                                    ? 'bg-amber-600/20 border-amber-600 text-amber-500'
-                                                    : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600 hover:text-white'
+                                                    ? 'bg-[#F5D800] border-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+                                                    : 'bg-[#151515] border-white/10 text-gray-400 hover:border-white/20 hover:text-white'
                                             }`}
                                         >
                                             <span className="text-sm">{curr.symbol}</span>

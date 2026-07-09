@@ -7,24 +7,24 @@ import Link from 'next/link';
 
 const FAQS = [
     {
-        question: "Logistics: Regional Distribution Protocol?",
-        answer: "Our standard logistics network spans the entire Indian subcontinent via tier-1 courier partners. Priority 'Instant Deployment' is currently restricted to the Delhi NCR strategic zone."
+        question: "Shipping: Regional Delivery Areas?",
+        answer: "We ship across India using leading courier services. Express delivery is available for the Delhi NCR region."
     },
     {
-        question: "Acquisition: Wholesale Procurement Process?",
-        answer: "Switch the interface to 'Wholesale Mode' via the primary navigation nexus. This activates bulk inventory logic. Compiled inquiries are processed through direct technical consultation via our synchronized WhatsApp uplink."
+        question: "Wholesale: How to Order in Bulk?",
+        answer: "Switch the site to 'Wholesale Mode' via the navigation bar to see bulk pricing. Wholesale orders are processed through direct consultation via our WhatsApp support."
     },
     {
-        question: "Parameters: Minimum Order Quantity (MOQ)?",
-        answer: "Standard 'Retail' acquisitions have zero MOQ constraints. 'Wholesale' procurement requires adherence to product-specific MOQ thresholds to activate industrial pricing tiers."
+        question: "Wholesale: What is the Minimum Order Quantity (MOQ)?",
+        answer: "Retail orders have no minimum order quantity. Wholesale orders require meeting specific product MOQ thresholds to qualify for bulk pricing."
     },
     {
-        question: "Settlement: Authorized Payment Channels?",
-        answer: "We support high-bandwidth digital settlement via UPI, Global Credit/Debit frameworks, and Net Banking. Industrial-scale transactions are facilitated through NEFT/RTGS bank transmissions."
+        question: "Payments: What Payment Methods Do You Accept?",
+        answer: "We accept payment via UPI, Credit/Debit Cards, and Net Banking. Large wholesale orders can be paid via NEFT or RTGS bank transfer."
     },
     {
-        question: "Integrity: Returns and Technical Warranty?",
-        answer: "Technical discrepancies must be logged within a 48-hour window post-deployment. We require high-definition 'Unboxing Documentation' (Video) to authorize manufacturing defect claims."
+        question: "Returns: What is the Return Policy?",
+        answer: "Any issues or defects must be reported within 48 hours of delivery. We require an unboxing video to process manufacturing defect claims."
     }
 ];
 

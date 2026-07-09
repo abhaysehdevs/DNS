@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { 
     Loader2, 
@@ -8,7 +8,6 @@ import {
     Truck, 
     XCircle, 
     ArrowRight, 
-    Activity, 
     TrendingUp, 
     Users, 
     AlertTriangle, 
@@ -17,8 +16,9 @@ import {
     Grid,
     ShieldCheck,
     RefreshCw,
-    Trash2,
-    Monitor
+    Monitor,
+    Activity,
+    Trash2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -27,6 +27,8 @@ export default function AdminDashboard() {
     const [orders, setOrders] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
     const [sessions, setSessions] = useState<any[]>([]);
+    const [quotes, setQuotes] = useState<any[]>([]);
+    const [activities, setActivities] = useState<any[]>([]);
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
     const [revokingId, setRevokingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -40,49 +42,8 @@ export default function AdminDashboard() {
         topProducts: [] as { name: string, count: number, revenue: number }[]
     });
 
-    const [terminalLogs, setTerminalLogs] = useState<string[]>([
-        'Initializing Dinanath OS v1.2.0-secure...',
-        'Loading Secure Kernel & RLS Modules...',
-        '[OK] Database connection pool initialized (Supabase).',
-        '[OK] Real-time orders websocket listener active.',
-        '[OK] Session authorization heartbeat tracking synced.',
-        'System monitoring daemon status: ACTIVE'
-    ]);
-
-    const terminalEndRef = useRef<HTMLDivElement>(null);
-
     useEffect(() => {
         fetchData();
-    }, []);
-
-    useEffect(() => {
-        terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [terminalLogs]);
-
-    useEffect(() => {
-        const templates = [
-            '[SYS] Ping database storage engines... 200 OK',
-            '[WS] Realtime sync: 0 pending events in pipeline.',
-            '[SYS] Heartbeat signal sent from operator client.',
-            '[CACHE] Invalidating stale static page metadata cache.',
-            '[SEC] Scanning active operators: session active.',
-            '[DB] Querying product inventory levels... OK.',
-            '[SYS] CPU load: 1.2% | Memory: 56.4 MB',
-            '[SYS] Active connections: 4 client hosts, 1 database instance.',
-            '[SEC] Verified security certificates for SSL connection.',
-            '[DB] Garbage collection run: zero orphaned database rows found.',
-        ];
-
-        const interval = setInterval(() => {
-            const randomLog = templates[Math.floor(Math.random() * templates.length)];
-            const timestamp = new Date().toLocaleTimeString();
-            setTerminalLogs((prev) => {
-                const updated = [...prev, `[${timestamp}] ${randomLog}`];
-                return updated.slice(-35); // Keep last 35
-            });
-        }, 6000);
-
-        return () => clearInterval(interval);
     }, []);
 
     async function fetchSessions() {
@@ -200,6 +161,29 @@ export default function AdminDashboard() {
             }
             
             if (productsData) setProducts(productsData);
+
+            // Fetch quotes and activities from database
+            try {
+                const { data: quotesData } = await supabase
+                    .from('customer_quotes')
+                    .select('*')
+                    .order('date', { ascending: false })
+                    .limit(5);
+                if (quotesData) setQuotes(quotesData);
+            } catch (err) {
+                console.error('Error fetching quotes:', err);
+            }
+
+            try {
+                const { data: activitiesData } = await supabase
+                    .from('customer_activities')
+                    .select('*')
+                    .order('date', { ascending: false })
+                    .limit(5);
+                if (activitiesData) setActivities(activitiesData);
+            } catch (err) {
+                console.error('Error fetching activities:', err);
+            }
             
             await fetchSessions();
             setCurrentSessionId(localStorage.getItem('admin_session_id'));
@@ -569,10 +553,67 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            {/* Security & Node Diagnostics Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* CRM & Node Diagnostics Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+                {/* CRM quotes & interactions */}
+                <div className="lg:col-span-2 bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-xl flex flex-col h-[400px]">
+                    <h3 className="text-lg font-bold text-text-primary flex items-center gap-2 mb-6">
+                        <Users className="text-blue-500" size={20} /> Customer Relations (CRM)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0">
+                        {/* Quotes */}
+                        <div className="flex flex-col min-h-0">
+                            <h4 className="text-xs font-black text-text-tertiary uppercase tracking-wider mb-3">Active B2B Quotes</h4>
+                            <div className="space-y-2 flex-1 overflow-y-auto pr-2">
+                                {quotes.map((q) => (
+                                    <div key={q.id} className="p-3 bg-surface-2 border border-glass-border/50 rounded-xl flex justify-between items-center text-xs">
+                                        <div className="min-w-0">
+                                            <p className="font-bold text-text-primary truncate">{q.customer_name}</p>
+                                            <p className="text-[10px] text-text-secondary truncate mt-0.5">{q.product_name}</p>
+                                        </div>
+                                        <div className="text-right shrink-0 ml-3">
+                                            <span className="font-bold text-emerald-500">₹{Number(q.quoted_price).toLocaleString()}</span>
+                                            <span className="text-[9px] text-text-tertiary block mt-0.5">{new Date(q.date).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                                {quotes.length === 0 && (
+                                    <div className="text-center py-10 text-text-tertiary italic text-xs border border-dashed border-glass-border rounded-xl">No active quotes yet</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Activities */}
+                        <div className="flex flex-col min-h-0">
+                            <h4 className="text-xs font-black text-text-tertiary uppercase tracking-wider mb-3">CRM Interaction Log</h4>
+                            <div className="space-y-2 flex-1 overflow-y-auto pr-2">
+                                {activities.map((act) => (
+                                    <div key={act.id} className="p-3 bg-surface-2 border border-glass-border/50 rounded-xl flex justify-between items-start text-xs gap-3">
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-1.5 flex-wrap">
+                                                <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase ${
+                                                    act.type === 'Call' ? 'bg-blue-500/10 text-blue-500' :
+                                                    act.type === 'Order' ? 'bg-emerald-500/10 text-emerald-500' :
+                                                    act.type === 'Meeting' ? 'bg-purple-500/10 text-purple-500' :
+                                                    'bg-amber-500/10 text-amber-500'
+                                                }`}>{act.type}</span>
+                                                <span className="font-bold text-text-primary truncate">{act.summary}</span>
+                                            </div>
+                                            <p className="text-[10px] text-text-secondary mt-1 line-clamp-1">{act.details || 'No details provided'}</p>
+                                        </div>
+                                        <span className="text-[9px] text-text-tertiary shrink-0">{new Date(act.date).toLocaleDateString()}</span>
+                                    </div>
+                                ))}
+                                {activities.length === 0 && (
+                                    <div className="text-center py-10 text-text-tertiary italic text-xs border border-dashed border-glass-border rounded-xl">No recent activities</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Active Operator Sessions */}
-                <div className="bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-xl flex flex-col h-[380px]">
+                <div className="bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-xl flex flex-col h-[400px]">
                     <div className="flex justify-between items-center mb-6">
                         <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                             <ShieldCheck className="text-emerald-500" size={20} /> Active Operators
@@ -641,31 +682,6 @@ export default function AdminDashboard() {
                                 No operator sessions found
                             </div>
                         )}
-                    </div>
-                </div>
-
-                {/* Simulated live-scrolling terminal logs */}
-                <div className="bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-xl flex flex-col h-[380px]">
-                    <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                            <Activity className="text-blue-500 dark:text-gold-primary" size={20} /> Diagnostics Terminal
-                        </h3>
-                        <div className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[10px] text-emerald-500 font-mono uppercase font-black">Live feed</span>
-                        </div>
-                    </div>
-                    <div className="flex-1 bg-surface-2 border border-glass-border rounded-xl p-4 font-mono text-[11px] text-emerald-500 dark:text-gold-primary/90 overflow-y-auto space-y-2 select-text tech-grid relative">
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent pointer-events-none rounded-xl" />
-                        <div className="relative z-10 space-y-1">
-                            {terminalLogs.map((log, idx) => (
-                                <div key={idx} className="leading-relaxed whitespace-pre-wrap break-all">
-                                    <span className="text-text-tertiary select-none">{`> `}</span>
-                                    {log}
-                                </div>
-                            ))}
-                            <div ref={terminalEndRef} />
-                        </div>
                     </div>
                 </div>
             </div>

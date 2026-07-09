@@ -223,15 +223,6 @@ export default function SettingsPage() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-400">Admin Email</label>
-                                        <input
-                                            type="email"
-                                            value={adminSettings.adminEmail}
-                                            onChange={(e) => updateAdminSettings({ adminEmail: e.target.value })}
-                                            className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-400">Default Currency</label>
                                         <select
                                             value={adminSettings.currency}

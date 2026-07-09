@@ -53,12 +53,12 @@ export default function ForgotPasswordPage() {
 
                 <div className="mb-12 text-center relative z-10">
                     <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-gold text-[#C9A84C] text-[9px] font-black uppercase tracking-[0.3em] mb-8">
-                        <ShieldCheck size={14} /> Security Protocol
+                        <ShieldCheck size={14} /> Security Access
                     </div>
                     <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-[0.9] mb-6">
                         Recover <span style={{ background: 'linear-gradient(135deg, #F5F5F7, #C9A84C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Access</span>
                     </h1>
-                    <p className="text-[#5A5A6A] text-xs font-bold uppercase tracking-[0.2em]">Enter your digital address to receive a recovery uplink.</p>
+                    <p className="text-[#5A5A6A] text-xs font-bold uppercase tracking-[0.2em]">Enter your email address to receive a password reset link.</p>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
                                 <CheckCircle size={24} />
                             </div>
                             <div className="text-xs font-black uppercase tracking-widest leading-relaxed">
-                                Recovery Transmission Sent. <br /> Check your digital address.
+                                Reset Email Sent. <br /> Check your inbox.
                             </div>
                         </motion.div>
                     )}
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
                 {!success && (
                     <form onSubmit={handleReset} className="space-y-8 relative z-10">
                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5A5A6A] ml-2">Digital Identification</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5A5A6A] ml-2">Email Address</label>
                             <div className="relative group">
                                 <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-[#3A3A4A] group-focus-within:text-[#C9A84C] transition-colors duration-500" size={18} />
                                 <input
@@ -118,11 +118,11 @@ export default function ForgotPasswordPage() {
                             {loading ? (
                                 <div className="flex items-center justify-center gap-3">
                                     <Loader2 className="animate-spin" size={20} />
-                                    Transmitting...
+                                    Sending...
                                 </div>
                             ) : (
                                 <div className="flex items-center justify-center gap-4 relative z-10">
-                                    Send Uplink <Zap size={18} />
+                                    Send Reset Link <Zap size={18} />
                                 </div>
                             )}
                         </button>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Layout, Plus, Image as ImageIcon, Save, Trash2, MoveUp, MoveDown, Loader2, Globe, Monitor, Smartphone, AlertCircle, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { convertToWebP } from '@/lib/image-utils';
 
 interface Banner {
     id: string;
@@ -20,15 +21,95 @@ export default function CMSPage() {
     const [banners, setBanners] = useState<Banner[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [activeTab, setActiveTab] = useState<'banners' | 'announcements' | 'featured'>('banners');
+    const [activeTab, setActiveTab] = useState<'banners' | 'announcements' | 'navigation'>('banners');
     const [announcements, setAnnouncements] = useState<any[]>([]);
     const [collections, setCollections] = useState<any[]>([]);
+    const [uploading, setUploading] = useState<string | null>(null);
+    const [dbCategories, setDbCategories] = useState<any[]>([]);
+
+    // Special pages configuration states
+    const [navPages, setNavPages] = useState<any[]>([]);
+    const [selectedPageKey, setSelectedPageKey] = useState<'new-arrivals' | 'offers'>('new-arrivals');
+    const [pageTitle, setPageTitle] = useState('');
+    const [pageSubtitle, setPageSubtitle] = useState('');
+    const [pageProducts, setPageProducts] = useState<string[]>([]);
+    const [catalogProducts, setCatalogProducts] = useState<any[]>([]);
+    const [productSearch, setProductSearch] = useState('');
 
     useEffect(() => {
         fetchBanners();
         fetchAnnouncements();
-        fetchCollections();
+        fetchNavigationPages();
+        fetchCatalogProducts();
+        fetchCategories();
     }, []);
+
+    // Fetch navigation pages logic
+    const fetchNavigationPages = async () => {
+        try {
+            const { data } = await supabase.from('navigation_pages').select('*');
+            if (data) {
+                setNavPages(data);
+                const selected = data.find(p => p.page_key === selectedPageKey);
+                if (selected) {
+                    setPageTitle(selected.title);
+                    setPageSubtitle(selected.subtitle || '');
+                    setPageProducts(selected.product_ids || []);
+                }
+            }
+        } catch (e) {}
+    };
+
+    // Fetch catalog products
+    const fetchCatalogProducts = async () => {
+        try {
+            const { data } = await supabase.from('products').select('id, name, category');
+            if (data) setCatalogProducts(data);
+        } catch (e) {}
+    };
+
+    // Save navigation configurations
+    const handleSaveNavigationPage = async () => {
+        setSaving(true);
+        try {
+            const { error } = await supabase
+                .from('navigation_pages')
+                .upsert({
+                    page_key: selectedPageKey,
+                    title: pageTitle,
+                    subtitle: pageSubtitle,
+                    product_ids: pageProducts
+                });
+            if (error) throw error;
+            alert('Navigation page configurations saved successfully!');
+            fetchNavigationPages();
+        } catch (err: any) {
+            alert('Error saving navigation page: ' + err.message);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    // Selected page key synchronizer
+    useEffect(() => {
+        const selected = navPages.find(p => p.page_key === selectedPageKey);
+        if (selected) {
+            setPageTitle(selected.title);
+            setPageSubtitle(selected.subtitle || '');
+            setPageProducts(selected.product_ids || []);
+        } else {
+            setPageTitle(selectedPageKey === 'new-arrivals' ? 'New Arrivals' : 'Special Offers');
+            setPageSubtitle('');
+            setPageProducts([]);
+        }
+    }, [selectedPageKey, navPages]);
+
+    async function fetchCategories() {
+        try {
+            const { data } = await supabase.from('categories').select('*').order('name');
+            if (data) setDbCategories(data);
+        } catch (e) {}
+    }
 
     async function fetchBanners() {
         setLoading(true);
@@ -92,6 +173,40 @@ export default function CMSPage() {
         setBanners(banners.filter(b => b.id !== id));
     };
 
+    const handleUploadImage = async (id: string, file: File) => {
+        setUploading(id);
+        try {
+            let fileToUpload = file;
+            if (file.type.startsWith('image/') && file.type !== 'image/gif') {
+                try {
+                    fileToUpload = await convertToWebP(file);
+                } catch (e) {
+                    console.error('WebP conversion failed, using original file:', e);
+                }
+            }
+            const fileExt = fileToUpload.name.split('.').pop();
+            const fileName = `${id}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `banners/${fileName}`;
+
+            const { error } = await supabase.storage
+                .from('products')
+                .upload(filePath, fileToUpload);
+
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('products')
+                .getPublicUrl(filePath);
+
+            setBanners(prev => prev.map(b => b.id === id ? { ...b, image_url: publicUrl } : b));
+            alert('Image uploaded successfully!');
+        } catch (err: any) {
+            alert('Upload failed: ' + err.message);
+        } finally {
+            setUploading(null);
+        }
+    };
+
     return (
         <div className="space-y-8 max-w-6xl mx-auto p-4 md:p-8 pb-32">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-800 pb-6">
@@ -105,13 +220,13 @@ export default function CMSPage() {
                     onClick={() => {
                         if (activeTab === 'banners') handleSaveSection('homepage_banners', banners);
                         if (activeTab === 'announcements') handleSaveSection('announcements', announcements);
-                        if (activeTab === 'featured') handleSaveSection('featured_collections', collections);
+                        if (activeTab === 'navigation') handleSaveNavigationPage();
                     }}
                     disabled={saving}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-2xl shadow-blue-900/40 transition-all disabled:opacity-50 active:scale-95"
                 >
                     {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
-                    Publish {activeTab}
+                    Publish {activeTab === 'navigation' ? 'Page Config' : activeTab}
                 </button>
             </div>
 
@@ -120,7 +235,7 @@ export default function CMSPage() {
                 {[
                     { id: 'banners', label: 'Hero Banners', icon: Monitor },
                     { id: 'announcements', label: 'Ticker Bar', icon: Smartphone },
-                    { id: 'featured', label: 'Collections', icon: Globe }
+                    { id: 'navigation', label: 'Arrivals & Offers', icon: Globe }
                 ].map(tab => (
                     <button
                         key={tab.id}
@@ -157,16 +272,34 @@ export default function CMSPage() {
                                                     <ImageIcon size={48} />
                                                 </div>
                                             )}
-                                            <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center p-8">
-                                                <div className="w-full space-y-2">
-                                                    <label className="text-[10px] font-black text-blue-500 uppercase">CDN Asset URL</label>
-                                                    <input 
-                                                        type="text" 
-                                                        value={banner.image_url}
-                                                        onChange={(e) => handleUpdateBanner(banner.id, { image_url: e.target.value })}
-                                                        className="w-full bg-black border border-gray-700 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500"
-                                                        placeholder="Paste image link..."
-                                                    />
+                                            <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center p-6">
+                                                <div className="w-full space-y-3">
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-black text-blue-500 uppercase">CDN Asset URL</label>
+                                                        <input 
+                                                            type="text" 
+                                                            value={banner.image_url}
+                                                            onChange={(e) => handleUpdateBanner(banner.id, { image_url: e.target.value })}
+                                                            className="w-full bg-black border border-gray-700 rounded-xl p-2 text-xs text-white outline-none focus:border-blue-500"
+                                                            placeholder="Paste image link..."
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-black text-blue-500 uppercase block">Or Upload Image</label>
+                                                        <input 
+                                                            type="file" 
+                                                            accept="image/*"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (file) handleUploadImage(banner.id, file);
+                                                            }}
+                                                            disabled={uploading === banner.id}
+                                                            className="w-full bg-black border border-gray-700 rounded-xl p-1.5 text-[10px] text-white file:bg-gray-800 file:text-white file:border-0 file:px-1.5 file:py-0.5 file:rounded file:mr-1 file:cursor-pointer hover:file:bg-gray-700"
+                                                        />
+                                                        {uploading === banner.id && (
+                                                            <span className="text-[8px] text-blue-400 font-bold block animate-pulse">Uploading...</span>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -254,38 +387,102 @@ export default function CMSPage() {
                     </div>
                 )}
 
-                {activeTab === 'featured' && (
-                    <div className="space-y-8">
-                        <div className="bg-gray-900 border border-gray-800 rounded-[2.5rem] p-10">
-                            <div className="flex justify-between items-center mb-8">
+                {activeTab === 'navigation' && (
+                    <div className="space-y-8 animate-fadeIn">
+                        <div className="bg-gray-900 border border-gray-800 rounded-[2.5rem] p-8 md:p-10 shadow-2xl">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-gray-800 pb-6">
                                 <div>
-                                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Homepage Collections</h3>
-                                    <p className="text-gray-500 text-xs mt-1">Curate dynamic product grids based on categories or tags.</p>
+                                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Dynamic Catalog Pages</h3>
+                                    <p className="text-gray-500 text-xs mt-1 font-medium">Configure headers, page pitch, and select specific products for specialized routes.</p>
                                 </div>
-                                <button onClick={() => setCollections([...collections, { id: `temp-${Date.now()}`, name: 'New Collection', query: 'category=Tools', display_limit: 8, display_order: collections.length, active: true }])} className="bg-blue-600 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all">
-                                    + Add Collection
-                                </button>
+                                <div className="flex bg-black border border-gray-800 p-1 rounded-xl shrink-0">
+                                    <button 
+                                        onClick={() => setSelectedPageKey('new-arrivals')}
+                                        className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all ${selectedPageKey === 'new-arrivals' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/25' : 'text-gray-500 hover:text-gray-300'}`}
+                                    >
+                                        New Arrivals
+                                    </button>
+                                    <button 
+                                        onClick={() => setSelectedPageKey('offers')}
+                                        className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all ${selectedPageKey === 'offers' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/25' : 'text-gray-500 hover:text-gray-300'}`}
+                                    >
+                                        Special Offers
+                                    </button>
+                                </div>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {collections.map(col => (
-                                    <div key={col.id} className="bg-black border border-gray-800 p-8 rounded-[2rem] space-y-6 group hover:border-blue-500/50 transition-all relative">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-gray-600 uppercase">Collection Label</label>
-                                            <input value={col.name} onChange={e => setCollections(collections.map(c => c.id === col.id ? {...c, name: e.target.value} : c))} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-lg font-bold text-white" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-gray-600 uppercase">Data Source Query</label>
-                                            <input value={col.query} onChange={e => setCollections(collections.map(c => c.id === col.id ? {...c, query: e.target.value} : c))} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-blue-400 font-mono" placeholder="category=Machinery&limit=4" />
-                                        </div>
-                                        <div className="flex justify-between items-center pt-4">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-[10px] font-black text-gray-700 uppercase">Limit:</span>
-                                                <input type="number" value={col.display_limit} onChange={e => setCollections(collections.map(c => c.id === col.id ? {...c, display_limit: parseInt(e.target.value)} : c))} className="w-16 bg-gray-900 border border-gray-800 rounded px-2 py-1 text-xs text-white" />
-                                            </div>
-                                            <button onClick={() => setCollections(collections.filter(c => c.id !== col.id))} className="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={18}/></button>
-                                        </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                {/* Page configuration settings */}
+                                <div className="lg:col-span-1 space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Page Main Title</label>
+                                        <input 
+                                            type="text" 
+                                            value={pageTitle}
+                                            onChange={e => setPageTitle(e.target.value)}
+                                            className="w-full bg-black border border-gray-800 focus:border-blue-500 outline-none rounded-xl p-3 text-xs font-bold text-white transition-colors"
+                                        />
                                     </div>
-                                ))}
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Page Subtitle / Pitch</label>
+                                        <textarea 
+                                            rows={4}
+                                            value={pageSubtitle}
+                                            onChange={e => setPageSubtitle(e.target.value)}
+                                            className="w-full bg-black border border-gray-800 focus:border-blue-500 outline-none rounded-xl p-3 text-xs font-semibold text-white transition-colors leading-relaxed"
+                                        />
+                                    </div>
+
+                                    <div className="pt-4 border-t border-gray-800 flex justify-between items-center text-xs font-bold">
+                                        <span className="text-[10px] font-black text-gray-500 uppercase">Selected Products:</span>
+                                        <span className="font-mono bg-blue-600/10 text-blue-400 px-2 py-0.5 rounded font-black">{pageProducts.length} items</span>
+                                    </div>
+                                </div>
+
+                                {/* Catalog products search & select */}
+                                <div className="lg:col-span-2 space-y-4">
+                                    <div className="flex gap-3">
+                                        <input 
+                                            type="text"
+                                            placeholder="FILTER CATALOG BY NAME OR CATEGORY..."
+                                            value={productSearch}
+                                            onChange={e => setProductSearch(e.target.value)}
+                                            className="w-full bg-black border border-gray-800 focus:border-blue-500 outline-none rounded-xl px-4 py-3.5 text-xs font-bold text-white transition-colors placeholder-[#5A5A6A]"
+                                        />
+                                    </div>
+
+                                    <div className="border border-gray-800 rounded-2xl overflow-hidden bg-black/50 h-[300px] overflow-y-auto divide-y divide-gray-900 custom-scrollbar">
+                                        {catalogProducts
+                                            .filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()) || p.category.toLowerCase().includes(productSearch.toLowerCase()))
+                                            .map(p => {
+                                                const isChecked = pageProducts.includes(p.id);
+                                                return (
+                                                    <div 
+                                                        key={p.id} 
+                                                        onClick={() => {
+                                                            if (isChecked) {
+                                                                setPageProducts(pageProducts.filter(id => id !== p.id));
+                                                            } else {
+                                                                setPageProducts([...pageProducts, p.id]);
+                                                            }
+                                                        }}
+                                                        className={`p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-900/50 transition-colors ${isChecked ? 'bg-blue-600/5' : ''}`}
+                                                    >
+                                                        <div>
+                                                            <p className="text-xs font-bold text-white uppercase tracking-wider">{p.name}</p>
+                                                            <span className="text-[8px] bg-gray-900 text-gray-500 border border-gray-800 px-2 py-0.5 rounded uppercase font-black mt-1 inline-block">{p.category}</span>
+                                                        </div>
+                                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${isChecked ? 'bg-blue-600 border-blue-500 text-white' : 'border-gray-800 bg-gray-900'}`}>
+                                                            {isChecked && <Plus size={10} strokeWidth={3} />}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        {catalogProducts.length === 0 && (
+                                            <div className="py-20 text-center text-text-tertiary italic text-xs font-bold uppercase">No products available in database.</div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

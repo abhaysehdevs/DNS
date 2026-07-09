@@ -63,7 +63,7 @@ export default function Contact() {
     const businessInfo = {
         address: '1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi 110006',
         phone: '9953435647',
-        email: 'ajayabhay12872@gmail.com',
+        email: 'info@daridhinaathandsons.com',
         hours: '11:00 AM - 8:00 PM (Mon-Sat)',
     };
 
@@ -148,18 +148,18 @@ export default function Contact() {
                     >
                         <div className="max-w-2xl">
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-gold text-gold-primary text-[8px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm">
-                                <Headphones size={12} /> Communication Node Uplink
+                                <Headphones size={12} /> Direct Support Channels
                             </div>
                             <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter uppercase mb-4 leading-[0.85] text-text-primary">
-                                Nexus <br/>
-                                <span className="text-transparent bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text">Uplink</span>
+                                Contact <br/>
+                                <span className="text-transparent bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text">Us</span>
                             </h1>
                         </div>
                         <p className="text-text-secondary text-base font-medium max-w-sm mb-2 leading-relaxed">
-                            Formed in Delhi, India. Calibrated to support jewelry manufacturing setups in over 40 countries.
+                            Based in Delhi, India. Helping jewelry manufacturing setups in over 40 countries.
                         </p>
                     </motion.div>
-
+ 
                     {/* Support tiers */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
                         {supportTiers.map((tier, i) => (
@@ -179,15 +179,15 @@ export default function Contact() {
                                 <p className="text-[8px] font-black uppercase tracking-widest text-text-tertiary mb-4 font-mono">{tier.desc}</p>
                                 <p className="text-xs text-text-secondary leading-relaxed mb-8">{tier.detail}</p>
                                 <button className="mt-auto text-[8px] font-black uppercase tracking-[0.25em] text-gold-primary flex items-center gap-1.5 hover:underline cursor-pointer">
-                                    Access Protocol <ArrowUpRight size={12} />
+                                    Contact Support <ArrowUpRight size={12} />
                                 </button>
                             </motion.div>
                         ))}
                     </div>
-
+ 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
                         
-                        {/* Message transmission form */}
+                        {/* Support Message Form */}
                         <div className="lg:col-span-7">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -195,10 +195,10 @@ export default function Contact() {
                                 className="bg-surface-1 rounded-3xl p-8 md:p-12 border border-glass-border shadow-xl relative overflow-hidden"
                             >
                                 <div className="mb-8">
-                                    <h2 className="text-2xl font-black uppercase tracking-tight mb-2">Transmission Interface</h2>
-                                    <p className="text-[8px] font-black text-text-tertiary uppercase tracking-[0.25em] font-mono">Encrypted feed connection • Instant Sync</p>
+                                    <h2 className="text-2xl font-black uppercase tracking-tight mb-2">Send a Message</h2>
+                                    <p className="text-[8px] font-black text-text-tertiary uppercase tracking-[0.25em] font-mono">We respond to support queries within 24 hours</p>
                                 </div>
-
+ 
                                 <AnimatePresence mode="wait">
                                     {formStatus === 'success' ? (
                                         <motion.div 
@@ -211,39 +211,39 @@ export default function Contact() {
                                             <div className="w-16 h-16 rounded-full bg-gold-primary/10 flex items-center justify-center mx-auto mb-8 border border-gold-primary/20">
                                                 <Check size={32} className="text-gold-primary" />
                                             </div>
-                                            <h3 className="text-2xl font-black text-text-primary uppercase tracking-tight mb-2">Sync Completed</h3>
-                                            <p className="text-text-secondary text-sm font-medium mb-8">Our technical office has received the parameters. Dispatch response time &lt; 24h.</p>
-                                            <button onClick={() => setFormStatus('idle')} className="text-[9px] font-black text-gold-primary uppercase tracking-[0.25em] hover:underline cursor-pointer">Reset console</button>
+                                            <h3 className="text-2xl font-black text-text-primary uppercase tracking-tight mb-2">Message Sent</h3>
+                                            <p className="text-text-secondary text-sm font-medium mb-8">We have received your support message and will respond shortly.</p>
+                                            <button onClick={() => setFormStatus('idle')} className="text-[9px] font-black text-gold-primary uppercase tracking-[0.25em] hover:underline cursor-pointer">Send another message</button>
                                         </motion.div>
                                     ) : (
                                         <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6" onSubmit={handleSendMessage}>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Operator Name</label>
+                                                    <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Your Name</label>
                                                     <input required type="text" className="w-full h-12 bg-surface-2 border border-glass-border rounded-xl px-5 text-text-primary placeholder-text-tertiary/40 focus:border-gold-primary focus:outline-none transition-all text-xs font-semibold" placeholder="FULL NAME" value={name} onChange={(e) => setName(e.target.value)} />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Uplink Email</label>
+                                                    <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Email Address</label>
                                                     <input required type="email" className="w-full h-12 bg-surface-2 border border-glass-border rounded-xl px-5 text-text-primary placeholder-text-tertiary/40 focus:border-gold-primary focus:outline-none transition-all text-xs font-semibold" placeholder="EMAIL@DOMAIN.COM" value={email} onChange={(e) => setEmail(e.target.value)} />
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Operations Class</label>
+                                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Inquiry Type</label>
                                                 <select className="w-full h-12 bg-surface-2 border border-glass-border rounded-xl px-5 text-text-primary focus:border-gold-primary focus:outline-none transition-all text-xs font-bold appearance-none cursor-pointer" value={opsClass} onChange={(e) => setOpsClass(e.target.value)}>
-                                                    <option>Wholesale Procurement Node</option>
-                                                    <option>Technical Calibration Support</option>
-                                                    <option>Order & Dispatch Inquiries</option>
-                                                    <option>Direct Representative Contact</option>
+                                                    <option>Wholesale Procurement</option>
+                                                    <option>Technical Support</option>
+                                                    <option>Order & Shipping</option>
+                                                    <option>General Inquiry</option>
                                                 </select>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Transmission logs (Message)</label>
-                                                <textarea required rows={4} className="w-full bg-surface-2 border border-glass-border rounded-xl p-5 text-text-primary placeholder-text-tertiary/40 focus:border-gold-primary focus:outline-none transition-all text-xs font-semibold resize-none" placeholder="DESCRIBE YOUR MACHINERY OR TOOLING SPECS..." value={message} onChange={(e) => setMessage(e.target.value)} />
+                                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-text-tertiary ml-1 font-mono">Message</label>
+                                                <textarea required rows={4} className="w-full bg-surface-2 border border-glass-border rounded-xl p-5 text-text-primary placeholder-text-tertiary/40 focus:border-gold-primary focus:outline-none transition-all text-xs font-semibold resize-none" placeholder="How can we help you?" value={message} onChange={(e) => setMessage(e.target.value)} />
                                             </div>
                                             <Button type="submit" disabled={formStatus === 'submitting'} className="w-full h-14 text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-xl relative overflow-hidden group/btn shadow shadow-gold-primary/15" style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}>
                                                 <div className="flex items-center justify-center gap-3 relative z-10">
                                                     {formStatus === 'submitting' ? <Loader2 className="animate-spin" size={16} /> : <Send size={15} />}
-                                                    {formStatus === 'submitting' ? 'UPLINKING ENGINE...' : 'ESTABLISH CONNECT'}
+                                                    {formStatus === 'submitting' ? 'SENDING MESSAGE...' : 'SEND MESSAGE'}
                                                 </div>
                                             </Button>
                                         </motion.form>
@@ -251,11 +251,11 @@ export default function Contact() {
                                 </AnimatePresence>
                             </motion.div>
                         </div>
-
+ 
                         {/* Distribution coordinates */}
                         <div className="lg:col-span-5 space-y-6">
                             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="bg-surface-1 border border-glass-border rounded-3xl p-8 shadow-md relative overflow-hidden">
-                                <h3 className="text-lg font-black uppercase mb-6 flex items-center gap-2 font-mono"><Globe className="text-gold-primary" size={18} /> Logistics Node</h3>
+                                <h3 className="text-lg font-black uppercase mb-6 flex items-center gap-2 font-mono"><Globe className="text-gold-primary" size={18} /> Our Office</h3>
                                 <div className="space-y-5">
                                     <div className="flex items-start gap-4">
                                         <div className="w-8 h-8 rounded-lg bg-surface-2 border border-glass-border flex items-center justify-center text-gold-primary shrink-0"><MapPin size={15} /></div>
@@ -275,28 +275,28 @@ export default function Contact() {
                                     <div className="flex items-center gap-4">
                                         <div className="w-8 h-8 rounded-lg bg-surface-2 border border-glass-border flex items-center justify-center text-emerald-500 shrink-0"><Mail size={15} /></div>
                                         <div>
-                                            <p className="text-[8px] font-black uppercase tracking-widest text-text-tertiary mb-0.5">Email Node</p>
+                                            <p className="text-[8px] font-black uppercase tracking-widest text-text-tertiary mb-0.5">Email Address</p>
                                             <p className="text-xs font-bold">{businessInfo.email}</p>
                                         </div>
                                     </div>
                                 </div>
                             </motion.div>
-
-                            {/* WhatsApp Uplink */}
+ 
+                            {/* WhatsApp Support */}
                             <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="bg-surface-1 border border-glass-border p-8 rounded-3xl flex flex-col items-center text-center shadow-md">
                                 <div className="w-14 h-14 rounded-full bg-gold-primary/10 flex items-center justify-center mb-6 shadow relative overflow-hidden">
                                     <MessageSquare size={24} className="text-gold-primary relative z-10" />
                                     <div className="absolute inset-0 bg-gold-primary/5 animate-pulse" />
                                 </div>
-                                <h3 className="text-xl font-black uppercase tracking-tight mb-2">WhatsApp Uplink</h3>
-                                <p className="text-[10px] text-text-secondary font-semibold leading-relaxed mb-6 max-w-xs">Sync directly with our support desk engineers for custom bulk order planning.</p>
+                                <h3 className="text-xl font-black uppercase tracking-tight mb-2">WhatsApp Support</h3>
+                                <p className="text-[10px] text-text-secondary font-semibold leading-relaxed mb-6 max-w-xs">Chat directly with our support team for bulk order planning and inquiries.</p>
                                 <Button className="w-full h-12 text-black font-black text-[9px] uppercase tracking-[0.25em] rounded-xl shadow-md transition-all hover:scale-[1.02] active:scale-95" onClick={() => window.open(`https://wa.me/919953435647`, '_blank')}
                                   style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
-                                >Initiate Chat</Button>
+                                >Start Chat</Button>
                             </motion.div>
                         </div>
                     </div>
-
+ 
                     {/* FAQ accordion */}
                     <section className="mb-20">
                         <div className="text-center mb-12">

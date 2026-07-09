@@ -17,6 +17,48 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [showNotifications, setShowNotifications] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
+    const [ordersCount, setOrdersCount] = useState(0);
+
+    // Fetch actual pending/processing orders from database
+    useEffect(() => {
+        if (!isAdminAuthenticated) return;
+
+        const fetchPendingOrdersCount = async () => {
+            try {
+                const { count, error } = await supabase
+                    .from('orders')
+                    .select('*', { count: 'exact', head: true })
+                    .in('status', ['pending', 'processing']);
+                if (!error && count !== null) {
+                    setOrdersCount(count);
+                }
+            } catch (err) {
+                console.error('Error fetching orders count:', err);
+            }
+        };
+
+        fetchPendingOrdersCount();
+
+        // Subscribe to changes on orders table to update count
+        const channel = supabase
+            .channel('realtime-orders-count')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'orders'
+                },
+                () => {
+                    fetchPendingOrdersCount();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [isAdminAuthenticated]);
 
     // Load global settings from database
     useEffect(() => {
@@ -225,6 +267,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                         >
                                             <Icon size={20} className={isActive ? 'text-white' : 'text-text-tertiary'} />
                                             <span className="font-medium text-base">{item.name}</span>
+                                            {item.name === 'Orders' && ordersCount > 0 && (
+                                                <span className="ml-auto bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                                    {ordersCount}
+                                                </span>
+                                            )}
                                         </Link>
                                     );
                                 })}
@@ -270,9 +317,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             >
                                 <Icon size={18} className={`transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-text-tertiary group-hover:text-text-primary'}`} />
                                 <span className="font-medium">{item.name}</span>
-                                {item.name === 'Orders' && notifications.filter(n => !n.read && n.type === 'success').length > 0 && (
+                                {item.name === 'Orders' && ordersCount > 0 && (
                                     <span className="ml-auto bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                                        {notifications.filter(n => !n.read && n.type === 'success').length}
+                                        {ordersCount}
                                     </span>
                                 )}
                             </Link>

@@ -16,4 +16,11 @@ create policy "Allow read access to anyone"
 create policy "Allow full control to admins" 
   on public.site_settings for all using (
     exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+    or
+    (auth.jwt() ->> 'email' = 'abhaysehdevofficial@gmail.com')
+  )
+  with check (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+    or
+    (auth.jwt() ->> 'email' = 'abhaysehdevofficial@gmail.com')
   );

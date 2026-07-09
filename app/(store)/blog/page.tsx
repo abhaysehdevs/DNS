@@ -3,12 +3,43 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ArrowRight, Search, Clock, Tag, Mail, Sparkles, Zap, ChevronRight } from 'lucide-react';
+import { Calendar, ArrowRight, Search, Clock, Tag, Mail, Sparkles, Zap, ChevronRight, Loader2 } from 'lucide-react';
 import { BLOG_POSTS, BlogPost } from '@/lib/blog-data';
+import { supabase } from '@/lib/supabase';
 
 export default function Blog() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState<string>('All');
+    const [newsletterEmail, setNewsletterEmail] = useState('');
+    const [subscribed, setSubscribed] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleNewsletterSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newsletterEmail) return;
+        setSubmitting(true);
+        try {
+            const { error } = await supabase
+                .from('newsletter_subscribers')
+                .insert([{ email: newsletterEmail }]);
+            if (error) {
+                if (error.code === '23505') {
+                    alert('You are already subscribed to our newsletter!');
+                } else {
+                    throw error;
+                }
+            } else {
+                setSubscribed(true);
+                setNewsletterEmail('');
+                setTimeout(() => setSubscribed(false), 5000);
+            }
+        } catch (err: any) {
+            console.error(err);
+            alert('Failed to subscribe. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const categories = ['All', ...Array.from(new Set(BLOG_POSTS.map(post => post.category)))];
 
@@ -247,20 +278,29 @@ export default function Blog() {
                             Acquire the latest metallurgical insights, machinery reviews, and exclusive factory protocols delivered directly to your workstation.
                         </p>
 
-                        <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
-                            <input
-                                type="email"
-                                placeholder="DIGITAL ADDRESS"
-                                required
-                                className="flex-1 h-18 bg-surface-1/20 border border-glass-border rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] text-text-primary focus:outline-none focus:border-gold-primary/30 transition-all placeholder-text-tertiary/40"
-                            />
-                            <button
-                                type="submit"
-                                className="h-18 glass-gold text-[#0A0A0F] font-black px-10 rounded-2xl text-[10px] uppercase tracking-[0.3em] transition-all hover:shadow-2xl hover:-translate-y-1 active:scale-95 cursor-pointer"
-                            >
-                                Synchronize
-                            </button>
-                        </form>
+                        {subscribed ? (
+                            <div className="text-emerald-500 font-bold uppercase tracking-wider text-sm bg-emerald-500/10 border border-emerald-500/20 px-6 py-4 rounded-xl max-w-lg mx-auto">
+                                Thanks for subscribing!
+                            </div>
+                        ) : (
+                            <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={handleNewsletterSubmit}>
+                                <input
+                                    type="email"
+                                    placeholder="DIGITAL ADDRESS"
+                                    required
+                                    value={newsletterEmail}
+                                    onChange={e => setNewsletterEmail(e.target.value)}
+                                    className="flex-1 h-18 bg-surface-1/20 border border-glass-border rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] text-text-primary focus:outline-none focus:border-gold-primary/30 transition-all placeholder-text-tertiary/40"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="h-18 glass-gold text-[#0A0A0F] font-black px-10 rounded-2xl text-[10px] uppercase tracking-[0.3em] transition-all hover:shadow-2xl hover:-translate-y-1 active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                                >
+                                    {submitting ? <Loader2 className="animate-spin" size={16} /> : 'Synchronize'}
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </motion.div>
 

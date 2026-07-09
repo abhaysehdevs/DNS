@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Reviews } from '@/components/reviews';
 import { RelatedProducts } from '@/components/related-products';
 import { RecentlyViewed } from '@/components/recently-viewed';
+import { SecureImage } from '@/components/secure-image';
 import { Product, getProductGallery } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
@@ -168,7 +169,7 @@ export default function ProductClient({ id }: { id: string }) {
                             {gallery[selectedMediaIndex]?.type === 'video' ? (
                                 <video src={gallery[selectedMediaIndex].url} controls autoPlay className="w-full h-full object-contain" />
                             ) : (
-                                <img src={gallery[selectedMediaIndex]?.url || product.primaryImage} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 mix-blend-lighten" alt={product.name} />
+                                <SecureImage src={gallery[selectedMediaIndex]?.url || product.primaryImage} containerClassName="w-full h-full" className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 mix-blend-lighten" alt={product.name} />
                             )}
                             
                             {/* Badges Overlay */}
@@ -186,7 +187,7 @@ export default function ProductClient({ id }: { id: string }) {
                                     onClick={() => setSelectedMediaIndex(idx)}
                                     className={`relative shrink-0 w-20 h-20 rounded-xl overflow-hidden border bg-[#1E1E1E] p-2 flex items-center justify-center transition-all ${selectedMediaIndex === idx ? 'border-[#A67C35] scale-105 shadow-md shadow-[#A67C35]/10' : 'border-[#343434] opacity-50 hover:opacity-100'}`}
                                 >
-                                    <img src={media.url} className="w-full h-full object-contain mix-blend-lighten" alt={`${product.name} thumbnail ${idx + 1}`} />
+                                    <SecureImage src={media.url} containerClassName="w-full h-full" className="w-full h-full object-contain mix-blend-lighten" alt={`${product.name} thumbnail ${idx + 1}`} />
                                     {media.type === 'video' && <div className="absolute inset-0 flex items-center justify-center bg-black/45"><PlayCircle size={20} className="text-[#A67C35]" /></div>}
                                 </button>
                             ))}
