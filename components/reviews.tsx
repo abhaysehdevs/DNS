@@ -139,100 +139,100 @@ export function Reviews({ initialReviews, productId }: { initialReviews: Review[
     };
 
     return (
-        <div className="bg-black border-4 border-[#F5D800] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-[#F8F3E8] relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-[#F5D800] text-black font-mono text-[9px] font-black uppercase tracking-widest px-4 py-1.5 shadow-[-2px_2px_0px_0px_rgba(0,0,0,1)] border-b border-l border-black">
-                Feedback Loop
+        <div className="bg-[#1E1E1E] border border-[#343434] rounded-2xl p-8 text-[#F8F3E8] relative overflow-hidden shadow-xl">
+            <div className="absolute top-0 right-0 bg-[#A67C35] text-black font-mono text-[9px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-bl-xl shadow">
+                Customer Feedback
             </div>
 
-            <h3 className="text-3xl font-black text-white uppercase tracking-wider mb-6 flex items-center gap-3">
-                Customer Reviews
+            <h3 className="text-2xl font-black text-[#F8F3E8] uppercase tracking-wider mb-6 flex items-center gap-3">
+                Verified Reviews
             </h3>
 
-            <div className="flex items-center gap-6 mb-8 bg-[#151515] p-5 border-2 border-white/10 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)]">
-                <div className="text-5xl font-black text-[#F5D800] tracking-tighter">{averageRating.toFixed(1)}</div>
+            <div className="flex items-center gap-6 mb-8 bg-[#151515] p-5 border border-[#343434] rounded-xl shadow-inner">
+                <div className="text-4xl font-black text-[#A67C35] tracking-tight">{averageRating.toFixed(1)}</div>
                 <div>
-                    <div className="flex text-[#F5D800] gap-0.5">
+                    <div className="flex text-[#A67C35] gap-1">
                         {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={18} fill={i < Math.round(averageRating) ? "currentColor" : "none"} strokeWidth={2.5} />
+                            <Star key={i} size={16} fill={i < Math.round(averageRating) ? "currentColor" : "none"} strokeWidth={2} />
                         ))}
                     </div>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{reviews.length} Total Reviews</p>
+                    <p className="text-[10px] text-[#8E8E9A] font-bold uppercase tracking-widest mt-1">{reviews.length} Verified Customer Reviews</p>
                 </div>
             </div>
 
             {/* Review List */}
-            <div className="space-y-6 mb-8 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                {reviews.length === 0 && <p className="text-gray-500 italic font-medium">No reviews yet. Be the first to share your thoughts!</p>}
+            <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                {reviews.length === 0 && <p className="text-[#8E8E9A] italic text-xs font-medium">No reviews yet. Be the first to share your feedback!</p>}
                 {reviews.map((review, idx) => (
-                    <div key={review.id || idx} className="bg-[#151515]/30 border-2 border-white/10 p-5 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:border-[#F5D800]/50 transition-all duration-300">
+                    <div key={review.id || idx} className="bg-[#151515] border border-[#343434] p-5 rounded-xl hover:border-[#A67C35]/50 transition-all duration-300">
                         <div className="flex justify-between items-start mb-3 flex-wrap gap-2">
                             <div className="flex items-center gap-2.5">
-                                <div className="bg-[#1E1E1E] p-1.5 border border-white/15 text-[#F5D800]"><User size={14} strokeWidth={2.5} /></div>
-                                <div className="flex flex-col items-start gap-1">
+                                <div className="bg-[#242424] p-2 rounded-lg border border-[#343434] text-[#A67C35]"><User size={14} strokeWidth={2.5} /></div>
+                                <div className="flex flex-col items-start gap-0.5">
                                     <span className="font-bold text-[#F8F3E8] uppercase tracking-wide text-xs">{review.userName}</span>
                                     {review.verifiedPurchase && (
-                                        <span className="bg-[#F5D800] text-black font-black text-[8px] uppercase tracking-widest px-1.5 py-0.5 border border-black shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]">
+                                        <span className="bg-[#A67C35]/15 text-[#A67C35] font-bold text-[8px] uppercase tracking-widest px-2 py-0.5 rounded border border-[#A67C35]/30">
                                             Verified Buyer
                                         </span>
                                     )}
                                 </div>
                             </div>
-                            <span className="text-[9px] text-gray-500 font-mono uppercase font-bold">{review.date}</span>
+                            <span className="text-[9px] text-[#8E8E9A] font-mono uppercase font-bold">{review.date}</span>
                         </div>
-                        <div className="flex text-[#F5D800] mb-3 gap-0.5">
+                        <div className="flex text-[#A67C35] mb-2 gap-0.5">
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} strokeWidth={2} />
                             ))}
                         </div>
-                        <p className="text-gray-300 text-xs leading-relaxed font-medium">{review.comment}</p>
+                        <p className="text-[#CFCFCF] text-xs leading-relaxed font-normal">{review.comment}</p>
                     </div>
                 ))}
             </div>
 
             {/* Write Review */}
-            <div className="border-t-2 border-white/15 pt-8">
-                <h4 className="font-black text-white text-lg uppercase tracking-wider mb-6">Write a Review</h4>
+            <div className="border-t border-[#343434] pt-6">
+                <h4 className="font-bold text-[#F8F3E8] text-base uppercase tracking-wider mb-4">Write a Product Review</h4>
                 {user ? (
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Rating:</span>
+                            <span className="text-xs font-bold text-[#8E8E9A] uppercase tracking-widest">Rating:</span>
                             <div className="flex gap-1.5">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         key={star}
                                         type="button"
                                         onClick={() => setRating(star)}
-                                        className={`text-[#F5D800] hover:scale-125 transition-all`}
+                                        className="text-[#A67C35] hover:scale-110 transition-transform"
                                     >
-                                        <Star size={24} fill={star <= rating ? "currentColor" : "none"} strokeWidth={2} />
+                                        <Star size={20} fill={star <= rating ? "currentColor" : "none"} strokeWidth={2} />
                                     </button>
                                 ))}
                             </div>
                         </div>
                         <textarea
-                            className="w-full bg-black border-2 border-white/10 p-4 text-xs text-white focus:border-[#F5D800] focus:outline-none placeholder-gray-600 transition-colors rounded-none"
+                            className="w-full bg-[#151515] border border-[#343434] p-4 text-xs text-[#F8F3E8] focus:border-[#A67C35] focus:outline-none placeholder-[#8E8E9A] transition-colors rounded-xl font-medium"
                             rows={3}
-                            placeholder="SHARE YOUR EXPERIENCES WITH THIS PRECISION SKU..."
+                            placeholder="Share your technical feedback and build quality experience with this product..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             required
                         />
                         <Button
                             type="submit"
-                            className="bg-[#F5D800] hover:bg-[#d4ba00] text-black font-black uppercase tracking-widest text-[10px] px-8 py-3 rounded-none border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-2"
+                            className="bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9.5px] px-8 py-3 rounded-xl shadow-md transition-all flex items-center gap-2 border-none cursor-pointer"
                             disabled={submitting}
                         >
                             {submitting ? <Loader2 className="animate-spin" size={14} /> : null}
-                            {submitting ? 'Publishing Feedback...' : 'Publish Review'}
+                            {submitting ? 'Submitting Feedback...' : 'Publish Review'}
                         </Button>
                     </form>
                 ) : (
-                    <div className="bg-[#151515] border-2 border-white/10 p-6 text-center rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
-                        <p className="text-xs text-gray-300 font-bold uppercase tracking-wider mb-2">Verified Buyers Access Only</p>
-                        <p className="text-[10px] text-gray-500 mb-4">LOG IN WITH YOUR ACCOUNT TO AUTHORIZE THIS REVIEW FEEDBACK FLOW.</p>
+                    <div className="bg-[#151515] border border-[#343434] p-6 text-center rounded-xl">
+                        <p className="text-xs text-[#F8F3E8] font-bold uppercase tracking-wider mb-1">Customer Account Required</p>
+                        <p className="text-[10px] text-[#8E8E9A] mb-4 uppercase font-semibold">Log in with your customer account to post product reviews.</p>
                         <Link href="/login">
-                            <Button className="bg-[#F5D800] hover:bg-[#d4ba00] text-black font-black uppercase tracking-widest text-[9px] px-6 py-2.5 rounded-none border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                Login to Authorize
+                            <Button className="bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9px] px-6 py-2.5 rounded-xl shadow-md border-none cursor-pointer">
+                                Login to Review
                             </Button>
                         </Link>
                     </div>

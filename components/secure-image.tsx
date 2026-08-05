@@ -27,6 +27,7 @@ export function SecureImage({ src, alt, className = '', containerClassName = '',
                 src={src} 
                 alt={alt} 
                 loading="lazy"
+                decoding="async"
                 onDragStart={handleDragStart}
                 className={`select-none pointer-events-none ${className}`}
                 {...props}

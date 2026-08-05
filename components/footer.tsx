@@ -93,9 +93,10 @@ export function Footer() {
                             <li><Link href="/account" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">My Account</Link></li>
                             <li><Link href="/track-order" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Track Order</Link></li>
                             <li><Link href="/wishlist" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Wishlist</Link></li>
-                            <li><Link href="/faq" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Shipping Policy</Link></li>
-                            <li><Link href="/faq" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Return Policy</Link></li>
-                            <li><Link href="/faq" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Terms & Conditions</Link></li>
+                            <li><Link href="/shipping-policy" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Shipping Policy</Link></li>
+                            <li><Link href="/return-policy" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Return Policy</Link></li>
+                            <li><Link href="/terms" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Terms & Conditions</Link></li>
+                            <li><Link href="/faq" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">FAQ & Support</Link></li>
                         </ul>
                     </div>
 
@@ -117,8 +118,8 @@ export function Footer() {
                         </div>
                         <div className="flex gap-2.5 items-center">
                             <Mail size={14} className="text-[#A67C35] shrink-0" />
-                            <a href="mailto:info@daridhinaathandsons.com" className="text-[10px] text-[#CFCFCF] font-semibold hover:text-[#A67C35] transition-colors truncate">
-                                info@daridhinaathandsons.com
+                            <a href="mailto:info@dinanathandsons.com" className="text-[10px] text-[#CFCFCF] font-semibold hover:text-[#A67C35] transition-colors truncate">
+                                info@dinanathandsons.com
                             </a>
                         </div>
                         <div className="flex gap-2.5 items-start mb-2">

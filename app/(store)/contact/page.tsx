@@ -63,7 +63,7 @@ export default function Contact() {
     const businessInfo = {
         address: '1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi 110006',
         phone: '9953435647',
-        email: 'info@daridhinaathandsons.com',
+        email: 'info@dinanathandsons.com',
         hours: '11:00 AM - 8:00 PM (Mon-Sat)',
     };
 

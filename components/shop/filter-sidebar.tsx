@@ -52,13 +52,13 @@ export function FilterSidebar({
             </div>
 
             {/* Desktop Header */}
-            <div className="hidden lg:flex flex-col p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(18,18,26,0.8)' }}>
-                <h3 className="text-lg font-bold text-[#F5F5F7] flex items-center gap-2">
-                    <Filter size={20} className="text-[#C9A84C]" /> Filters
+            <div className="hidden lg:flex flex-col pb-3 mb-3 border-b border-[#343434]">
+                <h3 className="text-sm font-bold text-[#F8F3E8] flex items-center gap-2 uppercase tracking-wider">
+                    <Filter size={16} className="text-[#A67C35]" /> Filter Options
                 </h3>
             </div>
 
-            <div className="p-6 space-y-8">
+            <div className="space-y-5">
                 {/* Categories Section */}
                 <div>
                     <button

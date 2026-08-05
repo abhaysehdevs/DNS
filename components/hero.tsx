@@ -2,76 +2,123 @@
 
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
-import { ArrowRight, Sparkles, Sliders, Compass, Flame } from 'lucide-react';
+import { ArrowRight, Sparkles, Sliders, Compass, Flame, ShieldCheck, Zap, Award, Search, CheckCircle2, ChevronRight, Package, Wrench, Layers } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
-interface ProductItem {
-    id: 'tools' | 'machinery' | 'torch';
+interface ShowcaseCategory {
+    id: string;
     title: string;
     categoryLabel: string;
     badge: string;
     image: string;
-    fallbackImage: string;
     tagline: string;
     link: string;
-    specsSummary: string;
+    specs: { label: string; value: string }[];
+    description: string;
     icon: any;
-    glowClass: string;
-    staggerClass: string;
+    glowColor: string;
 }
 
-const ITEMS: ProductItem[] = [
+const CATEGORY_SHOWCASES: ShowcaseCategory[] = [
     {
         id: 'tools',
-        title: 'Precision Tweezers',
-        categoryLabel: 'TOOLS',
-        badge: '62 HRC // SUS316',
+        title: 'Precision Goldsmith Tools',
+        categoryLabel: 'HAND TOOLS & INSTRUMENTS',
+        badge: 'SUS316 // 62 HRC HARDNESS',
         image: '/images/products/15f-tweezers.png',
-        fallbackImage: "/images/products/dinanath's-aa-tweezers.png",
-        tagline: 'High-hardness stainless steel tweezers engineered for micro-tolerances.',
+        tagline: 'Micro-tolerance stainless steel tweezers, pliers, cutters & setting instruments.',
+        description: 'Engineered for precision stone setting, delicate soldering, and microscopic metalwork. Manufactured from high-grade anti-magnetic alloys.',
         link: '/shop?cat=Tools',
-        specsSummary: 'Hardness rating: 62 HRC',
+        specs: [
+            { label: 'Material', value: 'Non-Magnetic SUS316 Stainless Steel' },
+            { label: 'Hardness', value: '62 HRC Tempered Tips' },
+            { label: 'Precision', value: 'Zero-Tolerance Alignment' }
+        ],
         icon: Sliders,
-        glowClass: 'bg-[#A67C35]',
-        staggerClass: 'lg:translate-y-6'
+        glowColor: '#A67C35'
     },
     {
         id: 'machinery',
-        title: 'Heavy Machinery',
-        categoryLabel: 'MACHINES',
-        badge: '2.5 HP // 500 CFM',
+        title: 'Jewellery Workshop Machinery',
+        categoryLabel: 'HEAVY MACHINERY & EQUIPMENT',
+        badge: '2.5 HP // 500 CFM DUST EXTRACTOR',
         image: '/images/products/sand-blasting-dust-collector-machine.png',
-        fallbackImage: '/placeholder.jpg',
-        tagline: 'Polishing dust collectors and sand blasters calibrated for industrial output.',
+        tagline: 'Industrial sand blasters, polishing dust collectors & motor units calibrated for output.',
+        description: 'High-torque workshop machinery built for gold recovery, metal surface texturing, and heavy-duty continuous operations.',
         link: '/shop?cat=Machinery',
-        specsSummary: 'Airflow capacity: 500 CFM',
+        specs: [
+            { label: 'Motor Rating', value: '2.5 HP Heavy Duty Copper Wound' },
+            { label: 'Filtration', value: 'Dual HEPA Dust Collector Chamber' },
+            { label: 'Airflow', value: '500 CFM High Vacuum' }
+        ],
         icon: Compass,
-        glowClass: 'bg-[#8A6232]',
-        staggerClass: 'lg:-translate-y-4'
+        glowColor: '#8A6232'
     },
     {
         id: 'torch',
-        title: 'Automatic Gas Torch',
-        categoryLabel: 'WELDING',
-        badge: '3200°F PEAK TEMP',
+        title: 'Automatic Brazing & Soldering',
+        categoryLabel: 'WELDING & MELTING',
+        badge: '3200°F PEAK MELTING TEMP',
         image: '/images/products/gas-torch-auto.png',
-        fallbackImage: '/placeholder.jpg',
-        tagline: 'Self-igniting automatic gas torches optimized for brazing & soldering.',
+        tagline: 'Piezo auto-ignition torches, gas burners & flux accessories for gold casting.',
+        description: 'Self-igniting micro torches with needle-valve flame regulation designed for seamless gold, silver, and platinum soldering.',
         link: '/shop?cat=Tools',
-        specsSummary: 'Regulated needle valve control',
+        specs: [
+            { label: 'Max Temp', value: '3200°F (1760°C) Pinpoint Flame' },
+            { label: 'Ignition', value: 'Instant Piezo Push Trigger' },
+            { label: 'Fuel Compat', value: 'LPG / MAPP / Propane Gas' }
+        ],
         icon: Flame,
-        glowClass: 'bg-[#DFCE9F]',
-        staggerClass: 'lg:translate-y-12'
+        glowColor: '#DFCE9F'
+    },
+    {
+        id: 'polishing',
+        title: 'Polishing & Finishing Buffs',
+        categoryLabel: 'BUFFING & CONSUMABLES',
+        badge: 'HIGH-GLOSS MIRROR FINISH',
+        image: '/images/products/15f-tweezers.png',
+        tagline: 'Cotton buff wheels, rouge compounds, and bristle brushes for high mirror lustre.',
+        description: 'Specially treated stitched cotton buffs and diamond polishing compounds formulated for ultra-smooth finishing of precious alloys.',
+        link: '/shop?cat=Consumables',
+        specs: [
+            { label: 'Buff Type', value: 'Fine Cotton Stitched & Loose' },
+            { label: 'Applications', value: 'Gold, Silver & Platinum Lustre' },
+            { label: 'Durability', value: 'Reinforced Center Washer' }
+        ],
+        icon: Wrench,
+        glowColor: '#C9A84C'
+    },
+    {
+        id: 'packaging',
+        title: 'Luxury Packaging & Trays',
+        categoryLabel: 'PACKAGING & DISPLAY',
+        badge: 'PREMIUM VELVET & LEATHERETTE',
+        image: '/images/products/sand-blasting-dust-collector-machine.png',
+        tagline: 'Custom jewellery presentation boxes, velvet rolls, and counter display organizers.',
+        description: 'Elevate your retail brand with bespoke jewellery display boxes, gem counters, and velvet storage trays.',
+        link: '/shop?cat=Packaging',
+        specs: [
+            { label: 'Finishing', value: 'Soft Micro-Velvet & Matte Leatherette' },
+            { label: 'Branding', value: 'Custom Gold Foil Embossing Available' },
+            { label: 'Capacity', value: 'Multi-Compartment Organizer Trays' }
+        ],
+        icon: Package,
+        glowColor: '#A67C35'
     }
 ];
 
 export function Hero() {
+    const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
-    const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const [activeTabId, setActiveTabId] = useState<string>('tools');
+    const [searchQuery, setSearchQuery] = useState('');
     const [banners, setBanners] = useState<any[]>([]);
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    const activeShowcase = CATEGORY_SHOWCASES.find(c => c.id === activeTabId) || CATEGORY_SHOWCASES[0];
 
     useEffect(() => {
         const fetchBanners = async () => {
@@ -111,265 +158,287 @@ export function Hero() {
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
-    // Smooth cursor movement spring
     const smoothX = useSpring(useMotionValue(0.5), { damping: 40, stiffness: 220 });
     const smoothY = useSpring(useMotionValue(0.5), { damping: 40, stiffness: 220 });
 
     useEffect(() => {
         smoothX.set(mousePosition.x - 0.5);
         smoothY.set(mousePosition.y - 0.5);
-    }, [mousePosition]);
+    }, [mousePosition, smoothX, smoothY]);
+
+    const cardRotateX = useTransform(smoothY, [-0.5, 0.5], [8, -8]);
+    const cardRotateY = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
 
     return (
         <section 
             ref={containerRef}
-            className="relative min-h-[95vh] lg:min-h-screen w-full flex items-center justify-center bg-[#070707] text-[#F8F3E8] overflow-hidden pt-24 pb-16 lg:py-0 px-6 md:px-12 lg:px-16"
+            className="relative min-h-[92vh] w-full flex flex-col justify-center bg-[#090909] text-[#F8F3E8] overflow-hidden pt-28 pb-16 px-4 sm:px-8 md:px-12 lg:px-16 border-b border-[#343434]"
         >
-            {/* Ambient cursor spotlight */}
+            {/* Ambient Radial Spotlight */}
             <div 
-                className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 opacity-40"
+                className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-700 opacity-30"
                 style={{
-                    background: `radial-gradient(750px circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(166, 124, 53, 0.05), transparent 70%)`
+                    background: `radial-gradient(900px circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(166, 124, 53, 0.12), transparent 70%)`
                 }}
             />
 
-            {/* Subtle mesh backdrop */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(166,124,53,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(166,124,53,0.015)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
+            {/* Grid Pattern Backdrop */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(166,124,53,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(166,124,53,0.03)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0" />
+            
+            {/* Top Glow Blur Pill */}
+            <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-[#A67C35]/10 rounded-full blur-[140px] pointer-events-none z-0" />
+
             <div className="container mx-auto max-w-7xl relative z-10 w-full">
-                {banners.length > 0 ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center min-h-[70vh]">
-                        {/* Slide Content */}
-                        <div className="lg:col-span-6 flex flex-col space-y-6 lg:space-y-8 text-left items-start">
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={currentSlide}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -20 }}
-                                    className="space-y-6"
+                
+                {/* 1. HERITAGE & VALUE BANNER STRIP */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-[#343434]/50">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="inline-flex items-center gap-2.5 bg-[#1E1E1E] border border-[#A67C35]/30 rounded-full px-4 py-1.5 shadow-lg"
+                    >
+                        <Sparkles size={12} className="text-[#A67C35] animate-pulse" />
+                        <span className="text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.25em] text-[#A67C35] uppercase">
+                            ESTABLISHED 1960 • CHANDNI CHOWK, NEW DELHI
+                        </span>
+                    </motion.div>
+
+                    {/* Quick Category Quick-Nav Chips */}
+                    <div className="hidden md:flex items-center gap-2">
+                        {CATEGORY_SHOWCASES.map((cat) => {
+                            const Icon = cat.icon;
+                            const isActive = activeTabId === cat.id;
+                            return (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setActiveTabId(cat.id)}
+                                    className={`px-3.5 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 border ${
+                                        isActive 
+                                            ? 'bg-[#A67C35] text-black border-[#A67C35] shadow-md shadow-[#A67C35]/20 font-black' 
+                                            : 'bg-[#1E1E1E]/60 text-[#CFCFCF] border-[#343434] hover:border-[#A67C35]/50 hover:text-[#F8F3E8]'
+                                    }`}
                                 >
-                                    <div className="inline-flex items-center gap-2 text-[#A67C35] font-mono text-[9px] tracking-[0.35em] uppercase font-bold">
-                                        <Sparkles size={10} className="opacity-80" />
-                                        <span>ESTABLISHED 1960 • LIVE UPDATE</span>
+                                    <Icon size={11} />
+                                    <span>{cat.title.split(' ')[0]}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* 2. MAIN HERO DISPLAY GRID */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+                    
+                    {/* LEFT COLUMN: BRAND PROPOSITION & INTERACTIVE CONTROLS */}
+                    <div className="lg:col-span-6 flex flex-col space-y-6 text-left items-start">
+                        
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="space-y-3"
+                        >
+                            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-display tracking-wider uppercase leading-[1.08] text-white">
+                                Dinanath
+                                <span className="block text-xl sm:text-3xl lg:text-4xl text-[#A67C35] font-sans font-light mt-1 tracking-[0.2em]">
+                                    & SONS
+                                </span>
+                            </h1>
+
+                            <h2 className="text-lg sm:text-2xl font-display font-light uppercase tracking-wide leading-snug pt-1 text-[#F8F3E8]">
+                                India's Premier <span className="bg-gradient-to-r from-[#DFCE9F] via-[#A67C35] to-[#8A6232] bg-clip-text text-transparent font-bold">Jewellery Tools & Equipment</span> Pioneer
+                            </h2>
+                        </motion.div>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="text-xs sm:text-sm text-[#CFCFCF] leading-relaxed max-w-xl font-light tracking-wide opacity-90"
+                        >
+                            Equipping over three generations of master goldsmiths, jewelry manufacturers, and casting workshops with precision tweezers, heavy polishing machines, automatic gas torches, and certified supplies.
+                        </motion.p>
+
+                        {/* Interactive Search Launcher */}
+                        <motion.form 
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            onSubmit={handleSearchSubmit}
+                            className="w-full max-w-lg relative flex items-center bg-[#1E1E1E] border border-[#343434] hover:border-[#A67C35]/60 rounded-xl overflow-hidden shadow-2xl transition-all"
+                        >
+                            <div className="pl-4 text-[#A67C35]">
+                                <Search size={16} />
+                            </div>
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search catalog: Tweezers, Dust Collectors, Torches, Buffs..."
+                                className="w-full py-3.5 px-3 bg-transparent text-xs text-[#F8F3E8] placeholder-[#8E8E9A] focus:outline-none font-medium"
+                            />
+                            <button
+                                type="submit"
+                                className="px-5 py-3.5 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase text-[9px] tracking-widest transition-colors flex items-center gap-1.5 shrink-0"
+                            >
+                                <span>Search</span>
+                                <ArrowRight size={12} strokeWidth={2.5} />
+                            </button>
+                        </motion.form>
+
+                        {/* CTA Buttons */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="flex flex-wrap gap-4 pt-1"
+                        >
+                            <Link href="/shop">
+                                <button className="h-12 px-7 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9.5px] rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 shadow-xl border-none cursor-pointer">
+                                    <span>Explore Full Catalog</span>
+                                    <ArrowRight size={14} strokeWidth={2.5} />
+                                </button>
+                            </Link>
+
+                            <Link href={activeShowcase.link}>
+                                <button className="h-12 px-7 bg-[#1E1E1E] border border-[#343434] hover:border-[#A67C35] text-[#F8F3E8] font-bold uppercase tracking-widest text-[9.5px] rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer">
+                                    <span>Browse {activeShowcase.title.split(' ')[0]}</span>
+                                    <ChevronRight size={14} className="text-[#A67C35]" />
+                                </button>
+                            </Link>
+                        </motion.div>
+
+                        {/* Interactive Feature Badges */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 w-full">
+                            {[
+                                { label: "60+ YRS", sub: "Heritage Excellence" },
+                                { label: "500+", sub: "Jewellery Tools" },
+                                { label: "PAN INDIA", sub: "Fast Dispatch" },
+                                { label: "100%", sub: "Quality Assured" }
+                            ].map((stat, idx) => (
+                                <div key={idx} className="bg-[#151515] border border-[#343434] rounded-xl p-2.5 text-center shadow">
+                                    <div className="text-xs sm:text-sm font-black text-[#A67C35] uppercase font-mono">{stat.label}</div>
+                                    <div className="text-[7.5px] text-[#8E8E9A] font-bold uppercase tracking-wider mt-0.5">{stat.sub}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+
+                    {/* RIGHT COLUMN: INTERACTIVE 3D CATEGORY SHOWCASE CARD */}
+                    <div className="lg:col-span-6 flex flex-col items-center justify-center w-full relative">
+                        
+                        {/* Tab Switcher for Mobile & Tablet */}
+                        <div className="flex lg:hidden overflow-x-auto w-full gap-2 pb-3 mb-4 scrollbar-hide">
+                            {CATEGORY_SHOWCASES.map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setActiveTabId(cat.id)}
+                                    className={`px-3 py-1.5 rounded-lg text-[8.5px] font-bold uppercase tracking-wider shrink-0 transition-all border ${
+                                        activeTabId === cat.id 
+                                            ? 'bg-[#A67C35] text-black border-[#A67C35] font-black' 
+                                            : 'bg-[#1E1E1E] text-[#8E8E9A] border-[#343434]'
+                                    }`}
+                                >
+                                    {cat.title.split(' ')[0]}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Interactive Card */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeShowcase.id}
+                                initial={{ opacity: 0, scale: 0.96, y: 15 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.96, y: -15 }}
+                                transition={{ duration: 0.4 }}
+                                style={{
+                                    rotateX: cardRotateX,
+                                    rotateY: cardRotateY,
+                                    transformStyle: 'preserve-3d'
+                                }}
+                                className="relative w-full max-w-lg bg-[#141414]/90 border border-[#A67C35]/40 rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl backdrop-blur-xl group select-none"
+                            >
+                                {/* Radial Glow Behind Image */}
+                                <div 
+                                    className="absolute -top-10 -right-10 w-64 h-64 rounded-full blur-[80px] opacity-25 pointer-events-none transition-all duration-700"
+                                    style={{ backgroundColor: activeShowcase.glowColor }}
+                                />
+
+                                {/* Header Tag */}
+                                <div className="flex items-center justify-between w-full mb-4 relative z-10 border-b border-[#343434]/60 pb-3">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-[#A67C35] animate-ping" />
+                                        <span className="text-[8px] font-mono font-bold tracking-[0.2em] text-[#A67C35] uppercase">
+                                            {activeShowcase.categoryLabel}
+                                        </span>
                                     </div>
-                                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-display tracking-wider uppercase leading-tight text-white">
-                                        {banners[currentSlide].title}
-                                    </h1>
-                                    <p className="text-xs sm:text-sm text-[#CFCFCF] leading-relaxed max-w-lg opacity-75 font-light tracking-wide">
-                                        {banners[currentSlide].subtitle}
-                                    </p>
-                                    <div className="flex gap-4 pt-2">
-                                        <Link href={banners[currentSlide].link || '/shop'}>
-                                            <button className="h-12 px-8 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9.5px] rounded-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 shadow-lg border-none cursor-pointer">
-                                                {banners[currentSlide].button_text || 'Explore Catalog'}
+                                    <span className="text-[7.5px] font-mono text-black font-extrabold bg-[#A67C35] px-2.5 py-0.5 rounded uppercase tracking-wider shadow">
+                                        {activeShowcase.badge}
+                                    </span>
+                                </div>
+
+                                {/* Main Showcase Image */}
+                                <div className="w-full h-52 sm:h-64 flex items-center justify-center p-4 relative z-10 my-2">
+                                    <img 
+                                        src={activeShowcase.image} 
+                                        alt={activeShowcase.title}
+                                        className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-105 drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = '/logo.png';
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Content & Live Spec Badges */}
+                                <div className="relative z-10 space-y-3 pt-3 border-t border-[#343434]/60 text-left">
+                                    <div>
+                                        <h3 className="text-lg sm:text-xl font-bold text-[#F8F3E8] uppercase tracking-wide">
+                                            {activeShowcase.title}
+                                        </h3>
+                                        <p className="text-xs text-[#CFCFCF] font-light leading-relaxed mt-1 line-clamp-2">
+                                            {activeShowcase.description}
+                                        </p>
+                                    </div>
+
+                                    {/* Specifications Grid */}
+                                    <div className="grid grid-cols-1 gap-1.5 pt-1">
+                                        {activeShowcase.specs.map((spec, i) => (
+                                            <div key={i} className="flex items-center justify-between text-[8.5px] bg-[#1E1E1E] px-3 py-1.5 rounded-lg border border-[#343434]/40">
+                                                <span className="text-[#8E8E9A] font-mono uppercase tracking-wider">{spec.label}</span>
+                                                <span className="text-[#A67C35] font-bold font-mono tracking-wider">{spec.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Action Bar */}
+                                    <div className="pt-2 flex items-center justify-between">
+                                        <Link href={activeShowcase.link} className="w-full">
+                                            <button className="w-full h-11 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9px] rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer">
+                                                <span>View {activeShowcase.title}</span>
                                                 <ArrowRight size={13} strokeWidth={2.5} />
                                             </button>
                                         </Link>
                                     </div>
-                                </motion.div>
-                            </AnimatePresence>
-                            
-                            {/* Slide indicators */}
-                            {banners.length > 1 && (
-                                <div className="flex gap-2.5 pt-4">
-                                    {banners.map((_, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setCurrentSlide(idx)}
-                                            className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === idx ? 'w-8 bg-[#A67C35]' : 'w-2 bg-[#343434]'}`}
-                                        />
-                                    ))}
+
                                 </div>
-                            )}
-                        </div>
 
-                        {/* Slide Image */}
-                        <div className="lg:col-span-6 w-full flex items-center justify-center relative aspect-video rounded-3xl overflow-hidden bg-black/40 border border-[#242424]">
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={currentSlide}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 1.05 }}
-                                    transition={{ duration: 0.5 }}
-                                    src={banners[currentSlide].image_url || '/placeholder.jpg'}
-                                    alt="Promo Banner"
-                                    className="w-full h-full object-cover rounded-3xl"
-                                />
-                            </AnimatePresence>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                        
-                        {/* LEFT COLUMN: BRAND HUD AND COPY */}
-                        <div className="lg:col-span-4 flex flex-col space-y-6 lg:space-y-8 text-left items-start">
-                            
-                            {/* Elegant Minimalist Heritage Badge */}
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
-                                className="inline-flex items-center gap-2 text-[#A67C35] font-mono text-[9px] tracking-[0.35em] uppercase font-bold"
-                            >
-                                <Sparkles size={10} className="opacity-80" />
-                                <span>ESTABLISHED 1960 • NEW DELHI</span>
                             </motion.div>
-
-                            {/* Brand typography */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                                className="space-y-2"
-                            >
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display tracking-wider uppercase leading-[1.08]">
-                                    Dinanath
-                                    <span className="block text-2xl sm:text-3xl lg:text-4xl text-[#8E8E9A] font-sans font-light mt-1.5 tracking-[0.2em]">& SONS</span>
-                                </h1>
-                                <h2 className="text-xl sm:text-2xl font-display font-light uppercase tracking-widest leading-snug pt-2">
-                                    Precision Tools For <br />
-                                    <span className="bg-gradient-to-r from-[#DFCE9F] via-[#A67C35] to-[#8A6232] bg-clip-text text-transparent font-bold">
-                                        Master Jewellers
-                                    </span>
-                                </h2>
-                            </motion.div>
-
-                            {/* Tagline */}
-                            <motion.p
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                className="text-xs sm:text-sm text-[#CFCFCF] leading-relaxed max-w-lg opacity-75 font-light tracking-wide"
-                            >
-                                For three generations, we have engineered high-hardness instruments, heavy machinery, and calibrated workshop tools to refine the artistry of India’s master goldsmiths.
-                            </motion.p>
-
-                            {/* CTA Actions */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                                className="flex flex-wrap gap-4 pt-2"
-                            >
-                                <Link href="/shop">
-                                    <button className="h-12 px-8 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9.5px] rounded-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 shadow-lg border-none cursor-pointer">
-                                        Explore Catalog
-                                        <ArrowRight size={13} strokeWidth={2.5} />
-                                    </button>
-                                </Link>
-                                <Link href="/about">
-                                    <button className="h-12 px-8 bg-transparent border border-[#343434] hover:border-[#A67C35] text-[#CFCFCF] hover:text-[#F8F3E8] font-bold uppercase tracking-widest text-[9.5px] rounded-lg transition-all hover:scale-105 active:scale-95 cursor-pointer">
-                                        Our Legacy
-                                    </button>
-                                </Link>
-                            </motion.div>
-
-                        </div>
-
-                        {/* RIGHT COLUMN: MULTI-PRODUCT STAGGERED DECK */}
-                        <div className="lg:col-span-8 flex flex-col justify-center w-full">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 lg:gap-6 w-full relative pt-8 md:pt-0 pb-12 md:pb-0">
-                                
-                                {ITEMS.map((item, index) => {
-                                    const CardIcon = item.icon;
-                                    const isCardHovered = hoveredId === item.id;
-                                    const isSomeCardHovered = hoveredId !== null;
-                                    const isDimmed = isSomeCardHovered && !isCardHovered;
-
-                                    // Individual card parallax tracking inside the hook
-                                    const cardRotateX = useTransform(smoothY, [-0.5, 0.5], [6, -6]);
-                                    const cardRotateY = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
-
-                                    return (
-                                        <motion.div
-                                            key={item.id}
-                                            initial={{ opacity: 0, y: 30 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.6, delay: 0.15 + index * 0.1 }}
-                                            style={{
-                                                rotateX: isCardHovered ? cardRotateX : 0,
-                                                rotateY: isCardHovered ? cardRotateY : 0,
-                                                transformStyle: 'preserve-3d'
-                                            }}
-                                            onMouseEnter={() => setHoveredId(item.id)}
-                                            onMouseLeave={() => setHoveredId(null)}
-                                            className={`relative w-full aspect-[4/5] bg-[#121212]/30 border border-[#242424] hover:border-[#A67C35]/50 rounded-2xl p-5 flex flex-col justify-between overflow-hidden shadow-xl backdrop-blur-md transition-all duration-500 group select-none ${
-                                                item.staggerClass
-                                            } ${
-                                                isDimmed ? 'opacity-30 scale-[0.96] blur-[0.5px]' : 'opacity-100 scale-100'
-                                            } ${
-                                                isCardHovered ? 'shadow-[0_15px_35px_rgba(0,0,0,0.7)] border-[#A67C35]' : ''
-                                            }`}
-                                        >
-                                            {/* Card Radial Spotlight Glow */}
-                                            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[75%] rounded-full blur-[45px] transition-all duration-700 opacity-10 group-hover:opacity-20 pointer-events-none ${item.glowClass}`} />
-
-                                            {/* Dynamic Header */}
-                                            <div className="flex items-center justify-between w-full relative z-10">
-                                                <span className="text-[7.5px] font-mono tracking-widest text-[#8E8E9A] group-hover:text-[#A67C35] transition-colors">
-                                                    {item.categoryLabel}
-                                                </span>
-                                                <div className="text-[#8E8E9A] group-hover:text-[#A67C35] transition-colors">
-                                                    <CardIcon size={12} strokeWidth={2} />
-                                                </div>
-                                            </div>
-
-                                            {/* Main Product Showcase Area */}
-                                            <div className="w-full flex-1 flex items-center justify-center p-3 relative z-10">
-                                                <img 
-                                                    src={item.image} 
-                                                    alt={item.title} 
-                                                    className="max-h-[85%] max-w-[85%] object-contain mix-blend-lighten transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
-                                                    onError={(e) => {
-                                                        (e.target as HTMLImageElement).src = item.fallbackImage;
-                                                    }}
-                                                />
-                                            </div>
-
-                                            {/* Details & Specs Section */}
-                                            <div className="flex flex-col text-left space-y-1 relative z-10 mt-auto pt-2 border-t border-[#242424]/40 group-hover:border-[#A67C35]/20 transition-colors">
-                                                <span className="text-[7px] text-[#A67C35] font-mono font-bold tracking-wider">
-                                                    {item.badge}
-                                                </span>
-                                                <h4 className="text-xs font-bold text-[#F8F3E8] uppercase tracking-wide">
-                                                    {item.title}
-                                                </h4>
-                                                <p className="text-[8.5px] text-[#8E8E9A] font-light leading-tight line-clamp-2 pt-0.5 group-hover:text-[#CFCFCF] transition-colors">
-                                                    {item.tagline}
-                                                </p>
-                                                
-                                                {/* Action Explore link (fades up on hover) */}
-                                                <div className="pt-2 flex items-center gap-1.5 text-[8.5px] font-mono font-bold text-[#8E8E9A] group-hover:text-[#A67C35] transition-colors">
-                                                    <Link href={item.link} className="flex items-center gap-1">
-                                                        <span>GO TO SHOP</span>
-                                                        <ArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    );
-                                })}
-
-                            </div>
-                        </div>
+                        </AnimatePresence>
 
                     </div>
-                )}
-            </div>
 
-            {/* Scroll indicator */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none hidden lg:flex flex-col items-center gap-1.5 opacity-30">
-                <span className="text-[8px] font-bold text-[#8E8E9A] uppercase tracking-[0.25em]">Scroll to Explore</span>
-                <div className="w-4 h-7 rounded-full border border-[#A67C35] p-1 flex justify-center">
-                    <motion.div 
-                        animate={{ y: [0, 6, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        className="w-1 h-1 rounded-full bg-[#A67C35]" 
-                    />
                 </div>
-            </div>
 
+            </div>
         </section>
     );
 }

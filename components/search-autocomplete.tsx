@@ -50,12 +50,13 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
         return () => clearTimeout(debounce);
     }, [query]);
 
-    const handleSelect = (term: string, type: 'product' | 'term') => {
+    const handleSelect = (target: string | any, type: 'product' | 'term') => {
         if (type === 'term') {
-            onSelect(term);
-            saveRecentSearch(term);
+            onSelect(target);
+            saveRecentSearch(target);
         } else {
-            router.push(`/shop/${term}`);
+            const { getProductUrl } = require('@/lib/slug');
+            router.push(getProductUrl(target));
         }
     };
 
@@ -121,13 +122,13 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
                             )}
                         </div>
 
-                        {/* Trending Categories */}
+                        {/* Popular Store Hardware Categories */}
                         <div>
                             <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                                <TrendingUp size={14} className="text-amber-500" /> Global Trends
+                                <TrendingUp size={14} className="text-amber-500" /> Popular Store Categories
                             </h4>
                             <div className="grid grid-cols-1 gap-2">
-                                {['Ultrasonic Hardware', 'Laser Induction', 'Rolling Mills', 'Precision Scales'].map(term => (
+                                {['Tweezers & Pliers', 'Casting Machinery', 'Automatic Gas Torches', 'Polishing Buffs', 'Rolling Mills', 'Gold Testing Kits'].map(term => (
                                     <button
                                         key={term}
                                         onClick={() => handleSelect(term, 'term')}
@@ -152,7 +153,7 @@ export function SearchAutocomplete({ query, onSelect, isVisible }: SearchAutocom
                                     {products.map(p => (
                                         <button
                                             key={p.id}
-                                            onClick={() => handleSelect(p.id, 'product')}
+                                            onClick={() => handleSelect(p, 'product')}
                                             className="w-full flex items-center gap-6 px-4 py-4 hover:bg-white/5 rounded-2xl transition-all group text-left border border-transparent hover:border-white/5"
                                         >
                                             <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center overflow-hidden">

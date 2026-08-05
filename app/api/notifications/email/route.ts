@@ -6,7 +6,7 @@ export async function POST(req: Request) {
         const { type } = body;
 
         const resendApiKey = process.env.RESEND_API_KEY;
-        const supportEmail = 'info@daridhinaathandsons.com';
+        const supportEmail = 'info@dinanathandsons.com';
 
         let subject = '';
         let htmlContent = '';

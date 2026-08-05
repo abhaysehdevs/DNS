@@ -189,42 +189,24 @@ function ShopContent() {
                                 Our <span className="text-transparent bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text">Hardware</span>
                             </h1>
                         </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className={`px-4 py-1.5 rounded-full bg-surface-1 border border-glass-border text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 transition-all shadow-sm ${isRetail ? 'text-gold-primary' : 'text-blue-500'}`}>
-                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isRetail ? 'bg-gold-primary' : 'bg-blue-500'}`} />
-                                {isRetail ? 'Retail Node Active' : 'B2B Client Config'}
-                            </div>
-                        </div>
                     </div>
                 </motion.div>
 
-                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
                     
-                    {/* Left Filters Sidebar */}
-                    <aside className="hidden lg:block w-[280px] shrink-0">
-                        <div className="sticky top-32 space-y-6">
-                            <FilterSidebar
-                                categories={categories}
-                                selectedCategories={[selectedCategory]}
-                                onCategoryChange={handleCategoryChange}
-                                priceRange={priceRange}
-                                setPriceRange={setPriceRange}
-                                minPrice={minPrice}
-                                setMinPrice={setMinPrice}
-                                isRetail={isRetail}
-                                className="bg-surface-1 border border-glass-border rounded-2xl p-6 shadow-md"
-                            />
-
-                            {/* Factory Direct Bento Block */}
-                            <div className="bg-surface-1 border border-glass-border rounded-2xl p-6 relative overflow-hidden shadow-md">
-                                <div className="absolute -right-6 -top-6 w-20 h-20 bg-gold-muted rounded-full blur-xl" />
-                                <h4 className="text-xs font-black text-text-primary mb-2 uppercase tracking-[0.1em]">Engineering Node</h4>
-                                <p className="text-[10px] text-text-secondary leading-relaxed mb-4 font-semibold">
-                                    All machinery is certified for micro-precision jewelry casting, rolling, and polishing. Reach out for technical consults.
-                                </p>
-                            </div>
-                        </div>
+                    {/* Left Sticky Filters Sidebar */}
+                    <aside className="hidden lg:block w-[260px] shrink-0 sticky top-36 self-start">
+                        <FilterSidebar
+                            categories={categories}
+                            selectedCategories={[selectedCategory]}
+                            onCategoryChange={handleCategoryChange}
+                            priceRange={priceRange}
+                            setPriceRange={setPriceRange}
+                            minPrice={minPrice}
+                            setMinPrice={setMinPrice}
+                            isRetail={isRetail}
+                            className="bg-surface-1 border border-glass-border rounded-2xl p-5 shadow-md max-h-[80vh] overflow-y-auto custom-scrollbar"
+                        />
                     </aside>
 
                     {/* Main Content Area */}
@@ -284,19 +266,19 @@ function ShopContent() {
                                         > <List size={15} /> </button>
                                     </div>
 
-                                    {/* Custom Sort Selector */}
-                                    <div className="relative min-w-[150px] h-12 flex items-center bg-surface-2 rounded-xl px-5 border border-glass-border">
+                                    {/* Custom Styled Sort Selector */}
+                                    <div className="relative min-w-[160px] h-12 flex items-center bg-[#151515] border border-[#343434] focus-within:border-[#A67C35] rounded-xl px-4 transition-all">
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="w-full bg-transparent text-[9px] font-black uppercase tracking-[0.1em] text-text-primary appearance-none cursor-pointer outline-none"
+                                            className="w-full bg-transparent text-[10px] font-bold uppercase tracking-wider text-[#F8F3E8] appearance-none cursor-pointer outline-none pr-6"
                                         >
-                                            <option value="featured" className="bg-surface-1 text-text-primary">Featured</option>
-                                            <option value="priceAsc" className="bg-surface-1 text-text-primary">Price: Low to High</option>
-                                            <option value="priceDesc" className="bg-surface-1 text-text-primary">Price: High to Low</option>
-                                            <option value="nameAsc" className="bg-surface-1 text-text-primary">Name: A-Z</option>
+                                            <option value="featured" className="bg-[#151515] text-[#F8F3E8]">Featured Sort</option>
+                                            <option value="priceAsc" className="bg-[#151515] text-[#F8F3E8]">Price: Low to High</option>
+                                            <option value="priceDesc" className="bg-[#151515] text-[#F8F3E8]">Price: High to Low</option>
+                                            <option value="nameAsc" className="bg-[#151515] text-[#F8F3E8]">Name: A to Z</option>
                                         </select>
-                                        <ChevronDown size={12} className="absolute right-5 text-text-tertiary pointer-events-none" />
+                                        <ChevronDown size={14} className="absolute right-4 text-[#A67C35] pointer-events-none" />
                                     </div>
                                 </div>
                             </div>

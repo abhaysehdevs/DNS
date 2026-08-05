@@ -2,143 +2,151 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, Sparkles, Zap, ShieldCheck, MessageSquare } from 'lucide-react';
+import { ChevronDown, Sparkles, Zap, ShieldCheck, MessageSquare, Truck, RotateCcw, FileText } from 'lucide-react';
 import Link from 'next/link';
 
-const FAQS = [
+const POLICIES = [
     {
-        question: "Shipping: Regional Delivery Areas?",
-        answer: "We ship across India using leading courier services. Express delivery is available for the Delhi NCR region."
+        category: "Shipping Policy",
+        icon: Truck,
+        items: [
+            {
+                question: "What are the shipping costs and dispatch times?",
+                answer: "We offer Pan-India dispatch for all jewellery tools and machinery. Orders are dispatched within 24 to 48 hours from our Chandni Chowk store in Delhi. Express dispatch is available for Delhi NCR. Standard shipping takes 3-7 business days across India."
+            },
+            {
+                question: "How is heavy machinery (Rolling Mills, Castings, Dust Collectors) shipped?",
+                answer: "Heavy machinery and workshop equipment are securely crate-packed and dispatched via trusted surface freight logistics partners (V-Trans, Safexpress, TCI Freight). Freight tracking AWBs are provided immediately upon dispatch."
+            }
+        ]
     },
     {
-        question: "Wholesale: How to Order in Bulk?",
-        answer: "Switch the site to 'Wholesale Mode' via the navigation bar to see bulk pricing. Wholesale orders are processed through direct consultation via our WhatsApp support."
+        category: "Return & Refund Policy",
+        icon: RotateCcw,
+        items: [
+            {
+                question: "What is the 7-Day Defect Exchange & Return Policy?",
+                answer: "If any tool or equipment is received damaged, defective, or missing components, you are eligible for an immediate replacement or 100% refund within 7 days of delivery. We request a short unboxing video for fast defect verification."
+            },
+            {
+                question: "How do I initiate a return or replacement?",
+                answer: "You can initiate a return by contacting support at info@dinanathandsons.com or WhatsApp +91 9953435647 with your order ID and unboxing photos/video. Our team arranges reverse pickup or replacement dispatch within 24 hours."
+            }
+        ]
     },
     {
-        question: "Wholesale: What is the Minimum Order Quantity (MOQ)?",
-        answer: "Retail orders have no minimum order quantity. Wholesale orders require meeting specific product MOQ thresholds to qualify for bulk pricing."
-    },
-    {
-        question: "Payments: What Payment Methods Do You Accept?",
-        answer: "We accept payment via UPI, Credit/Debit Cards, and Net Banking. Large wholesale orders can be paid via NEFT or RTGS bank transfer."
-    },
-    {
-        question: "Returns: What is the Return Policy?",
-        answer: "Any issues or defects must be reported within 48 hours of delivery. We require an unboxing video to process manufacturing defect claims."
+        category: "Terms & Conditions",
+        icon: FileText,
+        items: [
+            {
+                question: "Are GST Tax Invoices provided for B2B Input Credit?",
+                answer: "Yes, 100% of our orders are shipped with official GST Tax Invoices. Enter your GSTIN and business name during checkout to claim input tax credit."
+            },
+            {
+                question: "What payment methods are supported?",
+                answer: "We support UPI (GPay, PhonePe, Paytm), Credit & Debit Cards, Netbanking via Razorpay online payment gateway, as well as Direct Bank Transfer (NEFT/RTGS) for bulk B2B wholesale orders."
+            }
+        ]
     }
 ];
 
 export default function FAQ() {
+    const [activeTab, setActiveTab] = useState(0);
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-    const faqSchema = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": FAQS.map((faq) => ({
-            "@type": "Question",
-            "name": faq.question,
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": faq.answer
-            }
-        }))
-    };
-
     return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
-            <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-48 pb-24 noise-overlay selection:bg-gold-primary/30 overflow-x-hidden blueprint-grid">
-                
-                {/* Ambient Lighting */}
-                <div className="fixed inset-0 pointer-events-none">
-                    <div className="absolute top-[10%] right-[-5%] w-[40%] h-[40%] bg-gold-primary/5 blur-[120px] rounded-full animate-pulse-glow" />
-                    <div className="absolute bottom-[20%] left-[-5%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
-                </div>
-
+        <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-44 pb-24 noise-overlay selection:bg-gold-primary/30 overflow-x-hidden">
             <div className="container mx-auto px-6 relative z-10 max-w-4xl">
                 
-                <div className="text-center mb-24">
+                <div className="text-center mb-16">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-3 px-6 py-2 rounded-full glass text-text-secondary text-[9px] font-black uppercase tracking-[0.3em] mb-10 shadow-sm"
+                        className="inline-flex items-center gap-3 px-6 py-2 rounded-full glass text-text-secondary text-[9px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm"
                     >
-                        <MessageSquare size={14} /> Knowledge Support Nexus
+                        <MessageSquare size={14} className="text-[#A67C35]" /> Store Policies & Knowledge Center
                     </motion.div>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-black mb-8 tracking-tighter uppercase leading-[0.9]"
-                    >
-                        Technical <span className="bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text text-transparent">Support</span>
-                    </motion.h1>
-                    <p className="text-text-secondary text-lg font-medium max-w-2xl mx-auto uppercase tracking-widest text-[10px]">Standardized operational guidelines and procurement protocols</p>
+                    <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight uppercase leading-[0.9]">
+                        Store Policies & <span className="bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text text-transparent">Support</span>
+                    </h1>
+                    <p className="text-text-secondary text-xs font-bold uppercase tracking-widest max-w-xl mx-auto">Standardized shipping rules, return policy, and B2B terms for Dinanath & Sons</p>
                 </div>
 
-                <div className="space-y-6">
-                    {FAQS.map((faq, index) => (
-                        <motion.div 
+                {/* Category Policy Tabs */}
+                <div className="flex justify-center items-center gap-3 mb-10 overflow-x-auto pb-2">
+                    {POLICIES.map((group, idx) => {
+                        const Icon = group.icon;
+                        const isActive = activeTab === idx;
+                        return (
+                            <button
+                                key={idx}
+                                onClick={() => { setActiveTab(idx); setOpenIndex(0); }}
+                                className={`px-5 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
+                                    isActive 
+                                        ? 'bg-[#A67C35] text-black shadow-lg scale-105' 
+                                        : 'bg-[#1E1E1E] text-[#8E8E9A] hover:text-[#F8F3E8] border border-[#343434]'
+                                }`}
+                            >
+                                <Icon size={16} />
+                                <span>{group.category}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* FAQ Accordions */}
+                <div className="space-y-4">
+                    {POLICIES[activeTab].items.map((item, index) => (
+                        <div 
                             key={index} 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            className={`glass rounded-[2rem] border transition-all duration-500 overflow-hidden ${openIndex === index ? 'border-gold-primary/30 bg-surface-1/50 shadow-[0_20px_60px_rgba(0,0,0,0.05)]' : 'border-glass-border hover:border-glass-border/80'}`}
+                            className={`bg-[#1E1E1E] rounded-2xl border transition-all duration-300 overflow-hidden ${
+                                openIndex === index ? 'border-[#A67C35] shadow-lg' : 'border-[#343434] hover:border-[#343434]/80'
+                            }`}
                         >
                             <button
                                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                className="w-full flex justify-between items-center p-8 md:p-10 text-left transition-all cursor-pointer"
+                                className="w-full flex justify-between items-center p-6 text-left transition-all cursor-pointer"
                             >
-                                <div className="flex items-center gap-6">
-                                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all shadow-sm ${openIndex === index ? 'glass-gold text-[#0A0A0F]' : 'glass text-text-secondary'}`}>
-                                        <Zap size={18} />
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${openIndex === index ? 'bg-[#A67C35] text-black' : 'bg-[#151515] text-[#A67C35]'}`}>
+                                        <Zap size={15} />
                                     </div>
-                                    <span className={`text-sm md:text-xl font-black uppercase tracking-tight transition-colors ${openIndex === index ? 'text-text-primary' : 'text-text-secondary'}`}>{faq.question}</span>
+                                    <span className={`text-sm md:text-base font-bold uppercase tracking-wide ${openIndex === index ? 'text-[#F8F3E8]' : 'text-[#CFCFCF]'}`}>
+                                        {item.question}
+                                    </span>
                                 </div>
-                                <div className={`w-8 h-8 rounded-full glass flex items-center justify-center transition-all ${openIndex === index ? 'rotate-180 bg-gold-primary text-white' : 'text-text-secondary'}`}>
-                                    <ChevronDown size={18} />
+                                <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform ${openIndex === index ? 'rotate-180 bg-[#A67C35] text-black' : 'text-[#8E8E9A]'}`}>
+                                    <ChevronDown size={16} />
                                 </div>
                             </button>
+
                             <AnimatePresence>
                                 {openIndex === index && (
                                     <motion.div
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: 'auto', opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
-                                        className="relative"
                                     >
-                                        <div className="px-10 md:px-24 pb-12 pt-0 text-text-secondary text-sm md:text-lg leading-relaxed font-medium relative">
-                                            <div className="absolute left-10 md:left-24 top-0 bottom-12 w-px bg-glass-border" />
-                                            <div className="pl-8">
-                                                {faq.answer}
-                                            </div>
+                                        <div className="px-6 pb-6 pt-0 text-[#CFCFCF] text-xs md:text-sm leading-relaxed font-normal border-t border-[#343434]/40 mt-2 pt-4">
+                                            {item.answer}
                                         </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
 
-                {/* Footer Link */}
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    className="mt-20 text-center glass p-10 rounded-[3rem] border border-glass-border relative overflow-hidden group shadow-xl"
-                >
-                    <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-                        <ShieldCheck size={120} className="text-gold-primary" />
-                    </div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary mb-6">Inquiry not resolved in current nexus?</p>
+                {/* Footer Inquiry Prompt */}
+                <div className="mt-16 text-center bg-[#1E1E1E] p-8 rounded-3xl border border-[#343434] shadow-xl">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E8E9A] mb-4">Have further technical queries about tools or bulk machinery?</p>
                     <Link href="/contact">
-                        <button className="text-[10px] font-black uppercase tracking-[0.2em] text-gold-primary hover:opacity-70 transition-opacity border-b border-gold-primary/30 pb-1 cursor-pointer">Initialize Direct Transmission</button>
+                        <button className="text-xs font-bold uppercase tracking-widest text-[#A67C35] hover:underline cursor-pointer border-none bg-transparent">
+                            Contact Support (info@dinanathandsons.com) →
+                        </button>
                     </Link>
-                </motion.div>
+                </div>
             </div>
         </div>
-        </>
     );
 }

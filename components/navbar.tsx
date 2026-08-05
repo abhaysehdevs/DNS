@@ -174,7 +174,7 @@ export function Navbar() {
                             <span className="text-[#A67C35] font-bold">★</span>
                             <span>{announcements.length > 0 ? announcements[currentAnnIndex].message : "India's Trusted Jewellery Tool Experts Since 1960"}</span>
                         </div>
-                        <div className="hidden md:flex items-center gap-6 text-[#F8F3E8]">
+                        <div className="hidden md:flex items-center gap-6 text-text-primary font-bold">
                             <Link href="/about" className="hover:text-[#A67C35] transition-colors">About Us</Link>
                             <Link href="/contact" className="hover:text-[#A67C35] transition-colors">Contact Us</Link>
                             <Link 
@@ -212,16 +212,16 @@ export function Navbar() {
                 <div className="w-full py-4 px-4 md:px-6">
                     <div className="container mx-auto flex items-center justify-between gap-3 md:gap-6">
                         {/* Logo & Brand Identity */}
-                        <Link href="/" className="flex items-center gap-2 md:gap-3.5 shrink-0 group">
-                            <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-[#1E1E1E] border border-[#343434] flex items-center justify-center relative overflow-hidden group-hover:border-[#A67C35]/50 transition-all duration-500 shadow-xl">
-                                <div className="absolute inset-0 bg-[#A67C35]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <img src="/images/logo.png" className="w-7 h-7 md:w-11 md:h-11 object-contain relative z-10" alt="Logo" onError={(e) => {
+                        <Link href="/" className="flex items-center gap-3 md:gap-4 shrink-0 group">
+                            <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-[#1E1E1E] border border-[#343434] flex items-center justify-center relative overflow-hidden group-hover:border-[#A67C35]/60 transition-all duration-500 shadow-2xl shrink-0">
+                                <div className="absolute inset-0 bg-[#A67C35]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <img src="/images/logo.png" className="w-10 h-10 md:w-16 md:h-16 object-contain relative z-10 scale-105 group-hover:scale-110 transition-transform duration-300" alt="Dinanath & Sons Logo" onError={(e) => {
                                     (e.target as HTMLImageElement).src = '/logo.png';
                                 }} />
                             </div>
                             <div className="flex flex-col text-left">
-                                <span className="text-sm xs:text-base md:text-xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase leading-none">Dinanath & Sons</span>
-                                <span className="text-[7px] md:text-[8px] font-semibold text-[#8E8E9A] tracking-[0.25em] uppercase mt-1 hidden sm:block">Jewellery Tools & Equipment — Since 1960</span>
+                                <span className="text-base xs:text-lg md:text-2xl font-black font-display text-[#F8F3E8] tracking-wider uppercase leading-none group-hover:text-[#A67C35] transition-colors">Dinanath & Sons</span>
+                                <span className="text-[8px] md:text-[9.5px] font-bold text-[#A67C35] tracking-[0.25em] uppercase mt-1.5 hidden sm:block">Jewellery Tools & Equipment — Since 1960</span>
                             </div>
                         </Link>
 

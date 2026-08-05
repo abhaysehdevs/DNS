@@ -146,30 +146,37 @@ export async function getPersonalizedRecommendations(viewedProductIds: string[],
     });
 }
 
-// 3. Trending / Best Sellers (Simple Fallback)
+// 3. Trending / Best Sellers (Fallback)
 export async function getTrendingProducts(limit: number = 4): Promise<Product[]> {
-    const { data } = await supabase
-        .from('products')
-        .select('*')
-        .limit(limit); // For now just grab top products. In real app, order by sales_count.
+    try {
+        const { data } = await supabase
+            .from('products')
+            .select('*')
+            .limit(limit);
 
-    if (!data) return [];
+        if (data && data.length > 0) {
+            return data.map((p: any) => {
+                const primaryImage = p.image || p.image_url || '/placeholder.jpg';
+                return {
+                    id: p.id,
+                    name: p.name,
+                    description: p.description,
+                    retailPrice: p.retail_price,
+                    wholesalePrice: p.wholesale_price,
+                    wholesaleMOQ: p.wholesale_moq,
+                    primaryImage: primaryImage,
+                    image: primaryImage,
+                    gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
+                    category: p.category,
+                    inStock: p.in_stock,
+                    reviews: p.reviews || []
+                };
+            });
+        }
+    } catch (e) {
+        console.error('Error fetching trending products:', e);
+    }
 
-    return data.map((p: any) => {
-        const primaryImage = p.image || p.image_url || '/placeholder.jpg';
-        return {
-            id: p.id,
-            name: p.name,
-            description: p.description,
-            retailPrice: p.retail_price,
-            wholesalePrice: p.wholesale_price,
-            wholesaleMOQ: p.wholesale_moq,
-            primaryImage: primaryImage,
-            image: primaryImage,
-            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: primaryImage }],
-            category: p.category,
-            inStock: p.in_stock,
-            reviews: p.reviews || []
-        };
-    });
+    const { products } = await import('./data');
+    return products.slice(0, limit);
 }

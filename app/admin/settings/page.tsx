@@ -512,6 +512,70 @@ export default function SettingsPage() {
                     {/* Security & Sessions */}
                     {activeTab === 'security' && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                            
+                            {/* BIOMETRIC HARDWARE SECURITY CONSOLE */}
+                            <div className="bg-[#1E1E1E] border border-[#343434] rounded-2xl p-6 shadow-lg space-y-4">
+                                <div className="flex items-center justify-between border-b border-[#343434] pb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-[#A67C35]/15 border border-[#A67C35]/30 text-[#A67C35] flex items-center justify-center">
+                                            <ShieldCheck size={22} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-lg font-black text-[#F8F3E8] uppercase tracking-wider">Hardware Biometrics & Fingerprint Console</h2>
+                                            <p className="text-[10px] text-[#8E8E9A] font-bold uppercase tracking-widest mt-0.5">Secure Operator Hardware Binding (Windows Hello / Touch ID)</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-[#151515] border border-[#343434] rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <div>
+                                        <div className="text-xs font-bold text-[#F8F3E8] uppercase tracking-wide flex items-center gap-2">
+                                            <span>Device Status:</span>
+                                            {typeof window !== 'undefined' && localStorage.getItem('dns_admin_biometric_cred_id') ? (
+                                                <span className="text-emerald-400 flex items-center gap-1"><ShieldCheck size={14} /> Biometrics Linked & Active</span>
+                                            ) : (
+                                                <span className="text-[#8E8E9A]">No Biometric Credentials Enrolled</span>
+                                            )}
+                                        </div>
+                                        <p className="text-[10px] text-[#8E8E9A] leading-relaxed mt-1">
+                                            Only authenticated operators can bind hardware fingerprint credentials from inside this secure console.
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <button
+                                            onClick={async () => {
+                                                const { registerBiometrics } = await import('@/lib/webauthn');
+                                                const ok = await registerBiometrics();
+                                                if (ok) {
+                                                    alert('Hardware fingerprint / biometrics successfully linked to this device!');
+                                                    window.location.reload();
+                                                } else {
+                                                    alert('Biometric enrollment failed or was cancelled.');
+                                                }
+                                            }}
+                                            className="px-4 py-2.5 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase text-[9.5px] tracking-wider rounded-xl transition-all shadow cursor-pointer border-none"
+                                        >
+                                            Link My Biometrics to Device
+                                        </button>
+                                        
+                                        {typeof window !== 'undefined' && localStorage.getItem('dns_admin_biometric_cred_id') && (
+                                            <button
+                                                onClick={() => {
+                                                    const { clearBiometrics } = require('@/lib/webauthn');
+                                                    clearBiometrics();
+                                                    alert('Biometric credentials unlinked from this device.');
+                                                    window.location.reload();
+                                                }}
+                                                className="px-3 py-2.5 bg-[#151515] border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white font-bold uppercase text-[9.5px] tracking-wider rounded-xl transition-all cursor-pointer"
+                                            >
+                                                Unlink
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
                                 <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
                                     <ShieldCheck className="text-green-500" size={24} /> Active Sessions

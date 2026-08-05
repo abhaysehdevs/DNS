@@ -1,13 +1,11 @@
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Sparkles, ShoppingBag, Truck, Info, Settings, TrendingUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { MessageCircle, X, Send, Sparkles, ShoppingBag, Truck, Info, Settings, TrendingUp, HelpCircle, ShieldAlert, ArrowRight, CornerDownLeft, Bot, RefreshCw } from 'lucide-react';
 import { products } from '@/lib/data';
 import Link from 'next/link';
-import { Currency } from '@/components/currency';
+import { getProductUrl } from '@/lib/slug';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 
 interface Message {
@@ -24,45 +22,53 @@ export function AIAssistant() {
         {
             id: 'welcome',
             role: 'assistant',
-            content: "Namaste! I'm Dinanath AI, your specialized guide for professional jewelry tools, workshop machinery, and order logistics. How can I assist you with our inventory today?",
+            content: (
+                <div className="space-y-2">
+                    <p className="font-bold text-[#F8F3E8] text-xs">Namaste! I'm Dinanath AI 🤖</p>
+                    <p className="text-xs text-[#CFCFCF] leading-relaxed">
+                        Your intelligent assistant for professional jewelry manufacturing tools, workshop machinery, B2B quotes, and order logistics. How can I help your workshop today?
+                    </p>
+                </div>
+            ),
             timestamp: new Date()
         }
     ]);
     const [isTyping, setIsTyping] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const isMobile = useIsMobile();
 
-    // Scroll to bottom on new message
+    // Auto-scroll on new message
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages, isTyping, isOpen]);
 
-    // Handle custom open event from mobile nav
+    // Handle custom open event from mobile nav or buttons
     useEffect(() => {
         const handleOpen = () => setIsOpen(true);
         window.addEventListener('open-ai-assistant', handleOpen);
         return () => window.removeEventListener('open-ai-assistant', handleOpen);
     }, []);
 
-    const handleSendMessage = async (e?: React.FormEvent) => {
+    const handleSendMessage = (e?: React.FormEvent, customText?: string) => {
         e?.preventDefault();
-        if (!input.trim()) return;
+        const textToSend = customText || input;
+        if (!textToSend.trim()) return;
 
         const userMsg: Message = {
             id: Date.now().toString(),
             role: 'user',
-            content: input,
+            content: textToSend,
             timestamp: new Date()
         };
 
         setMessages(prev => [...prev, userMsg]);
-        setInput('');
+        if (!customText) setInput('');
         setIsTyping(true);
 
-        // Simulated highly-responsive delay (400ms)
         setTimeout(() => {
-            const botResponse = generateResponse(userMsg.content as string);
+            const botResponse = generateAIResponse(textToSend);
             setMessages(prev => [...prev, {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
@@ -70,112 +76,110 @@ export function AIAssistant() {
                 timestamp: new Date()
             }]);
             setIsTyping(false);
-        }, 400);
+        }, 450);
     };
 
-    // Simple "AI" Logic (Descriptive & Professional)
-    // Advanced Industry Intelligence Logic
-    const generateResponse = (query: string): React.ReactNode => {
-        const lowerQuery = query.toLowerCase();
+    // Advanced Intelligent AI Engine
+    const generateAIResponse = (query: string): React.ReactNode => {
+        const lower = query.toLowerCase();
 
-        // Strict focus check: only answer questions related to tools, jewelry, machinery, orders, shipping
-        const isRelated = 
-            lowerQuery.includes('tool') || 
-            lowerQuery.includes('machine') || 
-            lowerQuery.includes('mill') || 
-            lowerQuery.includes('cast') || 
-            lowerQuery.includes('furnace') || 
-            lowerQuery.includes('polish') || 
-            lowerQuery.includes('jewelry') || 
-            lowerQuery.includes('jewellery') || 
-            lowerQuery.includes('order') || 
-            lowerQuery.includes('ship') || 
-            lowerQuery.includes('deliver') || 
-            lowerQuery.includes('wholesale') || 
-            lowerQuery.includes('bulk') || 
-            lowerQuery.includes('price') || 
-            lowerQuery.includes('contact') || 
-            lowerQuery.includes('catalog') || 
-            lowerQuery.includes('how to') || 
-            lowerQuery.includes('help') ||
-            lowerQuery.includes('best') ||
-            lowerQuery.includes('hello') ||
-            lowerQuery.includes('hi') ||
-            lowerQuery.includes('hey');
-
-        if (!isRelated) {
+        // 1. Return Policy & Refund Queries (Strict Store Policy Enforcement)
+        if (lower.includes('return') || lower.includes('refund') || lower.includes('exchange') || lower.includes('replace')) {
             return (
-                <div className="space-y-2">
-                    <p>I am Dinanath AI, an assistant dedicated exclusively to helping you with <strong>Dinanath & Sons' jewelry tools, workshop machinery, and store inventory</strong>.</p>
-                    <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Please ask me about our tools, casting machines, or shipping policies.</p>
-                </div>
-            );
-        }
-
-        // 1. Jewelry Specific Categories
-        if (lowerQuery.includes('casting') || lowerQuery.includes('machine') || lowerQuery.includes('furnace')) {
-            return (
-                <div className="space-y-4">
-                    <p className="text-gray-200">Our <strong>Professional Casting Tools</strong> include high-quality vacuum casting machines and gold melting furnaces. These are designed to ensure your metals are melted perfectly with minimal waste.</p>
-                    <div className="grid grid-cols-2 gap-2">
-                        <Link href="/shop?category=Machinery" className="bg-gray-800 p-3 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-blue-600 transition-colors">Machinery</Link>
-                        <Link href="/shop?category=Consumables" className="bg-gray-800 p-3 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-amber-600 transition-colors">Consumables</Link>
+                <div className="space-y-3 text-xs text-[#CFCFCF]">
+                    <div className="flex items-center gap-2 text-[#D12A1C] font-bold uppercase tracking-wider text-[11px]">
+                        <ShieldAlert size={16} /> Store Policy Notice
                     </div>
-                </div>
-            );
-        }
-
-        // 2. Shipping / Delivery (Advanced Logistics)
-        if (lowerQuery.includes('shipping') || lowerQuery.includes('delivery') || lowerQuery.includes('track')) {
-            return (
-                <div className="space-y-4">
-                    <p className="text-gray-200">We provide <strong>Reliable Shipping</strong> for all our tools and machinery. Every order is carefully packed and insured to ensure it reaches you in perfect condition.</p>
-                    <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-[1.5rem] flex items-center gap-4">
-                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shrink-0">
-                            <Truck className="text-white" size={20} />
-                        </div>
-                        <div>
-                            <div className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Global Dispatch</div>
-                            <div className="text-xs text-gray-400">Dispatch within 24h of verification.</div>
-                        </div>
+                    <p className="leading-relaxed">
+                        <strong className="text-[#F8F3E8]">No Returns Policy:</strong> As a specialized B2B and retail hardware supplier, Dinanath & Sons <strong>does not offer a return or refund policy on almost all products</strong>.
+                    </p>
+                    <p className="leading-relaxed">
+                        If a specific product exceptionally includes a return or warranty coverage, it will be <strong>explicitly displayed on that product's page</strong>.
+                    </p>
+                    <div className="p-3 bg-[#151515] border border-[#343434] rounded-xl text-[10px] text-[#8E8E9A] leading-normal font-semibold">
+                        Manufacturing Defect Notice: If equipment arrives damaged or defective upon initial unboxing, contact technical support within 48 hours for verification.
                     </div>
+                    <Link href="/return-policy" onClick={() => setIsOpen(false)} className="inline-flex items-center gap-1.5 text-[#A67C35] font-bold text-[10px] uppercase tracking-wider hover:underline pt-1">
+                        Read Full Return Policy Document →
+                    </Link>
                 </div>
             );
         }
 
-        // 3. Wholesale (B2B Priority)
-        if (lowerQuery.includes('wholesale') || lowerQuery.includes('bulk') || lowerQuery.includes('quote') || lowerQuery.includes('quotation')) {
+        // 2. Shipping & Delivery Logistics
+        if (lower.includes('ship') || lower.includes('deliver') || lower.includes('courier') || lower.includes('track') || lower.includes('dispatch')) {
             return (
-                <div className="space-y-4">
-                    <p className="text-gray-200">Dinanath & Sons offers special <strong>Wholesale Pricing</strong> for bulk orders. We support jewelry factories and distributors with the best rates in the industry.</p>
-                    <a href="https://wa.me/919953435647?text=I'm interested in a wholesale quotation for jewelry tools." target="_blank" rel="noopener noreferrer" className="block w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-2xl text-center font-black uppercase text-xs tracking-widest shadow-xl shadow-green-900/20 transition-all">
-                        Connect with Trade Desk
+                <div className="space-y-3 text-xs text-[#CFCFCF]">
+                    <div className="flex items-center gap-2 text-[#A67C35] font-bold uppercase tracking-wider text-[11px]">
+                        <Truck size={16} /> Pan-India Logistics
+                    </div>
+                    <p className="leading-relaxed">
+                        We dispatch all standard tool orders within <strong className="text-[#F8F3E8]">24 to 48 hours</strong> from our central Chandni Chowk store in Delhi.
+                    </p>
+                    <ul className="list-disc pl-4 space-y-1 text-[11px]">
+                        <li>Express delivery available for Delhi NCR.</li>
+                        <li>Standard courier delivery takes 3 to 7 business days.</li>
+                        <li>Heavy machinery (Rolling Mills, Castings) is shipped via surface freight (V-Trans, Safexpress, TCI).</li>
+                    </ul>
+                    <Link href="/track-order" onClick={() => setIsOpen(false)} className="inline-flex items-center gap-1.5 text-[#A67C35] font-bold text-[10px] uppercase tracking-wider hover:underline">
+                        Track Active Shipment via AWB →
+                    </Link>
+                </div>
+            );
+        }
+
+        // 3. Wholesale & B2B Quotations
+        if (lower.includes('wholesale') || lower.includes('bulk') || lower.includes('b2b') || lower.includes('quote') || lower.includes('moq')) {
+            return (
+                <div className="space-y-3 text-xs text-[#CFCFCF]">
+                    <p className="leading-relaxed">
+                        Dinanath & Sons supports jewelry manufacturers, factories, and retail shopkeepers with direct <strong>B2B Wholesale Quotations</strong>.
+                    </p>
+                    <div className="bg-[#151515] p-3 rounded-xl border border-[#343434] space-y-2">
+                        <p className="text-[10px] text-[#A67C35] font-bold uppercase tracking-wider">B2B Purchasing Requirements:</p>
+                        <p className="text-[11px] text-[#8E8E9A] leading-normal font-semibold">
+                            Wholesale rates apply when meeting Minimum Order Quantity (MOQ) thresholds for tools and equipment. Official GST Tax Invoices are provided for input credit.
+                        </p>
+                    </div>
+                    <a 
+                        href="https://wa.me/919953435647?text=Hi%20Dinanath%20Trade%20Desk,%20I%20need%20a%20wholesale%20quotation%20for%20jewelry%20tools." 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block w-full text-center py-2.5 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase text-[9.5px] tracking-wider rounded-xl transition-all shadow"
+                    >
+                        Connect with B2B Trade Desk on WhatsApp
                     </a>
                 </div>
             );
         }
 
-        // 4. Product Intelligence (Dynamic)
-        const matches = products.filter(p =>
-            p.name.toLowerCase().includes(lowerQuery) ||
-            p.description.toLowerCase().includes(lowerQuery) ||
-            p.category.toLowerCase().includes(lowerQuery)
+        // 4. Product Matching Intelligence
+        const matchedProducts = products.filter(p =>
+            p.name.toLowerCase().includes(lower) ||
+            p.category.toLowerCase().includes(lower) ||
+            p.description.toLowerCase().includes(lower)
         ).slice(0, 3);
 
-        if (matches.length > 0) {
+        if (matchedProducts.length > 0) {
             return (
-                <div className="space-y-4">
-                    <p className="text-gray-200">I found these <strong>High-Quality Tools</strong> that match what you're looking for:</p>
-                    <div className="space-y-3">
-                        {matches.map(p => (
-                            <Link href={`/shop/${p.id}`} key={p.id} className="flex gap-4 bg-gray-900/50 border border-gray-800 p-3 rounded-2xl hover:border-blue-500/50 transition-all group">
-                                <div className="w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0">
-                                    <img src={p.primaryImage} alt={p.name} className="w-full h-full object-contain p-1" />
+                <div className="space-y-3 text-xs text-[#CFCFCF]">
+                    <p className="font-bold text-[#F8F3E8]">Here are the matching precision products from our store catalog:</p>
+                    <div className="space-y-2">
+                        {matchedProducts.map(p => (
+                            <Link 
+                                key={p.id} 
+                                href={getProductUrl(p)}
+                                onClick={() => setIsOpen(false)}
+                                className="flex items-center gap-3 p-2.5 bg-[#151515] border border-[#343434] hover:border-[#A67C35] rounded-xl transition-all group text-left"
+                            >
+                                <div className="w-12 h-12 bg-white rounded-lg p-1 shrink-0 flex items-center justify-center">
+                                    <img src={p.primaryImage} alt={p.name} className="max-h-full max-w-full object-contain" />
                                 </div>
-                                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                    <div className="text-xs font-black text-white truncate group-hover:text-blue-400 transition-colors">{p.name}</div>
-                                    <div className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{p.category}</div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-xs font-bold text-[#F8F3E8] group-hover:text-[#A67C35] transition-colors truncate uppercase">{p.name}</h4>
+                                    <p className="text-[9px] text-[#8E8E9A] font-mono font-bold uppercase">{p.category} • ₹{p.retailPrice ? p.retailPrice.toLocaleString() : 'Out of Stock'}</p>
                                 </div>
+                                <ArrowRight size={14} className="text-[#8E8E9A] group-hover:text-[#A67C35] group-hover:translate-x-1 transition-all" />
                             </Link>
                         ))}
                     </div>
@@ -183,32 +187,29 @@ export function AIAssistant() {
             );
         }
 
-        // 5. Fallback (Expert Tone)
+        // 5. Default Specialized Knowledge Assistant Response
         return (
-            <div className="space-y-2">
-                <p>I couldn't find exactly what you're looking for. However, as your <strong>Expert Guide</strong>, I recommend checking our Shop for the latest jewelry tools and machinery.</p>
-                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Tip: Try searching for 'Machinery' or 'Hand Tools'.</p>
+            <div className="space-y-3 text-xs text-[#CFCFCF]">
+                <p>
+                    I am specialized in Dinanath & Sons' complete inventory of <strong>500+ jewellery tools, heavy rolling mills, casting machines, ultrasonic cleaners, and soldering torches</strong>.
+                </p>
+                <p className="text-[10px] text-[#8E8E9A] font-bold uppercase tracking-wider">
+                    Try asking about: "Rolling Mills", "Return Policy", "Shipping Time", or "B2B Quotes".
+                </p>
             </div>
         );
     };
 
-    const isMobile = useIsMobile();
-    const suggestions = [
-        { label: '🔥 Best Selling Tools', icon: <TrendingUp size={12}/> },
-        { label: '📦 Shipping Info', icon: <Truck size={12}/> },
-        { label: '💎 Wholesale Price', icon: <MessageCircle size={12}/> },
-        { label: '🛠️ New Tools', icon: <Sparkles size={12}/> }
+    const promptChips = [
+        "What is the Return Policy?",
+        "Shipping & Delivery Times",
+        "Show Rolling Mills",
+        "B2B Wholesale Quotation"
     ];
-
-    const handleSuggestionClick = (label: string) => {
-        setInput(label.replace(/^[^\s]+\s/, ''));
-        // We'll trigger send in the next tick
-        setTimeout(() => document.getElementById('ai-submit-btn')?.click(), 10);
-    };
 
     return (
         <>
-            {/* FAB Trigger */}
+            {/* Floating FAB Trigger Button */}
             <AnimatePresence>
                 {!isOpen && (
                     <motion.button
@@ -216,124 +217,103 @@ export function AIAssistant() {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
                         onClick={() => setIsOpen(true)}
-                        className="fixed bottom-6 right-6 z-[150] w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform group"
+                        className="fixed bottom-6 right-6 z-[150] w-14 h-14 bg-[#A67C35] hover:bg-[#8A6232] text-black rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(166,124,53,0.4)] transition-all hover:scale-110 border-none cursor-pointer"
                     >
-                        <Sparkles className="text-white" size={28} />
-                        {!isMobile && (
-                            <motion.div 
-                                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="absolute inset-0 bg-blue-400 rounded-full -z-10"
-                            />
-                        )}
+                        <Bot size={26} strokeWidth={2.5} />
                     </motion.button>
                 )}
             </AnimatePresence>
 
-            {/* Chat Window */}
+            {/* Chat Window Modal */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 40, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 50, scale: 0.95 }}
-                        className={`fixed bottom-6 right-6 z-[200] w-[95vw] md:w-[450px] h-[600px] bg-black border border-gray-800 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden ${isMobile ? '' : 'backdrop-blur-2xl bg-black/90'}`}
+                        exit={{ opacity: 0, y: 40, scale: 0.95 }}
+                        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[200] w-[92vw] sm:w-[420px] h-[550px] sm:h-[600px] bg-[#1E1E1E] border border-[#343434] rounded-3xl shadow-[0_30px_90px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden text-left"
                     >
-                        {/* Header */}
-                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 border-b border-gray-800 flex justify-between items-center relative overflow-hidden">
-                            <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
-                                <Sparkles size={120} className="text-blue-500 translate-x-10 -translate-y-10" />
-                            </div>
-                            <div className="flex items-center gap-4 relative z-10">
-                                <div className="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center border border-blue-500/30">
-                                    <Sparkles size={24} className="text-blue-500" />
+                        {/* Chat Header */}
+                        <div className="bg-[#151515] p-4 px-6 border-b border-[#343434] flex justify-between items-center relative select-none">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-[#A67C35]/15 border border-[#A67C35]/30 rounded-xl flex items-center justify-center text-[#A67C35]">
+                                    <Bot size={22} />
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-white text-lg tracking-tight">Dinanath AI <span className="text-[10px] bg-blue-600 px-1.5 py-0.5 rounded ml-1 uppercase">Pro</span></h3>
-                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Online and Ready to Help</span>
-                                    </div>
+                                    <h3 className="text-sm font-bold text-[#F8F3E8] uppercase tracking-wide flex items-center gap-2">
+                                        Dinanath AI <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    </h3>
+                                    <p className="text-[9px] text-[#8E8E9A] font-mono uppercase font-semibold">Jewellery Tools Assistant</p>
                                 </div>
                             </div>
-                            <button
-                                onClick={() => setIsOpen(false)}
-                                className="w-10 h-10 bg-black/40 hover:bg-black text-gray-500 hover:text-white rounded-full flex items-center justify-center transition-all border border-gray-800 relative z-10"
+                            <button 
+                                onClick={() => setIsOpen(false)} 
+                                className="w-8 h-8 rounded-lg bg-[#242424] border border-[#343434] flex items-center justify-center text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors cursor-pointer"
                             >
-                                <X size={20} />
+                                <X size={16} />
                             </button>
                         </div>
- 
-                        {/* Messages Area */}
-                        <div
-                            className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent"
-                            ref={scrollRef}
-                        >
+
+                        {/* Messages Body */}
+                        <div ref={scrollRef} className="flex-1 p-5 overflow-y-auto space-y-4 custom-scrollbar bg-[#1E1E1E]">
                             {messages.map((msg) => (
-                                <motion.div
-                                    initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
+                                <div
                                     key={msg.id}
                                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
                                     <div
-                                        className={`max-w-[85%] rounded-3xl px-5 py-4 text-sm leading-relaxed ${msg.role === 'user'
-                                                ? 'bg-blue-600 text-white rounded-br-none shadow-lg shadow-blue-900/20'
-                                                : 'bg-gray-900 text-gray-200 rounded-bl-none border border-gray-800'
-                                            }`}
+                                        className={`max-w-[85%] rounded-2xl p-4 text-xs ${
+                                            msg.role === 'user'
+                                                ? 'bg-[#A67C35] text-black font-bold shadow-md rounded-br-none'
+                                                : 'bg-[#151515] border border-[#343434] text-[#F8F3E8] rounded-bl-none shadow'
+                                        }`}
                                     >
                                         {msg.content}
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
+
                             {isTyping && (
                                 <div className="flex justify-start">
-                                    <div className="bg-gray-900 border border-gray-800 rounded-3xl rounded-bl-none px-6 py-4 flex gap-1.5 items-center">
-                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }} />
-                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }} />
+                                    <div className="bg-[#151515] border border-[#343434] rounded-2xl p-3 px-4 rounded-bl-none flex items-center gap-1.5">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#A67C35] animate-bounce" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#A67C35] animate-bounce [animation-delay:0.2s]" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#A67C35] animate-bounce [animation-delay:0.4s]" />
                                     </div>
                                 </div>
                             )}
+                        </div>
 
-                            {/* Suggestion Chips */}
-                            {!isTyping && messages.length < 3 && (
-                                <div className="pt-4 flex flex-wrap gap-2">
-                                    {suggestions.map((s, i) => (
-                                        <button 
-                                            key={i}
-                                            onClick={() => handleSuggestionClick(s.label)}
-                                            className="px-4 py-2 bg-black border border-gray-800 rounded-full text-[10px] font-black text-gray-400 uppercase tracking-widest hover:border-blue-500 hover:text-white hover:bg-blue-600/10 transition-all flex items-center gap-2"
-                                        >
-                                            {s.icon} {s.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
- 
-                        {/* Input Area */}
-                        <div className="p-4 bg-gray-900 border-t border-gray-800">
-                            <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
-                                <input
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Ask Dinanath AI anything..."
-                                    className="flex-1 bg-black border border-gray-800 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-all shadow-inner"
-                                />
+                        {/* Quick Action Prompt Chips */}
+                        <div className="px-4 py-2 bg-[#151515] border-t border-[#343434] flex items-center gap-2 overflow-x-auto custom-scrollbar">
+                            {promptChips.map((chip, idx) => (
                                 <button
-                                    id="ai-submit-btn"
-                                    type="submit"
-                                    disabled={!input.trim() || isTyping}
-                                    className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/20 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+                                    key={idx}
+                                    onClick={() => handleSendMessage(undefined, chip)}
+                                    className="px-3 py-1.5 rounded-full bg-[#242424] hover:bg-[#343434] border border-[#343434] text-[#CFCFCF] text-[9.5px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors cursor-pointer shrink-0"
                                 >
-                                    <Send size={24} />
+                                    {chip}
                                 </button>
-                            </form>
-                            <p className="text-[9px] text-gray-600 text-center mt-3 font-bold uppercase tracking-widest">
-                                Dinanath Support • Always Online
-                            </p>
+                            ))}
                         </div>
+
+                        {/* Chat Input Bar */}
+                        <form onSubmit={handleSendMessage} className="p-3 px-4 bg-[#151515] border-t border-[#343434] flex items-center gap-2">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Ask Dinanath AI..."
+                                className="flex-1 h-11 bg-[#1E1E1E] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] placeholder-[#8E8E9A] focus:outline-none transition-colors"
+                            />
+                            <button
+                                type="submit"
+                                disabled={!input.trim()}
+                                className="w-11 h-11 bg-[#A67C35] hover:bg-[#8A6232] text-black rounded-xl flex items-center justify-center transition-colors disabled:opacity-30 border-none cursor-pointer shrink-0 shadow"
+                            >
+                                <Send size={16} />
+                            </button>
+                        </form>
                     </motion.div>
                 )}
             </AnimatePresence>

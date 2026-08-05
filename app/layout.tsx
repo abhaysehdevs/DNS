@@ -95,6 +95,8 @@ export const viewport = {
   themeColor: '#151515',
 };
 
+import { ThemeSync } from '@/components/theme-sync';
+
 export default function RootLayout({
   children,
 }: {
@@ -185,6 +187,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={cn(inter.variable, cinzel.variable, roboto.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col bg-surface-2 text-text-primary")}>
+        <ThemeSync />
         {children}
       </body>
     </html>

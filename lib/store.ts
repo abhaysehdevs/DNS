@@ -231,6 +231,9 @@ export const useAppStore = create<AppState>()(
             },
 
             addToCart: (item) => set((state) => {
+                if (!item.price || item.price <= 0 || item.quantity <= 0) {
+                    return state;
+                }
                 // Check if same product AND same variant exists
                 const existingIndex = state.cart.findIndex((i) =>
                     i.productId === item.productId &&
@@ -274,9 +277,13 @@ export const useAppStore = create<AppState>()(
 
             clearCart: () => set({ cart: [] }),
 
-            // Admin Actions Implementation
             loginAdmin: () => set({ isAdminAuthenticated: true }),
-            logoutAdmin: () => set({ isAdminAuthenticated: false }),
+            logoutAdmin: () => {
+                if (typeof window !== 'undefined') {
+                    sessionStorage.removeItem('dns_admin_session_active');
+                }
+                set({ isAdminAuthenticated: false });
+            },
 
             updateAdminSettings: (newSettings) => set((state) => ({
                 adminSettings: { ...state.adminSettings, ...newSettings },

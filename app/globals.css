@@ -118,6 +118,45 @@ html.light {
   --text-tertiary: #86868B;
 }
 
+/* GLOBAL LIGHT MODE SITE-WIDE OVERRIDES */
+html.light body {
+  background-color: var(--surface-2) !important;
+  color: var(--text-primary) !important;
+}
+
+html.light .bg-\[\#151515\],
+html.light .bg-\[\#070707\],
+html.light .bg-\[\#090909\],
+html.light .bg-\[\#121212\],
+html.light .bg-\[\#141414\],
+html.light .bg-\[\#1A1A1A\],
+html.light .bg-black {
+  background-color: var(--surface-2) !important;
+}
+
+html.light .bg-\[\#1E1E1E\],
+html.light .bg-\[\#242424\] {
+  background-color: var(--surface-3) !important;
+}
+
+html.light .text-\[\#F8F3E8\],
+html.light .text-white {
+  color: var(--text-primary) !important;
+}
+
+html.light .text-\[\#CFCFCF\] {
+  color: var(--text-secondary) !important;
+}
+
+html.light .text-\[\#8E8E9A\] {
+  color: var(--text-tertiary) !important;
+}
+
+html.light .border-\[\#343434\],
+html.light .border-\[\#242424\] {
+  border-color: var(--glass-border) !important;
+}
+
 /* ═══════════════════════════════════════
    GLOBAL FORM STYLING (FIX: VISIBILITY)
    ═══════════════════════════════════════ */
