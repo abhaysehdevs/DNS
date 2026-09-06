@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Currency } from '@/components/currency';
 import { SecureImage } from './secure-image';
+import { ShareButton } from './share-button';
+import { getProductUrl } from '@/lib/slug';
 
 export function ProductQuickView({ product, isOpen, onClose }: { product: Product, isOpen: boolean, onClose: () => void }) {
     const { mode, language, cart, addToCart, wishlist, toggleWishlist } = useAppStore();
@@ -87,13 +89,17 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                             style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)' }}
                         />
 
-                        {/* Close button */}
-                        <button
-                            onClick={onClose}
-                            className="absolute top-6 right-6 z-50 w-12 h-12 glass hover:bg-white/10 rounded-full flex items-center justify-center text-[#5A5A6A] hover:text-[#F5F5F7] transition-all group"
-                        >
-                            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
-                        </button>
+                        {/* Action buttons (Share & Close) */}
+                        <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
+                            <ShareButton product={product} variant="icon" />
+                            <button
+                                onClick={onClose}
+                                className="w-10 h-10 md:w-12 md:h-12 glass hover:bg-white/10 rounded-full flex items-center justify-center text-[#5A5A6A] hover:text-[#F5F5F7] transition-all group"
+                                title="Close dialog"
+                            >
+                                <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                            </button>
+                        </div>
 
                         <div className="flex flex-col md:flex-row w-full overflow-y-auto md:overflow-hidden">
                             
@@ -270,7 +276,7 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                     {/* Footer Link */}
                                     <div className="flex items-center justify-center pt-4">
                                         <Link
-                                            href={`/shop/${product.id}`}
+                                            href={getProductUrl(product)}
                                             onClick={onClose}
                                             className="text-[#5A5A6A] hover:text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 transition-all group/link"
                                         >

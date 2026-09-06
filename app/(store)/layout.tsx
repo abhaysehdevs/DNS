@@ -1,7 +1,6 @@
 import { Navbar } from '@/components/navbar';
 import { LanguagePopup } from '@/components/language-popup';
 import { AIAssistant } from '@/components/ai-assistant';
-import { Preloader } from '@/components/preloader';
 import { Footer } from '@/components/footer';
 import { GoogleTranslate } from '@/components/google-translate';
 import { CurrencyManager } from '@/components/currency-manager';
@@ -16,7 +15,6 @@ export default function StoreLayout({
     <>
       <CurrencyManager />
       <GoogleTranslate />
-      <Preloader />
       <Navbar />
       <LanguagePopup />
       <AIAssistant />

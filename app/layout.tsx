@@ -5,6 +5,8 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import Script from 'next/script';
 
+import { AuthListener } from '@/components/auth-listener';
+
 const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-display' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const roboto = Roboto({ weight: ['400', '500', '700'], subsets: ['latin'], variable: '--font-technical' });
@@ -95,15 +97,14 @@ export const viewport = {
   themeColor: '#151515',
 };
 
-import { ThemeSync } from '@/components/theme-sync';
-
 export default function RootLayout({
+
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
       <head>
         <script
           type="application/ld+json"
@@ -149,29 +150,6 @@ export default function RootLayout({
             })
           }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var storage = localStorage.getItem('dinanath-store-storage');
-                  if (storage) {
-                    var parsed = JSON.parse(storage);
-                    if (parsed && parsed.state && parsed.state.theme) {
-                      if (parsed.state.theme === 'light') {
-                        document.documentElement.classList.add('light');
-                        document.documentElement.classList.remove('dark');
-                        return;
-                      }
-                    }
-                  }
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.classList.remove('light');
-                } catch (e) {}
-              })();
-            `
-          }}
-        />
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-9HPF6NRR0W"
@@ -187,9 +165,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={cn(inter.variable, cinzel.variable, roboto.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col bg-surface-2 text-text-primary")}>
-        <ThemeSync />
+        <AuthListener />
         {children}
       </body>
     </html>
   );
 }
+

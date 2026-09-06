@@ -66,7 +66,7 @@ export default function NewArrivalsPage() {
                     .order('created_at', { ascending: false })
                     .limit(8);
 
-                if (fallbackData) {
+                if (fallbackData && fallbackData.length > 0) {
                     const mapped: Product[] = fallbackData.map((p: any) => ({
                         id: p.id,
                         name: p.name,
@@ -82,9 +82,16 @@ export default function NewArrivalsPage() {
                         reviews: p.reviews || []
                     }));
                     setProducts(mapped);
+                } else {
+                    const module = await import('@/lib/data');
+                    setProducts(module.products.slice(0, 8));
                 }
             } catch (err) {
                 console.error(err);
+                try {
+                    const module = await import('@/lib/data');
+                    setProducts(module.products.slice(0, 8));
+                } catch (e) {}
             } finally {
                 setLoading(false);
             }

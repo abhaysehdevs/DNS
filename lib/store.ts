@@ -159,7 +159,7 @@ export const useAppStore = create<AppState>()(
             hasSeenLanguagePopup: false,
             viewedProducts: [],
             wishlist: [],
-            theme: 'light',
+            theme: 'dark',
 
             // Default Admin Settings
             adminSettings: {
@@ -196,7 +196,7 @@ export const useAppStore = create<AppState>()(
             })),
             setUser: (user) => set({ user }), // New
             setHasSeenLanguagePopup: (hasSeenLanguagePopup) => set({ hasSeenLanguagePopup }),
-            setTheme: (theme) => set({ theme }),
+            setTheme: (theme) => set({ theme: 'dark' }),
 
             viewProduct: (productId) => set((state) => {
                 const newViewed = [productId, ...state.viewedProducts.filter(id => id !== productId)].slice(0, 6);

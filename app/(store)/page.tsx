@@ -185,13 +185,13 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 2. CATEGORIES SECTION (Ivory theme background) */}
-            <section className="py-24 px-6 bg-warm-ivory border-b border-[#E2DCD0] relative">
+            {/* 2. CATEGORIES SECTION */}
+            <section className="py-24 px-6 bg-[#151515] border-b border-[#343434] relative">
                 <div className="container mx-auto">
                     <div className="text-center mb-16">
                         <div className="h-0.5 w-16 bg-[#A67C35] mx-auto mb-4" />
-                        <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-2">Shop By Category</h2>
-                        <p className="text-[10px] font-bold text-[#8A6232] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
+                        <h2 className="text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-2">Shop By Category</h2>
+                        <p className="text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
@@ -203,7 +203,7 @@ export default function Home() {
                                         alt={cat.name} 
                                         className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 mix-blend-lighten"
                                         onError={(e) => {
-                                            (e.target as HTMLImageElement).src = '/placeholder.jpg';
+                                             (e.target as HTMLImageElement).src = '/placeholder.jpg';
                                         }}
                                     />
                                 </div>
@@ -222,27 +222,27 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 3. FEATURED COLLECTIONS (Ivory theme background) */}
+            {/* 3. FEATURED COLLECTIONS */}
             {featuredCollections.length > 0 ? (
                 featuredCollections.map((col) => {
                     const colProducts = collectionsProducts[col.id] || [];
                     if (colProducts.length === 0) return null;
                     return (
-                        <section key={col.id} className="py-24 px-6 bg-[#FAF6EE] relative border-b border-[#E2DCD0]">
+                        <section key={col.id} className="py-24 px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
                             <div className="container mx-auto">
-                                <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#E2DCD0] pb-6 gap-4 text-center sm:text-left">
+                                <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#343434] pb-6 gap-4 text-center sm:text-left">
                                     <div>
-                                        <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-1">{col.name}</h2>
-                                        <p className="text-[9px] font-bold text-[#8A6232] uppercase tracking-[0.2em]">Curated {col.name.toLowerCase()} catalog</p>
+                                        <h2 className="text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">{col.name}</h2>
+                                        <p className="text-[9px] font-bold text-[#A67C35] uppercase tracking-[0.2em]">Curated {col.name.toLowerCase()} catalog</p>
                                     </div>
-                                    <Link href={`/shop?cat=${col.query.replace('category=', '')}`} className="group text-[10px] font-bold text-matte-black hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                                    <Link href={`/shop?cat=${col.query.replace('category=', '')}`} className="group text-[10px] font-bold text-[#CFCFCF] hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
                                         <span>View Collection</span>
                                         <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                                     </Link>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
                                     {colProducts.map((product) => (
-                                        <ProductCard key={product.id} product={product} lightTheme={true} />
+                                        <ProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
                             </div>
@@ -251,14 +251,14 @@ export default function Home() {
                 })
             ) : (
                 /* Fallback New Arrivals */
-                <section className="py-24 px-6 bg-[#FAF6EE] relative border-b border-[#E2DCD0]">
+                <section className="py-24 px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
                     <div className="container mx-auto">
-                        <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#E2DCD0] pb-6 gap-4 text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#343434] pb-6 gap-4 text-center sm:text-left">
                             <div>
-                                <h2 className="text-3xl md:text-5xl font-bold font-display text-matte-black tracking-wider uppercase mb-1">New Arrivals</h2>
-                                <p className="text-[9px] font-bold text-[#8A6232] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
+                                <h2 className="text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">New Arrivals</h2>
+                                <p className="text-[9px] font-bold text-[#A67C35] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
                             </div>
-                            <Link href="/shop" className="group text-[10px] font-bold text-matte-black hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                            <Link href="/shop" className="group text-[10px] font-bold text-[#CFCFCF] hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
                                 <span>View All Products</span>
                                 <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
@@ -272,7 +272,7 @@ export default function Home() {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
                                 {newArrivals.map((product) => (
-                                    <ProductCard key={product.id} product={product} lightTheme={true} />
+                                    <ProductCard key={product.id} product={product} />
                                 ))}
                             </div>
                         )}

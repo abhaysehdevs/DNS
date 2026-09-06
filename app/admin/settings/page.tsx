@@ -249,40 +249,6 @@ export default function SettingsPage() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
-                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
-                                    <Palette className="text-purple-500" size={24} /> Appearance
-                                </h2>
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-800">
-                                        <div>
-                                            <h3 className="font-medium text-white mb-1">Theme Mode</h3>
-                                            <p className="text-xs text-gray-400">Select your preferred interface theme.</p>
-                                        </div>
-                                        <div className="flex bg-black p-1 rounded-lg border border-gray-700">
-                                            <button
-                                                onClick={() => updateAdminSettings({ theme: 'light' })}
-                                                className={`p-2 rounded-md transition-all ${adminSettings.theme === 'light' ? 'bg-gray-800 text-white shadow' : 'text-gray-500 hover:text-gray-300'}`}
-                                            >
-                                                <Sun size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => updateAdminSettings({ theme: 'dark' })}
-                                                className={`p-2 rounded-md transition-all ${adminSettings.theme === 'dark' ? 'bg-gray-800 text-white shadow' : 'text-gray-500 hover:text-gray-300'}`}
-                                            >
-                                                <Moon size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => updateAdminSettings({ theme: 'system' })}
-                                                className={`p-2 rounded-md transition-all ${adminSettings.theme === 'system' ? 'bg-gray-800 text-white shadow' : 'text-gray-500 hover:text-gray-300'}`}
-                                            >
-                                                <Monitor size={18} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     )}
 

@@ -6,17 +6,16 @@ import { getProductUrl } from '@/lib/slug';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { SecureImage } from './secure-image';
+import { ShareButton } from './share-button';
 
 export function ProductCard({ 
     product, 
     compact = false, 
-    list = false,
-    lightTheme = false
+    list = false
 }: { 
     product: Product, 
     compact?: boolean, 
-    list?: boolean,
-    lightTheme?: boolean
+    list?: boolean
 }) {
     const { mode, wishlist, toggleWishlist } = useAppStore();
     const isRetail = mode === 'retail';
@@ -26,47 +25,7 @@ export function ProductCard({
     const isAvailable = product.inStock && !isPriceInvalid;
     const productUrl = getProductUrl(product);
 
-    // 1. LIGHT THEME CARD LAYOUT
-    if (lightTheme) {
-        return (
-            <Link href={productUrl} className="group relative bg-white border border-[#E2DCD0] hover:border-[#A67C35] rounded-2xl p-4 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full">
-                {!isAvailable && (
-                    <div className="absolute top-3 left-3 z-10 bg-[#D12A1C] text-white text-[7.5px] font-black uppercase px-2.5 py-1 rounded tracking-widest shadow">
-                        Out of Stock
-                    </div>
-                )}
-
-                <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-56 sm:h-64 bg-[#FAF6EE] rounded-xl p-4 flex items-center justify-center mb-4 overflow-hidden relative">
-                        <SecureImage 
-                            src={product.image || product.primaryImage} 
-                            alt={product.name} 
-                            containerClassName="w-full h-full flex items-center justify-center"
-                            className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105 mix-blend-multiply" 
-                        />
-                    </div>
-
-                    <div className="text-[8px] font-mono font-bold text-[#A67C35] uppercase tracking-widest mb-1.5">{product.category}</div>
-                    
-                    <h3 className="text-xs sm:text-sm font-bold text-[#1D1D1F] leading-snug uppercase tracking-tight line-clamp-2 h-10 mb-2 group-hover:text-[#A67C35] transition-colors">
-                        {product.name}
-                    </h3>
-                </div>
-
-                <div className="mt-auto pt-3 border-t border-[#FAF6EE] text-center">
-                    {isPriceInvalid ? (
-                        <span className="text-xs font-bold text-[#D12A1C] uppercase tracking-wider">Out of Stock</span>
-                    ) : isRetail ? (
-                        <span className="text-sm font-black text-[#1D1D1F]">₹{product.retailPrice.toLocaleString()}</span>
-                    ) : (
-                        <span className="text-xs text-[#A67C35] uppercase font-bold tracking-wider">Wholesale Inquiry</span>
-                    )}
-                </div>
-            </Link>
-        );
-    }
-
-    // 2. COMPACT CARD LAYOUT
+    // 1. COMPACT CARD LAYOUT
     if (compact) {
         return (
             <Link href={productUrl} className="block group h-full">
@@ -126,9 +85,11 @@ export function ProductCard({
                 )}
             </Link>
 
-            {/* Wishlist Heart Action */}
-            <div className="absolute top-3 right-3 z-20">
+            {/* Top Right Action Tools (Wishlist & Share) */}
+            <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
+                <ShareButton product={product} variant="icon" />
                 <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
+                    title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                     className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-md transition-all duration-300 border ${
                         isWishlisted 
                             ? 'bg-[#D12A1C]/10 text-[#D12A1C] border-[#D12A1C]/20' 

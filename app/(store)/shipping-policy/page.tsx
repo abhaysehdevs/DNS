@@ -61,7 +61,7 @@ export default function ShippingPolicyPage() {
                     <div className="space-y-3 pb-6 border-b border-[#343434]">
                         <h3 className="text-sm font-bold text-[#A67C35] uppercase tracking-wider flex items-center gap-2">
                             <span className="w-6 h-6 rounded-lg bg-[#A67C35]/15 border border-[#A67C35]/30 flex items-center justify-center text-xs">2</span>
-                            Delivery Delivery Durations
+                            Delivery Durations
                         </h3>
                         <ul className="list-disc pl-5 text-xs text-[#CFCFCF] space-y-2">
                             <li><strong>Delhi NCR Region:</strong> 1 to 2 business days.</li>

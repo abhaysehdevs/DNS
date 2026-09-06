@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, Search, Heart, X, ChevronDown, User, Sun, Moon, Phone, Globe, Shield, Tag } from 'lucide-react';
+import { ShoppingCart, Menu, Search, Heart, X, ChevronDown, User, Phone, Globe, Shield, Tag } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import { useState, useEffect, useRef } from 'react';
@@ -12,7 +12,7 @@ import { SearchAutocomplete } from './search-autocomplete';
 import { supabase } from '@/lib/supabase';
 
 export function Navbar() {
-    const { mode, language, cart, wishlist, setMode, user, theme, setTheme, currencyData } = useAppStore();
+    const { mode, language, cart, wishlist, setMode, user, currencyData } = useAppStore();
     const t = translations[language] || translations['en'];
     const isMobile = useIsMobile();
     const pathname = usePathname();
@@ -87,16 +87,6 @@ export function Navbar() {
         }
     }, [isMenuOpen]);
 
-    useEffect(() => {
-        if (theme === 'light') {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-        } else {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-        }
-    }, [theme]);
-
     // Handle clicks outside search dropdown
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -120,10 +110,6 @@ export function Navbar() {
         setSearchQuery(term);
         router.push(`/shop?search=${encodeURIComponent(term)}`);
         setIsSearchFocused(false);
-    };
-
-    const toggleTheme = () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
     };
 
     const navLinks = [
@@ -265,16 +251,6 @@ export function Navbar() {
                                 <button onClick={() => setMode('wholesale')} className={`px-3 py-1.5 rounded text-[8px] font-bold uppercase tracking-wider transition-all ${!isRetail ? 'bg-[#D12A1C] text-white shadow' : 'text-[#8E8E9A] hover:text-[#F8F3E8]'}`}>Wholesale</button>
                             </div>
 
-                            {/* Theme Toggle */}
-                            <button 
-                                 onClick={toggleTheme} 
-                                 onMouseMove={(e) => handleMouseMove(e, "Theme Selector: Toggle interface environment between dark and light modes.")}
-                                 onMouseLeave={handleMouseLeave}
-                                 className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] hover:text-[#A67C35] hover:border-[#A67C35]/30 transition-all"
-                             >
-                                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-                            </button>
-
                             {/* Account Link */}
                             <Link 
                                  href="/account" 
@@ -286,9 +262,12 @@ export function Navbar() {
                                     <User size={16} />
                                 </div>
                                 <div className="hidden xl:flex flex-col text-left">
-                                    <span className="text-[8px] text-[#8E8E9A] font-bold uppercase tracking-wider leading-none">Account</span>
-                                    <span className="text-[10px] text-[#F8F3E8] font-bold mt-1 group-hover:text-[#A67C35] transition-colors uppercase leading-none">Login / Register</span>
+                                    <span className="text-[8px] text-[#8E8E9A] font-bold uppercase tracking-wider leading-none">{user ? 'Signed In' : 'Account'}</span>
+                                    <span className="text-[10px] text-[#F8F3E8] font-bold mt-1 group-hover:text-[#A67C35] transition-colors uppercase leading-none truncate max-w-[120px]">
+                                        {user ? (user.name || 'My Account') : 'Login / Register'}
+                                    </span>
                                 </div>
+
                             </Link>
 
                             {/* Wishlist Link */}
@@ -462,10 +441,6 @@ export function Navbar() {
                                     <button onClick={() => { setMode('retail'); setIsMenuOpen(false); }} className={`h-11 rounded-lg font-bold uppercase tracking-wider text-[8px] border ${isRetail ? 'bg-[#A67C35] text-black border-[#A67C35]' : 'bg-[#1E1E1E] text-[#CFCFCF] border-[#343434]'}`}>Retail</button>
                                     <button onClick={() => { setMode('wholesale'); setIsMenuOpen(false); }} className={`h-11 rounded-lg font-bold uppercase tracking-wider text-[8px] border ${!isRetail ? 'bg-[#D12A1C] text-white border-[#D12A1C]' : 'bg-[#1E1E1E] text-[#CFCFCF] border-[#343434]'}`}>Wholesale</button>
                                 </div>
-                                <button onClick={toggleTheme} className="w-full h-11 rounded-lg border border-[#343434] bg-[#1E1E1E] text-[#CFCFCF] font-bold uppercase tracking-wider text-[8px] flex items-center justify-center gap-2">
-                                    {theme === 'dark' ? <Sun size={12} /> : <Moon size={12} />}
-                                    Toggle Theme ({theme === 'dark' ? 'Light' : 'Dark'})
-                                </button>
                                 <button 
                                     onClick={() => { setIsMenuOpen(false); window.dispatchEvent(new CustomEvent('open-language-popup')); }} 
                                     className="w-full h-11 rounded-lg border border-[#343434] bg-[#1E1E1E] text-[#CFCFCF] font-bold uppercase tracking-wider text-[8px] flex items-center justify-center gap-2"

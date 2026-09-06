@@ -9,6 +9,7 @@ import { Reviews } from '@/components/reviews';
 import { RelatedProducts } from '@/components/related-products';
 import { RecentlyViewed } from '@/components/recently-viewed';
 import { SecureImage } from '@/components/secure-image';
+import { ShareButton } from '@/components/share-button';
 import { Product, getProductGallery } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
@@ -372,9 +373,13 @@ export default function ProductClient({ id }: { id: string }) {
                                 <button 
                                     onClick={() => toggleWishlist(product.id)}
                                     className={`w-14 h-14 rounded-lg border flex items-center justify-center shrink-0 transition-all ${isWishlisted ? 'bg-[#D12A1C]/10 text-[#D12A1C] border-[#D12A1C]/30' : 'bg-[#151515] border-[#343434] text-[#8E8E9A] hover:text-[#F8F3E8]'}`}
+                                    title="Add to Wishlist"
                                 >
                                     <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
                                 </button>
+
+                                {/* Unique Shareable Link Button */}
+                                <ShareButton product={product} />
                             </div>
                         </div>
 

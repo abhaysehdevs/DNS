@@ -53,6 +53,7 @@ export interface Product {
     // Legacy / Alternative
     variants?: any[];
     variantType?: string;
+    slug?: string;
 }
 
 // Helper to generate gallery

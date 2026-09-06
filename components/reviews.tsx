@@ -52,7 +52,7 @@ export function Reviews({ initialReviews, productId }: { initialReviews: Review[
         };
 
         if (productId) fetchReviews();
-    }, [productId, initialReviews]);
+    }, [productId]);
 
     // Check if the current user is a verified buyer of this product
     useEffect(() => {

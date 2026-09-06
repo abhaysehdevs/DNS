@@ -79,27 +79,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         loadSettings();
     }, []);
 
-    // Apply active theme
-    useEffect(() => {
-        const currentTheme = adminSettings.theme || 'dark';
-        if (currentTheme === 'light') {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-        } else if (currentTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-        } else if (currentTheme === 'system') {
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            if (systemTheme === 'light') {
-                document.documentElement.classList.add('light');
-                document.documentElement.classList.remove('dark');
-            } else {
-                document.documentElement.classList.add('dark');
-                document.documentElement.classList.remove('light');
-            }
-        }
-    }, [adminSettings.theme]);
-
     // Strict Authentication & Session Token Check
     useEffect(() => {
         if (pathname === '/admin/login') return;
