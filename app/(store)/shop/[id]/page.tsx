@@ -34,8 +34,8 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
         };
     }
 
-    const title = `${rawProduct.name} | Dinanath & Sons`;
-    const description = rawProduct.description?.substring(0, 160) || `Buy ${rawProduct.name} at wholesale prices. Premium jewelry tools and machinery.`;
+    const title = (rawProduct as any).seo_title || (rawProduct.specifications as any)?.seo_title || `${rawProduct.name} | Dinanath & Sons`;
+    const description = (rawProduct as any).seo_description || (rawProduct.specifications as any)?.seo_description || rawProduct.description?.substring(0, 160) || `Buy ${rawProduct.name} at wholesale prices. Premium jewelry tools and machinery.`;
     const image = rawProduct.image || rawProduct.image_url || 'https://dinanathandsons.com/placeholder.jpg';
     const canonicalUrl = `https://dinanathandsons.com${getProductUrl(rawProduct)}`;
 

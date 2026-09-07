@@ -15,7 +15,8 @@ import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import { 
     ShoppingCart, Truck, RotateCcw, Lock, FileText, Heart, 
-    PlayCircle, Loader2, Star, Zap, Check, CheckCircle2, ShieldCheck, Scale, Ruler
+    PlayCircle, Loader2, Star, Zap, Check, CheckCircle2, ShieldCheck, Scale, Ruler,
+    MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -130,15 +131,6 @@ export default function ProductClient({ id }: { id: string }) {
     // Calculations for Mock original price
     const originalPrice = Math.round(product.retailPrice * 1.2 / 100) * 100;
     const discountPercent = 16;
-
-    // Bullet specification options
-    const defaultFeatures = [
-        "High-performance design optimized for professional jewellers & casting workshops.",
-        "Precision engineered components using hardened alloys for long-lasting durability.",
-        "Ergonomically tested model suitable for continuous workshop operations.",
-        "Backed by Dinanath & Sons' 60+ years of hardware excellence and trusted support."
-    ];
-    const bulletFeatures = product.features && product.features.length > 0 ? product.features : defaultFeatures;
 
     return (
         <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-32 md:pt-48 pb-20 selection:bg-[#A67C35]/30">
@@ -314,15 +306,17 @@ export default function ProductClient({ id }: { id: string }) {
                             )}
                         </div>
 
-                        {/* Specifications Bullet list */}
-                        <div className="border-y border-[#343434] py-6 space-y-3.5">
-                            {bulletFeatures.slice(0, 4).map((feat, idx) => (
-                                <div key={idx} className="flex items-start gap-3">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-[#A67C35] shrink-0 mt-2" />
-                                    <p className="text-sm text-[#CFCFCF] font-medium leading-relaxed">{feat}</p>
-                                </div>
-                            ))}
-                        </div>
+                        {/* Specifications Bullet list (only if configured on product) */}
+                        {product.features && product.features.length > 0 && (
+                            <div className="border-y border-[#343434] py-6 space-y-3.5">
+                                {product.features.map((feat, idx) => (
+                                    <div key={idx} className="flex items-start gap-3">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#A67C35] shrink-0 mt-2" />
+                                        <p className="text-sm text-[#CFCFCF] font-medium leading-relaxed">{feat}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Pricing display & Purchasing Block */}
                         <div className="bg-[#1E1E1E] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6 shadow-xl">
@@ -398,6 +392,19 @@ export default function ProductClient({ id }: { id: string }) {
                                 {/* Unique Shareable Link Button */}
                                 <ShareButton product={product} />
                             </div>
+
+                            {/* Bulk Inquiry on WhatsApp Button */}
+                            <a 
+                                href={`https://api.whatsapp.com/send?phone=919953435647&text=${encodeURIComponent(
+                                    `Hello Dinanath & Sons, I would like to make a bulk inquiry / request wholesale rates for "${product.name}".\nProduct Link: https://dinanathandsons.com/shop/${product.slug || product.id}`
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full h-12 rounded-xl font-black uppercase tracking-[0.15em] text-[10.5px] bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 hover:border-[#25D366]/60 text-[#25D366] transition-all flex items-center justify-center gap-2.5 shadow-md active:scale-[0.99]"
+                            >
+                                <MessageSquare size={16} />
+                                <span>Bulk Inquiry / Wholesale Rate on WhatsApp</span>
+                            </a>
                         </div>
 
                         {/* Succesful Cart Addition Banner */}
@@ -458,9 +465,8 @@ export default function ProductClient({ id }: { id: string }) {
                         <p className="text-[#8E8E9A] text-[9px] font-bold uppercase tracking-widest mt-1">In-depth engineering & manufacturing details</p>
                     </div>
                     
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                        {/* Specifications Table */}
-                        <div className="lg:col-span-8 space-y-1 text-left">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div className={`${product.features && product.features.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-1 text-left`}>
                             {Object.entries(product.specifications || {}).map(([key, val], idx) => (
                                 <div key={key} className={`flex py-4 px-6 rounded-lg border border-transparent ${idx % 2 === 0 ? 'bg-[#1E1E1E]' : ''}`}>
                                     <span className="w-1/3 text-[9px] font-bold text-[#8E8E9A] uppercase tracking-widest self-center">{key}</span>
@@ -472,18 +478,24 @@ export default function ProductClient({ id }: { id: string }) {
                             )}
                         </div>
                         
-                        {/* Model highlights */}
-                        <div className="lg:col-span-4 bg-[#1E1E1E] border border-[#343434] rounded-xl p-6 space-y-6 text-left h-fit">
-                            <h3 className="text-sm font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-2 border-b border-[#343434] pb-3"><Zap size={14} className="text-[#A67C35]" /> Core Features</h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                {bulletFeatures.map((feat, i) => (
-                                    <div key={i} className="flex items-start gap-3">
-                                        <div className="w-5 h-5 rounded-full bg-[#242424] text-[#A67C35] border border-[#343434] flex items-center justify-center shrink-0 mt-0.5"><Check size={10} strokeWidth={3} /></div>
-                                        <p className="text-[#CFCFCF] text-xs font-medium leading-relaxed">{feat}</p>
-                                    </div>
-                                ))}
+                        {/* Model highlights (only if configured on product) */}
+                        {product.features && product.features.length > 0 && (
+                            <div className="lg:col-span-4 bg-[#1E1E1E] border border-[#343434] rounded-xl p-6 space-y-6 text-left h-fit">
+                                <h3 className="text-sm font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-2 border-b border-[#343434] pb-3">
+                                    <Zap size={14} className="text-[#A67C35]" /> Core Features
+                                </h3>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {product.features.map((feat, i) => (
+                                        <div key={i} className="flex items-start gap-3">
+                                            <div className="w-5 h-5 rounded-full bg-[#242424] text-[#A67C35] border border-[#343434] flex items-center justify-center shrink-0 mt-0.5">
+                                                <Check size={10} strokeWidth={3} />
+                                            </div>
+                                            <p className="text-[#CFCFCF] text-xs font-medium leading-relaxed">{feat}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 

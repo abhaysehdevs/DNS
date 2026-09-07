@@ -7,7 +7,7 @@ import {
     Filter, AlertCircle, CheckCircle, XCircle, Layers, Box, ChevronDown, 
     CheckSquare, Square, MoreHorizontal, Download, Upload, Video, 
     Settings, Info, Zap, Scale, Ruler, ShieldCheck, Tag, Link as LinkIcon,
-    Globe
+    Globe, Star, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { convertToWebP } from '@/lib/image-utils';
@@ -93,8 +93,10 @@ export default function ProductsAdminPage() {
         setLoading(false);
     };
 
+    const [variantUploadingId, setVariantUploadingId] = useState<string | null>(null);
+
     // --- Media Handlers ---
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'image' | 'gallery' | 'video') => {
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'gallery' | 'video') => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
 
@@ -139,23 +141,58 @@ export default function ProductsAdminPage() {
                         url: result.url
                     });
                 }
-                setCurrentProduct(prev => ({
-                    ...prev,
-                    gallery: [...(prev.gallery || []), ...newItems]
-                }));
-            } else {
+                setCurrentProduct(prev => {
+                    const updatedGallery = [...(prev.gallery || []), ...newItems];
+                    const mainImg = prev.image || (updatedGallery.find(g => g.type === 'image')?.url) || updatedGallery[0]?.url || '';
+                    return {
+                        ...prev,
+                        image: mainImg,
+                        gallery: updatedGallery
+                    };
+                });
+            } else if (target === 'video') {
                 const result = await uploadSingleFile(files[0]);
-                if (target === 'image') {
-                    setCurrentProduct(prev => ({ ...prev, image: result.url }));
-                } else if (target === 'video') {
-                    setCurrentProduct(prev => ({ ...prev, video_url: result.url }));
-                }
+                setCurrentProduct(prev => ({ ...prev, video_url: result.url }));
             }
         } catch (error: any) {
             alert('Upload failed: ' + error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const handleSetMainImage = (url: string) => {
+        setCurrentProduct(prev => ({ ...prev, image: url }));
+    };
+
+    const handleMoveGalleryItem = (index: number, direction: 'left' | 'right') => {
+        setCurrentProduct(prev => {
+            const gallery = [...(prev.gallery || [])];
+            const targetIndex = direction === 'left' ? index - 1 : index + 1;
+            if (targetIndex < 0 || targetIndex >= gallery.length) return prev;
+            
+            const temp = gallery[index];
+            gallery[index] = gallery[targetIndex];
+            gallery[targetIndex] = temp;
+
+            return { ...prev, gallery };
+        });
+    };
+
+    const handleDeleteGalleryItem = (id: string) => {
+        setCurrentProduct(prev => {
+            const itemToDelete = prev.gallery?.find(g => g.id === id);
+            const remaining = prev.gallery?.filter(g => g.id !== id) || [];
+            let mainImg = prev.image;
+            if (itemToDelete && itemToDelete.url === prev.image) {
+                mainImg = remaining.find(g => g.type === 'image')?.url || remaining[0]?.url || '';
+            }
+            return {
+                ...prev,
+                image: mainImg,
+                gallery: remaining
+            };
+        });
     };
 
     // --- Variant Handlers ---
@@ -176,6 +213,42 @@ export default function ProductsAdminPage() {
         }));
     };
 
+    const handleVariantUpload = async (e: React.ChangeEvent<HTMLInputElement>, variantId: string) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setVariantUploadingId(variantId);
+        try {
+            let fileToUpload = file;
+            if (file.type.startsWith('image/') && file.type !== 'image/gif') {
+                try {
+                    fileToUpload = await convertToWebP(file);
+                } catch (e) {
+                    console.error('WebP conversion failed, using original file:', e);
+                }
+            }
+            const fileExt = fileToUpload.name.split('.').pop();
+            const fileName = `var-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `product-media/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('products')
+                .upload(filePath, fileToUpload);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('products')
+                .getPublicUrl(filePath);
+
+            updateVariant(variantId, { image: publicUrl });
+        } catch (err: any) {
+            alert('Variant image upload failed: ' + err.message);
+        } finally {
+            setVariantUploadingId(null);
+        }
+    };
+
     const removeVariant = (id: string) => {
         setCurrentProduct(prev => ({
             ...prev,
@@ -189,13 +262,40 @@ export default function ProductsAdminPage() {
         setFormLoading(true);
 
         try {
-            const payload = {
-                ...currentProduct,
-                // Ensure array fields are initialized
+            const galleryList = currentProduct.gallery || [];
+            // Ensure primary image is set if gallery exists
+            const primaryImage = currentProduct.image || galleryList.find(g => g.type === 'image')?.url || galleryList[0]?.url || '';
+
+            // Store SEO fields safely inside specifications
+            const specs = {
+                ...(currentProduct.specifications || {}),
+                seo_title: currentProduct.seo_title || '',
+                seo_description: currentProduct.seo_description || '',
+                seo_keywords: currentProduct.seo_keywords || ''
+            };
+
+            const payload: any = {
+                name: currentProduct.name,
+                category: currentProduct.category,
+                description: currentProduct.description || '',
+                retail_price: currentProduct.retail_price || 0,
+                wholesale_price: currentProduct.wholesale_price || 0,
+                wholesale_moq: currentProduct.wholesale_moq || 1,
+                in_stock: currentProduct.in_stock !== false,
+                quantity: currentProduct.quantity || 0,
+                sku: currentProduct.sku || '',
+                brand: currentProduct.brand || '',
+                model_number: currentProduct.model_number || '',
+                weight: currentProduct.weight || '',
+                dimensions: currentProduct.dimensions || { length: '', width: '', height: '' },
+                warranty_info: currentProduct.warranty_info || '',
+                image: primaryImage,
+                video_url: currentProduct.video_url || '',
                 features: currentProduct.features || [],
-                specifications: currentProduct.specifications || {},
+                specifications: specs,
                 variants: currentProduct.variants || [],
-                gallery: currentProduct.gallery || []
+                variant_type: currentProduct.variant_type || '',
+                gallery: galleryList
             };
 
             if (isEditing && currentProduct.id) {
@@ -205,10 +305,9 @@ export default function ProductsAdminPage() {
                     .eq('id', currentProduct.id);
                 if (error) throw error;
             } else {
-                const { id, ...newProduct } = payload as any;
                 const { error } = await supabase
                     .from('products')
-                    .insert([newProduct]);
+                    .insert([payload]);
                 if (error) throw error;
             }
 
@@ -274,10 +373,14 @@ export default function ProductsAdminPage() {
     };
 
     const handleEdit = (p: ProductDB) => {
+        const specs = p.specifications || {};
         setCurrentProduct({ 
             ...p, 
+            seo_title: p.seo_title || (specs as any).seo_title || '',
+            seo_description: p.seo_description || (specs as any).seo_description || '',
+            seo_keywords: p.seo_keywords || (specs as any).seo_keywords || '',
             features: p.features || [], 
-            specifications: p.specifications || {},
+            specifications: specs,
             variants: p.variants || [],
             gallery: p.gallery || [],
             dimensions: p.dimensions || { length: '', width: '', height: '' }
@@ -300,6 +403,9 @@ export default function ProductsAdminPage() {
             specifications: {},
             variants: [],
             gallery: [],
+            seo_title: '',
+            seo_description: '',
+            seo_keywords: '',
             dimensions: { length: '', width: '', height: '' }
         });
         setIsEditing(false);
@@ -854,87 +960,153 @@ export default function ProductsAdminPage() {
                                     </div>
                                 )}
 
-                                {/* --- Tab Content: Media (Upload & Video) --- */}
+                                {/* --- Tab Content: Media (Unified Gallery & Video) --- */}
                                 {activeTab === 'media' && (
-                                    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                            {/* Primary Media */}
-                                            <div className="space-y-6">
-                                                <h3 className="text-xs font-black text-white uppercase tracking-widest">Master Asset</h3>
-                                                <div className="relative aspect-square bg-black border-2 border-dashed border-gray-800 rounded-[3rem] overflow-hidden flex flex-col items-center justify-center group hover:border-blue-500 transition-all">
-                                                    {currentProduct.image ? (
-                                                        <>
-                                                            <img src={currentProduct.image} className="w-full h-full object-cover" />
-                                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-4">
-                                                                <button type="button" onClick={() => setCurrentProduct({...currentProduct, image: ''})} className="bg-red-600 text-white p-4 rounded-full"><Trash2 size={24}/></button>
+                                    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+                                            <div>
+                                                <h3 className="text-xl font-black text-white">Media Gallery ({currentProduct.gallery?.length || 0} Assets)</h3>
+                                                <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-1">
+                                                    Upload images and videos. Reposition items or pick which image serves as the main display photo.
+                                                </p>
+                                            </div>
+                                            <label className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-wider cursor-pointer transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+                                                <Upload size={16} />
+                                                <span>Upload Media Files</span>
+                                                <input 
+                                                    type="file" 
+                                                    multiple 
+                                                    onChange={e => handleFileUpload(e, 'gallery')} 
+                                                    className="hidden" 
+                                                    accept="image/*,video/*" 
+                                                />
+                                            </label>
+                                        </div>
+
+                                        {/* Unified Gallery Grid */}
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                                {currentProduct.gallery?.map((item, index) => {
+                                                    const isMain = currentProduct.image === item.url || (!currentProduct.image && index === 0);
+                                                    return (
+                                                        <div 
+                                                            key={item.id} 
+                                                            className={`relative rounded-3xl overflow-hidden bg-black border-2 transition-all group flex flex-col justify-between ${
+                                                                isMain ? 'border-amber-500 shadow-[0_0_25px_rgba(245,158,11,0.25)] ring-2 ring-amber-500/20' : 'border-gray-800 hover:border-gray-700'
+                                                            }`}
+                                                        >
+                                                            {/* Media Preview Aspect */}
+                                                            <div className="relative aspect-square w-full bg-gray-950 flex items-center justify-center overflow-hidden p-3">
+                                                                {item.type === 'video' ? (
+                                                                    <video src={item.url} className="w-full h-full object-cover rounded-2xl" controls={false} muted playsInline />
+                                                                ) : (
+                                                                    <img src={item.url} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" alt="Product asset" />
+                                                                )}
+
+                                                                {/* Main Image Badge */}
+                                                                {isMain && (
+                                                                    <div className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
+                                                                        <Star size={11} fill="currentColor" />
+                                                                        <span>Main Display Image</span>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* Delete button */}
+                                                                <button 
+                                                                    type="button" 
+                                                                    onClick={() => handleDeleteGalleryItem(item.id)} 
+                                                                    className="absolute top-3 right-3 p-2.5 bg-red-600/90 hover:bg-red-600 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all z-10"
+                                                                    title="Remove from gallery"
+                                                                >
+                                                                    <Trash2 size={14} />
+                                                                </button>
                                                             </div>
-                                                        </>
-                                                    ) : (
-                                                        <div className="text-center p-8">
-                                                            <Upload size={48} className="text-gray-700 mx-auto mb-4" />
-                                                            <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest">Drag or Click to Upload Master Image</p>
-                                                            <input type="file" onChange={e => handleFileUpload(e, 'image')} className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
+
+                                                            {/* Card Action Toolbar (Reorder + Set Main) */}
+                                                            <div className="p-3 bg-gray-900/90 border-t border-gray-800 flex items-center justify-between gap-2">
+                                                                {/* Left / Right Position Shift */}
+                                                                <div className="flex items-center gap-1">
+                                                                    <button
+                                                                        type="button"
+                                                                        disabled={index === 0}
+                                                                        onClick={() => handleMoveGalleryItem(index, 'left')}
+                                                                        className="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 disabled:opacity-30 disabled:hover:bg-gray-800 transition-all"
+                                                                        title="Move Left"
+                                                                    >
+                                                                        <ChevronLeft size={14} />
+                                                                    </button>
+                                                                    <span className="text-[10px] font-mono font-bold text-gray-500 px-1">#{index + 1}</span>
+                                                                    <button
+                                                                        type="button"
+                                                                        disabled={index === (currentProduct.gallery?.length || 1) - 1}
+                                                                        onClick={() => handleMoveGalleryItem(index, 'right')}
+                                                                        className="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 disabled:opacity-30 disabled:hover:bg-gray-800 transition-all"
+                                                                        title="Move Right"
+                                                                    >
+                                                                        <ChevronRight size={14} />
+                                                                    </button>
+                                                                </div>
+
+                                                                {/* Set Main Image Button */}
+                                                                {!isMain && item.type !== 'video' ? (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => handleSetMainImage(item.url)}
+                                                                        className="px-3 py-1.5 rounded-xl bg-gray-800 hover:bg-amber-500 hover:text-black text-amber-400 text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1"
+                                                                    >
+                                                                        <Star size={11} />
+                                                                        <span>Set as Main</span>
+                                                                    </button>
+                                                                ) : (
+                                                                    <span className="text-[9px] font-black text-amber-500 uppercase tracking-wider px-2">Primary</span>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    )}
-                                                    {uploading && <div className="absolute inset-0 bg-black/80 flex items-center justify-center"><Loader2 className="animate-spin text-blue-500" size={48}/></div>}
-                                                </div>
+                                                    );
+                                                })}
+
+                                                {/* Upload Tile Dropzone */}
+                                                <label className="relative aspect-square border-2 border-dashed border-gray-800 hover:border-blue-500 rounded-3xl flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all group bg-black/40 hover:bg-blue-500/5 min-h-[220px]">
+                                                    <div className="w-14 h-14 rounded-2xl bg-gray-900 group-hover:bg-blue-500/20 flex items-center justify-center mb-3 transition-colors">
+                                                        <Plus className="text-gray-500 group-hover:text-blue-400" size={28} />
+                                                    </div>
+                                                    <p className="text-white font-black text-xs uppercase tracking-wider mb-1">Add More Media</p>
+                                                    <p className="text-gray-500 text-[10px] font-bold">Auto WebP compression</p>
+                                                    <input type="file" multiple onChange={e => handleFileUpload(e, 'gallery')} className="hidden" accept="image/*,video/*" />
+                                                </label>
                                             </div>
 
-                                            {/* Video Asset */}
-                                            <div className="space-y-6">
-                                                <h3 className="text-xs font-black text-white uppercase tracking-widest">Video Experience</h3>
-                                                <div className="relative aspect-video bg-black border-2 border-dashed border-gray-800 rounded-[3rem] overflow-hidden flex flex-col items-center justify-center group hover:border-purple-500 transition-all">
-                                                    {currentProduct.video_url ? (
-                                                        <>
-                                                            <video src={currentProduct.video_url} className="w-full h-full object-cover" />
-                                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                                                                <button type="button" onClick={() => setCurrentProduct({...currentProduct, video_url: ''})} className="bg-red-600 text-white p-4 rounded-full"><Trash2 size={24}/></button>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <div className="text-center p-8">
-                                                            <Video size={48} className="text-gray-700 mx-auto mb-4" />
-                                                            <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest">Upload Product Demonstration Video</p>
-                                                            <input type="file" onChange={e => handleFileUpload(e, 'video')} className="absolute inset-0 opacity-0 cursor-pointer" accept="video/*" />
-                                                        </div>
-                                                    )}
+                                            {uploading && (
+                                                <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl text-blue-400 text-xs font-bold uppercase tracking-wider">
+                                                    <Loader2 className="animate-spin" size={18} />
+                                                    <span>Compressing and uploading media files to storage...</span>
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-gray-600 uppercase">Or External Video URL (YouTube/Vimeo)</label>
-                                                    <input value={currentProduct.video_url || ''} onChange={e => setCurrentProduct({...currentProduct, video_url: e.target.value})} className="w-full bg-black border border-gray-800 rounded-2xl p-4 text-xs text-white" placeholder="https://youtube.com/..." />
-                                                </div>
-                                            </div>
+                                            )}
                                         </div>
-                                        {/* Gallery */}
-                                        <div className="space-y-6">
-                                            <h3 className="text-xs font-black text-white uppercase tracking-widest">Media Gallery</h3>
-                                            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-                                                {currentProduct.gallery?.map(item => (
-                                                    <div key={item.id} className="relative aspect-square bg-black border border-gray-800 rounded-3xl overflow-hidden group">
-                                                        {item.type === 'video' ? (
-                                                            <video src={item.url} className="w-full h-full object-cover" controls={false} muted playsInline />
-                                                        ) : (
-                                                            <img src={item.url} className="w-full h-full object-cover" />
-                                                        )}
-                                                        <button type="button" onClick={() => setCurrentProduct({...currentProduct, gallery: currentProduct.gallery?.filter(g => g.id !== item.id)})} className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={12}/></button>
-                                                    </div>
-                                                ))}
-                                                <div className="relative aspect-square border-2 border-dashed border-gray-800 rounded-3xl flex items-center justify-center hover:border-blue-500 transition-all cursor-pointer">
-                                                    <Plus className="text-gray-700" size={32} />
-                                                    <input type="file" multiple onChange={e => handleFileUpload(e, 'gallery')} className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*,video/*" />
-                                                </div>
-                                            </div>
+
+                                        {/* External Video / YouTube Showcase */}
+                                        <div className="pt-8 border-t border-gray-800 space-y-4">
+                                            <h4 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+                                                <Video size={16} className="text-purple-400" />
+                                                <span>External Video Demonstration (YouTube / Vimeo / Direct Link)</span>
+                                            </h4>
+                                            <input 
+                                                value={currentProduct.video_url || ''} 
+                                                onChange={e => setCurrentProduct({...currentProduct, video_url: e.target.value})} 
+                                                className="w-full bg-black border border-gray-800 focus:border-purple-500 rounded-2xl p-4 text-xs text-white placeholder-gray-600 focus:outline-none transition-all font-mono" 
+                                                placeholder="https://www.youtube.com/watch?v=... or direct MP4 URL" 
+                                            />
                                         </div>
                                     </div>
                                 )}
 
-                                {/* --- Tab Content: Variants (RE-ENABLED & FIXED) --- */}
+                                {/* --- Tab Content: Variants (Direct Image Upload & Attributes) --- */}
                                 {activeTab === 'variants' && (
                                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                                        <div className="flex justify-between items-center">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                             <div>
                                                 <h3 className="text-xl font-black text-white">Variant Architecture</h3>
-                                                <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-1">Define SKU-level options (Size, Color, Material)</p>
+                                                <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-1">Define options with direct image uploads (Size, Model, Material, Voltage)</p>
                                             </div>
                                             <button 
                                                 type="button" 
@@ -952,40 +1124,85 @@ export default function ProductsAdminPage() {
                                                     value={currentProduct.variant_type || ''} 
                                                     onChange={e => setCurrentProduct({...currentProduct, variant_type: e.target.value})}
                                                     className="bg-black border border-gray-800 rounded-xl px-4 py-2 text-xs text-white"
-                                                    placeholder="e.g. Size or Material"
+                                                    placeholder="e.g. Size, Material, or Voltage"
                                                 />
                                             </div>
 
                                             <div className="grid grid-cols-1 gap-4">
                                                 {currentProduct.variants?.map(v => (
-                                                    <div key={v.id} className="bg-black border border-gray-800 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
-                                                        <div className="space-y-2">
-                                                            <label className="text-[10px] font-black text-gray-700 uppercase">Variant Name</label>
-                                                            <input value={v.name} onChange={e => updateVariant(v.id, {name: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white" placeholder="e.g. XL or Stainless" />
+                                                    <div key={v.id} className="bg-black border border-gray-800 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                                                        {/* Variant Name */}
+                                                        <div className="md:col-span-3 space-y-2">
+                                                            <label className="text-[10px] font-black text-gray-700 uppercase">Variant Option Name</label>
+                                                            <input value={v.name} onChange={e => updateVariant(v.id, {name: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white font-bold" placeholder="e.g. 5 Inch / 220V" />
                                                         </div>
-                                                        <div className="space-y-2">
+
+                                                        {/* SKU Override */}
+                                                        <div className="md:col-span-2 space-y-2">
                                                             <label className="text-[10px] font-black text-gray-700 uppercase">SKU Override</label>
-                                                            <input value={v.sku || ''} onChange={e => updateVariant(v.id, {sku: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white" placeholder="e.g. SKU-VAR-01" />
+                                                            <input value={v.sku || ''} onChange={e => updateVariant(v.id, {sku: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white font-mono" placeholder="e.g. SKU-VAR-01" />
                                                         </div>
-                                                        <div className="space-y-2">
+
+                                                        {/* Price */}
+                                                        <div className="md:col-span-2 space-y-2">
                                                             <label className="text-[10px] font-black text-gray-700 uppercase">Specific Price (₹)</label>
                                                             <input type="number" value={v.price} onChange={e => updateVariant(v.id, {price: parseFloat(e.target.value) || 0})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white font-bold" />
                                                         </div>
-                                                        <div className="space-y-2">
-                                                            <label className="text-[10px] font-black text-gray-700 uppercase">Variant Image URL</label>
-                                                            <input value={v.image || ''} onChange={e => updateVariant(v.id, {image: e.target.value})} className="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-xs text-white" placeholder="https://..." />
-                                                        </div>
-                                                        <div className="flex items-center justify-between md:justify-end gap-6 pt-6">
+
+                                                        {/* Direct Image Upload */}
+                                                        <div className="md:col-span-3 space-y-2">
+                                                            <label className="text-[10px] font-black text-gray-700 uppercase">Variant Photo</label>
                                                             <div className="flex items-center gap-3">
+                                                                {v.image ? (
+                                                                    <div className="relative w-12 h-12 rounded-xl bg-gray-900 border border-gray-800 overflow-hidden shrink-0 group">
+                                                                        <img src={v.image} alt={v.name} className="w-full h-full object-cover" />
+                                                                        <button 
+                                                                            type="button" 
+                                                                            onClick={() => updateVariant(v.id, { image: '' })} 
+                                                                            className="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"
+                                                                            title="Remove image"
+                                                                        >
+                                                                            <X size={14} />
+                                                                        </button>
+                                                                    </div>
+                                                                ) : null}
+
+                                                                <label className="flex-1 cursor-pointer">
+                                                                    <div className="h-12 bg-gray-900 hover:bg-gray-800 border border-dashed border-gray-700 hover:border-blue-500 rounded-xl px-3 flex items-center justify-center gap-2 text-[10px] font-black uppercase text-gray-300 transition-all">
+                                                                        {variantUploadingId === v.id ? (
+                                                                            <>
+                                                                                <Loader2 size={14} className="animate-spin text-blue-400" />
+                                                                                <span>Uploading...</span>
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                <Upload size={14} className="text-blue-400" />
+                                                                                <span>{v.image ? 'Change Photo' : 'Upload Photo'}</span>
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                    <input 
+                                                                        type="file" 
+                                                                        accept="image/*" 
+                                                                        onChange={e => handleVariantUpload(e, v.id)} 
+                                                                        className="hidden" 
+                                                                    />
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Stock Toggle & Delete */}
+                                                        <div className="md:col-span-2 flex items-center justify-between md:justify-end gap-4 pt-2 md:pt-6">
+                                                            <div className="flex items-center gap-2">
                                                                 <div 
                                                                     onClick={() => updateVariant(v.id, {inStock: !v.inStock})}
-                                                                    className={`w-12 h-6 rounded-full relative transition-all cursor-pointer ${v.inStock ? 'bg-green-600' : 'bg-gray-800'}`}
+                                                                    className={`w-10 h-5 rounded-full relative transition-all cursor-pointer ${v.inStock ? 'bg-green-600' : 'bg-gray-800'}`}
                                                                 >
-                                                                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${v.inStock ? 'left-7' : 'left-1'}`} />
+                                                                    <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all ${v.inStock ? 'left-5' : 'left-1'}`} />
                                                                 </div>
-                                                                <span className="text-[10px] font-black text-gray-500 uppercase">{v.inStock ? 'In Stock' : 'OOS'}</span>
+                                                                <span className="text-[9px] font-black text-gray-500 uppercase">{v.inStock ? 'In Stock' : 'OOS'}</span>
                                                             </div>
-                                                            <button type="button" onClick={() => removeVariant(v.id)} className="p-3 bg-red-900/10 text-red-500 hover:bg-red-600 hover:text-white rounded-xl transition-all"><Trash2 size={16}/></button>
+                                                            <button type="button" onClick={() => removeVariant(v.id)} className="p-2.5 bg-red-900/10 text-red-500 hover:bg-red-600 hover:text-white rounded-xl transition-all"><Trash2 size={15}/></button>
                                                         </div>
                                                     </div>
                                                 ))}
