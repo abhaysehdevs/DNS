@@ -44,26 +44,12 @@ export async function POST(req: Request) {
                     sentViaSms = true;
                     console.log(`[Fast2SMS] OTP successfully dispatched to ${raw10Digit}:`, data);
                 } else {
-                    // Secondary: Fast2SMS POST
-                    const postRes = await fetch('https://www.fast2sms.com/dev/bulkV2', {
-                        method: 'POST',
-                        headers: {
-                            'authorization': fast2smsKey,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            route: 'otp',
-                            variables_values: otp,
-                            numbers: raw10Digit
-                        })
-                    });
-                    const postData = await postRes.json();
-                    if (postData.return === true) {
-                        sentViaSms = true;
-                        console.log(`[Fast2SMS POST] OTP successfully dispatched to ${raw10Digit}`);
-                    } else {
-                        console.warn('[Fast2SMS Notice]:', postData);
+                    if (data.status_code === 996) {
+                        providerError = "Fast2SMS requires 1-time Website Verification: In your Fast2SMS dashboard, click 'Smart OTP' on the left menu and add 'dinanathandsons.com' to enable live SMS.";
+                    } else if (data.message) {
+                        providerError = typeof data.message === 'string' ? data.message : data.message[0];
                     }
+                    console.warn('[Fast2SMS Notice]:', data);
                 }
             } catch (e: any) {
                 console.warn('[Fast2SMS Error]:', e);
@@ -101,25 +87,17 @@ export async function POST(req: Request) {
             }
         }
 
-        // 3. MSG91 Integration (Indian SMS Gateway)
-        const msg91AuthKey = process.env.MSG91_AUTH_KEY;
-        const msg91TemplateId = process.env.MSG91_TEMPLATE_ID;
-        if (!sentViaSms && msg91AuthKey && msg91TemplateId) {
-            try {
-                const msg91Url = `https://control.msg91.com/api/v5/otp?template_id=${msg91TemplateId}&mobile=91${raw10Digit}&authkey=${msg91AuthKey}&otp=${otp}`;
-                const res = await fetch(msg91Url, { method: 'POST' });
-                if (res.ok) {
-                    sentViaSms = true;
-                    console.log(`[MSG91] OTP dispatched to ${raw10Digit}`);
-                }
-            } catch (e) {
-                console.warn('[MSG91 Error]:', e);
-            }
+        if (!sentViaSms && providerError) {
+            return NextResponse.json({
+                success: false,
+                error: providerError,
+                sentViaSms: false
+            }, { status: 400 });
         }
 
         return NextResponse.json({
             success: true,
-            message: `Verification code sent to ${cleanPhone}`,
+            message: `Verification code dispatched to ${cleanPhone}`,
             sentViaSms
         });
     } catch (error: any) {
