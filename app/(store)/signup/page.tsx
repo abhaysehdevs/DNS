@@ -135,11 +135,7 @@ function SignupContent() {
 
             setOtpSent(true);
             setResendCooldown(60);
-            if (data.otpHint) {
-                setSuccessMessage(`Verification code sent to ${fullPhone} (Code: ${data.otpHint})`);
-            } else {
-                setSuccessMessage(`Verification code sent to ${fullPhone}`);
-            }
+            setSuccessMessage(`Verification code sent to ${fullPhone}. Please enter the 6-digit code received.`);
         } catch (err: any) {
             setError(err.message || 'Failed to send OTP verification code.');
         } finally {
