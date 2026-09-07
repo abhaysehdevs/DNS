@@ -137,21 +137,22 @@ function LoginContent() {
         const fullPhone = formatPhoneNumber(phone);
 
         try {
-            const { error: otpError } = await supabase.auth.signInWithOtp({
-                phone: fullPhone
+            const res = await fetch('/api/auth/phone/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: fullPhone })
             });
 
-            if (otpError) {
-                // If SMS gateway is not configured on Supabase, guide the user gracefully
-                if (otpError.message?.toLowerCase().includes('sms') || otpError.message?.toLowerCase().includes('provider')) {
-                    throw new Error(`SMS Provider Notice: ${otpError.message}. Alternatively, you can use Google One-Click Login or Email/Password.`);
-                }
-                throw otpError;
-            }
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to send OTP code');
 
             setOtpSent(true);
             setResendCooldown(60);
-            setSuccessMessage(`6-digit verification code sent to ${fullPhone}`);
+            if (data.otpHint) {
+                setSuccessMessage(`Verification code sent to ${fullPhone} (Code: ${data.otpHint})`);
+            } else {
+                setSuccessMessage(`Verification code sent to ${fullPhone}`);
+            }
         } catch (err: any) {
             setError(err.message || 'Failed to send OTP verification code.');
         } finally {
@@ -172,27 +173,21 @@ function LoginContent() {
         const fullPhone = formatPhoneNumber(phone);
 
         try {
-            const { data, error: verifyError } = await supabase.auth.verifyOtp({
-                phone: fullPhone,
-                token: otp.trim(),
-                type: 'sms'
+            const res = await fetch('/api/auth/phone/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: fullPhone, otp: otp.trim() })
             });
 
-            if (verifyError) throw verifyError;
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Invalid OTP code');
 
-            if (data.session && data.user) {
-                const userObj: User = {
-                    id: data.user.id,
-                    email: data.user.email || `${fullPhone.replace('+', '')}@phone.dinanathandsons.com`,
-                    name: data.user.user_metadata?.full_name || `Customer ${fullPhone.slice(-4)}`,
-                    created_at: data.user.created_at
-                };
-                setUser(userObj);
-
+            if (data.user) {
+                setUser(data.user);
                 router.push(nextPath);
                 router.refresh();
             } else {
-                throw new Error('Verification completed but session could not be established.');
+                throw new Error('Verification completed but user profile could not be created.');
             }
         } catch (err: any) {
             setError(err.message || 'Invalid or expired OTP verification code.');
