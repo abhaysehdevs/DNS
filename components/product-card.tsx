@@ -114,43 +114,28 @@ export function ProductCard({
                     )}
                 </div>
 
-                {/* Price & Action Section */}
-                <div className="pt-3 border-t border-[#343434]/60 mt-auto space-y-2.5">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-[7px] font-mono font-bold text-[#8E8E9A] uppercase tracking-wider mb-0.5">{isRetail ? 'Rate' : 'B2B Wholesale'}</p>
-                            <div className="font-bold">
-                                {isPriceInvalid ? (
-                                    <span className="text-xs font-bold text-[#D12A1C] uppercase tracking-wider">
-                                        Out of Stock
-                                    </span>
-                                ) : isRetail ? (
-                                    <span className="text-base font-black text-[#F8F3E8]">₹{product.retailPrice.toLocaleString()}</span>
-                                ) : (
-                                    <span className="text-xs text-[#A67C35] font-bold uppercase tracking-wider">
-                                        Inquiry for Rate
-                                    </span>
-                                )}
-                            </div>
+                {/* Price Display Section */}
+                <div className="pt-3 border-t border-[#343434]/60 mt-auto flex items-center justify-between">
+                    <div>
+                        <p className="text-[7px] font-mono font-bold text-[#8E8E9A] uppercase tracking-wider mb-0.5">{isRetail ? 'Rate' : 'B2B Wholesale'}</p>
+                        <div className="font-bold">
+                            {isPriceInvalid ? (
+                                <span className="text-xs font-bold text-[#D12A1C] uppercase tracking-wider">
+                                    Out of Stock
+                                </span>
+                            ) : isRetail ? (
+                                <span className="text-base font-black text-[#F8F3E8]">₹{product.retailPrice.toLocaleString()}</span>
+                            ) : (
+                                <span className="text-xs text-[#A67C35] font-bold uppercase tracking-wider">
+                                    Inquiry for Rate
+                                </span>
+                            )}
                         </div>
-
-                        <Link href={productUrl} className="text-[8.5px] font-mono font-bold text-[#A67C35] uppercase tracking-wider hover:underline">
-                            View Product →
-                        </Link>
                     </div>
 
-                    <a
-                        href={`https://api.whatsapp.com/send?phone=919953435647&text=${encodeURIComponent(
-                            `Hello Dinanath & Sons, I would like to make a bulk inquiry for "${product.name}".\nProduct Link: https://dinanathandsons.com${productUrl}`
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-full py-1.5 px-3 rounded-lg bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 hover:border-[#25D366]/60 text-[#25D366] text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]"
-                    >
-                        <MessageSquare size={11} />
-                        <span>Bulk WhatsApp Inquiry</span>
-                    </a>
+                    <Link href={productUrl} className="text-[8.5px] font-mono font-bold text-[#A67C35] uppercase tracking-wider hover:underline">
+                        View Product →
+                    </Link>
                 </div>
             </div>
         </div>

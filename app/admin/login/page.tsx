@@ -72,7 +72,7 @@ export default function AdminLoginPage() {
             grantAccess(cleanEmail);
         } else {
             setLoading(false);
-            setErrorMsg('ACCESS DENIED: Only ajayabhay12872@gmail.com is authorized to access the Admin Panel.');
+            setErrorMsg('ACCESS DENIED: This email address is not authorized to access the Admin Panel.');
         }
     };
 
@@ -191,8 +191,9 @@ export default function AdminLoginPage() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="ajayabhay12872@gmail.com"
-                                className="w-full h-14 bg-[#1E1E1E] border border-white/10 rounded-2xl pl-14 pr-5 text-[#F8F3E8] placeholder-[#666] focus:border-[#C9A84C] focus:outline-none transition-all font-bold text-xs"
+                                placeholder="admin@domain.com"
+                                autoComplete="off"
+                                className="w-full h-14 bg-[#1E1E1E] border border-white/10 rounded-2xl pl-14 pr-5 text-[#F8F3E8] placeholder-[#555] focus:border-[#C9A84C] focus:outline-none transition-all font-bold text-xs"
                             />
                         </div>
                     </div>

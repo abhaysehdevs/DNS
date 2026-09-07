@@ -27,6 +27,7 @@ export default function ProductClient({ id }: { id: string }) {
     const isRetail = mode === 'retail';
 
     const [product, setProduct] = useState<Product | null>(null);
+    const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
     const [qty, setQty] = useState(1);
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
@@ -71,6 +72,9 @@ export default function ProductClient({ id }: { id: string }) {
                 };
 
                 setProduct(mappedProduct);
+                if (mappedProduct.variants && mappedProduct.variants.length > 0) {
+                    setSelectedVariant(mappedProduct.variants[0]);
+                }
                 setQty(isRetail ? 1 : mappedProduct.wholesaleMOQ);
                 viewProduct(mappedProduct.id);
             } catch (err) {
@@ -79,6 +83,9 @@ export default function ProductClient({ id }: { id: string }) {
                     const localProduct = module.products.find(p => p.id === id);
                     if (localProduct) {
                         setProduct(localProduct);
+                        if (localProduct.variants && localProduct.variants.length > 0) {
+                            setSelectedVariant(localProduct.variants[0]);
+                        }
                         setQty(isRetail ? 1 : localProduct.wholesaleMOQ);
                         viewProduct(localProduct.id);
                     }
@@ -95,21 +102,31 @@ export default function ProductClient({ id }: { id: string }) {
 
     const gallery = getProductGallery(product);
     const isWishlisted = wishlist.includes(product.id);
-    const isPriceInvalid = !product.retailPrice || product.retailPrice <= 0;
-    const canPurchase = product.inStock && !isPriceInvalid;
+
+    const activePrice = (selectedVariant && selectedVariant.price !== undefined && selectedVariant.price !== null && selectedVariant.price !== '') 
+        ? Number(selectedVariant.price) 
+        : product.retailPrice;
+
+    const activeSku = (selectedVariant && selectedVariant.sku) ? selectedVariant.sku : (product.sku || product.id.slice(0, 8).toUpperCase());
+    const isVariantInStock = (selectedVariant && selectedVariant.in_stock !== undefined) ? !!selectedVariant.in_stock : product.inStock;
+    const isPriceInvalid = !activePrice || activePrice <= 0;
+    const canPurchase = isVariantInStock && !isPriceInvalid;
 
     const handleAddToCart = () => {
         if (isRetail) {
             addToCart({
                 productId: product.id,
+                variantId: selectedVariant?.id || undefined,
+                variantName: selectedVariant?.name || undefined,
                 quantity: qty,
-                price: product.retailPrice,
+                price: activePrice,
                 mode: mode
             });
             setAddedAlert(true);
             setTimeout(() => setAddedAlert(false), 3000);
         } else {
-            const message = `Hi Dinanath & Sons, I am interested in a wholesale quotation for: ${product.name} (SKU: ${product.sku || product.id}). Qty: ${qty}`;
+            const varInfo = selectedVariant ? ` (Variant: ${selectedVariant.name})` : '';
+            const message = `Hi Dinanath & Sons, I am interested in a wholesale quotation for: ${product.name}${varInfo} (SKU: ${activeSku}). Qty: ${qty}`;
             window.open(`https://wa.me/919953435647?text=${encodeURIComponent(message)}`, '_blank');
         }
     };
@@ -118,8 +135,10 @@ export default function ProductClient({ id }: { id: string }) {
         if (isRetail) {
             addToCart({
                 productId: product.id,
+                variantId: selectedVariant?.id || undefined,
+                variantName: selectedVariant?.name || undefined,
                 quantity: qty,
-                price: product.retailPrice,
+                price: activePrice,
                 mode: mode
             });
             router.push('/cart');
@@ -129,7 +148,7 @@ export default function ProductClient({ id }: { id: string }) {
     };
 
     // Calculations for Mock original price
-    const originalPrice = Math.round(product.retailPrice * 1.2 / 100) * 100;
+    const originalPrice = Math.round(activePrice * 1.2 / 100) * 100;
     const discountPercent = 16;
 
     return (
@@ -212,26 +231,105 @@ export default function ProductClient({ id }: { id: string }) {
                                 </span>
                             </div>
                             <div className="h-3.5 w-px bg-[#343434]" />
-                            <span className="font-mono text-[10px] uppercase tracking-wider text-[#8E8E9A]">SKU: {product.sku || product.id.slice(0, 8).toUpperCase()}</span>
+                            <span className="font-mono text-[10px] uppercase tracking-wider text-[#8E8E9A]">SKU: {activeSku}</span>
                         </div>
 
                         {/* ════════════════════════════════════════════════════════════════
+                           INTERACTIVE VARIANT SELECTOR & SPECIFICATIONS
+                           ════════════════════════════════════════════════════════════════ */}
+                        {product.variants && product.variants.length > 0 && (
+                            <div className="bg-[#1A1A1A] border border-[#A67C35]/30 rounded-2xl p-5 space-y-4 shadow-xl">
+                                <div className="flex items-center justify-between border-b border-[#343434]/60 pb-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-[#A67C35] animate-pulse" />
+                                        <span className="text-xs font-black uppercase tracking-wider text-[#F8F3E8]">
+                                            Select {product.variantType || 'Option / Size / Variant'}:
+                                        </span>
+                                    </div>
+                                    {selectedVariant && (
+                                        <span className="text-xs font-mono font-bold text-[#A67C35] bg-[#A67C35]/10 px-2.5 py-0.5 rounded border border-[#A67C35]/20 uppercase">
+                                            {selectedVariant.name}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {product.variants.map((v: any, idx: number) => {
+                                        const isSelected = selectedVariant?.id === v.id || (!selectedVariant && idx === 0);
+                                        const vPrice = v.price !== undefined && v.price !== null && v.price !== '' ? Number(v.price) : product.retailPrice;
+                                        const inStock = v.in_stock !== undefined ? !!v.in_stock : true;
+
+                                        return (
+                                            <button
+                                                key={v.id || idx}
+                                                type="button"
+                                                onClick={() => {
+                                                    setSelectedVariant(v);
+                                                    if (v.image) {
+                                                        const existingIdx = gallery.findIndex(g => g.url === v.image);
+                                                        if (existingIdx >= 0) setSelectedMediaIndex(existingIdx);
+                                                    }
+                                                }}
+                                                className={`p-3.5 rounded-xl border text-left transition-all flex items-center justify-between gap-3 ${
+                                                    isSelected
+                                                        ? 'bg-[#A67C35]/15 border-[#A67C35] shadow-lg shadow-[#A67C35]/10 ring-1 ring-[#A67C35]'
+                                                        : 'bg-[#222222] border-[#343434] hover:border-white/30'
+                                                }`}
+                                            >
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    {v.image && (
+                                                        <div className="w-12 h-12 rounded-lg bg-black border border-white/10 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                                                            <img src={v.image} alt={v.name} className="w-full h-full object-contain" />
+                                                        </div>
+                                                    )}
+                                                    <div className="min-w-0">
+                                                        <p className={`text-xs font-black uppercase truncate ${isSelected ? 'text-[#F8F3E8]' : 'text-gray-300'}`}>
+                                                            {v.name || v.title}
+                                                        </p>
+                                                        {v.sku && (
+                                                            <p className="text-[9px] font-mono text-[#8E8E9A] uppercase tracking-wider">
+                                                                SKU: {v.sku}
+                                                            </p>
+                                                        )}
+                                                        <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded inline-block mt-1 ${inStock ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                                                            {inStock ? 'Available' : 'Out of Stock'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-right shrink-0">
+                                                    <span className="text-sm font-black text-[#A67C35] font-mono block">
+                                                        ₹{vPrice.toLocaleString('en-IN')}
+                                                    </span>
+                                                    {isSelected && (
+                                                        <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-emerald-400 mt-1">
+                                                            <Check size={10} strokeWidth={3} /> Selected
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ════════════════════════════════════════════════════════════════
                            PROMINENT PRODUCT DETAILS & QUANTITY SPECIFICATIONS PANEL
-                           (Displayed right beneath Product Title)
                            ════════════════════════════════════════════════════════════════ */}
                         <div className="bg-[#1A1A1A] border border-[#343434] hover:border-[#A67C35]/50 rounded-2xl p-5 space-y-4 shadow-lg transition-all">
                             {/* Stock Quantity Header Indicator */}
                             <div className="flex items-center justify-between border-b border-[#343434]/60 pb-3">
                                 <div className="flex items-center gap-2.5">
-                                    <div className={`w-3 h-3 rounded-full relative flex items-center justify-center ${product.inStock ? 'bg-emerald-500' : 'bg-red-500'}`}>
-                                        {product.inStock && <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />}
+                                    <div className={`w-3 h-3 rounded-full relative flex items-center justify-center ${canPurchase ? 'bg-emerald-500' : 'bg-red-500'}`}>
+                                        {canPurchase && <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />}
                                     </div>
                                     <span className="text-xs font-black uppercase tracking-wider text-[#F8F3E8]">
                                         Available Stock Quantity: <span className="text-[#A67C35] font-mono text-sm">{product.quantity ?? 15} Units</span>
                                     </span>
                                 </div>
-                                <span className={`text-[8.5px] font-bold uppercase tracking-widest px-2.5 py-1 rounded ${product.inStock ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
-                                    {product.inStock ? 'In Stock' : 'Out of Stock'}
+                                <span className={`text-[8.5px] font-bold uppercase tracking-widest px-2.5 py-1 rounded ${canPurchase ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+                                    {canPurchase ? 'In Stock' : 'Out of Stock'}
                                 </span>
                             </div>
 
@@ -275,7 +373,7 @@ export default function ProductClient({ id }: { id: string }) {
                             {product.specifications && Object.keys(product.specifications).length > 0 && (
                                 <div className="space-y-2 pt-1 border-t border-[#343434]/40">
                                     <span className="text-[8px] font-mono font-bold uppercase tracking-[0.2em] text-[#A67C35] block">
-                                        Specifications & Sizes:
+                                        Specifications & Technical Data:
                                     </span>
                                     <div className="flex flex-wrap gap-2">
                                         {Object.entries(product.specifications).map(([key, val]) => (
@@ -288,17 +386,22 @@ export default function ProductClient({ id }: { id: string }) {
                                 </div>
                             )}
 
-                            {/* Variants List (if product has sizes / options configured) */}
+                            {/* Variant Specifications Overview */}
                             {product.variants && product.variants.length > 0 && (
-                                <div className="space-y-2 pt-1 border-t border-[#343434]/40">
-                                    <span className="text-[8px] font-mono font-bold uppercase tracking-[0.2em] text-[#A67C35] block">
-                                        {product.variantType || 'Available Sizes / Options'}:
+                                <div className="space-y-2.5 pt-2 border-t border-[#343434]/40">
+                                    <span className="text-[8.5px] font-mono font-bold uppercase tracking-[0.2em] text-[#A67C35] block">
+                                        Configured Variant Matrix:
                                     </span>
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                         {product.variants.map((v: any, idx: number) => (
-                                            <div key={idx} className="bg-[#242424] px-3 py-1.5 rounded-lg border border-[#A67C35]/40 text-xs font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-2">
-                                                <span>{v.name || v.title}</span>
-                                                {v.price && <span className="text-[#A67C35]">₹{v.price}</span>}
+                                            <div key={idx} className="bg-[#242424] p-2.5 rounded-xl border border-white/5 flex items-center justify-between text-xs">
+                                                <div>
+                                                    <span className="font-bold text-[#F8F3E8] uppercase block">{v.name || v.title}</span>
+                                                    {v.sku && <span className="text-[8px] font-mono text-[#8E8E9A]">SKU: {v.sku}</span>}
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className="font-mono font-bold text-[#A67C35]">₹{(v.price ? Number(v.price) : product.retailPrice).toLocaleString('en-IN')}</span>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -328,7 +431,7 @@ export default function ProductClient({ id }: { id: string }) {
                                     </div>
                                 ) : isRetail ? (
                                     <>
-                                        <span className="text-4xl md:text-5xl font-black text-[#F8F3E8] tracking-tight">₹{product.retailPrice.toLocaleString('en-IN')}</span>
+                                        <span className="text-4xl md:text-5xl font-black text-[#F8F3E8] tracking-tight">₹{activePrice.toLocaleString('en-IN')}</span>
                                         <span className="text-[#8E8E9A] text-base line-through uppercase font-bold">₹{originalPrice.toLocaleString('en-IN')}</span>
                                         <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">({discountPercent}% OFF)</span>
                                     </>
@@ -382,7 +485,7 @@ export default function ProductClient({ id }: { id: string }) {
                                     className={`w-14 h-14 rounded-xl border flex items-center justify-center shrink-0 transition-all ${
                                         isWishlisted 
                                             ? 'bg-red-500/10 text-red-500 border-red-500/30 shadow-red-950/30' 
-                                            : 'bg-[#151515] border-white/10 text-[#8E8E9A] hover:text-[#F8F3E8] hover:border-white/20'
+                                             : 'bg-[#151515] border-white/10 text-[#8E8E9A] hover:text-[#F8F3E8] hover:border-white/20'
                                     }`}
                                     title="Add to Wishlist"
                                 >
@@ -393,18 +496,21 @@ export default function ProductClient({ id }: { id: string }) {
                                 <ShareButton product={product} />
                             </div>
 
-                            {/* Bulk Inquiry on WhatsApp Button */}
-                            <a 
-                                href={`https://api.whatsapp.com/send?phone=919953435647&text=${encodeURIComponent(
-                                    `Hello Dinanath & Sons, I would like to make a bulk inquiry / request wholesale rates for "${product.name}".\nProduct Link: https://dinanathandsons.com/shop/${product.slug || product.id}`
-                                )}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full h-12 rounded-xl font-black uppercase tracking-[0.15em] text-[10.5px] bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 hover:border-[#25D366]/60 text-[#25D366] transition-all flex items-center justify-center gap-2.5 shadow-md active:scale-[0.99]"
-                            >
-                                <MessageSquare size={16} />
-                                <span>Bulk Inquiry / Wholesale Rate on WhatsApp</span>
-                            </a>
+                            {/* Small, Sleek WhatsApp Bulk Inquiry Button */}
+                            <div className="pt-1 flex items-center justify-between">
+                                <a 
+                                    href={`https://api.whatsapp.com/send?phone=919953435647&text=${encodeURIComponent(
+                                        `Hello Dinanath & Sons, I would like to make a bulk inquiry / request wholesale rates for "${product.name}"${selectedVariant ? ` (Variant: ${selectedVariant.name})` : ''}.\nProduct Link: https://dinanathandsons.com/shop/${product.slug || product.id}`
+                                    )}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10.5px] font-black uppercase tracking-wider bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 hover:border-[#25D366]/60 text-[#25D366] transition-all shadow-sm active:scale-95"
+                                >
+                                    <MessageSquare size={14} />
+                                    <span>Bulk WhatsApp Inquiry</span>
+                                </a>
+                                <span className="text-[9.5px] text-gray-500 font-mono font-bold uppercase">Direct Factory Supply</span>
+                            </div>
                         </div>
 
                         {/* Succesful Cart Addition Banner */}

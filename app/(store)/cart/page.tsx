@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { 
     Trash2, Truck, ArrowRight, ShoppingBag, Loader2, Minus, Plus, 
     CheckCircle, ShieldCheck, Tag, MessageCircle, Mail, MapPin, 
-    FileText, Check, AlertCircle, Sparkles, Send
+    FileText, Check, AlertCircle, Sparkles, Send, Lock
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -161,6 +161,10 @@ export default function CartPage() {
 
     const handlePlaceOrder = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!user) {
+            router.push('/login?next=/cart');
+            return;
+        }
         setIsSubmitting(true);
 
         const orderId = 'ORD-' + Math.floor(10000000 + Math.random() * 90000000);
@@ -174,6 +178,7 @@ export default function CartPage() {
             return {
                 productId: item.productId,
                 productName: product?.name || 'Unknown Product',
+                variantId: item.variantId || undefined,
                 variantName: item.variantName || undefined,
                 quantity: item.quantity,
                 price: item.price,
@@ -214,7 +219,7 @@ export default function CartPage() {
         emailManifest += `Shipping Address: ${formData.address} (PIN: ${pincode || 'N/A'})\n\n`;
         emailManifest += `ORDERED ITEMS:\n`;
         orderItemsPayload.forEach((it, i) => {
-            emailManifest += `${i + 1}. ${it.productName} (Qty: ${it.quantity}) - ₹${(it.price * it.quantity).toLocaleString('en-IN')}\n`;
+            emailManifest += `${i + 1}. ${it.productName}${it.variantName ? ` [Variant: ${it.variantName}]` : ''} (Qty: ${it.quantity}) - ₹${(it.price * it.quantity).toLocaleString('en-IN')}\n`;
             emailManifest += `   Link: ${it.productUrl}\n`;
         });
         emailManifest += `\nSubtotal: ₹${total.toLocaleString('en-IN')}\n`;
@@ -225,8 +230,34 @@ export default function CartPage() {
 
         const mailtoUrl = `mailto:info@dinanathandsons.com?subject=${encodeURIComponent(`New Order #${orderId} - ₹${finalTotal.toLocaleString('en-IN')}`)}&body=${encodeURIComponent(emailManifest)}`;
 
+        // 1. Call server API endpoint for guaranteed order recording in Supabase
         try {
-            await supabase.from('orders').insert({
+            await fetch('/api/orders/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    orderId,
+                    customerName: formData.name,
+                    customerEmail: formData.email,
+                    customerPhone: formData.phone,
+                    shippingAddress: formData.address,
+                    pincode: pincode || 'N/A',
+                    totalAmount: finalTotal,
+                    discountAmount,
+                    couponCode: appliedCoupon?.code || null,
+                    paymentMethod: orderMethod,
+                    mode,
+                    notes: formData.notes,
+                    items: orderItemsPayload
+                })
+            });
+        } catch (apiErr) {
+            console.error('Server order route error:', apiErr);
+        }
+
+        // 2. Immediate direct write
+        try {
+            await supabase.from('orders').upsert({
                 id: orderId,
                 customer_name: formData.name,
                 customer_email: formData.email,
@@ -239,7 +270,7 @@ export default function CartPage() {
                 payment_status: 'pending',
                 payment_method: orderMethod,
                 type: mode
-            });
+            }, { onConflict: 'id' });
 
             const dbOrderItems = cart.map(item => {
                 const product = cartProducts.find(p => p.id === item.productId);
@@ -258,29 +289,6 @@ export default function CartPage() {
             if (appliedCoupon) {
                 await supabase.rpc('increment_coupon_usage', { coupon_id: appliedCoupon.id });
             }
-            
-            // Trigger Email Notification in background
-            fetch('/api/notifications/email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'order',
-                    orderId: orderId,
-                    customerName: formData.name,
-                    customerEmail: formData.email,
-                    customerPhone: formData.phone,
-                    shippingAddress: `${formData.address}${pincode ? ` (PIN: ${pincode})` : ''}`,
-                    totalAmount: finalTotal,
-                    paymentMethod: orderMethod,
-                    items: orderItemsPayload.map(it => ({
-                        product_name: it.productName,
-                        variant_name: it.variantName || null,
-                        quantity: it.quantity,
-                        price: it.price,
-                        product_url: it.productUrl
-                    }))
-                })
-            }).catch(e => console.error('Notification error', e));
         } catch (error) {
             console.error('Checkout recording error:', error);
         }
@@ -307,7 +315,6 @@ export default function CartPage() {
         if (orderMethod === 'whatsapp') {
             window.open(whatsappUrl, '_blank');
         } else {
-            // For email method, also attempt mailto or proceed to confirmation
             window.location.href = mailtoUrl;
         }
 
@@ -499,44 +506,70 @@ export default function CartPage() {
                                         </div>
                                     </div>
 
-                                    {/* Customer & Address Form */}
-                                    <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-6">
-                                        <div className="border-t border-white/10 pt-6">
-                                            <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-[#C9A84C] mb-4">Customer & Shipping Information</h4>
+                                    {!user ? (
+                                        <div className="bg-[#151515] rounded-3xl p-8 border border-[#C9A84C]/30 shadow-2xl text-center space-y-6">
+                                            <div className="w-16 h-16 rounded-3xl bg-[#C9A84C]/10 border border-[#C9A84C]/20 flex items-center justify-center mx-auto text-[#C9A84C]">
+                                                <Lock size={30} />
+                                            </div>
+                                            <div className="space-y-2 max-w-md mx-auto">
+                                                <h3 className="text-2xl font-black uppercase text-[#F8F3E8] tracking-tight">Login Required to Order</h3>
+                                                <p className="text-xs text-[#86868B] font-bold uppercase tracking-wider leading-relaxed">
+                                                    To complete your order, ensure GST invoicing, and track delivery status, please sign in or register your Dinanath & Sons account.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto pt-2">
+                                                <Link href="/login?next=/cart" className="flex-1">
+                                                    <Button className="w-full h-14 bg-gradient-to-r from-[#E8D48B] to-[#C9A84C] text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:-translate-y-0.5 transition-all">
+                                                        Sign In
+                                                    </Button>
+                                                </Link>
+                                                <Link href="/signup?next=/cart" className="flex-1">
+                                                    <Button variant="outline" className="w-full h-14 bg-[#1E1E1E] hover:bg-[#252525] border border-white/10 hover:border-[#C9A84C]/50 text-[#F8F3E8] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all">
+                                                        Register New
+                                                    </Button>
+                                                </Link>
+                                            </div>
                                         </div>
+                                    ) : (
+                                        /* Customer & Address Form */
+                                        <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-6">
+                                            <div className="border-t border-white/10 pt-6">
+                                                <h4 className="text-[10px] font-black uppercase tracking-[0.25em] text-[#C9A84C] mb-4">Customer & Shipping Information</h4>
+                                            </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Full Name *</label>
-                                                <input required className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider" placeholder="Your Name or Business" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Full Name *</label>
+                                                    <input required className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider" placeholder="Your Name or Business" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Phone / WhatsApp *</label>
+                                                    <input required className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider" placeholder="+91 000 000 0000" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                                                </div>
                                             </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Phone / WhatsApp *</label>
-                                                <input required className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider" placeholder="+91 000 000 0000" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">{orderMethod === 'email' ? 'Email Address *' : 'Email Address (Optional)'}</label>
+                                                    <input type="email" required={orderMethod === 'email'} className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold text-xs tracking-wider" placeholder="email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Delivery PIN Code</label>
+                                                    <input className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider" placeholder="6-Digit PIN" value={pincode} onChange={(e) => setPincode(e.target.value)} maxLength={6} />
+                                                </div>
                                             </div>
-                                        </div>
-                                        
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">{orderMethod === 'email' ? 'Email Address *' : 'Email Address (Optional)'}</label>
-                                                <input type="email" required={orderMethod === 'email'} className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold text-xs tracking-wider" placeholder="email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Delivery PIN Code</label>
-                                                <input className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider" placeholder="6-Digit PIN" value={pincode} onChange={(e) => setPincode(e.target.value)} maxLength={6} />
-                                            </div>
-                                        </div>
 
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Shipping Address *</label>
-                                            <textarea required rows={3} className="w-full bg-[#151515] border border-white/10 rounded-2xl p-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider resize-none" placeholder="Shop / Workshop / House No., Street, City, State" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
-                                        </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Shipping Address *</label>
+                                                <textarea required rows={3} className="w-full bg-[#151515] border border-white/10 rounded-2xl p-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-bold uppercase text-xs tracking-wider resize-none" placeholder="Shop / Workshop / House No., Street, City, State" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
+                                            </div>
 
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Order Notes / Custom Requirements</label>
-                                            <input className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-medium text-xs" placeholder="e.g., Specific courier preference or gst invoice request" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
-                                        </div>
-                                    </form>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Order Notes / Custom Requirements</label>
+                                                <input className="w-full h-14 bg-[#151515] border border-white/10 rounded-2xl px-5 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-medium text-xs" placeholder="e.g., Specific courier preference or gst invoice request" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
+                                            </div>
+                                        </form>
+                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -664,29 +697,46 @@ export default function CartPage() {
                                         </div>
 
                                         {/* Continue CTA */}
-                                        <Button onClick={() => setStep('details')} className="w-full h-16 bg-gradient-to-r from-[#E8D48B] to-[#C9A84C] text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 group">
-                                            Proceed to Checkout <ArrowRight size={18} className="ml-3 group-hover:translate-x-1.5 transition-transform" />
+                                        <Button 
+                                            onClick={() => {
+                                                if (!user) {
+                                                    router.push('/login?next=/cart');
+                                                } else {
+                                                    setStep('details');
+                                                }
+                                            }} 
+                                            className="w-full h-16 bg-gradient-to-r from-[#E8D48B] to-[#C9A84C] text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 group"
+                                        >
+                                            {user ? 'Proceed to Checkout' : 'Login to Checkout'} <ArrowRight size={18} className="ml-3 group-hover:translate-x-1.5 transition-transform" />
                                         </Button>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
-                                        <Button 
-                                            type="submit" 
-                                            form="checkout-form" 
-                                            disabled={isSubmitting} 
-                                            className={`w-full h-16 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3 ${
-                                                orderMethod === 'whatsapp' 
-                                                    ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40' 
-                                                    : 'bg-[#C9A84C] hover:bg-[#8A6232] text-black shadow-amber-950/40'
-                                            }`}
-                                        >
-                                            {isSubmitting ? <Loader2 className="animate-spin" /> : (
-                                                <>
-                                                    {orderMethod === 'whatsapp' ? <MessageCircle size={20} /> : <Mail size={20} />}
-                                                    <span>{orderMethod === 'whatsapp' ? 'Submit Order on WhatsApp' : 'Submit Order via Email'}</span>
-                                                </>
-                                            )}
-                                        </Button>
+                                        {!user ? (
+                                            <Link href="/login?next=/cart" className="block">
+                                                <Button className="w-full h-16 bg-gradient-to-r from-[#E8D48B] to-[#C9A84C] text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl">
+                                                    Sign In to Place Order
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <Button 
+                                                type="submit" 
+                                                form="checkout-form" 
+                                                disabled={isSubmitting} 
+                                                className={`w-full h-16 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3 ${
+                                                    orderMethod === 'whatsapp' 
+                                                        ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40' 
+                                                        : 'bg-[#C9A84C] hover:bg-[#8A6232] text-black shadow-amber-950/40'
+                                                }`}
+                                            >
+                                                {isSubmitting ? <Loader2 className="animate-spin" /> : (
+                                                    <>
+                                                        {orderMethod === 'whatsapp' ? <MessageCircle size={20} /> : <Mail size={20} />}
+                                                        <span>{orderMethod === 'whatsapp' ? 'Submit Order on WhatsApp' : 'Submit Order via Email'}</span>
+                                                    </>
+                                                )}
+                                            </Button>
+                                        )}
                                         
                                         <button onClick={() => setStep('cart')} className="w-full text-[10px] font-black uppercase tracking-[0.3em] text-[#86868B] hover:text-[#F8F3E8] transition-all py-2">
                                             ← Back to Cart Edit

@@ -48,6 +48,7 @@ interface ProductDB {
     seo_title?: string;
     seo_description?: string;
     seo_keywords?: string;
+    slug?: string;
 }
 
 export default function ProductsAdminPage() {
@@ -274,6 +275,13 @@ export default function ProductsAdminPage() {
                 seo_keywords: currentProduct.seo_keywords || ''
             };
 
+            const generatedSku = currentProduct.sku?.trim() ? currentProduct.sku.trim() : `DNS-${Date.now().toString().slice(-6)}`;
+            const baseSlug = (currentProduct.name || 'product')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)+/g, '');
+            const generatedSlug = isEditing && currentProduct.slug ? currentProduct.slug : `${baseSlug}-${Math.floor(1000 + Math.random() * 9000)}`;
+
             const payload: any = {
                 name: currentProduct.name,
                 category: currentProduct.category,
@@ -282,8 +290,9 @@ export default function ProductsAdminPage() {
                 wholesale_price: currentProduct.wholesale_price || 0,
                 wholesale_moq: currentProduct.wholesale_moq || 1,
                 in_stock: currentProduct.in_stock !== false,
-                quantity: currentProduct.quantity || 0,
-                sku: currentProduct.sku || '',
+                quantity: currentProduct.quantity !== undefined ? currentProduct.quantity : 0,
+                sku: generatedSku,
+                slug: generatedSlug,
                 brand: currentProduct.brand || '',
                 model_number: currentProduct.model_number || '',
                 weight: currentProduct.weight || '',
@@ -298,18 +307,29 @@ export default function ProductsAdminPage() {
                 gallery: galleryList
             };
 
+            let saveError = null;
             if (isEditing && currentProduct.id) {
                 const { error } = await supabase
                     .from('products')
                     .update(payload)
                     .eq('id', currentProduct.id);
-                if (error) throw error;
+                saveError = error;
             } else {
                 const { error } = await supabase
                     .from('products')
                     .insert([payload]);
-                if (error) throw error;
+                saveError = error;
+
+                // If unique constraint error on sku or slug, retry automatically with unique suffix
+                if (saveError && (saveError.message?.includes('unique constraint') || saveError.code === '23505')) {
+                    payload.sku = `${payload.sku}-copy-${Math.floor(100 + Math.random() * 900)}`;
+                    payload.slug = `${payload.slug}-${Math.floor(100 + Math.random() * 900)}`;
+                    const { error: retryError } = await supabase.from('products').insert([payload]);
+                    saveError = retryError;
+                }
             }
+
+            if (saveError) throw saveError;
 
             setShowForm(false);
             fetchProducts();
@@ -535,8 +555,15 @@ export default function ProductsAdminPage() {
                             <div className="flex items-center gap-2 pt-1">
                                 <button 
                                     onClick={() => {
-                                        const { id, sku, ...clone } = p;
-                                        setCurrentProduct({ ...clone, name: `${clone.name} (Copy)`, sku: '' });
+                                        const { id, ...clone } = p;
+                                        const newSku = p.sku ? `${p.sku}-COPY-${Math.floor(100 + Math.random() * 900)}` : `DNS-${Date.now().toString().slice(-6)}`;
+                                        const newSlug = p.slug ? `${p.slug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
+                                        setCurrentProduct({ 
+                                            ...clone, 
+                                            name: `${clone.name} (Copy)`, 
+                                            sku: newSku,
+                                            slug: newSlug
+                                        });
                                         setIsEditing(false);
                                         setShowForm(true);
                                     }} 
@@ -638,8 +665,15 @@ export default function ProductsAdminPage() {
                                             <div className="flex justify-end gap-3 md:opacity-0 md:group-hover:opacity-100 transition-all md:translate-x-4 md:group-hover:translate-x-0">
                                                 <button 
                                                     onClick={() => {
-                                                        const { id, sku, ...clone } = p;
-                                                        setCurrentProduct({ ...clone, name: `${clone.name} (Copy)`, sku: '' });
+                                                        const { id, ...clone } = p;
+                                                        const newSku = p.sku ? `${p.sku}-COPY-${Math.floor(100 + Math.random() * 900)}` : `DNS-${Date.now().toString().slice(-6)}`;
+                                                        const newSlug = p.slug ? `${p.slug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
+                                                        setCurrentProduct({ 
+                                                            ...clone, 
+                                                            name: `${clone.name} (Copy)`, 
+                                                            sku: newSku,
+                                                            slug: newSlug
+                                                        });
                                                         setIsEditing(false);
                                                         setShowForm(true);
                                                     }} 
@@ -816,34 +850,6 @@ export default function ProductsAdminPage() {
                                                                 onChange={e => setCurrentProduct({...currentProduct, retail_price: parseFloat(e.target.value)})}
                                                                 className="bg-transparent text-2xl font-black text-white outline-none w-32 text-right"
                                                             />
-                                                        </div>
-                                                    </div>
-                                                    <div className="h-px bg-gray-800" />
-                                                    <div className="p-4 bg-blue-900/10 border border-blue-900/20 rounded-2xl flex items-start gap-4">
-                                                        <ShieldCheck className="text-blue-500 shrink-0" size={24} />
-                                                        <div>
-                                                            <p className="text-blue-400 text-xs font-black uppercase tracking-widest mb-1">Wholesale Configuration</p>
-                                                            <p className="text-gray-400 text-[10px] leading-relaxed mb-4">Wholesale prices are HIDDEN by default. Customers requesting bulk quotations will be automatically routed to your professional WhatsApp channel.</p>
-                                                            <div className="grid grid-cols-2 gap-4">
-                                                                <div className="space-y-2">
-                                                                    <label className="text-[9px] font-black text-gray-500 uppercase">Wholesale Price (₹)</label>
-                                                                    <input 
-                                                                        type="number"
-                                                                        value={currentProduct.wholesale_price || 0}
-                                                                        onChange={e => setCurrentProduct({...currentProduct, wholesale_price: parseFloat(e.target.value)})}
-                                                                        className="w-full bg-black border border-gray-800 rounded-xl p-3 text-xs text-white font-bold"
-                                                                    />
-                                                                </div>
-                                                                <div className="space-y-2">
-                                                                    <label className="text-[9px] font-black text-gray-500 uppercase">Min. Order Qty</label>
-                                                                    <input 
-                                                                        type="number"
-                                                                        value={currentProduct.wholesale_moq || 1}
-                                                                        onChange={e => setCurrentProduct({...currentProduct, wholesale_moq: parseInt(e.target.value)})}
-                                                                        className="w-full bg-black border border-gray-800 rounded-xl p-3 text-xs text-white font-bold"
-                                                                    />
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
