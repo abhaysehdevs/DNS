@@ -87,11 +87,7 @@ function SignupContent() {
             const { error: oauthError } = await supabase.auth.signInWithOAuth({
                 provider,
                 options: {
-                    redirectTo: redirectUrl,
-                    queryParams: provider === 'google' ? {
-                        access_type: 'offline',
-                        prompt: 'select_account'
-                    } : undefined
+                    redirectTo: redirectUrl
                 }
             });
             if (oauthError) throw oauthError;

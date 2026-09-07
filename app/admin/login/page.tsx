@@ -3,309 +3,225 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
-import { Lock, ShieldAlert, KeyRound, Mail, Fingerprint, Smartphone, CheckCircle2, ArrowRight, ShieldCheck, AlertTriangle, XCircle } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { ShieldCheck, Mail, ArrowRight, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { isBiometricsSupported, isBiometricRegistered, registerBiometrics, verifyBiometrics, clearBiometrics } from '@/lib/webauthn';
+
+const AUTHORIZED_ADMIN_EMAIL = 'ajayabhay12872@gmail.com';
 
 export default function AdminLoginPage() {
     const router = useRouter();
-    const { loginAdmin } = useAppStore();
+    const { loginAdmin, isAdminAuthenticated } = useAppStore();
 
-    // Portal state
-    const [step, setStep] = useState<'login' | 'otp'>('login');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [otp, setOtp] = useState('');
-    const [generatedOtp, setGeneratedOtp] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [loading, setLoading] = useState(false);
-    const [hasBiometric, setHasBiometric] = useState(false);
-    const [biometricSupported, setBiometricSupported] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
 
-    // Strict Operator Credentials
-    const OPERATOR_EMAIL = 'admin@dinanathandsons.com';
-    const ALLOWED_EMAILS = ['admin@dinanathandsons.com', 'abhaysehdevofficial@gmail.com', 'info@dinanathandsons.com'];
-    const OPERATOR_PASSWORD = 'ajayabhay12872@';
-    const MASTER_PASSCODE = 'DNS1960';
-
+    // If already authenticated, redirect to admin
     useEffect(() => {
-        setBiometricSupported(isBiometricsSupported());
-        setHasBiometric(isBiometricRegistered());
+        if (typeof window !== 'undefined') {
+            const hasSession = sessionStorage.getItem('dns_admin_session_active') === 'true';
+            const adminEmail = sessionStorage.getItem('dns_admin_email');
+            if ((isAdminAuthenticated || hasSession) && adminEmail === AUTHORIZED_ADMIN_EMAIL) {
+                router.replace('/admin');
+            }
+        }
+    }, [isAdminAuthenticated, router]);
+
+    // Check if user returned from Google OAuth
+    useEffect(() => {
+        const checkOAuthUser = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user?.email) {
+                    const userEmail = session.user.email.trim().toLowerCase();
+                    if (userEmail === AUTHORIZED_ADMIN_EMAIL) {
+                        grantAccess(userEmail);
+                    } else {
+                        setErrorMsg(`Access Denied: ${userEmail} is not authorized for Admin access.`);
+                    }
+                }
+            } catch (e) {}
+        };
+        checkOAuthUser();
     }, []);
 
-    // 1. HARDWARE BIOMETRIC LOGIN (STRICT NO-BYPASS)
-    const handleBiometricLogin = async () => {
-        setErrorMsg('');
-        setSuccessMsg('');
-        setLoading(true);
+    const grantAccess = (validEmail: string) => {
+        sessionStorage.setItem('dns_admin_session_active', 'true');
+        sessionStorage.setItem('dns_admin_email', validEmail);
+        sessionStorage.setItem('dns_admin_session_time', Date.now().toString());
 
-        const isVerified = await verifyBiometrics();
-
-        if (isVerified) {
-            setSuccessMsg('Biometric Authentication Verified. Opening Console...');
-            grantAdminAccess();
-        } else {
-            setLoading(false);
-            setErrorMsg('Biometric Verification Failed! Hardware Fingerprint / Face ID check was cancelled or unrecognized. Portal remains locked.');
-        }
+        loginAdmin();
+        setSuccessMsg('Clearance Verified: Welcome Admin. Opening console...');
+        setTimeout(() => {
+            router.push('/admin');
+        }, 500);
     };
 
-    // 2. ENROLL BIOMETRICS ON THIS DEVICE
-    const handleEnrollBiometrics = async () => {
-        setErrorMsg('');
-        setSuccessMsg('');
-        setLoading(true);
-
-        const enrolled = await registerBiometrics();
-        setLoading(false);
-
-        if (enrolled) {
-            setHasBiometric(true);
-            setSuccessMsg('Biometric hardware credentials successfully bound to this device!');
-        } else {
-            setErrorMsg('Biometric enrollment failed. Ensure your device has Windows Hello, Touch ID, or a Fingerprint scanner enabled.');
-        }
-    };
-
-    // 3. CREDENTIALS LOGIN SUBMIT
-    const handleCredentialsSubmit = async (e: React.FormEvent) => {
+    const handleEmailSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg('');
         setSuccessMsg('');
         setLoading(true);
 
         const cleanEmail = email.trim().toLowerCase();
-        const cleanPass = password.trim();
 
-        const isAuthorizedEmail = ALLOWED_EMAILS.includes(cleanEmail);
-        const isValidPassword = cleanPass === OPERATOR_PASSWORD || cleanPass === MASTER_PASSCODE;
-
-        if (!isAuthorizedEmail || !isValidPassword) {
-            setLoading(false);
-            setErrorMsg('ACCESS DENIED: Invalid Operator Email or Security Key.');
-            return;
-        }
-
-        // Check if device is trusted via salted token
-        const trustedToken = localStorage.getItem('dns_admin_trusted_device_v2');
-        if (!trustedToken) {
-            // New Device - Trigger OTP Verification
-            const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            setGeneratedOtp(newOtp);
-
-            try {
-                await fetch('/api/notifications/email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        to: OPERATOR_EMAIL,
-                        subject: 'Dinanath Admin Security OTP - New Device Verification',
-                        body: `Your Security OTP for logging in on a new device is: ${newOtp}`
-                    })
-                });
-            } catch (err) {
-                console.warn('OTP email error:', err);
-            }
-
-            setLoading(false);
-            setStep('otp');
-            return;
-        }
-
-        // Trusted Device -> Grant Access
-        grantAdminAccess();
-    };
-
-    // 4. OTP VERIFICATION SUBMIT
-    const handleOtpSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrorMsg('');
-        
-        if (otp.trim() === generatedOtp || otp.trim() === '128720') {
-            // Save Device Token
-            const token = `trusted_v2_${Date.now()}_${Math.random().toString(36).substring(2)}`;
-            localStorage.setItem('dns_admin_trusted_device_v2', token);
-            
-            setSuccessMsg('New Device Verified & Authorized. Redirecting...');
-            grantAdminAccess();
+        if (cleanEmail === AUTHORIZED_ADMIN_EMAIL) {
+            grantAccess(cleanEmail);
         } else {
-            setErrorMsg('INVALID OTP CODE! Verification failed.');
+            setLoading(false);
+            setErrorMsg('ACCESS DENIED: Only ajayabhay12872@gmail.com is authorized to access the Admin Panel.');
         }
     };
 
-    const grantAdminAccess = () => {
-        // Set active session token in sessionStorage
-        sessionStorage.setItem('dns_admin_session_active', 'true');
-        sessionStorage.setItem('dns_admin_session_time', Date.now().toString());
-
-        loginAdmin();
-        setTimeout(() => {
-            router.push('/admin');
-        }, 600);
+    const handleGoogleAdminLogin = async () => {
+        setGoogleLoading(true);
+        setErrorMsg('');
+        try {
+            const redirectUrl = `${window.location.origin}/admin/login`;
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: redirectUrl
+                }
+            });
+            if (error) throw error;
+        } catch (err: any) {
+            setErrorMsg(err.message || 'Google authentication failed.');
+            setGoogleLoading(false);
+        }
     };
 
     return (
-        <div className="min-h-screen bg-black text-[#A67C35] font-mono flex items-center justify-center p-4 relative overflow-hidden selection:bg-[#A67C35]/30">
+        <div className="min-h-screen bg-[#0A0A0F] text-[#F8F3E8] flex items-center justify-center p-6 relative overflow-hidden selection:bg-[#C9A84C]/30">
             
-            {/* Background Security Grid */}
-            <div className="absolute inset-0 opacity-15 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(rgba(166,124,53,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(166,124,53,0.1)_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            {/* Ambient Background Glow */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/10 blur-[140px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-500/10 blur-[140px] rounded-full" />
             </div>
 
-            <div className="w-full max-w-md bg-[#151515] border border-[#343434] shadow-[0_0_80px_rgba(166,124,53,0.25)] relative z-10 p-8 rounded-3xl text-left">
-                
-                {/* Laser Scanner animation */}
-                <motion.div
-                    className="absolute top-0 left-0 w-full h-1 bg-[#A67C35] shadow-[0_0_20px_#A67C35]"
-                    animate={{ top: ['0%', '100%', '0%'] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                />
-
-                {/* Portal Header */}
-                <div className="text-center space-y-3 mb-8">
-                    <div className="w-16 h-16 border-2 border-[#A67C35]/50 rounded-2xl mx-auto flex items-center justify-center bg-[#1E1E1E] shadow-inner relative">
-                        <Lock className="text-[#A67C35]" size={30} />
+            <motion.div
+                initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className="w-full max-w-md bg-[#151515] border border-white/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative z-10 text-left"
+            >
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 rounded-2xl bg-[#1E1E1E] border border-[#C9A84C]/30 flex items-center justify-center mx-auto mb-5 shadow-lg">
+                        <ShieldCheck size={32} className="text-[#C9A84C]" />
                     </div>
 
-                    <div>
-                        <h1 className="text-lg font-bold tracking-widest text-[#F8F3E8] uppercase">ENCRYPTED ADMIN SECURITY PORTAL</h1>
-                        <p className="text-[#8E8E9A] text-[9.5px] uppercase font-bold tracking-wider mt-1">Dinanath Operator Clearance Level 1</p>
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 text-[#C9A84C] text-[9px] font-black uppercase tracking-[0.3em] mb-3">
+                        Dinanath & Sons Admin
                     </div>
+
+                    <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-[#F8F3E8]">
+                        Admin <span className="bg-gradient-to-r from-[#F8F3E8] via-[#E8D48B] to-[#C9A84C] bg-clip-text text-transparent">Portal</span>
+                    </h1>
+                    <p className="text-[#86868B] text-xs font-bold uppercase tracking-wider mt-2">
+                        Enter authorized admin email to proceed
+                    </p>
                 </div>
 
                 {/* Error Banner */}
-                {errorMsg && (
-                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 bg-red-500/10 border border-red-500/40 rounded-2xl text-red-400 text-xs font-bold leading-relaxed flex items-start gap-3">
-                        <XCircle size={18} className="shrink-0 mt-0.5 text-red-500" />
-                        <span>{errorMsg}</span>
-                    </motion.div>
-                )}
+                <AnimatePresence mode="wait">
+                    {errorMsg && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-start gap-3 text-red-400 text-xs font-bold leading-relaxed"
+                        >
+                            <AlertCircle size={18} className="shrink-0 mt-0.5 text-red-400" />
+                            <span>{errorMsg}</span>
+                        </motion.div>
+                    )}
 
-                {/* Success Banner */}
-                {successMsg && (
-                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/40 rounded-2xl text-emerald-400 text-xs font-bold leading-relaxed flex items-start gap-3">
-                        <CheckCircle2 size={18} className="shrink-0 mt-0.5 text-emerald-500" />
-                        <span>{successMsg}</span>
-                    </motion.div>
-                )}
+                    {successMsg && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center gap-3 text-emerald-400 text-xs font-bold"
+                        >
+                            <CheckCircle2 size={18} className="shrink-0 text-emerald-400" />
+                            <span>{successMsg}</span>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-                {/* STEP 1: LOGIN FORM */}
-                {step === 'login' && (
-                    <div className="space-y-5">
-                        
-                        {/* BIOMETRIC HARDWARE BUTTON (IF ENROLLED) */}
-                        {hasBiometric && (
-                            <div className="space-y-2 pb-4 border-b border-[#343434]">
-                                <button
-                                    type="button"
-                                    onClick={handleBiometricLogin}
-                                    disabled={loading}
-                                    className="w-full py-3.5 bg-[#1E1E1E] border-2 border-[#A67C35] hover:bg-[#A67C35] hover:text-black text-[#A67C35] font-bold uppercase text-[10px] tracking-widest rounded-xl transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-lg"
-                                >
-                                    <Fingerprint size={20} /> Authenticate via Fingerprint / Biometrics
-                                </button>
-                                <p className="text-[8.5px] text-[#8E8E9A] text-center font-mono font-bold uppercase">Hardware Touch ID / Windows Hello Scanner</p>
-                            </div>
-                        )}
+                {/* Direct Google Admin Login */}
+                <button
+                    type="button"
+                    onClick={handleGoogleAdminLogin}
+                    disabled={googleLoading || loading}
+                    className="w-full h-14 bg-[#1E1E1E] hover:bg-[#252525] border border-white/10 hover:border-[#C9A84C]/40 rounded-2xl flex items-center justify-center gap-3 font-bold text-xs uppercase tracking-wider text-[#F8F3E8] transition-all mb-6 shadow-sm disabled:opacity-50"
+                >
+                    {googleLoading ? (
+                        <Loader2 className="animate-spin text-[#C9A84C]" size={18} />
+                    ) : (
+                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                        </svg>
+                    )}
+                    <span>Sign in with Admin Google</span>
+                </button>
 
-                        <form onSubmit={handleCredentialsSubmit} className="space-y-4">
-                            <div>
-                                <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">Operator Email ID</label>
-                                <div className="relative">
-                                    <Mail className="absolute left-3.5 top-3.5 text-[#8E8E9A]" size={15} />
-                                    <input
-                                        required
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="admin@dinanathandsons.com"
-                                        className="w-full h-11 bg-[#1E1E1E] border border-[#343434] focus:border-[#A67C35] rounded-xl pl-11 pr-4 text-xs font-mono text-[#F8F3E8] focus:outline-none"
-                                    />
-                                </div>
-                            </div>
+                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em] text-[#86868B] my-6">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full h-px bg-white/10" /></div>
+                    <span className="bg-[#151515] px-3 relative z-10">Or Enter Admin Email</span>
+                </div>
 
-                            <div>
-                                <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">Operator Password / Master Key</label>
-                                <div className="relative">
-                                    <KeyRound className="absolute left-3.5 top-3.5 text-[#8E8E9A]" size={15} />
-                                    <input
-                                        required
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••••••"
-                                        className="w-full h-11 bg-[#1E1E1E] border border-[#343434] focus:border-[#A67C35] rounded-xl pl-11 pr-4 text-xs font-mono text-[#F8F3E8] focus:outline-none"
-                                    />
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full h-12 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase text-[10px] tracking-widest rounded-xl transition-all shadow cursor-pointer border-none flex items-center justify-center gap-2 mt-2"
-                            >
-                                {loading ? 'Verifying Security Clearance...' : 'Authenticate Operator Session →'}
-                            </button>
-                        </form>
-                    </div>
-                )}
-
-                {/* STEP 2: NEW DEVICE OTP VERIFICATION */}
-                {step === 'otp' && (
-                    <motion.form initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} onSubmit={handleOtpSubmit} className="space-y-4">
-                        <div className="p-4 bg-[#1E1E1E] border border-[#A67C35]/40 rounded-2xl space-y-2">
-                            <div className="flex items-center gap-2 text-[#A67C35] text-[10px] font-bold uppercase tracking-widest">
-                                <Smartphone size={16} /> New Device Security Verification
-                            </div>
-                            <p className="text-[10px] text-[#CFCFCF] leading-relaxed">
-                                Logging in from an unverified device. A 6-digit Security OTP has been sent to <strong className="text-[#F8F3E8]">{OPERATOR_EMAIL}</strong>.
-                            </p>
-                        </div>
-
-                        {/* Simulated Security Dispatch Box */}
-                        <div className="p-3 bg-[#151515] border border-[#343434] rounded-xl text-[9.5px] font-mono text-[#8E8E9A] space-y-1">
-                            <div className="flex items-center justify-between text-[#A67C35] font-bold uppercase">
-                                <span>Security Dispatch OTP</span>
-                                <button type="button" onClick={() => setOtp(generatedOtp)} className="text-[#A67C35] underline cursor-pointer">Auto-Fill OTP</button>
-                            </div>
-                            <p>Sent Passcode: <strong className="text-[#F8F3E8] font-bold text-xs tracking-widest">{generatedOtp}</strong></p>
-                        </div>
-
-                        <div>
-                            <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">Enter 6-Digit Device OTP</label>
+                {/* Email Direct Login Form */}
+                <form onSubmit={handleEmailSubmit} className="space-y-5">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">
+                            Admin Email Address
+                        </label>
+                        <div className="relative group">
+                            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-[#86868B] group-focus-within:text-[#C9A84C] transition-colors" size={18} />
                             <input
                                 required
-                                maxLength={6}
-                                type="text"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                                placeholder="e.g. 872491"
-                                className="w-full h-12 bg-[#1E1E1E] border border-[#343434] focus:border-[#A67C35] rounded-xl text-center text-lg font-mono font-bold text-[#F8F3E8] tracking-[0.3em] focus:outline-none uppercase"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="ajayabhay12872@gmail.com"
+                                className="w-full h-14 bg-[#1E1E1E] border border-white/10 rounded-2xl pl-14 pr-5 text-[#F8F3E8] placeholder-[#666] focus:border-[#C9A84C] focus:outline-none transition-all font-bold text-xs"
                             />
                         </div>
+                    </div>
 
-                        <button
-                            type="submit"
-                            className="w-full h-12 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase text-[10px] tracking-widest rounded-xl transition-all shadow cursor-pointer border-none flex items-center justify-center gap-2"
-                        >
-                            Confirm OTP & Register Device →
-                        </button>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-14 bg-gradient-to-r from-[#E8D48B] via-[#C9A84C] to-[#A67C35] hover:opacity-95 text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                    >
+                        {loading ? (
+                            <div className="flex items-center gap-2">
+                                <Loader2 className="animate-spin" size={18} />
+                                <span>Verifying Clearance...</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <span>Open Admin Panel</span>
+                                <ArrowRight size={16} />
+                            </div>
+                        )}
+                    </button>
+                </form>
 
-                        <button
-                            type="button"
-                            onClick={() => { setStep('login'); setErrorMsg(''); }}
-                            className="w-full text-center text-[9px] text-[#8E8E9A] hover:text-[#F8F3E8] uppercase tracking-wider font-bold cursor-pointer"
-                        >
-                            ← Back to Login
-                        </button>
-                    </motion.form>
-                )}
-
-                <div className="mt-6 text-[9px] text-[#8E8E9A] text-center font-mono uppercase tracking-widest border-t border-[#343434]/40 pt-4">
-                    HIGH SECURITY ZONE • RESTRICTED ACCESS ONLY
+                <div className="mt-8 text-center pt-4 border-t border-white/5">
+                    <p className="text-[9px] font-mono text-[#86868B] uppercase tracking-widest">
+                        Protected Zone • Dinanath & Sons Control System
+                    </p>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

@@ -79,13 +79,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         loadSettings();
     }, []);
 
-    // Strict Authentication & Session Token Check
+    // Strict Authorized Email & Session Check
     useEffect(() => {
         if (pathname === '/admin/login') return;
 
         const hasActiveSession = typeof window !== 'undefined' && sessionStorage.getItem('dns_admin_session_active') === 'true';
+        const adminEmail = typeof window !== 'undefined' ? sessionStorage.getItem('dns_admin_email') : null;
 
-        if (!isAdminAuthenticated || !hasActiveSession) {
+        if (!hasActiveSession || adminEmail !== 'ajayabhay12872@gmail.com') {
             router.push('/admin/login');
         }
     }, [isAdminAuthenticated, pathname, router]);

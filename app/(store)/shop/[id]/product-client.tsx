@@ -199,13 +199,25 @@ export default function ProductClient({ id }: { id: string }) {
                         {/* Title */}
                         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wide uppercase leading-tight">{product.name}</h1>
                         
-                        {/* Review count & Ratings */}
+                        {/* Honest Review count & Ratings */}
                         <div className="flex items-center gap-6 text-[#CFCFCF] text-xs">
                             <div className="flex items-center gap-2">
-                                <div className="flex text-[#A67C35]">
-                                    {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-[#A67C35] stroke-none" />)}
+                                <div className="flex text-[#C9A84C] gap-0.5">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star 
+                                            key={i} 
+                                            size={14} 
+                                            className={product.reviews && product.reviews.length > 0 ? "fill-[#C9A84C] stroke-none" : "stroke-[#555] fill-none"} 
+                                        />
+                                    ))}
                                 </div>
-                                <span className="font-bold text-[#A67C35]">({product.reviews?.length || 25} Reviews)</span>
+                                <span className="font-bold text-xs">
+                                    {product.reviews && product.reviews.length > 0 ? (
+                                        <span className="text-[#C9A84C]">({product.reviews.length} {product.reviews.length === 1 ? 'Review' : 'Reviews'})</span>
+                                    ) : (
+                                        <span className="text-[#8E8E9A] font-medium">No reviews yet</span>
+                                    )}
+                                </span>
                             </div>
                             <div className="h-3.5 w-px bg-[#343434]" />
                             <span className="font-mono text-[10px] uppercase tracking-wider text-[#8E8E9A]">SKU: {product.sku || product.id.slice(0, 8).toUpperCase()}</span>
@@ -313,7 +325,7 @@ export default function ProductClient({ id }: { id: string }) {
                         </div>
 
                         {/* Pricing display & Purchasing Block */}
-                        <div className="bg-[#1E1E1E] border border-[#343434] rounded-xl p-6 space-y-4">
+                        <div className="bg-[#1E1E1E] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6 shadow-xl">
                             <div className="flex items-baseline gap-4 flex-wrap">
                                 {isPriceInvalid ? (
                                     <div className="space-y-1">
@@ -322,60 +334,65 @@ export default function ProductClient({ id }: { id: string }) {
                                     </div>
                                 ) : isRetail ? (
                                     <>
-                                        <span className="text-4xl font-black text-[#F8F3E8]">₹{product.retailPrice.toLocaleString()}</span>
-                                        <span className="text-[#8E8E9A] text-sm line-through uppercase font-bold">₹{originalPrice.toLocaleString()}</span>
-                                        <span className="text-[#D12A1C] text-xs font-bold uppercase tracking-wider">({discountPercent}% OFF)</span>
+                                        <span className="text-4xl md:text-5xl font-black text-[#F8F3E8] tracking-tight">₹{product.retailPrice.toLocaleString('en-IN')}</span>
+                                        <span className="text-[#8E8E9A] text-base line-through uppercase font-bold">₹{originalPrice.toLocaleString('en-IN')}</span>
+                                        <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">({discountPercent}% OFF)</span>
                                     </>
                                 ) : (
                                     <div className="space-y-1">
-                                        <span className="text-2xl font-bold text-[#A67C35] uppercase tracking-wider italic">Wholesale Price disclosed upon inquiry</span>
-                                        <p className="text-[#8E8E9A] text-[10px] font-bold uppercase">Prices negotiated based on volume (Minimum MOQ: {product.wholesaleMOQ} Units)</p>
+                                        <span className="text-2xl font-bold text-[#C9A84C] uppercase tracking-wider italic">Wholesale Pricing Available</span>
+                                        <p className="text-[#8E8E9A] text-[10px] font-bold uppercase">Volume rates tailored to quantity (Minimum MOQ: {product.wholesaleMOQ} Units)</p>
                                     </div>
                                 )}
                             </div>
 
                             {/* Purchase Quantity and CTAs */}
-                            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                            <div className="flex flex-col sm:flex-row gap-3.5 pt-2">
                                 {/* Quantity input */}
-                                <div className="flex items-center bg-[#151515] border border-[#343434] rounded-lg p-1 h-14 w-full sm:w-36 shrink-0">
-                                    <button disabled={!canPurchase} onClick={() => setQty(Math.max(1, qty - 1))} className="flex-1 h-full text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors font-bold text-lg disabled:opacity-30">-</button>
-                                    <span className="w-10 text-center font-mono font-bold text-sm">{qty}</span>
-                                    <button disabled={!canPurchase} onClick={() => setQty(qty + 1)} className="flex-1 h-full text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors font-bold text-lg disabled:opacity-30">+</button>
+                                <div className="flex items-center bg-[#151515] border border-white/10 rounded-xl p-1 h-14 w-full sm:w-36 shrink-0 shadow-inner">
+                                    <button disabled={!canPurchase} onClick={() => setQty(Math.max(1, qty - 1))} className="flex-1 h-full text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors font-black text-lg disabled:opacity-30 flex items-center justify-center">-</button>
+                                    <span className="w-10 text-center font-mono font-black text-sm text-[#F8F3E8]">{qty}</span>
+                                    <button disabled={!canPurchase} onClick={() => setQty(qty + 1)} className="flex-1 h-full text-[#8E8E9A] hover:text-[#F8F3E8] transition-colors font-black text-lg disabled:opacity-30 flex items-center justify-center">+</button>
                                 </div>
                                 
-                                {/* Add to Cart button */}
+                                {/* Premium Add to Cart button */}
                                 <button 
                                     onClick={handleAddToCart}
                                     disabled={!canPurchase}
-                                    className={`flex-1 h-14 rounded-lg flex items-center justify-center gap-2.5 font-bold uppercase tracking-widest text-[10px] transition-all active:scale-[0.98] shadow-lg ${
-                                        !canPurchase ? 'bg-[#343434] text-[#8E8E9A] cursor-not-allowed border border-[#444444]' : 
-                                        isRetail ? 'bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold' : 'bg-[#D12A1C] hover:bg-[#b02217] text-white'
+                                    className={`flex-1 h-14 px-6 rounded-xl flex items-center justify-center gap-3 font-black uppercase tracking-[0.2em] text-[11px] transition-all duration-300 active:scale-[0.98] shadow-xl ${
+                                        !canPurchase 
+                                            ? 'bg-[#242424] text-[#8E8E9A] cursor-not-allowed border border-white/5' 
+                                            : isRetail 
+                                                ? 'bg-gradient-to-r from-[#F0DFC0] via-[#C9A84C] to-[#A67C35] hover:opacity-95 text-[#0A0A0F] shadow-[0_8px_25px_rgba(201,168,76,0.25)] hover:shadow-[0_12px_35px_rgba(201,168,76,0.4)] hover:-translate-y-0.5' 
+                                                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950/40'
                                     }`}
                                 >
-                                    <ShoppingCart size={15} strokeWidth={2.5} />
-                                    {isRetail ? (canPurchase ? 'Add to Cart' : 'Out of Stock') : 'Request Quotation'}
+                                    <ShoppingCart size={17} strokeWidth={2.5} />
+                                    <span>{isRetail ? (canPurchase ? 'Add to Cart' : 'Out of Stock') : 'Request Quote'}</span>
                                 </button>
 
                                 {/* Buy Now button */}
-                                {isRetail && (
+                                {isRetail && canPurchase && (
                                     <button 
                                         onClick={handleBuyNow}
-                                        disabled={!canPurchase}
-                                        className={`flex-1 h-14 rounded-lg font-bold uppercase tracking-widest text-[10px] transition-all active:scale-[0.98] shadow-lg ${
-                                            !canPurchase ? 'bg-[#2A2A2A] text-[#666666] cursor-not-allowed border border-[#3A3A3A]' : 'bg-[#D12A1C] hover:bg-[#b02217] text-white'
-                                        }`}
+                                        className="flex-1 h-14 px-6 rounded-xl font-black uppercase tracking-[0.2em] text-[11px] transition-all duration-300 active:scale-[0.98] bg-[#151515] hover:bg-[#222222] border border-[#C9A84C]/50 hover:border-[#C9A84C] text-[#F8F3E8] shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2"
                                     >
-                                        Buy Now
+                                        <Zap size={15} className="text-[#C9A84C]" fill="currentColor" />
+                                        <span>Buy Now</span>
                                     </button>
                                 )}
 
                                 {/* Wishlist heart toggle */}
                                 <button 
                                     onClick={() => toggleWishlist(product.id)}
-                                    className={`w-14 h-14 rounded-lg border flex items-center justify-center shrink-0 transition-all ${isWishlisted ? 'bg-[#D12A1C]/10 text-[#D12A1C] border-[#D12A1C]/30' : 'bg-[#151515] border-[#343434] text-[#8E8E9A] hover:text-[#F8F3E8]'}`}
+                                    className={`w-14 h-14 rounded-xl border flex items-center justify-center shrink-0 transition-all ${
+                                        isWishlisted 
+                                            ? 'bg-red-500/10 text-red-500 border-red-500/30 shadow-red-950/30' 
+                                            : 'bg-[#151515] border-white/10 text-[#8E8E9A] hover:text-[#F8F3E8] hover:border-white/20'
+                                    }`}
                                     title="Add to Wishlist"
                                 >
-                                    <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
+                                    <Heart size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
                                 </button>
 
                                 {/* Unique Shareable Link Button */}

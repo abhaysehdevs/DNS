@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { useAppStore } from '@/lib/store';
 
-export function Reviews({ initialReviews, productId }: { initialReviews: Review[], productId: string }) {
+export function Reviews({ initialReviews = [], productId }: { initialReviews?: Review[], productId: string }) {
     const { user } = useAppStore();
-    const [reviews, setReviews] = useState<Review[]>(initialReviews);
-    const [loading, setLoading] = useState(false);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loading, setLoading] = useState(true);
     const [isVerified, setIsVerified] = useState(false);
 
     // New Review State
@@ -19,40 +19,42 @@ export function Reviews({ initialReviews, productId }: { initialReviews: Review[
     const [rating, setRating] = useState(5);
     const [submitting, setSubmitting] = useState(false);
 
-    // Fetch DB reviews on mount
+    // Fetch authentic DB reviews on mount
     useEffect(() => {
         const fetchReviews = async () => {
             setLoading(true);
-            const { data, error } = await supabase
-                .from('reviews')
-                .select('*')
-                .eq('product_id', productId)
-                .order('created_at', { ascending: false });
+            try {
+                const { data, error } = await supabase
+                    .from('reviews')
+                    .select('*')
+                    .eq('product_id', productId)
+                    .order('created_at', { ascending: false });
 
-            if (data && !error) {
-                const dbReviews: Review[] = data.map((r: any) => ({
-                    id: r.id,
-                    userName: r.user_name || 'Anonymous',
-                    rating: r.rating,
-                    comment: r.comment,
-                    date: new Date(r.created_at).toLocaleDateString(),
-                    verifiedPurchase: r.is_verified || false,
-                    helpfulCount: 0
-                }));
-                
-                // Combine and sort: verified reviews first
-                const sortedReviews = [...dbReviews, ...initialReviews].sort((a, b) => {
-                    if (a.verifiedPurchase && !b.verifiedPurchase) return -1;
-                    if (!a.verifiedPurchase && b.verifiedPurchase) return 1;
-                    return 0;
-                });
-                setReviews(sortedReviews);
+                if (data && !error && data.length > 0) {
+                    const dbReviews: Review[] = data.map((r: any) => ({
+                        id: r.id,
+                        userName: r.user_name || 'Verified Customer',
+                        rating: r.rating || 5,
+                        comment: r.comment,
+                        date: new Date(r.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                        verifiedPurchase: r.is_verified || false,
+                        helpfulCount: 0
+                    }));
+                    setReviews(dbReviews);
+                } else if (initialReviews && initialReviews.length > 0) {
+                    setReviews(initialReviews);
+                } else {
+                    setReviews([]);
+                }
+            } catch (e) {
+                setReviews(initialReviews || []);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
 
         if (productId) fetchReviews();
-    }, [productId]);
+    }, [productId, initialReviews]);
 
     // Check if the current user is a verified buyer of this product
     useEffect(() => {

@@ -281,6 +281,8 @@ export const useAppStore = create<AppState>()(
             logoutAdmin: () => {
                 if (typeof window !== 'undefined') {
                     sessionStorage.removeItem('dns_admin_session_active');
+                    sessionStorage.removeItem('dns_admin_email');
+                    sessionStorage.removeItem('dns_admin_session_time');
                 }
                 set({ isAdminAuthenticated: false });
             },
