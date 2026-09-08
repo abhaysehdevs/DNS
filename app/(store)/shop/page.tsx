@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Product } from '@/lib/data';
+import { Product, products as initialLocalProducts } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import {
@@ -26,10 +26,13 @@ function ShopContent() {
     const initialCategory = searchParams.get('cat') || 'All';
     const initialSearch = searchParams.get('search') || searchParams.get('q') || '';
 
-    // Data State
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [categories, setCategories] = useState<string[]>(['All']);
+    const initialCats = ['All', ...Array.from(new Set(initialLocalProducts.map(p => p.category)))];
+
+    // Data State - preloaded so initial server-rendered HTML contains real products and links
+    const [products, setProducts] = useState<Product[]>(() => initialLocalProducts);
+    const [loading, setLoading] = useState(false);
+    const [categories, setCategories] = useState<string[]>(initialCats);
+
 
     // Filter & Search State
     const [searchQuery, setSearchQuery] = useState(initialSearch);

@@ -73,30 +73,32 @@ export function Footer() {
                         </div>
                     </div>
 
-                    {/* Quick Links Column - Col Span 2 */}
+                    {/* Categories Column - Col Span 2 */}
                     <div className="lg:col-span-2 flex flex-col">
-                        <h4 className="text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.2em] mb-6 border-b border-[#343434]/40 pb-2">Quick Links</h4>
+                        <h4 className="text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.2em] mb-6 border-b border-[#343434]/40 pb-2">Categories</h4>
                         <ul className="space-y-3 text-xs font-semibold text-[#CFCFCF]">
-                            <li><Link href="/about" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">About Us</Link></li>
-                            <li><Link href="/shop" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Our Products</Link></li>
-                            <li><Link href="/new-arrivals" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">New Arrivals</Link></li>
-                            <li><Link href="/offers" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Offers</Link></li>
-                            <li><Link href="/blog" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Blog</Link></li>
-                            <li><Link href="/contact" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Contact Us</Link></li>
+                            <li><Link href="/shop/category/hand-tools" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Hand Tools</Link></li>
+                            <li><Link href="/shop/category/machines" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Machines</Link></li>
+                            <li><Link href="/shop/category/polishing" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Polishing & Buffs</Link></li>
+                            <li><Link href="/shop/category/chemicals" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Cleaning & Flux</Link></li>
+                            <li><Link href="/shop/category/packaging" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Packaging & Cards</Link></li>
+                            <li><Link href="/shop/category/bullion" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Certified Bullion</Link></li>
                         </ul>
                     </div>
 
-                    {/* Customer Service Column - Col Span 2 */}
+                    {/* Quick Links Column - Col Span 2 */}
                     <div className="lg:col-span-2 flex flex-col">
-                        <h4 className="text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.2em] mb-6 border-b border-[#343434]/40 pb-2">Customer Service</h4>
+                        <h4 className="text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.2em] mb-6 border-b border-[#343434]/40 pb-2">Information</h4>
                         <ul className="space-y-3 text-xs font-semibold text-[#CFCFCF]">
-                            <li><Link href="/account" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">My Account</Link></li>
-                            <li><Link href="/track-order" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Track Order</Link></li>
-                            <li><Link href="/wishlist" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Wishlist</Link></li>
+                            <li><Link href="/about" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">About Us</Link></li>
+                            <li><Link href="/shop" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">All Products</Link></li>
+                            <li><Link href="/new-arrivals" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">New Arrivals</Link></li>
+                            <li><Link href="/offers" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Special Offers</Link></li>
+                            <li><Link href="/blog" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Technical Blog</Link></li>
+                            <li><Link href="/contact" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Contact Us</Link></li>
                             <li><Link href="/shipping-policy" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Shipping Policy</Link></li>
                             <li><Link href="/return-policy" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Return Policy</Link></li>
-                            <li><Link href="/terms" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">Terms & Conditions</Link></li>
-                            <li><Link href="/faq" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">FAQ & Support</Link></li>
+                            <li><Link href="/faq" className="hover:text-[#A67C35] transition-colors uppercase tracking-wider text-[10px]">FAQ</Link></li>
                         </ul>
                     </div>
 

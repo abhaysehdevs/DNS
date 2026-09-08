@@ -115,11 +115,10 @@ export function Navbar() {
     const navLinks = [
         { href: '/', label: 'HOME' },
         { href: '/shop', label: 'PRODUCTS' },
-        { href: '/shop?cat=Machinery', label: 'MACHINES' },
-        { href: '/shop?cat=Tools', label: 'HAND TOOLS' },
-        { href: '/shop?cat=Consumables', label: 'POLISHING' },
-        { href: '/shop?cat=Packaging', label: 'PACKAGING' },
-        { href: '/shop?cat=Packaging', label: 'DISPLAY' }, // maps to packaging
+        { href: '/shop/category/machines', label: 'MACHINES' },
+        { href: '/shop/category/hand-tools', label: 'HAND TOOLS' },
+        { href: '/shop/category/polishing', label: 'POLISHING' },
+        { href: '/shop/category/packaging', label: 'PACKAGING & DISPLAY' },
         { href: '/new-arrivals', label: 'NEW ARRIVALS' },
         { href: '/offers', label: 'OFFERS' },
         { href: '/about', label: 'ABOUT' },
@@ -127,12 +126,12 @@ export function Navbar() {
     ];
 
     const categoryList = [
-        { name: 'Hand Tools', href: '/shop?cat=Tools' },
-        { name: 'Machines', href: '/shop?cat=Machinery' },
-        { name: 'Polishing & Buffs', href: '/shop?cat=Consumables' },
-        { name: 'Cleaning Solutions', href: '/shop?cat=Chemicals' },
-        { name: 'Packaging', href: '/shop?cat=Packaging' },
-        { name: 'Accessories', href: '/shop?cat=Tools' }
+        { name: 'Hand Tools', href: '/shop/category/hand-tools' },
+        { name: 'Machines', href: '/shop/category/machines' },
+        { name: 'Polishing & Buffs', href: '/shop/category/polishing' },
+        { name: 'Cleaning Solutions', href: '/shop/category/chemicals' },
+        { name: 'Packaging & Display', href: '/shop/category/packaging' },
+        { name: 'Certified Bullion', href: '/shop/category/bullion' }
     ];
 
     return (

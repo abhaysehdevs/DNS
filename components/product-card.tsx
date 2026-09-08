@@ -33,7 +33,7 @@ export function ProductCard({
                     <div className="h-44 bg-[#1E1E1E] flex items-center justify-center relative p-3 overflow-hidden">
                         <SecureImage 
                             src={product.image || product.primaryImage} 
-                            alt={product.name} 
+                            alt={`${product.name} - ${product.category} | Dinanath & Sons`} 
                             containerClassName="w-full h-full flex items-center justify-center"
                             className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-lighten" 
                         />
@@ -63,7 +63,7 @@ export function ProductCard({
             <Link href={productUrl} className={`relative block shrink-0 ${list ? 'w-full lg:w-80 border-b lg:border-b-0 lg:border-r border-[#343434]' : 'h-64 sm:h-72 w-full'} bg-[#1E1E1E] p-5 overflow-hidden flex items-center justify-center`}>
                 <SecureImage 
                     src={product.image || product.primaryImage} 
-                    alt={product.name} 
+                    alt={`${product.name} - ${product.category} | Dinanath & Sons Chandni Chowk`} 
                     containerClassName="w-full h-full flex items-center justify-center"
                     className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-105 mix-blend-lighten drop-shadow-md" 
                 />

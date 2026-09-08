@@ -85,6 +85,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
     ]
 
+    // Category Routes
+    const categoryRoutes: MetadataRoute.Sitemap = [
+        {
+            url: `${baseUrl}/shop/category/hand-tools`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/shop/category/machines`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/shop/category/polishing`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/shop/category/packaging`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/shop/category/chemicals`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/shop/category/bullion`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.85,
+        },
+    ]
+
     // Dynamic Product Routes
     let productRoutes: MetadataRoute.Sitemap = []
     try {
@@ -139,5 +179,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }))
     }
 
-    return [...staticRoutes, ...productRoutes, ...blogRoutes]
+    return [...staticRoutes, ...categoryRoutes, ...productRoutes, ...blogRoutes]
 }
+

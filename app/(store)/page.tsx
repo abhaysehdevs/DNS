@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Hero } from '@/components/hero';
 import { ProductCard } from '@/components/product-card';
-import { Product } from '@/lib/data';
+import { Product, products as initialLocalProducts } from '@/lib/data';
 import { 
     Loader2, ArrowRight, Star, Clock, ShieldCheck, Layers, 
     Truck, Lock, ThumbsUp, ChevronRight 
@@ -22,12 +22,12 @@ const trustStripItems = [
 ];
 
 const homeCategories = [
-    { name: 'Hand Tools', count: '120+ Products', img: '/images/products/ss-plier.png', href: '/shop?cat=Tools' },
-    { name: 'Machines', count: '45+ Products', img: '/images/products/sand-blasting-dust-collector-machine.png', href: '/shop?cat=Machinery' },
-    { name: 'Polishing & Buffs', count: '60+ Products', img: '/images/products/cloth-buff.png', href: '/shop?cat=Consumables' },
-    { name: 'Cleaning Solutions', count: '25+ Products', img: '/images/products/tik-tak-silver-cleaner.png', href: '/shop?cat=Chemicals' },
-    { name: 'Engraving Tools', count: '30+ Products', img: '/images/products/gas-torch-auto.png', href: '/shop?cat=Tools' },
-    { name: 'Accessories', count: '50+ Products', img: '/images/products/tweezer-ss-10k.png', href: '/shop?cat=Packaging' }
+    { name: 'Hand Tools', count: '120+ Products', img: '/images/products/ss-plier.png', href: '/shop/category/hand-tools' },
+    { name: 'Machines', count: '45+ Products', img: '/images/products/sand-blasting-dust-collector-machine.png', href: '/shop/category/machines' },
+    { name: 'Polishing & Buffs', count: '60+ Products', img: '/images/products/cloth-buff.png', href: '/shop/category/polishing' },
+    { name: 'Cleaning Solutions', count: '25+ Products', img: '/images/products/tik-tak-silver-cleaner.png', href: '/shop/category/chemicals' },
+    { name: 'Packaging & Cards', count: '30+ Products', img: '/images/packaging/silver-coins-5gms.png', href: '/shop/category/packaging' },
+    { name: 'Certified Bullion', count: '50+ Products', img: '/images/products/silver-coin-20g.png', href: '/shop/category/bullion' }
 ];
 
 const whyChooseUsItems = [
@@ -39,8 +39,9 @@ const whyChooseUsItems = [
 ];
 
 export default function Home() {
-    const [newArrivals, setNewArrivals] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [newArrivals, setNewArrivals] = useState<Product[]>(() => initialLocalProducts.slice(0, 6));
+    const [loading, setLoading] = useState(false);
+
     const [featuredCollections, setFeaturedCollections] = useState<any[]>([]);
     const [collectionsProducts, setCollectionsProducts] = useState<Record<string, Product[]>>({});
     const [newsletterEmail, setNewsletterEmail] = useState('');

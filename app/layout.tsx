@@ -19,43 +19,43 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinanathandsons.com'),
   title: {
-    default: "Dinanath's | Premium Jewelry Tools & Machinery",
-    template: "%s | Dinanath's"
+    default: "Dinanath & Sons | Jewellery Tools, Goldsmith Equipment & Machinery Since 1960",
+    template: "%s | Dinanath & Sons"
   },
-  description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables. Precision tooling for jewelers across India.',
+  description: 'India’s premier wholesale and retail supplier of professional jewellery making tools, goldsmith equipment, casting machinery, and polishing consumables. Serving jewelers since 1960 in Chandni Chowk, Delhi.',
   keywords: [
-    'jewelry tools', 
-    'jewelry machinery', 
-    'wholesale jewelry tools', 
-    'precision tooling', 
-    'goldsmith tools', 
-    'jewelry manufacturing equipment', 
-    "Dinanath's",
-    'jewelry making machinery', 
-    'goldsmith tools Chandni Chowk', 
-    'rolling mills wholesale Delhi', 
-    'precision jewelry scales', 
-    'polishing consumables', 
-    'micro-soldering jewelry', 
-    'jewelry workshop equipment', 
-    'wholesale precision engineering tools'
+    'jewellery tools',
+    'jewelry tools',
+    'goldsmith tools',
+    'jewellery tools wholesale',
+    'jewellery tools shop',
+    'jewellery tools Chandni Chowk',
+    'jewellery tools wholesale Delhi',
+    'jewellery equipment supplier India',
+    'jewelry machinery',
+    'precision tooling',
+    'casting equipment',
+    'gold testing kit',
+    'suhaga borax flux',
+    'coin packing cards',
+    'jewellery display trays',
+    'polishing consumables',
+    'rolling mills wholesale Delhi',
+    'micro-soldering jewelry'
   ],
-  authors: [{ name: "Dinanath's" }],
-  creator: "Dinanath's",
-  publisher: "Dinanath's",
+  authors: [{ name: "Dinanath & Sons" }],
+  creator: "Dinanath & Sons",
+  publisher: "Dinanath & Sons",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: './',
-  },
   openGraph: {
-    title: "Dinanath's | Premium Jewelry Tools & Machinery",
-    description: 'Leading wholesale and retail supplier of professional jewelry making tools, machinery, and consumables.',
+    title: "Dinanath & Sons | Premium Jewellery Tools & Machinery Since 1960",
+    description: 'Leading wholesale and retail supplier of professional jewellery making tools, machinery, and consumables across India.',
     url: 'https://dinanathandsons.com',
-    siteName: "Dinanath's",
+    siteName: "Dinanath & Sons",
     locale: 'en_IN',
     type: 'website',
     images: [
@@ -63,14 +63,14 @@ export const metadata: Metadata = {
         url: 'https://dinanathandsons.com/icon.png',
         width: 512,
         height: 512,
-        alt: "Dinanath's Precision Jewelry Tools",
+        alt: "Dinanath & Sons Precision Jewellery Tools",
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Dinanath's | Premium Jewelry Tools & Machinery",
-    description: 'Leading wholesale and retail supplier of professional jewelry making tools.',
+    title: "Dinanath & Sons | Premium Jewellery Tools & Machinery Since 1960",
+    description: 'Leading wholesale and retail supplier of professional jewellery making tools and goldsmith machinery.',
     images: ['https://dinanathandsons.com/icon.png'],
   },
   robots: {
@@ -113,15 +113,22 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               "name": "Dinanath & Sons",
+              "legalName": "Dinanath & Sons Hardware Store",
+              "alternateName": ["Dinanath and Sons", "Dinanath Tools", "Dinanath's"],
               "image": "https://dinanathandsons.com/icon.png",
               "@id": "https://dinanathandsons.com/#organization",
               "url": "https://dinanathandsons.com",
               "telephone": "+919953435647",
-              "priceRange": "$$",
+              "foundingDate": "1960",
+              "description": "Established in 1960 in Maliwara, Chandni Chowk, New Delhi, Dinanath & Sons is a premier manufacturer, retail vendor, and wholesale supplier of precision jewellery making tools, goldsmith hand tools, casting machinery, and polishing consumables across India.",
+              "priceRange": "₹₹",
+              "currenciesAccepted": "INR",
+              "paymentAccepted": "Cash, Credit Card, UPI, Net Banking, Bank Wire",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "1914, Chatta Madan Gopal, Maliwara, Chandni Chowk",
                 "addressLocality": "Delhi",
+                "addressRegion": "Delhi",
                 "postalCode": "110006",
                 "addressCountry": "IN"
               },
@@ -130,6 +137,11 @@ export default function RootLayout({
                 "latitude": 28.6562,
                 "longitude": 77.2309
               },
+              "areaServed": [
+                { "@type": "Country", "name": "India" },
+                { "@type": "City", "name": "Delhi" },
+                { "@type": "AdministrativeArea", "name": "Chandni Chowk" }
+              ],
               "openingHoursSpecification": {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": [

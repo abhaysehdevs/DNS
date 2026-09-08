@@ -1,17 +1,21 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "FAQ & Support Intelligence | Dinanath's Jewelry Machinery",
-    description: "Standard operational guides, wholesale MOQ parameters, payment channels, and technical warranties for Dinanath precision instruments.",
+    title: "Frequently Asked Questions (FAQ) | Dinanath & Sons Jewellery Tools",
+    description: "Find answers to common questions regarding retail and wholesale orders, pan-India dispatch, goldsmith tool specifications, payments, and machine warranties.",
     keywords: [
         'jewelry tools FAQ', 
         'wholesale tool return policy', 
         'jewelry machine warranty', 
-        'technical tool MOQ'
+        'technical tool MOQ',
+        'jewellery tools Chandni Chowk'
     ],
+    alternates: {
+        canonical: 'https://dinanathandsons.com/faq',
+    },
     openGraph: {
-        title: "FAQ & Support Intelligence | Dinanath's Jewelry Machinery",
-        description: "Standard operational guides, wholesale MOQ parameters, payment channels, and technical warranties for Dinanath precision instruments.",
+        title: "Frequently Asked Questions (FAQ) | Dinanath & Sons Jewellery Tools",
+        description: "Find answers to common questions regarding retail and wholesale orders, pan-India dispatch, goldsmith tool specifications, payments, and warranties.",
         url: 'https://dinanathandsons.com/faq',
     }
 };

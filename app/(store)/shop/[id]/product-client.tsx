@@ -20,20 +20,73 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function ProductClient({ id }: { id: string }) {
+export default function ProductClient({ id, initialProduct }: { id: string; initialProduct?: any }) {
     const router = useRouter();
     const { mode, language, addToCart, viewProduct, wishlist, toggleWishlist } = useAppStore();
     const t = translations[language] || translations['en'];
     const isRetail = mode === 'retail';
 
-    const [product, setProduct] = useState<Product | null>(null);
-    const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [qty, setQty] = useState(1);
+    const [product, setProduct] = useState<Product | null>(() => {
+        if (initialProduct) {
+            const retailPrice = Number(initialProduct.retailPrice ?? initialProduct.retail_price ?? 0);
+            const wholesalePrice = initialProduct.wholesalePrice !== undefined ? Number(initialProduct.wholesalePrice) : (initialProduct.wholesale_price !== undefined ? Number(initialProduct.wholesale_price) : undefined);
+            const wholesaleMOQ = Number(initialProduct.wholesaleMOQ ?? initialProduct.wholesale_moq ?? 1);
+            const inStock = initialProduct.inStock !== undefined ? Boolean(initialProduct.inStock) : (initialProduct.in_stock !== undefined ? Boolean(initialProduct.in_stock) : true);
+            const img = initialProduct.primaryImage || initialProduct.image || initialProduct.image_url || '/placeholder.jpg';
+
+            return {
+                id: initialProduct.id,
+                name: initialProduct.name,
+                description: initialProduct.description,
+                retailPrice,
+                wholesalePrice,
+                wholesaleMOQ,
+                primaryImage: img,
+                image: img,
+                videoUrl: initialProduct.videoUrl || initialProduct.video_url,
+                gallery: (initialProduct.gallery && initialProduct.gallery.length > 0) ? initialProduct.gallery : [{ id: '1', type: 'image', url: img }],
+                category: initialProduct.category || 'Tools',
+                inStock,
+                quantity: initialProduct.quantity !== undefined && initialProduct.quantity !== null ? initialProduct.quantity : 15,
+                reviews: initialProduct.reviews || [],
+                brand: initialProduct.brand || "Dinanath & Sons",
+                modelNumber: initialProduct.modelNumber || initialProduct.model_number,
+                sku: initialProduct.sku || initialProduct.id,
+                weight: initialProduct.weight,
+                dimensions: initialProduct.dimensions,
+                warrantyInfo: initialProduct.warrantyInfo || initialProduct.warranty_info,
+                features: initialProduct.features || [],
+                specifications: initialProduct.specifications || {},
+                variants: initialProduct.variants || [],
+                variantType: initialProduct.variantType || initialProduct.variant_type
+            };
+        }
+        return null;
+    });
+
+    const [selectedVariant, setSelectedVariant] = useState<any | null>(() => {
+        if (initialProduct && initialProduct.variants && initialProduct.variants.length > 0) {
+            return initialProduct.variants[0];
+        }
+        return null;
+    });
+
+    const [loading, setLoading] = useState(!initialProduct);
+    const [qty, setQty] = useState(() => {
+        if (initialProduct) {
+            return isRetail ? 1 : (Number(initialProduct.wholesaleMOQ ?? initialProduct.wholesale_moq ?? 1));
+        }
+        return 1;
+    });
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
     const [addedAlert, setAddedAlert] = useState(false);
 
     useEffect(() => {
+        if (product) {
+            viewProduct(product.id);
+            return;
+        }
+
         async function fetchProduct() {
             setLoading(true);
             try {
@@ -49,26 +102,27 @@ export default function ProductClient({ id }: { id: string }) {
                     id: data.id,
                     name: data.name,
                     description: data.description,
-                    retailPrice: data.retail_price,
-                    wholesalePrice: data.wholesale_price,
-                    wholesaleMOQ: data.wholesale_moq,
-                    primaryImage: data.image || '/placeholder.jpg',
-                    videoUrl: data.video_url,
+                    retailPrice: data.retail_price ?? data.retailPrice ?? 0,
+                    wholesalePrice: data.wholesale_price ?? data.wholesalePrice,
+                    wholesaleMOQ: data.wholesale_moq ?? data.wholesaleMOQ ?? 1,
+                    primaryImage: data.image || data.primaryImage || '/placeholder.jpg',
+                    image: data.image || data.primaryImage || '/placeholder.jpg',
+                    videoUrl: data.video_url || data.videoUrl,
                     gallery: data.gallery || [],
                     category: data.category,
-                    inStock: data.in_stock,
+                    inStock: data.in_stock ?? data.inStock ?? true,
                     quantity: data.quantity !== undefined && data.quantity !== null ? data.quantity : 15,
                     reviews: data.reviews || [],
-                    brand: data.brand,
-                    modelNumber: data.model_number,
-                    sku: data.sku,
+                    brand: data.brand || "Dinanath & Sons",
+                    modelNumber: data.model_number || data.modelNumber,
+                    sku: data.sku || data.id,
                     weight: data.weight,
                     dimensions: data.dimensions,
-                    warrantyInfo: data.warranty_info,
+                    warrantyInfo: data.warranty_info || data.warrantyInfo,
                     features: data.features || [],
                     specifications: data.specifications || {},
                     variants: data.variants || [],
-                    variantType: data.variant_type
+                    variantType: data.variant_type || data.variantType
                 };
 
                 setProduct(mappedProduct);
@@ -78,7 +132,6 @@ export default function ProductClient({ id }: { id: string }) {
                 setQty(isRetail ? 1 : mappedProduct.wholesaleMOQ);
                 viewProduct(mappedProduct.id);
             } catch (err) {
-                // Try local fallback on exception
                 import('@/lib/data').then((module) => {
                     const localProduct = module.products.find(p => p.id === id);
                     if (localProduct) {
@@ -95,10 +148,11 @@ export default function ProductClient({ id }: { id: string }) {
             }
         }
         fetchProduct();
-    }, [id, isRetail, viewProduct]);
+    }, [id, isRetail, viewProduct, product]);
 
     if (loading) return <div className="min-h-screen bg-[#151515] flex items-center justify-center"><Loader2 className="animate-spin text-[#A67C35]" size={48} /></div>;
     if (!product) return <div className="min-h-screen bg-[#151515] flex items-center justify-center text-[#F8F3E8] uppercase tracking-widest text-xs">Product Not Found</div>;
+
 
     const gallery = getProductGallery(product);
     const isWishlisted = wishlist.includes(product.id);

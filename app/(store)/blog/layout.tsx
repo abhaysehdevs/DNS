@@ -9,6 +9,9 @@ export const metadata: Metadata = {
         'jewelry machinery maintenance', 
         'gold casting protocols'
     ],
+    alternates: {
+        canonical: 'https://dinanathandsons.com/blog',
+    },
     openGraph: {
         title: "Dinanath & Sons Blog | Metallurgy, Goldsmith Craft & Machine Maintenance",
         description: "Professional tutorials, gold casting methodologies, rolling mill calibrations, and industrial maintenance guides for jewelry technicians.",
