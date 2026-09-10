@@ -2,17 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  const host = request.headers.get('host') || '';
-  
-  // 1. Enforce Non-WWW Canonical Host (Fixes GSC "Alternate page with proper canonical tag" for www pages)
-  if (host.startsWith('www.')) {
-    const cleanHost = host.replace(/^www\./, '');
-    const redirectUrl = new URL(request.url);
-    redirectUrl.host = cleanHost;
-    redirectUrl.protocol = 'https:';
-    return NextResponse.redirect(redirectUrl, { status: 301 });
-  }
-
   return await createClient(request);
 }
 

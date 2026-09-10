@@ -94,7 +94,9 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
     }
 
     // GSC Fix: If accessed via alias (e.g. /shop/category/tools), 301 redirect to canonical slug /shop/category/hand-tools
-    if (params.slug !== cat.slug) {
+    const requestedCatSlug = decodeURIComponent(params.slug || '').trim().toLowerCase();
+    const canonicalCatSlug = (cat.slug || '').trim().toLowerCase();
+    if (canonicalCatSlug && requestedCatSlug !== canonicalCatSlug) {
         permanentRedirect(`/shop/category/${cat.slug}`);
     }
 

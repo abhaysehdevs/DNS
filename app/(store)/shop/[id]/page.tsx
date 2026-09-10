@@ -88,8 +88,9 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
 
     // 2. GSC Alternate page with proper canonical tag fix:
     // If accessed via UUID, legacy alias slug, or alternate casing, permanently 301 redirect to canonical slug URL
-    const canonicalSlug = getCanonicalProductSlug(rawProduct);
-    if (params.id !== canonicalSlug) {
+    const requestedId = decodeURIComponent(params.id || '').trim().toLowerCase();
+    const canonicalSlug = (getCanonicalProductSlug(rawProduct) || '').trim().toLowerCase();
+    if (canonicalSlug && requestedId !== canonicalSlug) {
         permanentRedirect(`/shop/${canonicalSlug}`);
     }
 
