@@ -7,16 +7,24 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Clock, Share2, Facebook, Twitter, Linkedin, Copy, User, Sparkles, Zap, ShieldCheck, ArrowRight } from 'lucide-react';
 import { BLOG_POSTS } from '@/lib/blog-data';
 
-export default function BlogPostClient({ id }: { id: string }) {
-
+export default function BlogPostClient({ 
+    id, 
+    initialPost, 
+    initialRelatedPosts 
+}: { 
+    id: string; 
+    initialPost?: any; 
+    initialRelatedPosts?: any[]; 
+}) {
     const post = useMemo(() => {
-        return BLOG_POSTS.find(p => p.id === id);
-    }, [id]);
+        return initialPost || BLOG_POSTS.find(p => p.id === id);
+    }, [initialPost, id]);
 
     const relatedPosts = useMemo(() => {
+        if (initialRelatedPosts && initialRelatedPosts.length > 0) return initialRelatedPosts;
         if (!post) return [];
         return BLOG_POSTS.filter(p => p.id !== post.id && p.category === post.category).slice(0, 3);
-    }, [post]);
+    }, [initialRelatedPosts, post]);
 
     if (!post) {
         notFound();
@@ -146,7 +154,7 @@ export default function BlogPostClient({ id }: { id: string }) {
 
                         {/* Knowledge Tags */}
                         <div className="mt-24 pt-12 border-t border-white/[0.04] flex flex-wrap gap-4">
-                            {post.tags.map(tag => (
+                            {(post.tags || []).map((tag: string) => (
                                 <span key={tag} className="glass border border-white/[0.04] text-[#5A5A6A] text-[9px] font-black uppercase tracking-[0.2em] px-6 py-3 rounded-2xl hover:text-[#C9A84C] hover:border-[#C9A84C]/30 cursor-pointer transition-all">
                                     #{tag}
                                 </span>

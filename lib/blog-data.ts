@@ -10,6 +10,8 @@ export interface BlogPost {
   category: string;
   readTime: string;
   tags: string[];
+  slug?: string;
+  isPublished?: boolean;
 }
 
 export const BLOG_POSTS: BlogPost[] = [

@@ -23,7 +23,8 @@ export function normalizeProduct(rawProduct: any): any {
     if (!rawProduct) return null;
     const id = String(rawProduct.id || '');
     const name = String(rawProduct.name || '');
-    const slug = rawProduct.slug || toSlug(name) || id;
+    const specs = rawProduct.specifications || {};
+    const slug = rawProduct.slug || specs.slug || toSlug(name) || id;
     const image = rawProduct.image || rawProduct.image_url || rawProduct.primaryImage || '/placeholder.jpg';
     const retailPrice = Number(rawProduct.retail_price ?? rawProduct.retailPrice ?? 0);
     const wholesalePrice = rawProduct.wholesale_price !== undefined ? Number(rawProduct.wholesale_price) : (rawProduct.wholesalePrice !== undefined ? Number(rawProduct.wholesalePrice) : undefined);
@@ -55,11 +56,12 @@ export function normalizeProduct(rawProduct: any): any {
         dimensions: rawProduct.dimensions,
         warrantyInfo: rawProduct.warranty_info || rawProduct.warrantyInfo,
         features: rawProduct.features || [],
-        specifications: rawProduct.specifications || {},
+        specifications: specs,
         variants: rawProduct.variants || [],
-        variantType: rawProduct.variant_type || rawProduct.variantType,
-        seo_title: rawProduct.seo_title || rawProduct.seoTitle,
-        seo_description: rawProduct.seo_description || rawProduct.seoDescription,
+        variantType: rawProduct.variant_type || rawProduct.variantType || 'Size',
+        seo_title: rawProduct.seo_title || rawProduct.meta_title || specs.seo_title || rawProduct.seoTitle,
+        seo_description: rawProduct.seo_description || rawProduct.meta_description || specs.seo_description || rawProduct.seoDescription,
+        seo_keywords: rawProduct.seo_keywords || specs.seo_keywords || rawProduct.seoKeywords,
         retail_price: retailPrice,
         wholesale_price: wholesalePrice,
         wholesale_moq: wholesaleMOQ,
@@ -74,14 +76,23 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
         const { data: byId } = await supabase.from('products').select('*').eq('id', idOrSlug).maybeSingle();
         if (byId) return normalizeProduct(byId);
 
-        // 2. Try Supabase exact slug
-        const { data: bySlug } = await supabase.from('products').select('*').eq('slug', idOrSlug).maybeSingle();
-        if (bySlug) return normalizeProduct(bySlug);
+        // 2. Try Supabase exact slug (safely, ignore if slug column is not yet present)
+        try {
+            const { data: bySlug, error: slugErr } = await supabase.from('products').select('*').eq('slug', idOrSlug).maybeSingle();
+            if (!slugErr && bySlug) return normalizeProduct(bySlug);
+        } catch (e) {
+            // Slug column might not exist in database yet
+        }
 
-        // 3. Query DB products and match by generated toSlug(name)
+        // 3. Query DB products and match by generated toSlug(name), slug, or specifications.slug
         const { data: allDb } = await supabase.from('products').select('*');
         if (allDb && allDb.length > 0) {
-            const found = allDb.find((p: any) => toSlug(p.name) === idOrSlug || p.id === idOrSlug || p.slug === idOrSlug);
+            const found = allDb.find((p: any) => 
+                toSlug(p.name) === idOrSlug || 
+                p.id === idOrSlug || 
+                p.slug === idOrSlug ||
+                p.specifications?.slug === idOrSlug
+            );
             if (found) return normalizeProduct(found);
         }
     } catch (err) {

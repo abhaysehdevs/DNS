@@ -8,9 +8,9 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
     let slugs: string[] = [];
     try {
-        const { data: products } = await supabase.from('products').select('id, name, slug');
-        if (products && products.length > 0) {
-            slugs = products.map((p: any) => p.slug || toSlug(p.name) || p.id);
+        const { data: products, error } = await supabase.from('products').select('*');
+        if (!error && products && products.length > 0) {
+            slugs = products.map((p: any) => p.slug || p.specifications?.slug || toSlug(p.name) || p.id);
         } else {
             const { products: localProducts } = await import('@/lib/data');
             slugs = localProducts.map((p) => toSlug(p.name) || p.id);

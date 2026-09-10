@@ -130,12 +130,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     try {
         const { data: products } = await supabase
             .from('products')
-            .select('id, name, slug, created_at, updated_at')
+            .select('*')
             .eq('in_stock', true)
 
         if (products && products.length > 0) {
             productRoutes = products.map((product) => {
-                const slug = product.slug || toSlug(product.name) || product.id
+                const slug = product.slug || product.specifications?.slug || toSlug(product.name) || product.id
                 return {
                     url: `${baseUrl}/shop/${slug}`,
                     lastModified: new Date(product.updated_at || product.created_at || now),
@@ -161,11 +161,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     try {
         const { data: dbPosts } = await supabase
             .from('blog_posts')
-            .select('id, created_at, updated_at')
+            .select('*')
 
         const posts = dbPosts && dbPosts.length > 0 ? dbPosts : initialBlogPosts
         blogRoutes = posts.map((post: any) => ({
-            url: `${baseUrl}/blog/${post.id}`,
+            url: `${baseUrl}/blog/${post.slug || post.id}`,
             lastModified: new Date(post.updated_at || post.created_at || now),
             changeFrequency: 'monthly',
             priority: 0.7,

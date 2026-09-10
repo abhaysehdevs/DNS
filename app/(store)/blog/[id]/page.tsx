@@ -1,16 +1,20 @@
+import { getAllBlogPosts, getBlogPostByIdOrSlug } from '@/lib/blog';
 import { BLOG_POSTS } from '@/lib/blog-data';
 import BlogPostClient from './blog-post-client';
 import { Metadata } from 'next';
 
-export function generateStaticParams() {
-    return BLOG_POSTS.map((post) => ({
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+    const posts = await getAllBlogPosts();
+    return posts.map((post) => ({
         id: post.id,
     }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const post = BLOG_POSTS.find(p => p.id === id);
+    const post = await getBlogPostByIdOrSlug(id);
     if (!post) {
         return { title: 'Post Not Found | Dinanath & Sons' };
     }
@@ -48,7 +52,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const post = BLOG_POSTS.find(p => p.id === id);
+    const post = await getBlogPostByIdOrSlug(id);
+    const allPosts = await getAllBlogPosts();
+    const relatedPosts = post
+        ? allPosts.filter(p => p.id !== post.id && p.category === post.category).slice(0, 3)
+        : [];
 
     const articleSchema = post ? {
         "@context": "https://schema.org",
@@ -113,7 +121,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
                 />
             )}
-            <BlogPostClient id={id} />
+            <BlogPostClient id={id} initialPost={post} initialRelatedPosts={relatedPosts} />
         </>
     );
 }

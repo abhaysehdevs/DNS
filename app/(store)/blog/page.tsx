@@ -1,18 +1,28 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ArrowRight, Search, Clock, Tag, Mail, Sparkles, Zap, ChevronRight, Loader2 } from 'lucide-react';
 import { BLOG_POSTS, BlogPost } from '@/lib/blog-data';
+import { getAllBlogPosts } from '@/lib/blog';
 import { supabase } from '@/lib/supabase';
 
 export default function Blog() {
+    const [allPosts, setAllPosts] = useState<BlogPost[]>(BLOG_POSTS);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState<string>('All');
     const [newsletterEmail, setNewsletterEmail] = useState('');
     const [subscribed, setSubscribed] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        getAllBlogPosts().then(posts => {
+            if (posts && posts.length > 0) {
+                setAllPosts(posts);
+            }
+        });
+    }, []);
 
     const handleNewsletterSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,16 +51,16 @@ export default function Blog() {
         }
     };
 
-    const categories = ['All', ...Array.from(new Set(BLOG_POSTS.map(post => post.category)))];
+    const categories = ['All', ...Array.from(new Set(allPosts.map(post => post.category)))];
 
     const filteredPosts = useMemo(() => {
-        return BLOG_POSTS.filter((post) => {
+        return allPosts.filter((post) => {
             const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
             return matchesSearch && matchesCategory;
         });
-    }, [searchQuery, activeCategory]);
+    }, [allPosts, searchQuery, activeCategory]);
 
     const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null;
     const regularPosts = filteredPosts.slice(featuredPost ? 1 : 0);

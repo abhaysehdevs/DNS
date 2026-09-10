@@ -267,20 +267,21 @@ export default function ProductsAdminPage() {
             // Ensure primary image is set if gallery exists
             const primaryImage = currentProduct.image || galleryList.find(g => g.type === 'image')?.url || galleryList[0]?.url || '';
 
-            // Store SEO fields safely inside specifications
-            const specs = {
-                ...(currentProduct.specifications || {}),
-                seo_title: currentProduct.seo_title || '',
-                seo_description: currentProduct.seo_description || '',
-                seo_keywords: currentProduct.seo_keywords || ''
-            };
-
             const generatedSku = currentProduct.sku?.trim() ? currentProduct.sku.trim() : `DNS-${Date.now().toString().slice(-6)}`;
             const baseSlug = (currentProduct.name || 'product')
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/(^-|-$)+/g, '');
             const generatedSlug = isEditing && currentProduct.slug ? currentProduct.slug : `${baseSlug}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+            // Store SEO fields and slug safely inside specifications as resilient fallback
+            const specs = {
+                ...(currentProduct.specifications || {}),
+                seo_title: currentProduct.seo_title || '',
+                seo_description: currentProduct.seo_description || '',
+                seo_keywords: currentProduct.seo_keywords || '',
+                slug: generatedSlug
+            };
 
             const payload: any = {
                 name: currentProduct.name,
@@ -303,33 +304,57 @@ export default function ProductsAdminPage() {
                 features: currentProduct.features || [],
                 specifications: specs,
                 variants: currentProduct.variants || [],
-                variant_type: currentProduct.variant_type || '',
-                gallery: galleryList
+                variant_type: currentProduct.variant_type || 'Size',
+                gallery: galleryList,
+                meta_title: currentProduct.seo_title || '',
+                meta_description: currentProduct.seo_description || '',
+                seo_title: currentProduct.seo_title || '',
+                seo_description: currentProduct.seo_description || '',
+                seo_keywords: currentProduct.seo_keywords || '',
             };
 
-            let saveError = null;
-            if (isEditing && currentProduct.id) {
-                const { error } = await supabase
-                    .from('products')
-                    .update(payload)
-                    .eq('id', currentProduct.id);
-                saveError = error;
-            } else {
-                const { error } = await supabase
-                    .from('products')
-                    .insert([payload]);
-                saveError = error;
+            const saveToDb = async (data: any) => {
+                if (isEditing && currentProduct.id) {
+                    return await supabase
+                        .from('products')
+                        .update(data)
+                        .eq('id', currentProduct.id);
+                } else {
+                    return await supabase
+                        .from('products')
+                        .insert([data]);
+                }
+            };
 
-                // If unique constraint error on sku or slug, retry automatically with unique suffix
-                if (saveError && (saveError.message?.includes('unique constraint') || saveError.code === '23505')) {
-                    payload.sku = `${payload.sku}-copy-${Math.floor(100 + Math.random() * 900)}`;
-                    payload.slug = `${payload.slug}-${Math.floor(100 + Math.random() * 900)}`;
-                    const { error: retryError } = await supabase.from('products').insert([payload]);
-                    saveError = retryError;
+            let currentPayload = { ...payload };
+            let saveRes = await saveToDb(currentPayload);
+
+            // Adaptively handle missing columns in the Supabase schema cache
+            for (let i = 0; i < 6 && saveRes.error; i++) {
+                const errMsg = saveRes.error.message || '';
+                const match = errMsg.match(/Could not find the '([^']+)' column/) || errMsg.match(/column "?([^" ]+)"? does not exist/);
+                if (match && match[1] && match[1] in currentPayload) {
+                    delete currentPayload[match[1]];
+                    saveRes = await saveToDb(currentPayload);
+                } else if (saveRes.error.code === 'PGRST204' || errMsg.includes('schema cache')) {
+                    if ('slug' in currentPayload) delete currentPayload.slug;
+                    if ('seo_title' in currentPayload) delete currentPayload.seo_title;
+                    if ('seo_description' in currentPayload) delete currentPayload.seo_description;
+                    if ('seo_keywords' in currentPayload) delete currentPayload.seo_keywords;
+                    saveRes = await saveToDb(currentPayload);
+                } else {
+                    break;
                 }
             }
 
-            if (saveError) throw saveError;
+            // If unique constraint error on sku or slug, retry automatically with unique suffix
+            if (saveRes.error && (saveRes.error.message?.includes('unique constraint') || saveRes.error.code === '23505')) {
+                if (currentPayload.sku) currentPayload.sku = `${currentPayload.sku}-copy-${Math.floor(100 + Math.random() * 900)}`;
+                if (currentPayload.slug) currentPayload.slug = `${currentPayload.slug}-${Math.floor(100 + Math.random() * 900)}`;
+                saveRes = await saveToDb(currentPayload);
+            }
+
+            if (saveRes.error) throw saveRes.error;
 
             setShowForm(false);
             fetchProducts();
@@ -396,12 +421,14 @@ export default function ProductsAdminPage() {
         const specs = p.specifications || {};
         setCurrentProduct({ 
             ...p, 
-            seo_title: p.seo_title || (specs as any).seo_title || '',
-            seo_description: p.seo_description || (specs as any).seo_description || '',
+            seo_title: p.seo_title || (p as any).meta_title || (specs as any).seo_title || '',
+            seo_description: p.seo_description || (p as any).meta_description || (specs as any).seo_description || '',
             seo_keywords: p.seo_keywords || (specs as any).seo_keywords || '',
+            slug: p.slug || (specs as any).slug || '',
             features: p.features || [], 
             specifications: specs,
             variants: p.variants || [],
+            variant_type: p.variant_type || 'Size',
             gallery: p.gallery || [],
             dimensions: p.dimensions || { length: '', width: '', height: '' }
         });
@@ -422,10 +449,12 @@ export default function ProductsAdminPage() {
             features: [],
             specifications: {},
             variants: [],
+            variant_type: 'Size',
             gallery: [],
             seo_title: '',
             seo_description: '',
             seo_keywords: '',
+            slug: '',
             dimensions: { length: '', width: '', height: '' }
         });
         setIsEditing(false);
@@ -545,6 +574,11 @@ export default function ProductsAdminPage() {
                                         <span className={`text-base font-black ${p.quantity < 10 ? 'text-red-500' : 'text-green-500'}`}>{p.quantity}</span>
                                         <span className="text-[9px] text-gray-500 font-bold uppercase">Units</span>
                                     </div>
+                                    {p.variants && p.variants.length > 0 && (
+                                        <div className="text-[9px] text-blue-400 font-bold flex items-center gap-1 mt-1">
+                                            <Layers size={10} /> {p.variants.length} Variants
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="text-right">
                                     <span className="text-[9px] text-gray-600 font-black uppercase tracking-wider block">Price</span>
@@ -556,13 +590,21 @@ export default function ProductsAdminPage() {
                                 <button 
                                     onClick={() => {
                                         const { id, ...clone } = p;
+                                        const specs = clone.specifications || {};
                                         const newSku = p.sku ? `${p.sku}-COPY-${Math.floor(100 + Math.random() * 900)}` : `DNS-${Date.now().toString().slice(-6)}`;
-                                        const newSlug = p.slug ? `${p.slug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
+                                        const existingSlug = p.slug || (specs as any)?.slug;
+                                        const newSlug = existingSlug ? `${existingSlug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
                                         setCurrentProduct({ 
                                             ...clone, 
                                             name: `${clone.name} (Copy)`, 
                                             sku: newSku,
-                                            slug: newSlug
+                                            slug: newSlug,
+                                            seo_title: clone.seo_title || (clone as any).meta_title || (specs as any)?.seo_title || '',
+                                            seo_description: clone.seo_description || (clone as any).meta_description || (specs as any)?.seo_description || '',
+                                            seo_keywords: clone.seo_keywords || (specs as any)?.seo_keywords || '',
+                                            variants: clone.variants || [],
+                                            variant_type: clone.variant_type || 'Size',
+                                            gallery: clone.gallery || []
                                         });
                                         setIsEditing(false);
                                         setShowForm(true);
@@ -666,13 +708,21 @@ export default function ProductsAdminPage() {
                                                 <button 
                                                     onClick={() => {
                                                         const { id, ...clone } = p;
+                                                        const specs = clone.specifications || {};
                                                         const newSku = p.sku ? `${p.sku}-COPY-${Math.floor(100 + Math.random() * 900)}` : `DNS-${Date.now().toString().slice(-6)}`;
-                                                        const newSlug = p.slug ? `${p.slug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
+                                                        const existingSlug = p.slug || (specs as any)?.slug;
+                                                        const newSlug = existingSlug ? `${existingSlug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
                                                         setCurrentProduct({ 
                                                             ...clone, 
                                                             name: `${clone.name} (Copy)`, 
                                                             sku: newSku,
-                                                            slug: newSlug
+                                                            slug: newSlug,
+                                                            seo_title: clone.seo_title || (clone as any).meta_title || (specs as any)?.seo_title || '',
+                                                            seo_description: clone.seo_description || (clone as any).meta_description || (specs as any)?.seo_description || '',
+                                                            seo_keywords: clone.seo_keywords || (specs as any)?.seo_keywords || '',
+                                                            variants: clone.variants || [],
+                                                            variant_type: clone.variant_type || 'Size',
+                                                            gallery: clone.gallery || []
                                                         });
                                                         setIsEditing(false);
                                                         setShowForm(true);
