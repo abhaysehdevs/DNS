@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, Search, Heart, X, ChevronDown, User, Phone, Globe, Shield, Tag } from 'lucide-react';
+import { ShoppingCart, Menu, Search, Heart, X, ChevronDown, User, Phone, Globe, Shield, Tag, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import { useState, useEffect, useRef } from 'react';
@@ -375,6 +375,17 @@ export function Navbar() {
                                 );
                             })}
                         </nav>
+
+                        {/* AI Assistant Quick Trigger */}
+                        <button
+                            onClick={() => window.dispatchEvent(new CustomEvent('open-ai-assistant'))}
+                            className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600/20 to-indigo-600/20 hover:from-blue-600/30 hover:to-indigo-600/30 border border-blue-500/30 text-blue-400 hover:text-blue-300 text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm group shrink-0 ml-4"
+                            title="Open Dinanath AI Electrical & Load Advisor"
+                        >
+                            <Sparkles size={13} className="text-blue-400 group-hover:rotate-12 transition-transform" />
+                            <span>Ask Dinanath AI</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        </button>
                     </div>
                 </div>
             </motion.header>

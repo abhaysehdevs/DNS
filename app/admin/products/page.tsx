@@ -7,7 +7,7 @@ import {
     Filter, AlertCircle, CheckCircle, XCircle, Layers, Box, ChevronDown, 
     CheckSquare, Square, MoreHorizontal, Download, Upload, Video, 
     Settings, Info, Zap, Scale, Ruler, ShieldCheck, Tag, Link as LinkIcon,
-    Globe, Star, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight
+    Globe, Star, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { convertToWebP } from '@/lib/image-utils';
@@ -71,6 +71,62 @@ export default function ProductsAdminPage() {
     const [activeTab, setActiveTab] = useState<'basic' | 'details' | 'media' | 'variants' | 'seo'>('basic');
 
     const [dbCategories, setDbCategories] = useState<any[]>([]);
+
+    // AI Generation States
+    const [aiGeneratingDesc, setAiGeneratingDesc] = useState(false);
+    const [aiGeneratingSeo, setAiGeneratingSeo] = useState(false);
+    const [aiGeneratingAll, setAiGeneratingAll] = useState(false);
+
+    const handleAiGenerateContent = async (type: 'description' | 'seo' | 'all') => {
+        if (!currentProduct.name || !currentProduct.name.trim()) {
+            alert('Please provide a Product Name first so the AI can inspect and research the product specifications.');
+            return;
+        }
+
+        if (type === 'description') setAiGeneratingDesc(true);
+        else if (type === 'seo') setAiGeneratingSeo(true);
+        else setAiGeneratingAll(true);
+
+        try {
+            const res = await fetch('/api/admin/ai/generate-product-content', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: currentProduct.name,
+                    category: currentProduct.category || 'General',
+                    brand: currentProduct.brand || '',
+                    model_number: currentProduct.model_number || '',
+                    retail_price: currentProduct.retail_price || 0,
+                    image: currentProduct.image || '',
+                    gallery: currentProduct.gallery || [],
+                    specifications: currentProduct.specifications || {},
+                    mode: type
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to generate AI content');
+
+            const generated = data.data;
+            if ((type === 'description' || type === 'all') && generated.description) {
+                setCurrentProduct(prev => ({ ...prev, description: generated.description }));
+            }
+            if (type === 'seo' || type === 'all') {
+                setCurrentProduct(prev => ({
+                    ...prev,
+                    seo_title: generated.seo_title || prev.seo_title,
+                    seo_description: generated.seo_description || prev.seo_description,
+                    seo_keywords: generated.seo_keywords || prev.seo_keywords
+                }));
+            }
+        } catch (err: any) {
+            alert('AI Generation error: ' + err.message);
+        } finally {
+            setAiGeneratingDesc(false);
+            setAiGeneratingSeo(false);
+            setAiGeneratingAll(false);
+        }
+    };
 
     useEffect(() => {
         fetchProducts();
@@ -807,7 +863,18 @@ export default function ProductsAdminPage() {
                                     </div>
                                     <h2 className="text-4xl font-black text-white">{isEditing ? 'Sync Listing' : 'Initialize Product'}</h2>
                                 </div>
-                                <div className="flex gap-4">
+                                <div className="flex items-center gap-3">
+                                    <button 
+                                        type="button"
+                                        onClick={() => handleAiGenerateContent('all')}
+                                        disabled={aiGeneratingAll}
+                                        className="px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all cursor-pointer disabled:opacity-50"
+                                        title="AI inspects title, brand, and media to generate comprehensive technical description and SEO metadata"
+                                    >
+                                        {aiGeneratingAll ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                                        <span className="hidden sm:inline">AI Auto-Write Description & SEO</span>
+                                        <span className="sm:hidden">AI Auto-Write</span>
+                                    </button>
                                     <button onClick={() => setShowForm(false)} className="w-14 h-14 bg-black border border-gray-800 rounded-full flex items-center justify-center text-gray-500 hover:text-white transition-all"><X size={28} /></button>
                                 </div>
                             </div>
@@ -875,7 +942,19 @@ export default function ProductsAdminPage() {
                                                 </div>
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Marketing Copy / Description</label>
+                                                <div className="flex items-center justify-between">
+                                                    <label className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Marketing Copy / Description</label>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleAiGenerateContent('description')}
+                                                        disabled={aiGeneratingDesc}
+                                                        className="text-[10px] font-black uppercase tracking-wider text-blue-400 hover:text-blue-300 flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                                                        title="AI inspects title, brand, and media to write an accurate, highly specific description"
+                                                    >
+                                                        {aiGeneratingDesc ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                                                        <span>{aiGeneratingDesc ? 'Analyzing & Writing...' : '✨ Write with AI'}</span>
+                                                    </button>
+                                                </div>
                                                 <textarea 
                                                     rows={6}
                                                     value={currentProduct.description || ''}
@@ -1276,9 +1355,24 @@ export default function ProductsAdminPage() {
                                 {/* --- Tab Content: SEO Metadata --- */}
                                 {activeTab === 'seo' && (
                                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                                        <div>
-                                            <h3 className="text-xl font-black text-white">Search Engine Optimization</h3>
-                                            <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-1">Configure search engine visibility and previews</p>
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div>
+                                                <h3 className="text-xl font-black text-white flex items-center gap-2">
+                                                    <span>Search Engine Optimization</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">AI Powered</span>
+                                                </h3>
+                                                <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-1">Configure search engine visibility and previews</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleAiGenerateContent('seo')}
+                                                disabled={aiGeneratingSeo}
+                                                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all cursor-pointer disabled:opacity-50"
+                                                title="AI will inspect the product title, brand, and details to generate an optimized Meta Title, Description, and Keywords"
+                                            >
+                                                {aiGeneratingSeo ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                                                <span>{aiGeneratingSeo ? 'Analyzing & Writing SEO...' : '✨ Generate SEO with AI'}</span>
+                                            </button>
                                         </div>
                                         
                                         <div className="space-y-6">

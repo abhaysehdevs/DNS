@@ -721,3 +721,290 @@ export async function updateSiteSettings(args: { updates: Record<string, any> })
         };
     }
 }
+
+// ---------------- BULK & OMNIPOTENT ADMIN OPERATIONS ----------------
+
+export async function bulkUpdateProducts(args: {
+    filter?: {
+        category?: string;
+        inStock?: boolean;
+        query?: string;
+    };
+    updates: {
+        quantity?: number;
+        in_stock?: boolean;
+        retail_price?: number;
+        wholesale_price?: number;
+        category?: string;
+    };
+}): Promise<ToolExecutionResult> {
+    const supabase = getAdminSupabase();
+    try {
+        const payload: any = { ...args.updates };
+        if (payload.quantity !== undefined && payload.in_stock === undefined) {
+            payload.in_stock = Number(payload.quantity) > 0;
+        }
+
+        let query = supabase.from('products').update(payload);
+
+        if (args.filter?.category && args.filter.category.toLowerCase() !== 'all') {
+            query = query.ilike('category', `%${args.filter.category}%`);
+        }
+        if (args.filter?.inStock !== undefined) {
+            query = query.eq('in_stock', args.filter.inStock);
+        }
+        if (args.filter?.query) {
+            query = query.ilike('name', `%${args.filter.query}%`);
+        }
+
+        // PostgREST requires a filter to prevent accidental full-table updates unless explicitly targeted
+        if (!args.filter?.category && args.filter?.inStock === undefined && !args.filter?.query) {
+            query = query.not('name', 'is', null);
+        }
+
+        const { data, error } = await query.select('id, name, quantity, in_stock');
+        if (error) throw error;
+
+        const count = data?.length || 0;
+        const summary = Object.entries(payload).map(([k, v]) => `${k} = ${v}`).join(', ');
+
+        return {
+            success: true,
+            action: 'bulk_update_products',
+            message: `Successfully applied bulk update (${summary}) across ${count} product(s) in the catalog!`,
+            data: { updatedCount: count, sampleUpdated: data?.slice(0, 5) },
+            navigationUrl: '/admin/products'
+        };
+    } catch (err: any) {
+        return {
+            success: false,
+            action: 'bulk_update_products',
+            message: `Bulk product update failed: ${err.message}`
+        };
+    }
+}
+
+export async function bulkUpdateOrders(args: {
+    fromStatus?: string;
+    newStatus: string;
+}): Promise<ToolExecutionResult> {
+    const supabase = getAdminSupabase();
+    try {
+        let query = supabase.from('orders').update({ status: args.newStatus });
+        if (args.fromStatus && args.fromStatus !== 'all') {
+            query = query.eq('status', args.fromStatus.toLowerCase());
+        } else {
+            query = query.not('id', 'is', null);
+        }
+
+        const { data, error } = await query.select('id, status');
+        if (error) throw error;
+
+        return {
+            success: true,
+            action: 'bulk_update_orders',
+            message: `Updated status to "${args.newStatus}" for ${data?.length || 0} order(s).`,
+            data: { count: data?.length || 0 },
+            navigationUrl: '/admin/orders'
+        };
+    } catch (err: any) {
+        return {
+            success: false,
+            action: 'bulk_update_orders',
+            message: `Failed to bulk update orders: ${err.message}`
+        };
+    }
+}
+
+export async function executeAdminAction(args: {
+    table: string;
+    operation: 'select' | 'insert' | 'update' | 'delete';
+    filter?: Record<string, any>;
+    data?: any;
+    limit?: number;
+}): Promise<ToolExecutionResult> {
+    const supabase = getAdminSupabase();
+    try {
+        const allowedTables = [
+            'products', 'orders', 'categories', 'coupons', 
+            'site_settings', 'newsletter_subscribers', 'blog_posts', 
+            'cms_sections', 'admin_sessions'
+        ];
+        if (!allowedTables.includes(args.table)) {
+            return {
+                success: false,
+                action: 'execute_admin_action',
+                message: `Table "${args.table}" is restricted. Accessible tables: ${allowedTables.join(', ')}.`
+            };
+        }
+
+        let q: any = supabase.from(args.table);
+
+        if (args.operation === 'select') {
+            q = q.select('*');
+            if (args.filter) {
+                for (const [key, val] of Object.entries(args.filter)) {
+                    q = q.eq(key, val);
+                }
+            }
+            const { data, error } = await q.limit(args.limit || 50);
+            if (error) throw error;
+            return {
+                success: true,
+                action: 'execute_admin_action',
+                message: `Retrieved ${data?.length || 0} records from "${args.table}".`,
+                data
+            };
+        }
+
+        if (args.operation === 'update') {
+            q = q.update(args.data);
+            if (args.filter && Object.keys(args.filter).length > 0) {
+                for (const [key, val] of Object.entries(args.filter)) {
+                    q = q.eq(key, val);
+                }
+            } else {
+                q = q.not('id', 'is', null);
+            }
+            const { data, error } = await q.select();
+            if (error) throw error;
+            return {
+                success: true,
+                action: 'execute_admin_action',
+                message: `Updated ${data?.length || 0} record(s) in "${args.table}".`,
+                data
+            };
+        }
+
+        if (args.operation === 'insert') {
+            const { data, error } = await q.insert(Array.isArray(args.data) ? args.data : [args.data]).select();
+            if (error) throw error;
+            return {
+                success: true,
+                action: 'execute_admin_action',
+                message: `Inserted new record(s) into "${args.table}".`,
+                data
+            };
+        }
+
+        if (args.operation === 'delete') {
+            if (args.filter && Object.keys(args.filter).length > 0) {
+                for (const [key, val] of Object.entries(args.filter)) {
+                    q = q.eq(key, val);
+                }
+            } else {
+                return {
+                    success: false,
+                    action: 'execute_admin_action',
+                    message: 'Delete requires specific filter criteria.'
+                };
+            }
+            const { data, error } = await q.delete().select();
+            if (error) throw error;
+            return {
+                success: true,
+                action: 'execute_admin_action',
+                message: `Deleted ${data?.length || 0} record(s) from "${args.table}".`,
+                data
+            };
+        }
+
+        return {
+            success: false,
+            action: 'execute_admin_action',
+            message: `Unsupported operation: ${args.operation}`
+        };
+    } catch (err: any) {
+        return {
+            success: false,
+            action: 'execute_admin_action',
+            message: `Admin operation failed: ${err.message}`
+        };
+    }
+}
+
+export async function generateProductDescriptionAndSeo(args: {
+    id?: string;
+    name?: string;
+    applyToDb?: boolean;
+}): Promise<ToolExecutionResult> {
+    const supabase = getAdminSupabase();
+    try {
+        let product: any = null;
+        if (args.id) {
+            const { data } = await supabase.from('products').select('*').eq('id', args.id).single();
+            product = data;
+        } else if (args.name) {
+            const { data } = await supabase.from('products').select('*').ilike('name', `%${args.name}%`).limit(1);
+            product = data?.[0];
+        }
+
+        if (!product) {
+            return {
+                success: false,
+                action: 'generate_product_description_and_seo',
+                message: `Could not find product matching ${args.id || args.name}.`
+            };
+        }
+
+        const cleanName = product.name;
+        const brandName = product.brand || 'Dinanath & Sons Certified';
+        const catName = product.category || 'Electrical & Hardware';
+        const isCable = /wire|cable|cord|lead/i.test(cleanName);
+        const isSwitch = /switch|socket|plug|regulator/i.test(cleanName);
+        const isMcb = /mcb|mccb|breaker|fuse/i.test(cleanName);
+        const isLight = /light|led|panel|bulb|flood/i.test(cleanName);
+
+        let specificDetails = `Engineered with precision-grade manufacturing standards, offering supreme mechanical durability, electrical safety, and long-term thermal resilience. Tested according to national quality standards for demanding residential and commercial environments.`;
+        if (isCable) {
+            specificDetails = `Engineered with 99.97% pure electrolytic multi-strand copper conductor conforming to IS 694. Features Flame Retardant Lead-Free (FR-LF) PVC insulation ensuring zero toxic smoke emission and high current carrying capacity without overheating under peak domestic or industrial loads.`;
+        } else if (isSwitch) {
+            specificDetails = `Crafted with UV-stabilized fire-retardant polycarbonate housing, solid brass terminals, and silver-inlay contact points ensuring sparkless performance over 100,000+ continuous switching cycles.`;
+        } else if (isMcb) {
+            specificDetails = `Equipped with calibrated thermal-bimetallic overload sensing and instantaneous electromagnetic short-circuit trip coils with 10kA fault breaking capacity.`;
+        } else if (isLight) {
+            specificDetails = `Fitted with high-efficiency SMD LEDs (>100 Lumens/W) paired with an isolated surge-protected driver (<2.5kV) and die-cast aluminum heat dissipation chassis for extended service life exceeding 30,000 hours.`;
+        }
+
+        const generatedDescription = `${cleanName} by ${brandName} is a premium ${catName.toLowerCase()} solution engineered for demanding electrical applications requiring uncompromising safety and reliability.\n\n${specificDetails}\n\nKey Highlights:\n• Certified engineering grade materials\n• Energy efficient and high conductivity design\n• Built for Indian electrical standards and voltage fluctuations\n• Backed by Dinanath & Sons authentic brand warranty and fast dispatch`;
+
+        const generatedSeoTitle = `${cleanName} | Buy Online at Dinanath & Sons`.slice(0, 60);
+        const generatedSeoDesc = `Buy authentic ${cleanName} by ${brandName} online at best wholesale & retail prices with fast pan-India shipping from Dinanath & Sons.`.slice(0, 160);
+        const generatedKeywords = `${cleanName.toLowerCase()}, buy ${cleanName.toLowerCase()}, ${catName.toLowerCase()}, ${brandName.toLowerCase()}, electrical supplies delhi, dinanath and sons, wholesale prices`;
+
+        if (args.applyToDb !== false) {
+            const { error } = await supabase
+                .from('products')
+                .update({
+                    description: generatedDescription,
+                    seo_title: generatedSeoTitle,
+                    seo_description: generatedSeoDesc,
+                    seo_keywords: generatedKeywords
+                })
+                .eq('id', product.id);
+
+            if (error) throw error;
+        }
+
+        return {
+            success: true,
+            action: 'generate_product_description_and_seo',
+            message: `Successfully generated and saved detailed technical description and SEO metadata for "${cleanName}"!`,
+            data: {
+                productId: product.id,
+                name: cleanName,
+                description: generatedDescription,
+                seo_title: generatedSeoTitle,
+                seo_description: generatedSeoDesc,
+                seo_keywords: generatedKeywords
+            },
+            navigationUrl: '/admin/products'
+        };
+    } catch (err: any) {
+        return {
+            success: false,
+            action: 'generate_product_description_and_seo',
+            message: `Failed to generate product description/SEO: ${err.message}`
+        };
+    }
+}

@@ -15,6 +15,10 @@ import {
     getSubscribers,
     getSiteSettings,
     updateSiteSettings,
+    bulkUpdateProducts,
+    bulkUpdateOrders,
+    executeAdminAction,
+    generateProductDescriptionAndSeo,
     ToolExecutionResult
 } from './ai-tools';
 
@@ -58,6 +62,72 @@ export const GEMINI_TOOL_DECLARATIONS = [
                 }
             },
             required: ['updates']
+        }
+    },
+    {
+        name: 'bulk_update_products',
+        description: 'Update stock quantity, in_stock status, price, or category for ALL products in the catalog or matching a filter. Use this whenever the user says "make all products stock 72", "set all products quantity to X", or modifies multiple items at once.',
+        parameters: {
+            type: 'OBJECT',
+            properties: {
+                filter: {
+                    type: 'OBJECT',
+                    properties: {
+                        category: { type: 'STRING', description: 'Optional category name filter (or "all")' },
+                        inStock: { type: 'BOOLEAN', description: 'Optional stock status filter' },
+                        query: { type: 'STRING', description: 'Optional title search filter' }
+                    }
+                },
+                updates: {
+                    type: 'OBJECT',
+                    properties: {
+                        quantity: { type: 'INTEGER', description: 'New stock quantity to apply to all target products (e.g. 72)' },
+                        in_stock: { type: 'BOOLEAN', description: 'Whether products should be marked in stock' },
+                        retail_price: { type: 'NUMBER', description: 'New retail price' },
+                        wholesale_price: { type: 'NUMBER', description: 'New wholesale price' },
+                        category: { type: 'STRING', description: 'New category' }
+                    },
+                    required: []
+                }
+            },
+            required: ['updates']
+        }
+    },
+    {
+        name: 'bulk_update_orders',
+        description: 'Update the fulfillment status of multiple orders at once (e.g. all pending orders to processing).',
+        parameters: {
+            type: 'OBJECT',
+            properties: {
+                fromStatus: { type: 'STRING', description: 'Current status to match (e.g. pending, or all)' },
+                newStatus: { type: 'STRING', description: 'Target new status (pending, processing, shipped, delivered, cancelled)' }
+            },
+            required: ['newStatus']
+        }
+    },
+    {
+        name: 'execute_admin_action',
+        description: 'Execute arbitrary database operations (select, insert, update, delete) on any admin table (products, orders, categories, coupons, site_settings, newsletter_subscribers, blog_posts). Full administrative power.',
+        parameters: {
+            type: 'OBJECT',
+            properties: {
+                table: { type: 'STRING', description: 'Target database table' },
+                operation: { type: 'STRING', description: 'select, insert, update, or delete' },
+                filter: { type: 'OBJECT', description: 'Key-value filter criteria' },
+                data: { type: 'OBJECT', description: 'Payload data for update or insert' }
+            },
+            required: ['table', 'operation']
+        }
+    },
+    {
+        name: 'generate_product_description_and_seo',
+        description: 'Inspect the product title, brand, and specs to write a detailed, highly specific, technical product description and SEO metadata (meta title, meta description, keywords).',
+        parameters: {
+            type: 'OBJECT',
+            properties: {
+                id: { type: 'STRING', description: 'Product ID' },
+                name: { type: 'STRING', description: 'Product name or title' }
+            }
         }
     },
     {
@@ -218,6 +288,14 @@ export async function executeAdminTool(name: string, args: any): Promise<ToolExe
             return await createProduct(args);
         case 'update_product':
             return await updateProduct(args);
+        case 'bulk_update_products':
+            return await bulkUpdateProducts(args);
+        case 'bulk_update_orders':
+            return await bulkUpdateOrders(args);
+        case 'execute_admin_action':
+            return await executeAdminAction(args);
+        case 'generate_product_description_and_seo':
+            return await generateProductDescriptionAndSeo(args);
         case 'delete_product':
             return await deleteProduct(args);
         case 'get_products':
@@ -268,6 +346,79 @@ export async function parseAndExecuteFallback(userText: string): Promise<{
     actionResult?: ToolExecutionResult;
 }> {
     const text = userText.trim().toLowerCase();
+
+    // 0. Catalog-Wide Bulk Product Quantity / Stock Updates
+    // e.g. "make all the products' stock quantity 72", "set all products quantity to 72"
+    const isBulkAllProducts = (text.includes('all') || text.includes('every')) && (text.includes('product') || text.includes('item'));
+
+    if (isBulkAllProducts && (text.includes('stock') || text.includes('quantit') || text.includes('inventory'))) {
+        const numMatch = text.match(/\b(\d+)\b/);
+        if (numMatch) {
+            const qty = parseInt(numMatch[1], 10);
+            const res = await bulkUpdateProducts({
+                updates: {
+                    quantity: qty,
+                    in_stock: qty > 0
+                }
+            });
+            return {
+                reply: `Command executed: All products have been updated to stock quantity **${qty}** (${qty > 0 ? 'In Stock' : 'Out of Stock'}).`,
+                actionResult: res
+            };
+        }
+
+        if (text.includes('in stock') || text.includes('available')) {
+            const res = await bulkUpdateProducts({ updates: { in_stock: true } });
+            return { reply: 'Command executed: Marked all products as In Stock.', actionResult: res };
+        }
+        if (text.includes('out of stock') || text.includes('unavailable')) {
+            const res = await bulkUpdateProducts({ updates: { in_stock: false, quantity: 0 } });
+            return { reply: 'Command executed: Marked all products as Out of Stock.', actionResult: res };
+        }
+    }
+
+    // 0.1 Bulk Price Updates (e.g. "set all products price to 450")
+    if (isBulkAllProducts && (text.includes('price') || text.includes('rate'))) {
+        const numMatch = text.match(/(?:to|of|price)\s*₹?\s*(\d+(?:\.\d+)?)/i) || text.match(/(\d+(?:\.\d+)?)\s*(?:rs|rupees|inr)/i);
+        if (numMatch) {
+            const price = parseFloat(numMatch[1]);
+            const res = await bulkUpdateProducts({ updates: { retail_price: price } });
+            return {
+                reply: `Command executed: Updated retail price of all products to ₹${price}.`,
+                actionResult: res
+            };
+        }
+    }
+
+    // 0.2 Bulk Order Status Updates (e.g. "mark all orders as processing", "mark all pending orders as processing")
+    if ((text.includes('all') || text.includes('every')) && (text.includes('order') || text.includes('orders'))) {
+        const statusMatch = text.match(/(?:to|as)\s+(pending|processing|shipped|delivered|cancelled)/i);
+        if (statusMatch) {
+            const newStatus = statusMatch[1].toLowerCase();
+            const fromStatus = text.includes('pending') ? 'pending' : (text.includes('processing') ? 'processing' : undefined);
+            const res = await bulkUpdateOrders({ fromStatus, newStatus });
+            return {
+                reply: `Command executed: Updated ${res.data?.count || 0} order(s) to "${newStatus.toUpperCase()}".`,
+                actionResult: res
+            };
+        }
+    }
+
+    // 0.3 AI Product Description & SEO Generation
+    // e.g. "write description for Havells wire", "generate seo for copper cable"
+    if (text.includes('description') || text.includes('seo') || text.includes('meta title') || text.includes('keyword')) {
+        if (text.includes('write') || text.includes('generate') || text.includes('create') || text.includes('make') || text.includes('auto')) {
+            const prodNameMatch = userText.match(/(?:for|of|product)\s+["']?([^"',]+?)["']?(?:\s+using|\s+with|$|\.)/i);
+            const targetName = prodNameMatch ? prodNameMatch[1].trim() : userText.replace(/write|generate|create|make|auto|description|and|seo|metadata|for|product/gi, '').trim();
+            if (targetName) {
+                const res = await generateProductDescriptionAndSeo({ name: targetName });
+                return {
+                    reply: res.message,
+                    actionResult: res
+                };
+            }
+        }
+    }
 
     // 1. Orders Summary
     if (
