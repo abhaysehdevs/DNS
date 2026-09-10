@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Save, Globe, Trash2, ShieldCheck, Database, Bell, ShoppingBag, Palette, Moon, Sun, Monitor, Upload, Download, Loader2, LogOut, AlertCircle } from 'lucide-react';
+import { Save, Globe, Trash2, ShieldCheck, Database, Bell, ShoppingBag, Palette, Moon, Sun, Monitor, Upload, Download, Loader2, LogOut, AlertCircle, Sparkles, Bot, Key, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 
 export default function SettingsPage() {
@@ -18,6 +18,11 @@ export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState('general');
     const [sessions, setSessions] = useState<any[]>([]);
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+
+    // AI Assistant Configuration State
+    const [testAiLoading, setTestAiLoading] = useState(false);
+    const [testAiResult, setTestAiResult] = useState<string | null>(null);
+    const [showApiKey, setShowApiKey] = useState(false);
 
     useEffect(() => {
         const loadSettings = async () => {
@@ -85,11 +90,41 @@ export default function SettingsPage() {
     const tabs = [
         { id: 'general', label: 'General', icon: Globe },
         { id: 'store', label: 'Store Info', icon: ShoppingBag },
+        { id: 'ai', label: 'AI Assistant', icon: Sparkles },
         { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'data', label: 'Data & Backup', icon: Database },
         { id: 'security', label: 'Security & Sessions', icon: ShieldCheck },
         { id: 'danger', label: 'Danger Zone', icon: AlertCircle },
     ];
+
+    const handleTestAi = async () => {
+        setTestAiLoading(true);
+        setTestAiResult(null);
+        try {
+            const adminEmail = typeof window !== 'undefined' ? sessionStorage.getItem('dns_admin_email') || 'ajayabhay12872@gmail.com' : 'ajayabhay12872@gmail.com';
+            const res = await fetch('/api/admin/ai', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-admin-email': adminEmail
+                },
+                body: JSON.stringify({
+                    apiKey: adminSettings.geminiApiKey,
+                    messages: [{ role: 'user', content: 'Connection test: Say hello to Dinanath & Sons!' }]
+                })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setTestAiResult(`✅ Success: ${data.reply}`);
+            } else {
+                setTestAiResult(`❌ Error: ${data.error || 'Failed to connect'}`);
+            }
+        } catch (err: any) {
+            setTestAiResult(`❌ Connection error: ${err.message}`);
+        } finally {
+            setTestAiLoading(false);
+        }
+    };
 
     const handleSaveSettings = async () => {
         setLoading(true);
@@ -602,6 +637,133 @@ export default function SettingsPage() {
                                             );
                                         })
                                     )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* AI Assistant Configuration */}
+                    {activeTab === 'ai' && (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2.5 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl shadow-lg shadow-blue-500/20 text-white">
+                                            <Sparkles size={24} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-white">Personal AI Assistant Setup</h2>
+                                            <p className="text-xs text-gray-400">Configure Google Gemini LLM and administrative capabilities for your store.</p>
+                                        </div>
+                                    </div>
+                                    <span className="text-[11px] font-mono px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                        Admin Copilot
+                                    </span>
+                                </div>
+
+                                <div className="h-px bg-gray-800 w-full"></div>
+
+                                {/* Gemini API Key */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                            <Key size={16} className="text-blue-400" />
+                                            Google Gemini API Key
+                                        </label>
+                                        <a
+                                            href="https://aistudio.google.com/app/apikey"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-xs text-blue-400 hover:text-blue-300 hover:underline"
+                                        >
+                                            Get Free Gemini API Key →
+                                        </a>
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type={showApiKey ? 'text' : 'password'}
+                                            value={adminSettings.geminiApiKey || ''}
+                                            onChange={(e) => updateAdminSettings({ geminiApiKey: e.target.value })}
+                                            placeholder="AIzaSy..."
+                                            className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors pr-12 font-mono text-sm"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowApiKey(!showApiKey)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                                        >
+                                            {showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                        The assistant will use this key to generate responses and execute commands. If left blank, the assistant automatically uses the built-in deterministic command engine and any <code className="text-gray-400">GEMINI_API_KEY</code> set in <code className="text-gray-400">.env.local</code>.
+                                    </p>
+                                </div>
+
+                                {/* AI Model Selection */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                        <Bot size={16} className="text-indigo-400" />
+                                        Preferred Gemini Model
+                                    </label>
+                                    <select
+                                        value={adminSettings.aiModel || 'gemini-2.5-flash'}
+                                        onChange={(e) => updateAdminSettings({ aiModel: e.target.value })}
+                                        className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors"
+                                    >
+                                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended - Fastest & Most Accurate)</option>
+                                        <option value="gemini-1.5-flash">Gemini 1.5 Flash (Lightweight & Low Latency)</option>
+                                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Complex Reasoning)</option>
+                                    </select>
+                                </div>
+
+                                {/* Custom Assistant Prompt */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">
+                                        Custom Instructions / Store Directives (Optional)
+                                    </label>
+                                    <textarea
+                                        value={adminSettings.aiCustomInstructions || ''}
+                                        onChange={(e) => updateAdminSettings({ aiCustomInstructions: e.target.value })}
+                                        placeholder="e.g. Always suggest 15% discount for wholesale inquiries. Our priority warehouse is Maliwara, Chandni Chowk."
+                                        rows={3}
+                                        className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition-colors resize-none text-sm"
+                                    />
+                                    <p className="text-xs text-gray-500">
+                                        Special guidelines or preferences for the AI when analyzing sales, calculating quotes, or formulating responses.
+                                    </p>
+                                </div>
+
+                                <div className="h-px bg-gray-800 w-full"></div>
+
+                                {/* Test Connection & Save */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={handleTestAi}
+                                            disabled={testAiLoading}
+                                            className="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer border border-gray-700 disabled:opacity-50"
+                                        >
+                                            {testAiLoading ? <Loader2 className="animate-spin" size={16} /> : <Sparkles size={16} className="text-blue-400" />}
+                                            Test AI Connection
+                                        </button>
+                                        {testAiResult && (
+                                            <span className="text-xs text-gray-300 font-mono">
+                                                {testAiResult}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleSaveSettings}
+                                        disabled={loading}
+                                        className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 cursor-pointer disabled:opacity-50"
+                                    >
+                                        {loading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
+                                        Save AI Settings
+                                    </button>
                                 </div>
                             </div>
                         </div>

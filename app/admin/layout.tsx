@@ -4,10 +4,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Package, ShoppingCart, Users, Settings, Home, LayoutDashboard, Database, Bell, Check, Trash2, LogOut, X, Menu, Grid, Layout, Tag, Mail } from 'lucide-react';
+import { Package, ShoppingCart, Users, Settings, Home, LayoutDashboard, Database, Bell, Check, Trash2, LogOut, X, Menu, Grid, Layout, Tag, Mail, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
+import AdminAiAssistant from '@/components/admin/admin-ai-assistant';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
     const [ordersCount, setOrdersCount] = useState(0);
+    const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
 
     // Fetch actual pending/processing orders from database
     useEffect(() => {
@@ -189,6 +191,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const navItems = [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'AI Assistant', href: '/admin/ai', icon: Sparkles, isAi: true },
         { name: 'Products', href: '/admin/products', icon: Package },
         { name: 'Categories', href: '/admin/categories', icon: Grid },
         { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
@@ -250,6 +253,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                         >
                                             <Icon size={20} className={isActive ? 'text-white' : 'text-text-tertiary'} />
                                             <span className="font-medium text-base">{item.name}</span>
+                                            {item.isAi && (
+                                                <span className="ml-auto bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                                    Active
+                                                </span>
+                                            )}
                                             {item.name === 'Orders' && ordersCount > 0 && (
                                                 <span className="ml-auto bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                                     {ordersCount}
@@ -300,6 +308,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             >
                                 <Icon size={18} className={`transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-text-tertiary group-hover:text-text-primary'}`} />
                                 <span className="font-medium">{item.name}</span>
+                                {item.isAi && (
+                                    <span className="ml-auto bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                        Active
+                                    </span>
+                                )}
                                 {item.name === 'Orders' && ordersCount > 0 && (
                                     <span className="ml-auto bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                         {ordersCount}
@@ -349,6 +362,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             </span>
                             System Live
                         </div>
+
+                        {/* AI Assistant Trigger Button */}
+                        <button
+                            onClick={() => setIsAiDrawerOpen(true)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-600/20 to-indigo-600/20 hover:from-blue-600/30 hover:to-indigo-600/30 border border-blue-500/30 text-blue-400 hover:text-blue-300 text-xs font-semibold shadow-sm transition-all cursor-pointer group"
+                            title="Open DNS Admin AI Assistant (Ctrl+K)"
+                        >
+                            <Sparkles size={14} className="text-blue-400 group-hover:rotate-12 transition-transform" />
+                            <span className="hidden sm:inline">AI Copilot</span>
+                            <span className="hidden md:inline-block px-1.5 py-0.5 bg-blue-500/20 text-[10px] rounded font-mono">⌘K</span>
+                        </button>
 
                         {/* Notifications Bell */}
                         <div className="relative">
@@ -432,6 +456,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {showNotifications && (
                 <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setShowNotifications(false)}></div>
             )}
+
+            {/* Global Admin AI Assistant Floating Drawer & Trigger */}
+            <AdminAiAssistant
+                isOpenExternal={isAiDrawerOpen}
+                onToggleExternal={setIsAiDrawerOpen}
+            />
         </div>
     );
 }

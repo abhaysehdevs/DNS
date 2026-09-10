@@ -18,6 +18,9 @@ export interface AdminSettings {
     taxId?: string;
     legalBusinessName?: string;
     shippingOrigin?: string;
+    geminiApiKey?: string;
+    aiModel?: string;
+    aiCustomInstructions?: string;
     socialLinks?: {
         facebook?: string;
         twitter?: string;
