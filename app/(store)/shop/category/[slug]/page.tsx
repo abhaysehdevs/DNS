@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
 import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 import { products as localProducts, Product } from '@/lib/data';
@@ -15,7 +15,6 @@ export async function generateStaticParams() {
     const slugs = new Set<string>();
     CATEGORIES.forEach(cat => {
         slugs.add(cat.slug);
-        cat.aliases.forEach(a => slugs.add(a));
     });
     return Array.from(slugs).map(slug => ({ slug }));
 }
@@ -27,6 +26,10 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     if (!cat) {
         return {
             title: 'Category Not Found | Dinanath & Sons',
+            robots: {
+                index: false,
+                follow: false,
+            }
         };
     }
 
@@ -88,6 +91,11 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
 
     if (!cat) {
         notFound();
+    }
+
+    // GSC Fix: If accessed via alias (e.g. /shop/category/tools), 301 redirect to canonical slug /shop/category/hand-tools
+    if (params.slug !== cat.slug) {
+        permanentRedirect(`/shop/category/${cat.slug}`);
     }
 
     const products = await getCategoryProducts(cat.categoryKey);

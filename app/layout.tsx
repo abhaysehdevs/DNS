@@ -18,6 +18,9 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinanathandsons.com'),
+  alternates: {
+    canonical: 'https://dinanathandsons.com',
+  },
   title: {
     default: "Dinanath & Sons | Jewellery Tools, Goldsmith Equipment & Machinery Since 1960",
     template: "%s | Dinanath & Sons"

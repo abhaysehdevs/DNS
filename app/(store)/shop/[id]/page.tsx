@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { findProductByIdOrSlug, toSlug, getProductUrl } from '@/lib/slug';
+import { findProductByIdOrSlug, toSlug, getProductUrl, getCanonicalProductSlug } from '@/lib/slug';
 import ProductClient from './product-client';
 
 export const dynamicParams = true;
@@ -10,16 +11,16 @@ export async function generateStaticParams() {
     try {
         const { data: products, error } = await supabase.from('products').select('*');
         if (!error && products && products.length > 0) {
-            slugs = products.map((p: any) => p.slug || p.specifications?.slug || toSlug(p.name) || p.id);
+            slugs = products.map((p: any) => getCanonicalProductSlug(p));
         } else {
             const { products: localProducts } = await import('@/lib/data');
-            slugs = localProducts.map((p) => toSlug(p.name) || p.id);
+            slugs = localProducts.map((p) => getCanonicalProductSlug(p));
         }
     } catch (e) {
         console.warn('Failed to fetch product slugs for static generation', e);
     }
 
-    return slugs.map((slug) => ({
+    return Array.from(new Set(slugs)).map((slug) => ({
         id: slug,
     }));
 }
@@ -31,6 +32,10 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     if (!rawProduct) {
         return {
             title: 'Product Not Found | Dinanath & Sons',
+            robots: {
+                index: false,
+                follow: false,
+            }
         };
     }
 
@@ -41,7 +46,8 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     
     const rawImage = rawProduct.primaryImage || rawProduct.image || rawProduct.image_url || '/placeholder.jpg';
     const image = rawImage.startsWith('http') ? rawImage : `https://dinanathandsons.com${rawImage.startsWith('/') ? '' : '/'}${rawImage}`;
-    const canonicalUrl = `https://dinanathandsons.com${getProductUrl(rawProduct)}`;
+    const canonicalSlug = getCanonicalProductSlug(rawProduct);
+    const canonicalUrl = `https://dinanathandsons.com/shop/${canonicalSlug}`;
 
     return {
         title,
@@ -75,14 +81,26 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
     const params = await props.params;
     const rawProduct = await findProductByIdOrSlug(params.id);
 
-    const category = rawProduct?.category || 'Jewellery Tools';
-    const categorySlug = toSlug(category);
-    const rawImage = rawProduct?.primaryImage || rawProduct?.image || rawProduct?.image_url || '/placeholder.jpg';
-    const absoluteImage = rawImage.startsWith('http') ? rawImage : `https://dinanathandsons.com${rawImage.startsWith('/') ? '' : '/'}${rawImage}`;
-    const price = Number(rawProduct?.retailPrice ?? rawProduct?.retail_price ?? 0);
-    const inStock = Boolean(rawProduct?.inStock ?? rawProduct?.in_stock ?? true);
+    // 1. GSC Soft 404 fix: Return true HTTP 404 if product does not exist
+    if (!rawProduct) {
+        notFound();
+    }
 
-    const productSchema = rawProduct ? {
+    // 2. GSC Alternate page with proper canonical tag fix:
+    // If accessed via UUID, legacy alias slug, or alternate casing, permanently 301 redirect to canonical slug URL
+    const canonicalSlug = getCanonicalProductSlug(rawProduct);
+    if (params.id !== canonicalSlug) {
+        permanentRedirect(`/shop/${canonicalSlug}`);
+    }
+
+    const category = rawProduct.category || 'Jewellery Tools';
+    const categorySlug = toSlug(category);
+    const rawImage = rawProduct.primaryImage || rawProduct.image || rawProduct.image_url || '/placeholder.jpg';
+    const absoluteImage = rawImage.startsWith('http') ? rawImage : `https://dinanathandsons.com${rawImage.startsWith('/') ? '' : '/'}${rawImage}`;
+    const price = Number(rawProduct.retailPrice ?? rawProduct.retail_price ?? 0);
+    const inStock = Boolean(rawProduct.inStock ?? rawProduct.in_stock ?? true);
+
+    const productSchema = {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": rawProduct.name,
@@ -134,9 +152,9 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
                 "reviewCount": rawProduct.reviews.length
             }
         } : {})
-    } : null;
+    };
 
-    const breadcrumbSchema = rawProduct ? {
+    const breadcrumbSchema = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -165,7 +183,7 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
                 "item": `https://dinanathandsons.com${getProductUrl(rawProduct)}`
             }
         ]
-    } : null;
+    };
 
     return (
         <>

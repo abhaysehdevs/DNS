@@ -21,10 +21,63 @@ export const metadata: Metadata = {
     }
 };
 
+const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Dinanath & Sons",
+    "description": "Visit Dinanath & Sons in Maliwara, Chandni Chowk, Delhi. Direct contact for wholesale quotes, machine calibration, and tool orders.",
+    "url": "https://dinanathandsons.com/contact",
+    "mainEntity": {
+        "@type": "Store",
+        "name": "Dinanath & Sons Chandni Chowk Store",
+        "image": "https://dinanathandsons.com/icon.png",
+        "telephone": "+91-9810000000",
+        "email": "contact@dinanathandsons.com",
+        "priceRange": "₹₹",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Shop 1914, Chatta Madan Gopal, Maliwara, Chandni Chowk",
+            "addressLocality": "Central Delhi",
+            "addressRegion": "Delhi",
+            "postalCode": "110006",
+            "addressCountry": "IN"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "28.6562",
+            "longitude": "77.2307"
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday"
+                ],
+                "opens": "11:00",
+                "closes": "19:30"
+            }
+        ],
+        "url": "https://dinanathandsons.com"
+    }
+};
+
 export default function ContactLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return <>{children}</>;
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
+            />
+            {children}
+        </>
+    );
 }
