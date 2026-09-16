@@ -173,19 +173,6 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                             </div>
                         </div>
 
-                        {/* Wholesale Banner Inside Category */}
-                        <div className="mt-8 pt-6 border-t border-[#343434] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <p className="text-xs text-[#8E8E9A]">
-                                <strong className="text-[#A67C35]">Wholesale & Retail: </strong>
-                                {cat.wholesaleNote}
-                            </p>
-                            <Link
-                                href="/contact"
-                                className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#A67C35] hover:text-[#F8F3E8] transition-colors whitespace-nowrap"
-                            >
-                                Request Bulk Quote <ChevronRight size={12} />
-                            </Link>
-                        </div>
                     </header>
 
                     {/* Category Products Grid */}

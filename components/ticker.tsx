@@ -10,7 +10,7 @@ export function Ticker() {
 
     const messages = [
         `🚚 Free Shipping on Orders Over ${formattedThreshold}`,
-        "🏭 Bulk Discounts Available for Wholesale Partners",
+        "🏭 Workshop Direct Pricing for Bench Jewelers",
         "✨ New Casting Machinery Arrived - Check it Out!",
         "🛠️ Premium Hand Tools for Professional Jewelers"
     ];

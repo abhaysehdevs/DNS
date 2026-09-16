@@ -15,12 +15,11 @@ import { ShareButton } from './share-button';
 import { getProductUrl } from '@/lib/slug';
 
 export function ProductQuickView({ product, isOpen, onClose }: { product: Product, isOpen: boolean, onClose: () => void }) {
-    const { mode, language, cart, addToCart, wishlist, toggleWishlist } = useAppStore();
+    const { language, cart, addToCart, wishlist, toggleWishlist } = useAppStore();
     const t = translations[language];
-    const isRetail = mode === 'retail';
     const isWishlisted = wishlist.includes(product.id);
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
-    const [qty, setQty] = useState(isRetail ? 1 : product.wholesaleMOQ);
+    const [qty, setQty] = useState(1);
     const gallery = getProductGallery(product);
     const [mounted, setMounted] = useState(false);
 
@@ -28,13 +27,13 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
         setMounted(true);
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-            setQty(isRetail ? 1 : product.wholesaleMOQ);
+            setQty(1);
             setSelectedMediaIndex(0);
         } else {
             document.body.style.overflow = 'unset';
         }
         return () => { document.body.style.overflow = 'unset'; };
-    }, [isOpen, isRetail, product.wholesaleMOQ]);
+    }, [isOpen]);
 
     if (!isOpen || !mounted) return null;
 
@@ -42,22 +41,16 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
         ? product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length
         : 0;
 
-    const currentPrice = isRetail ? product.retailPrice : (product.wholesalePrice ?? 0);
+    const currentPrice = product.retailPrice;
 
     const handleAddToCart = () => {
-        if (isRetail) {
-            addToCart({
-                productId: product.id,
-                quantity: qty,
-                price: currentPrice,
-                mode: mode,
-            });
-            onClose();
-        } else {
-            let message = `Hi Dinanath & Sons, I am interested in wholesale pricing for: ${product.name} (ID: ${product.id}). Qty: ${qty}`;
-            const url = `https://wa.me/919953435647?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
+        addToCart({
+            productId: product.id,
+            quantity: qty,
+            price: currentPrice,
+            mode: 'retail',
+        });
+        onClose();
     };
 
     const modalContent = (
@@ -222,26 +215,20 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8 relative z-10">
                                             <div>
                                                 <p className="text-[10px] text-[#5A5A6A] uppercase tracking-[0.25em] font-black mb-2">
-                                                    {isRetail ? 'Investment Value' : 'B2B Wholesale Supply'}
+                                                    Price
                                                 </p>
                                                 <div className="flex items-baseline gap-4">
-                                                    <span className={`text-4xl font-black ${isRetail ? 'text-[#C9A84C]' : 'text-blue-400'}`}>
-                                                        {isRetail ? <Currency value={currentPrice} /> : 'Industrial Quote'}
+                                                    <span className="text-4xl font-black text-[#C9A84C]">
+                                                        <Currency value={currentPrice} />
                                                     </span>
                                                 </div>
                                             </div>
-                                            {!isRetail && (
-                                                <div className="glass px-5 py-3 rounded-2xl flex flex-col items-center">
-                                                    <span className="text-[9px] text-[#5A5A6A] uppercase tracking-[0.25em] font-bold mb-1">Min Order</span>
-                                                    <span className="text-xl font-black text-[#F5F5F7]">{product.wholesaleMOQ} <span className="text-xs text-[#5A5A6A]">UNITS</span></span>
-                                                </div>
-                                            )}
                                         </div>
 
                                         <div className="flex flex-col sm:flex-row gap-4 relative z-10">
                                             <div className="flex items-center glass rounded-2xl overflow-hidden h-16 w-full sm:w-auto p-1">
                                                 <button
-                                                    onClick={() => setQty(Math.max(isRetail ? 1 : product.wholesaleMOQ, qty - 1))}
+                                                    onClick={() => setQty(Math.max(1, qty - 1))}
                                                     className="w-12 h-full hover:bg-white/5 text-[#5A5A6A] hover:text-[#F5F5F7] transition-colors flex items-center justify-center font-black text-xl"
                                                 >-</button>
                                                 <div className="flex-1 sm:w-16 flex items-center justify-center font-black text-[#F5F5F7] text-xl tabular-nums">
@@ -258,17 +245,16 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                 disabled={!product.inStock}
                                                 className={`flex-1 h-16 text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all relative overflow-hidden group/btn ${!product.inStock ? 'opacity-50 grayscale' : ''}`}
                                                 style={{
-                                                    background: isRetail 
-                                                        ? 'linear-gradient(135deg, #E8D48B, #C9A84C, #8B6914)' 
-                                                        : 'linear-gradient(135deg, #60A5FA, #3B82F6, #1D4ED8)',
-                                                    color: isRetail ? '#0A0A0F' : '#F5F5F7'
+                                                    background: 'linear-gradient(135deg, #E8D48B, #C9A84C, #8B6914)',
+                                                    color: '#0A0A0F'
                                                 }}
                                             >
                                                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700 skew-x-[20deg]" />
-                                                {isRetail ?
-                                                    (product.inStock ? <div className="flex items-center justify-center gap-3"><ShoppingCart size={18} /> Add to Collection</div> : 'Out of Stock')
-                                                    : <div className="flex items-center justify-center gap-3"><MessageCircle size={18} /> Get Factory Quote</div>
-                                                }
+                                                {product.inStock ? (
+                                                    <div className="flex items-center justify-center gap-3">
+                                                        <ShoppingCart size={18} /> Add to Collection
+                                                    </div>
+                                                ) : 'Out of Stock'}
                                             </Button>
                                         </div>
                                     </div>

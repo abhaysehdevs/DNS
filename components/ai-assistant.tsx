@@ -115,7 +115,7 @@ export function AIAssistant() {
                 {
                     id: (Date.now() + 1).toString(),
                     role: 'assistant',
-                    text: 'Our Chandni Chowk workshop desk is ready to help! Please ask about tweezers, casting torches, polishing buffs, or contact us for wholesale quotes.',
+                    text: 'Our Chandni Chowk workshop desk is ready to help! Please ask about tweezers, casting torches, polishing buffs, or any tool recommendations.',
                     timestamp: new Date()
                 }
             ]);
@@ -142,7 +142,7 @@ export function AIAssistant() {
         { label: '🔬 Precision Tweezers & Pliers', q: 'What are the best tweezers for diamond setting and filigree?' },
         { label: '⚙️ Polishing & Dust Collectors', q: 'Tell me about polishing and dust collector machines' },
         { label: '🔥 Auto Gas Torches & Casting', q: 'What gas torch is recommended for gold melting?' },
-        { label: '📦 B2B Wholesale Pricing', q: 'Wholesale workshop quotes and bulk order discounts' },
+        { label: '⭐ Workshop Equipment & Tools', q: 'What are the most popular jewelry making equipment and tools?' },
         { label: '🚚 Pan-India Shipping', q: 'Delivery and dispatch time from Chandni Chowk' }
     ];
 

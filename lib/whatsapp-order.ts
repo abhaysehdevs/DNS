@@ -42,8 +42,7 @@ export function generateWhatsAppOrderMessage(order: WhatsAppOrderData): string {
     let msg = `🛍️ *NEW ORDER - DINANATH & SONS*\n`;
     msg += `═════════════════════════════\n`;
     msg += `📋 *Order ID:* ${order.orderId}\n`;
-    msg += `📅 *Date:* ${orderDate}\n`;
-    msg += `🏷️ *Order Type:* ${isRetail ? 'Retail Order' : 'B2B Wholesale Inquiry'}\n\n`;
+    msg += `📅 *Date:* ${orderDate}\n\n`;
 
     msg += `👤 *CUSTOMER DETAILS:*\n`;
     msg += `• *Name:* ${order.customer.name}\n`;
@@ -70,30 +69,24 @@ export function generateWhatsAppOrderMessage(order: WhatsAppOrderData): string {
             msg += `   • *Variant:* ${item.variantName}\n`;
         }
         msg += `   • *Quantity:* ${item.quantity} Units\n`;
-        if (isRetail && item.price > 0) {
+        if (item.price > 0) {
             msg += `   • *Rate:* ₹${item.price.toLocaleString('en-IN')} (Total: ₹${itemTotal.toLocaleString('en-IN')})\n`;
-        } else {
-            msg += `   • *Rate:* Wholesale Pricing Requested\n`;
         }
         msg += `   • *Product Link:* ${productUrl}\n\n`;
     });
 
     msg += `═════════════════════════════\n`;
     msg += `💰 *ORDER FINANCIAL SUMMARY:*\n`;
-    if (isRetail) {
-        msg += `• *Subtotal:* ₹${order.subtotal.toLocaleString('en-IN')}\n`;
-        if (order.shippingCost > 0) {
-            msg += `• *Estimated Delivery:* ₹${order.shippingCost.toLocaleString('en-IN')}\n`;
-        } else {
-            msg += `• *Delivery:* Included / Free Shipping\n`;
-        }
-        if (order.discountAmount > 0) {
-            msg += `• *Discount Applied (${order.couponCode || 'Coupon'}):* -₹${order.discountAmount.toLocaleString('en-IN')}\n`;
-        }
-        msg += `• *TOTAL AMOUNT PAYABLE:* ₹${order.totalAmount.toLocaleString('en-IN')}\n`;
+    msg += `• *Subtotal:* ₹${order.subtotal.toLocaleString('en-IN')}\n`;
+    if (order.shippingCost > 0) {
+        msg += `• *Estimated Delivery:* ₹${order.shippingCost.toLocaleString('en-IN')}\n`;
     } else {
-        msg += `• *Status:* Wholesale Quantity Pricing & Transport Quote Requested\n`;
+        msg += `• *Delivery:* Included / Free Shipping\n`;
     }
+    if (order.discountAmount > 0) {
+        msg += `• *Discount Applied (${order.couponCode || 'Coupon'}):* -₹${order.discountAmount.toLocaleString('en-IN')}\n`;
+    }
+    msg += `• *TOTAL AMOUNT PAYABLE:* ₹${order.totalAmount.toLocaleString('en-IN')}\n`;
     msg += `═════════════════════════════\n\n`;
     msg += `💬 _Please confirm my order availability, dispatch timeline, and invoice details._`;
 

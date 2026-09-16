@@ -192,7 +192,7 @@ export const useAppStore = create<AppState>()(
             customerActivities: [],
             currencyData: { code: 'INR', symbol: '₹', rate: 1 },
 
-            setMode: (mode) => set({ mode }),
+            setMode: () => set({ mode: 'retail' }),
             setLanguage: (language) => set((state) => ({
                 language,
                 adminSettings: { ...state.adminSettings, language }

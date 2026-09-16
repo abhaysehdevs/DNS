@@ -200,28 +200,7 @@ export function Hero() {
                 {/* ==================== 1. MOBILE DEDICATED HERO (lg:hidden) ==================== */}
                 <div className="block lg:hidden w-full max-w-lg mx-auto space-y-2.5">
                     
-                    {/* 1. Mobile Top Search Bar */}
-                    <form 
-                        onSubmit={handleSearchSubmit}
-                        className="w-full relative flex items-center bg-[#161616] border border-[#343434] hover:border-[#A67C35] focus-within:border-[#A67C35] rounded-xl h-11 px-3.5 shadow-md transition-all"
-                    >
-                        <Search size={16} className="text-[#A67C35] mr-2.5 shrink-0" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search 500+ tools, machines, torches..."
-                            className="w-full bg-transparent text-xs text-[#F8F3E8] placeholder-[#777] focus:outline-none"
-                        />
-                        <button
-                            type="submit"
-                            className="bg-[#A67C35] hover:bg-[#8A6232] text-black font-black text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-lg shrink-0 transition-colors shadow"
-                        >
-                            Search
-                        </button>
-                    </form>
-
-                    {/* 2. Flagship Brand Banner Card */}
+                    {/* 1. Flagship Brand Banner Card */}
                     <div className="relative w-full rounded-2xl overflow-hidden border border-[#A67C35]/35 bg-gradient-to-br from-[#1C1812] via-[#131313] to-[#0A0A0A] p-4 sm:p-5 shadow-2xl text-left">
                         {/* Background Storefront Watermark Overlay */}
                         <div 
@@ -276,47 +255,6 @@ export function Hero() {
                                     </button>
                                 </Link>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* 3. Popular Categories Horizontal Scroll (Thumb-Friendly) */}
-                    <div className="w-full pt-1">
-                        <div className="flex items-center justify-between px-0.5 mb-1.5">
-                            <span className="text-[10px] font-mono font-bold tracking-wider text-[#8E8E9A] uppercase">
-                                Popular Categories
-                            </span>
-                            <Link href="/shop" className="text-[10px] font-bold text-[#A67C35] flex items-center gap-0.5 hover:underline">
-                                <span>View All</span>
-                                <ChevronRight size={10} />
-                            </Link>
-                        </div>
-                        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                            {[
-                                { name: 'Hand Tools', icon: Sliders, link: '/shop?cat=Tools', count: '180+' },
-                                { name: 'Machinery', icon: Compass, link: '/shop?cat=Machinery', count: '45+' },
-                                { name: 'Gas Torches', icon: Flame, link: '/shop?cat=Tools', count: '30+' },
-                                { name: 'Polishing', icon: Wrench, link: '/shop?cat=Consumables', count: '90+' },
-                                { name: 'Packaging', icon: Package, link: '/shop?cat=Packaging', count: '60+' },
-                            ].map((cat, idx) => {
-                                const Icon = cat.icon;
-                                return (
-                                    <Link key={idx} href={cat.link} className="shrink-0 group">
-                                        <div className="flex items-center gap-2.5 bg-[#161616] border border-[#2D2D2D] group-hover:border-[#A67C35]/50 px-3 py-2 rounded-xl transition-all active:scale-95 shadow-sm">
-                                            <div className="w-7 h-7 rounded-lg bg-[#222] border border-[#383838] flex items-center justify-center text-[#A67C35] group-hover:bg-[#A67C35] group-hover:text-black transition-colors">
-                                                <Icon size={14} />
-                                            </div>
-                                            <div className="text-left pr-0.5">
-                                                <div className="text-[11px] font-bold text-[#F8F3E8] uppercase leading-none whitespace-nowrap">
-                                                    {cat.name}
-                                                </div>
-                                                <div className="text-[8px] text-[#8E8E9A] font-mono mt-0.5 leading-none whitespace-nowrap">
-                                                    {cat.count} items
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                );
-                            })}
                         </div>
                     </div>
 

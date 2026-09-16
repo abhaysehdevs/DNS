@@ -11,7 +11,7 @@ import { ProductGrid } from '@/components/shop/product-grid';
 export default function OffersPage() {
     const { mode } = useAppStore();
     const [products, setProducts] = useState<Product[]>([]);
-    const [pageDetails, setPageDetails] = useState({ title: 'Special Offers', subtitle: 'Get exclusive retail and wholesale discounts' });
+    const [pageDetails, setPageDetails] = useState({ title: 'Special Offers', subtitle: 'Get exclusive discounts and seasonal offers' });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default function OffersPage() {
                 if (!configError && pageConfig) {
                     setPageDetails({
                         title: pageConfig.title,
-                        subtitle: pageConfig.subtitle || 'Get exclusive retail and wholesale discounts'
+                        subtitle: pageConfig.subtitle || 'Get exclusive discounts and seasonal offers'
                     });
 
                     if (pageConfig.product_ids && pageConfig.product_ids.length > 0) {

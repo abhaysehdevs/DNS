@@ -72,12 +72,7 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
     });
 
     const [loading, setLoading] = useState(!initialProduct);
-    const [qty, setQty] = useState(() => {
-        if (initialProduct) {
-            return isRetail ? 1 : (Number(initialProduct.wholesaleMOQ ?? initialProduct.wholesale_moq ?? 1));
-        }
-        return 1;
-    });
+    const [qty, setQty] = useState(1);
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
     const [addedAlert, setAddedAlert] = useState(false);
 
@@ -129,7 +124,7 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                 if (mappedProduct.variants && mappedProduct.variants.length > 0) {
                     setSelectedVariant(mappedProduct.variants[0]);
                 }
-                setQty(isRetail ? 1 : mappedProduct.wholesaleMOQ);
+                setQty(1);
                 viewProduct(mappedProduct.id);
             } catch (err) {
                 import('@/lib/data').then((module) => {
@@ -139,7 +134,7 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                         if (localProduct.variants && localProduct.variants.length > 0) {
                             setSelectedVariant(localProduct.variants[0]);
                         }
-                        setQty(isRetail ? 1 : localProduct.wholesaleMOQ);
+                        setQty(1);
                         viewProduct(localProduct.id);
                     }
                 });
@@ -483,17 +478,12 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                                         <span className="text-xl sm:text-2xl font-black text-[#D12A1C] uppercase tracking-wider block">Out of Stock</span>
                                         <p className="text-[#8E8E9A] text-[9px] sm:text-[10px] font-bold uppercase">This product is currently out of stock or price is pending update.</p>
                                     </div>
-                                ) : isRetail ? (
+                                ) : (
                                     <>
                                         <span className="text-2xl sm:text-4xl md:text-5xl font-black text-[#F8F3E8] tracking-tight">₹{activePrice.toLocaleString('en-IN')}</span>
                                         <span className="text-[#8E8E9A] text-sm sm:text-base line-through uppercase font-bold">₹{originalPrice.toLocaleString('en-IN')}</span>
                                         <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider">({discountPercent}% OFF)</span>
                                     </>
-                                ) : (
-                                    <div className="space-y-1">
-                                        <span className="text-xl sm:text-2xl font-bold text-[#C9A84C] uppercase tracking-wider italic">Wholesale Pricing Available</span>
-                                        <p className="text-[#8E8E9A] text-[9px] sm:text-[10px] font-bold uppercase">Volume rates tailored to quantity (Minimum MOQ: {product.wholesaleMOQ} Units)</p>
-                                    </div>
                                 )}
                             </div>
 
@@ -514,17 +504,15 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                                         className={`flex-1 h-11 sm:h-14 px-3 sm:px-6 rounded-xl flex items-center justify-center gap-2 sm:gap-3 font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] sm:text-[11px] transition-all duration-300 active:scale-[0.98] shadow-xl cursor-pointer ${
                                             !canPurchase 
                                                 ? 'bg-[#242424] text-[#8E8E9A] cursor-not-allowed border border-white/5' 
-                                                : isRetail 
-                                                    ? 'bg-gradient-to-r from-[#F0DFC0] via-[#C9A84C] to-[#A67C35] hover:opacity-95 text-[#0A0A0F] shadow-[0_8px_25px_rgba(201,168,76,0.25)] hover:shadow-[0_12px_35px_rgba(201,168,76,0.4)] hover:-translate-y-0.5' 
-                                                    : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950/40'
+                                                : 'bg-gradient-to-r from-[#F0DFC0] via-[#C9A84C] to-[#A67C35] hover:opacity-95 text-[#0A0A0F] shadow-[0_8px_25px_rgba(201,168,76,0.25)] hover:shadow-[0_12px_35px_rgba(201,168,76,0.4)] hover:-translate-y-0.5'
                                         }`}
                                     >
                                         <ShoppingCart size={15} strokeWidth={2.5} />
-                                        <span>{isRetail ? (canPurchase ? 'Add to Cart' : 'Out of Stock') : 'Request Quote'}</span>
+                                        <span>{canPurchase ? 'Add to Cart' : 'Out of Stock'}</span>
                                     </button>
 
                                     {/* Buy Now button */}
-                                    {isRetail && canPurchase && (
+                                    {canPurchase && (
                                         <button 
                                             onClick={handleBuyNow}
                                             className="flex-1 h-11 sm:h-14 px-3 sm:px-6 rounded-xl font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] sm:text-[11px] transition-all duration-300 active:scale-[0.98] bg-[#151515] hover:bg-[#222222] border border-[#C9A84C]/50 hover:border-[#C9A84C] text-[#F8F3E8] shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
@@ -552,20 +540,20 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                                 <ShareButton product={product} />
                             </div>
 
-                            {/* Small, Sleek WhatsApp Bulk Inquiry Button */}
+                            {/* Small, Sleek WhatsApp Inquiry Button */}
                             <div className="pt-1 flex items-center justify-between">
                                 <a 
                                     href={`https://api.whatsapp.com/send?phone=919953435647&text=${encodeURIComponent(
-                                        `Hello Dinanath & Sons, I would like to make a bulk inquiry / request wholesale rates for "${product.name}"${selectedVariant ? ` (Variant: ${selectedVariant.name})` : ''}.\nProduct Link: https://dinanathandsons.com/shop/${product.slug || product.id}`
+                                        `Hello Dinanath & Sons, I would like to make an inquiry for "${product.name}"${selectedVariant ? ` (Variant: ${selectedVariant.name})` : ''}.\nProduct Link: https://dinanathandsons.com/shop/${product.slug || product.id}`
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10.5px] font-black uppercase tracking-wider bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 hover:border-[#25D366]/60 text-[#25D366] transition-all shadow-sm active:scale-95"
                                 >
                                     <MessageSquare size={14} />
-                                    <span>Bulk WhatsApp Inquiry</span>
+                                    <span>WhatsApp Inquiry</span>
                                 </a>
-                                <span className="text-[9.5px] text-gray-500 font-mono font-bold uppercase">Direct Factory Supply</span>
+                                <span className="text-[9.5px] text-gray-500 font-mono font-bold uppercase">Direct Workshop Desk</span>
                             </div>
                         </div>
 

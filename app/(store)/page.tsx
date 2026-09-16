@@ -6,20 +6,11 @@ import { Hero } from '@/components/hero';
 import { ProductCard } from '@/components/product-card';
 import { Product, products as initialLocalProducts } from '@/lib/data';
 import { 
-    Loader2, ArrowRight, Star, Clock, ShieldCheck, Layers, 
-    Truck, Lock, ThumbsUp, ChevronRight 
+    Loader2, ArrowRight, Star, ChevronRight,
+    Mail, Sparkles, CheckCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-
-const trustStripItems = [
-    { icon: Clock, title: "60+ Years", desc: "of Trust & Excellence" },
-    { icon: ShieldCheck, title: "Premium Quality", desc: "Industrial Grade Products" },
-    { icon: Layers, title: "Wide Range", desc: "A to Z Workshop Solutions" },
-    { icon: Truck, title: "Fast Delivery", desc: "Pan India Secure Shipping" },
-    { icon: Lock, title: "Secure Payments", desc: "100% Protected Checkouts" },
-    { icon: ThumbsUp, title: "Trusted by Professionals", desc: "Manufacturers & Goldsmiths" }
-];
 
 const homeCategories = [
     { name: 'Hand Tools', count: '120+ Products', img: '/images/products/ss-plier.png', href: '/shop/category/hand-tools' },
@@ -169,54 +160,39 @@ export default function Home() {
             {/* Cinematic Hero */}
             <Hero />
 
-            {/* 1. TRUST STRIP */}
-            <section className="relative z-30 bg-[#1E1E1E] border-y border-[#343434] py-5 sm:py-8 px-3 sm:px-6">
+            {/* SHOP BY CATEGORY (All categories in a single row, no scrolling, fully mobile-optimized) */}
+            <section className="py-6 sm:py-12 md:py-16 px-2.5 sm:px-6 bg-[#151515] border-b border-[#343434] relative">
                 <div className="container mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-6">
-                        {trustStripItems.map((item, i) => (
-                            <div key={i} className="flex flex-col items-center text-center p-2 sm:p-3 group">
-                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#242424] border border-[#343434] flex items-center justify-center mb-2 sm:mb-3 text-[#A67C35] group-hover:scale-110 transition-transform">
-                                    <item.icon size={16} strokeWidth={2} />
-                                </div>
-                                <h4 className="text-[9.5px] sm:text-[10px] font-bold text-[#F8F3E8] uppercase tracking-wider mb-0.5">{item.title}</h4>
-                                <p className="text-[7.5px] sm:text-[8px] text-[#CFCFCF] tracking-wide uppercase font-semibold">{item.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* 2. CATEGORIES SECTION */}
-            <section className="py-10 sm:py-16 md:py-24 px-3.5 sm:px-6 bg-[#151515] border-b border-[#343434] relative">
-                <div className="container mx-auto">
-                    <div className="text-center mb-8 sm:mb-16">
-                        <div className="h-0.5 w-12 sm:w-16 bg-[#A67C35] mx-auto mb-3 sm:mb-4" />
-                        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1.5 sm:mb-2">Shop By Category</h2>
-                        <p className="text-[8.5px] sm:text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
+                    <div className="text-center mb-4 sm:mb-8">
+                        <div className="h-0.5 w-10 sm:w-16 bg-[#A67C35] mx-auto mb-2" />
+                        <h2 className="text-xl sm:text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">Shop By Category</h2>
+                        <p className="text-[7.5px] sm:text-[9.5px] font-bold text-[#A67C35] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-6">
+                    {/* All categories in a single row showing at the same time - NO scrolling */}
+                    <div className="grid grid-cols-6 gap-1.5 sm:gap-3 md:gap-5 w-full">
                         {homeCategories.map((cat, i) => (
-                            <Link href={cat.href} key={i} className="group flex flex-col bg-[#242424] border border-[#343434] hover:border-[#A67C35] rounded-xl overflow-hidden shadow-lg transition-all hover:-translate-y-1">
-                                <div className="aspect-[4/3] w-full bg-[#1E1E1E] p-3 sm:p-4 flex items-center justify-center overflow-hidden relative">
+                            <Link 
+                                href={cat.href} 
+                                key={i} 
+                                className="group flex flex-col items-center text-center bg-[#1E1E1E] hover:bg-[#252525] border border-[#343434] hover:border-[#A67C35] rounded-lg sm:rounded-2xl p-1.5 sm:p-3 transition-all duration-300 shadow hover:-translate-y-1 active:scale-95"
+                            >
+                                <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-md sm:rounded-xl bg-[#141414] p-1.5 sm:p-2.5 flex items-center justify-center overflow-hidden border border-[#2E2E2E] group-hover:border-[#A67C35]/50 transition-colors">
                                     <img 
                                         src={cat.img} 
                                         alt={cat.name} 
-                                        className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 mix-blend-lighten"
+                                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 mix-blend-lighten"
                                         onError={(e) => {
                                              (e.target as HTMLImageElement).src = '/placeholder.jpg';
                                         }}
                                     />
                                 </div>
-                                <div className="p-2.5 sm:p-4 flex items-center justify-between gap-1.5 sm:gap-2 border-t border-[#343434]">
-                                    <div className="flex flex-col text-left min-w-0">
-                                        <h4 className="text-[10px] sm:text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider truncate">{cat.name}</h4>
-                                        <span className="text-[7.5px] sm:text-[8px] text-[#8E8E9A] uppercase font-bold mt-0.5">{cat.count}</span>
-                                    </div>
-                                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#343434] group-hover:bg-[#A67C35] group-hover:text-black flex items-center justify-center text-[#CFCFCF] transition-colors shrink-0">
-                                        <ChevronRight size={11} strokeWidth={2.5} />
-                                    </div>
-                                </div>
+                                <h4 className="text-[7.5px] sm:text-[10px] md:text-xs font-bold text-[#F8F3E8] group-hover:text-[#A67C35] transition-colors uppercase tracking-tight sm:tracking-normal line-clamp-2 leading-tight mt-1 sm:mt-2">
+                                    {cat.name}
+                                </h4>
+                                <span className="hidden sm:inline-block text-[7.5px] sm:text-[8.5px] text-[#8E8E9A] uppercase font-bold mt-0.5">
+                                    {cat.count}
+                                </span>
                             </Link>
                         ))}
                     </div>
@@ -330,41 +306,70 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 5. NEWSLETTER FORM (Rich Charcoal background) */}
-            <section className="py-10 sm:py-16 md:py-20 px-3.5 sm:px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
-                <div className="absolute right-0 bottom-0 w-[25vw] h-[25vw] bg-[#A67C35]/5 blur-[90px] rounded-full pointer-events-none opacity-40" />
-                <div className="container mx-auto max-w-4xl">
-                    <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
-                        <div className="flex-1 text-center md:text-left space-y-2 sm:space-y-4">
-                            <h2 className="text-2xl md:text-4xl font-bold font-display uppercase tracking-wider text-[#F8F3E8]">Newsletter</h2>
-                            <p className="text-xs text-[#CFCFCF] font-semibold leading-relaxed uppercase tracking-wide">
-                                Subscribe to get updates on new arrivals, offers, and technical logs.
-                            </p>
-                        </div>
-                        <div className="flex-1 w-full max-w-md">
-                            {subscribed ? (
-                                <div className="text-emerald-500 font-bold uppercase tracking-wider text-sm text-center md:text-left bg-emerald-500/10 border border-emerald-500/20 px-6 py-4 rounded-xl">
-                                    Thanks for subscribing!
+            {/* 5. NEWSLETTER SECTION (Luxury Goldsmith VIP Dispatch Card) */}
+            <section className="py-8 sm:py-16 md:py-20 px-3 sm:px-6 bg-[#151515] relative border-b border-[#343434] overflow-hidden">
+                <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#A67C35]/10 blur-[100px] rounded-full pointer-events-none" />
+                <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-[#A67C35]/10 blur-[100px] rounded-full pointer-events-none" />
+                
+                <div className="container mx-auto max-w-4xl relative z-10">
+                    <div className="bg-gradient-to-b from-[#1E1E1E] to-[#171717] border border-[#343434] hover:border-[#A67C35]/50 rounded-2xl sm:rounded-3xl p-5 sm:p-10 md:p-14 shadow-2xl transition-all">
+                        <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12">
+                            
+                            {/* Left: Text & Badge */}
+                            <div className="flex-1 text-center md:text-left space-y-2 sm:space-y-3">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#252525] border border-[#A67C35]/30 text-[#A67C35] text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em]">
+                                    <Sparkles size={11} className="text-[#A67C35]" />
+                                    <span>Workshop VIP Bulletin</span>
                                 </div>
-                            ) : (
-                                <form className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5" onSubmit={handleNewsletterSubmit}>
-                                    <input 
-                                        required 
-                                        type="email" 
-                                        placeholder="ENTER YOUR EMAIL" 
-                                        value={newsletterEmail}
-                                        onChange={e => setNewsletterEmail(e.target.value)}
-                                        className="flex-1 h-10 sm:h-12 bg-[#151515] border border-[#343434] rounded-lg px-4 text-xs font-semibold tracking-wider text-[#F8F3E8] focus:outline-none focus:border-[#A67C35] transition-all placeholder-[#8E8E9A]" 
-                                    />
-                                    <button 
-                                        type="submit" 
-                                        disabled={submitting}
-                                        className="h-10 sm:h-12 bg-[#A67C35] hover:bg-[#8A6232] disabled:opacity-50 text-black font-bold px-6 sm:px-8 rounded-lg text-[9px] sm:text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow flex items-center justify-center"
-                                    >
-                                        {submitting ? <Loader2 className="animate-spin" size={16} /> : 'Subscribe'}
-                                    </button>
-                                </form>
-                            )}
+                                <h2 className="text-xl sm:text-3xl md:text-4xl font-bold font-display uppercase tracking-wider text-[#F8F3E8] leading-tight">
+                                    Get Trade Updates & Drops
+                                </h2>
+                                <p className="text-[11px] sm:text-xs text-[#CFCFCF] font-medium leading-relaxed max-w-md mx-auto md:mx-0">
+                                    Be the first to receive notifications for new machine arrivals, metallurgical tips, and exclusive equipment catalogs.
+                                </p>
+                            </div>
+
+                            {/* Right: Modern Compact Form */}
+                            <div className="w-full md:w-auto md:min-w-[340px]">
+                                {subscribed ? (
+                                    <div className="flex items-center justify-center md:justify-start gap-2 text-emerald-400 font-bold uppercase tracking-wider text-xs bg-emerald-500/10 border border-emerald-500/30 px-5 py-3.5 rounded-xl">
+                                        <CheckCircle size={16} />
+                                        <span>Subscribed to VIP Bulletin!</span>
+                                    </div>
+                                ) : (
+                                    <form className="flex flex-col sm:flex-row gap-2" onSubmit={handleNewsletterSubmit}>
+                                        <div className="relative flex-1">
+                                            <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E8E9A] pointer-events-none" />
+                                            <input 
+                                                required 
+                                                type="email" 
+                                                placeholder="Enter your work email..." 
+                                                value={newsletterEmail}
+                                                onChange={e => setNewsletterEmail(e.target.value)}
+                                                className="w-full h-11 sm:h-12 bg-[#121212] border border-[#343434] focus:border-[#A67C35] rounded-xl pl-10 pr-3 text-xs font-semibold text-[#F8F3E8] placeholder-[#8E8E9A] focus:outline-none transition-all shadow-inner" 
+                                            />
+                                        </div>
+                                        <button 
+                                            type="submit" 
+                                            disabled={submitting}
+                                            className="h-11 sm:h-12 bg-gradient-to-r from-[#DFCE9F] via-[#C5A059] to-[#9E7B35] hover:brightness-110 active:scale-95 disabled:opacity-50 text-black font-black px-6 rounded-xl text-[10px] uppercase tracking-widest transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0"
+                                        >
+                                            {submitting ? (
+                                                <Loader2 className="animate-spin" size={15} />
+                                            ) : (
+                                                <>
+                                                    <span>Join</span>
+                                                    <ArrowRight size={13} />
+                                                </>
+                                            )}
+                                        </button>
+                                    </form>
+                                )}
+                                <span className="block text-[8px] sm:text-[9px] text-[#8E8E9A] text-center md:text-left mt-2 tracking-wide font-medium">
+                                    No spam. Unsubscribe anytime.
+                                </span>
+                            </div>
+
                         </div>
                     </div>
                 </div>

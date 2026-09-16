@@ -66,12 +66,16 @@ export function Navbar() {
     }, [announcements]);
 
     const searchRef = useRef<HTMLDivElement>(null);
+    const mobileSearchRef = useRef<HTMLDivElement>(null);
     const { scrollY } = useScroll();
     const isRetail = mode === 'retail';
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         const previous = scrollY.getPrevious() || 0;
-        if (latest > previous && latest > 150) {
+        if (isMobile) {
+            // Keep sticky header visible at all times on mobile as requested
+            setVisible(true);
+        } else if (latest > previous && latest > 150) {
             setVisible(false);
         } else {
             setVisible(true);
@@ -90,7 +94,9 @@ export function Navbar() {
     // Handle clicks outside search dropdown
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+            const inDesktop = searchRef.current && searchRef.current.contains(event.target as Node);
+            const inMobile = mobileSearchRef.current && mobileSearchRef.current.contains(event.target as Node);
+            if (!inDesktop && !inMobile) {
                 setIsSearchFocused(false);
             }
         }
@@ -239,16 +245,6 @@ export function Navbar() {
 
                         {/* User Action Tools - Right */}
                         <div className="flex items-center gap-2.5 md:gap-6 shrink-0 text-[#F8F3E8]">
-                            
-                            {/* Wholesale Toggle */}
-                            <div 
-                                 onMouseMove={(e) => handleMouseMove(e, "Wholesale Switch: Toggle pricing catalog and minimum order quantities for bulk purchases.")}
-                                 onMouseLeave={handleMouseLeave}
-                                 className="hidden sm:flex items-center p-1 bg-[#1E1E1E] border border-[#343434] rounded-lg"
-                             >
-                                <button onClick={() => setMode('retail')} className={`px-3 py-1.5 rounded text-[8px] font-bold uppercase tracking-wider transition-all ${isRetail ? 'bg-[#A67C35] text-black shadow' : 'text-[#8E8E9A] hover:text-[#F8F3E8]'}`}>Retail</button>
-                                <button onClick={() => setMode('wholesale')} className={`px-3 py-1.5 rounded text-[8px] font-bold uppercase tracking-wider transition-all ${!isRetail ? 'bg-[#D12A1C] text-white shadow' : 'text-[#8E8E9A] hover:text-[#F8F3E8]'}`}>Wholesale</button>
-                            </div>
 
                             {/* Account Link */}
                             <Link 
@@ -311,6 +307,44 @@ export function Navbar() {
                             <button onClick={() => setIsMenuOpen(true)} className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#F8F3E8]"><Menu size={18} /></button>
                         </div>
                     </div>
+                </div>
+
+                {/* 2.5 MOBILE STICKY SEARCH BAR - Directly below Dinanath & Sons */}
+                <div className="block lg:hidden w-full px-3 pb-2.5 pt-1 border-t border-[#343434]/40 bg-[#151515] relative z-20" ref={mobileSearchRef}>
+                    <form 
+                        onSubmit={handleSearchSubmit} 
+                        className="relative flex items-center w-full h-10 bg-[#1E1E1E] border border-[#343434] hover:border-[#A67C35]/60 focus-within:border-[#A67C35] rounded-xl overflow-hidden shadow-md transition-all px-3"
+                    >
+                        <Search size={15} className="text-[#A67C35] mr-2 shrink-0" />
+                        <input
+                            type="text"
+                            placeholder="Search 500+ tools, machines, equipment..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => setIsSearchFocused(true)}
+                            className="w-full bg-transparent text-xs text-[#F8F3E8] placeholder-[#8E8E9A] focus:outline-none font-medium"
+                        />
+                        {searchQuery ? (
+                            <button 
+                                type="button" 
+                                onClick={() => setSearchQuery('')}
+                                className="text-[#8E8E9A] hover:text-[#F8F3E8] p-1 mr-1"
+                            >
+                                <X size={14} />
+                            </button>
+                        ) : null}
+                        <button 
+                            type="submit" 
+                            className="bg-[#A67C35] hover:bg-[#8A6232] text-black font-black text-[9px] uppercase tracking-wider px-2.5 py-1.5 rounded-lg shrink-0 transition-colors shadow"
+                        >
+                            Search
+                        </button>
+                    </form>
+                    <SearchAutocomplete
+                        query={searchQuery}
+                        onSelect={handleSearchSelect}
+                        isVisible={isSearchFocused}
+                    />
                 </div>
 
                 {/* 3. NAVIGATION BAR & CATEGORY SELECTOR */}
@@ -447,10 +481,6 @@ export function Navbar() {
                             </div>
 
                             <div className="pt-8 border-t border-[#343434] space-y-6">
-                                <div className="grid grid-cols-2 gap-3">
-                                    <button onClick={() => { setMode('retail'); setIsMenuOpen(false); }} className={`h-11 rounded-lg font-bold uppercase tracking-wider text-[8px] border ${isRetail ? 'bg-[#A67C35] text-black border-[#A67C35]' : 'bg-[#1E1E1E] text-[#CFCFCF] border-[#343434]'}`}>Retail</button>
-                                    <button onClick={() => { setMode('wholesale'); setIsMenuOpen(false); }} className={`h-11 rounded-lg font-bold uppercase tracking-wider text-[8px] border ${!isRetail ? 'bg-[#D12A1C] text-white border-[#D12A1C]' : 'bg-[#1E1E1E] text-[#CFCFCF] border-[#343434]'}`}>Wholesale</button>
-                                </div>
                                 <button 
                                     onClick={() => { setIsMenuOpen(false); window.dispatchEvent(new CustomEvent('open-language-popup')); }} 
                                     className="w-full h-11 rounded-lg border border-[#343434] bg-[#1E1E1E] text-[#CFCFCF] font-bold uppercase tracking-wider text-[8px] flex items-center justify-center gap-2"

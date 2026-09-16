@@ -7,7 +7,8 @@ import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
 import {
     Search, X, LayoutGrid, List,
-    ChevronRight, Settings2, ChevronDown, Sparkles, Loader2
+    ChevronRight, Settings2, ChevronDown, Sparkles, Loader2,
+    Sliders, Compass, Wrench, Package, Droplets, Flame, Tag, Award
 } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -16,6 +17,27 @@ import { SearchAutocomplete } from '@/components/search-autocomplete';
 import { FilterSidebar } from '@/components/shop/filter-sidebar';
 import { ProductGrid } from '@/components/shop/product-grid';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+
+const ALL_STORE_CATEGORIES = [
+    { key: 'All', label: 'All Items', icon: LayoutGrid, aliases: ['all'] },
+    { key: 'Tools', label: 'Hand Tools', icon: Sliders, aliases: ['tools', 'hand tools', 'hand-tools'] },
+    { key: 'Machinery', label: 'Machinery', icon: Compass, aliases: ['machinery', 'machines', 'equipment'] },
+    { key: 'Consumables', label: 'Polishing & Buffs', icon: Wrench, aliases: ['consumables', 'polishing', 'buffs', 'polishing & buffs'] },
+    { key: 'Packaging', label: 'Packaging & Cards', icon: Package, aliases: ['packaging', 'cards', 'display', 'packaging & cards'] },
+    { key: 'Chemicals', label: 'Cleaning & Flux', icon: Droplets, aliases: ['chemicals', 'cleaning', 'flux', 'solutions'] },
+    { key: 'Bullion', label: 'Certified Bullion', icon: Award, aliases: ['bullion', 'coins', 'bars'] },
+    { key: 'Casting & Metallurgy', label: 'Casting & Melting', icon: Flame, aliases: ['casting', 'metallurgy', 'casting & metallurgy', 'welding'] }
+];
+
+const getCategoryIcon = (cat: string) => {
+    const found = ALL_STORE_CATEGORIES.find(c => c.key.toLowerCase() === cat.toLowerCase() || c.aliases.includes(cat.toLowerCase()));
+    return found ? found.icon : Tag;
+};
+
+const getCategoryDisplayName = (cat: string) => {
+    const found = ALL_STORE_CATEGORIES.find(c => c.key.toLowerCase() === cat.toLowerCase() || c.aliases.includes(cat.toLowerCase()));
+    return found ? found.label : cat;
+};
 
 function ShopContent() {
     const { mode, language } = useAppStore();
@@ -26,7 +48,8 @@ function ShopContent() {
     const initialCategory = searchParams.get('cat') || 'All';
     const initialSearch = searchParams.get('search') || searchParams.get('q') || '';
 
-    const initialCats = ['All', ...Array.from(new Set(initialLocalProducts.map(p => p.category)))];
+    const allCategoryKeys = ALL_STORE_CATEGORIES.map(c => c.key);
+    const initialCats = allCategoryKeys;
 
     // Data State - preloaded so initial server-rendered HTML contains real products and links
     const [products, setProducts] = useState<Product[]>(() => initialLocalProducts);
@@ -39,6 +62,7 @@ function ShopContent() {
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
     const [priceRange, setPriceRange] = useState(500000);
     const [minPrice, setMinPrice] = useState(0);
+    const [inStockOnly, setInStockOnly] = useState(false);
     const [sortBy, setSortBy] = useState('featured');
 
     // UI State
@@ -76,24 +100,19 @@ function ShopContent() {
                         };
                     });
 
-                    const uniqueCats = ['All', ...Array.from(new Set(mappedProducts.map(p => p.category)))];
-                    setCategories(uniqueCats);
+                    setCategories(allCategoryKeys);
                     setProducts(mappedProducts);
                 } else {
                     import('@/lib/data').then((module) => {
-                        const localProducts = module.products;
-                        const uniqueCats = ['All', ...Array.from(new Set(localProducts.map(p => p.category)))];
-                        setCategories(uniqueCats);
-                        setProducts(localProducts);
+                        setCategories(allCategoryKeys);
+                        setProducts(module.products);
                     });
                 }
             } catch (err) {
                 console.error("Fetch failed, loading fallbacks", err);
                 import('@/lib/data').then((module) => {
-                    const localProducts = module.products;
-                    const uniqueCats = ['All', ...Array.from(new Set(localProducts.map(p => p.category)))];
-                    setCategories(uniqueCats);
-                    setProducts(localProducts);
+                    setCategories(allCategoryKeys);
+                    setProducts(module.products);
                 });
             } finally {
                 setLoading(false);
@@ -127,15 +146,28 @@ function ShopContent() {
         setSearchQuery('');
         setPriceRange(500000);
         setMinPrice(0);
+        setInStockOnly(false);
+        setSortBy('featured');
         router.push('/shop', { scroll: false });
     };
 
     const filteredProducts = products
         .filter((product) => {
             const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+            const matchesCategory = selectedCategory === 'All' || (() => {
+                const selClean = selectedCategory.toLowerCase().trim();
+                const catObj = ALL_STORE_CATEGORIES.find(c => 
+                    c.key.toLowerCase() === selClean || 
+                    c.label.toLowerCase() === selClean || 
+                    c.aliases.includes(selClean)
+                );
+                const validAliases = catObj ? catObj.aliases : [selClean];
+                const prodCat = (product.category || '').toLowerCase().trim();
+                return validAliases.some(alias => prodCat.includes(alias) || alias.includes(prodCat));
+            })();
             const matchesPrice = isRetail ? (product.retailPrice <= priceRange && product.retailPrice >= minPrice) : true;
-            return matchesSearch && matchesCategory && matchesPrice;
+            const matchesStock = inStockOnly ? product.inStock : true;
+            return matchesSearch && matchesCategory && matchesPrice && matchesStock;
         })
         .sort((a, b) => {
             // Push out-of-stock products to the bottom
@@ -208,91 +240,132 @@ function ShopContent() {
                             minPrice={minPrice}
                             setMinPrice={setMinPrice}
                             isRetail={isRetail}
-                            className="bg-surface-1 border border-glass-border rounded-2xl p-5 shadow-md max-h-[80vh] overflow-y-auto custom-scrollbar"
+                            inStockOnly={inStockOnly}
+                            setInStockOnly={setInStockOnly}
+                            sortBy={sortBy}
+                            setSortBy={setSortBy}
+                            totalProductsCount={filteredProducts.length}
+                            onResetAll={handleClearFilters}
+                            className="bg-[#181818] border border-[#343434] rounded-2xl p-4 shadow-xl max-h-[82vh] overflow-y-auto custom-scrollbar"
                         />
                     </aside>
 
                     {/* Main Content Area */}
-                    <main className="flex-1 min-w-0">
+                    <main className="flex-1 min-w-0 w-full max-w-full overflow-hidden">
                         
-                        {/* Search & Sort Panel */}
-                        <div className="mb-4 sm:mb-6">
-                            <div className="flex flex-col md:flex-row gap-2.5 sm:gap-3 items-center bg-surface-1 border border-glass-border p-2 sm:p-2.5 rounded-xl sm:rounded-2xl shadow-xl relative z-50">
-                                
-                                {/* Search input */}
-                                <div className="flex-1 relative w-full" ref={searchContainerRef}>
-                                    <div className="relative h-10 sm:h-12 flex items-center">
-                                        <Search className={`absolute left-3.5 sm:left-5 transition-all duration-300 ${isSearchFocused ? 'text-gold-primary scale-110' : 'text-text-tertiary'}`} size={15} />
-                                        <input
-                                            type="text"
-                                            placeholder="Query inventory (e.g. casting, tweezers, rolling mill)..."
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            onFocus={() => setIsSearchFocused(true)}
-                                            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                            className="w-full h-full bg-transparent pl-10 sm:pl-12 pr-10 text-xs font-black placeholder-text-tertiary text-text-primary focus:outline-none transition-all"
-                                        />
-                                        {searchQuery && (
-                                            <button
-                                                onClick={() => setSearchQuery('')}
-                                                className="absolute right-3.5 sm:right-5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-tertiary hover:text-text-primary transition-all"
-                                            > <X size={11} /> </button>
-                                        )}
-                                    </div>
-                                    <SearchAutocomplete
-                                        query={searchQuery}
-                                        onSelect={handleSearchSelect}
-                                        isVisible={isSearchFocused}
+                        {/* Search & Category Navigation */}
+                        <div className="mb-4 sm:mb-6 space-y-2.5 sm:space-y-3">
+                            {/* Search Input Box (Desktop; Mobile uses sticky search bar in header) */}
+                            <div className="hidden md:block relative z-40 bg-surface-1 border border-glass-border p-2 sm:p-2.5 rounded-xl sm:rounded-2xl shadow-lg" ref={searchContainerRef}>
+                                <div className="relative h-10 sm:h-12 flex items-center">
+                                    <Search className={`absolute left-3.5 sm:left-5 transition-all duration-300 ${isSearchFocused ? 'text-gold-primary scale-110' : 'text-text-tertiary'}`} size={16} />
+                                    <input
+                                        type="text"
+                                        placeholder="Query inventory (e.g. casting, tweezers, rolling mill)..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onFocus={() => setIsSearchFocused(true)}
+                                        onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                                        className="w-full h-full bg-transparent pl-10 sm:pl-12 pr-10 text-xs font-black placeholder-text-tertiary text-text-primary focus:outline-none transition-all"
                                     />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="absolute right-3.5 sm:right-5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-tertiary hover:text-text-primary transition-all"
+                                        > <X size={11} /> </button>
+                                    )}
                                 </div>
+                                <SearchAutocomplete
+                                    query={searchQuery}
+                                    onSelect={handleSearchSelect}
+                                    isVisible={isSearchFocused}
+                                />
+                            </div>
 
-                                {/* Controls */}
-                                <div className="flex items-center gap-2 w-full md:w-auto md:pl-3 md:border-l border-glass-border">
-                                    {/* Mobile Filter toggle */}
+                            {/* Category Browse Row: Beside "All Items", list all website's categories */}
+                            <div className="w-full overflow-x-auto no-scrollbar scroll-smooth -mx-0.5 px-0.5 py-1">
+                                <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
+                                    {ALL_STORE_CATEGORIES.map((cat) => {
+                                        const isSelected = selectedCategory.toLowerCase() === cat.key.toLowerCase() || 
+                                                           selectedCategory.toLowerCase() === cat.label.toLowerCase() ||
+                                                           cat.aliases.includes(selectedCategory.toLowerCase());
+                                        const Icon = cat.icon;
+                                        const count = cat.key === 'All' 
+                                            ? products.length 
+                                            : products.filter(p => {
+                                                const prodCat = (p.category || '').toLowerCase().trim();
+                                                return cat.aliases.some(a => prodCat.includes(a) || a.includes(prodCat));
+                                            }).length;
+                                        return (
+                                            <button
+                                                key={cat.key}
+                                                onClick={() => handleCategoryChange(cat.key)}
+                                                className={`group flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[10px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 whitespace-nowrap active:scale-95 ${
+                                                    isSelected
+                                                        ? 'bg-gradient-to-r from-[#DFCE9F] via-[#C5A059] to-[#9E7B35] text-black shadow-md shadow-[#C5A059]/20 font-black border border-[#DFCE9F]'
+                                                        : 'bg-surface-1/90 hover:bg-surface-2 text-text-secondary hover:text-text-primary border border-glass-border/70 hover:border-gold-primary/40'
+                                                }`}
+                                            >
+                                                <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-lg flex items-center justify-center transition-colors ${
+                                                    isSelected ? 'bg-black/15 text-black' : 'bg-surface-2 text-gold-primary group-hover:text-gold-secondary'
+                                                }`}>
+                                                    <Icon size={11} />
+                                                </span>
+                                                <span>{cat.label}</span>
+                                                <span className={`text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded-md font-mono ${
+                                                    isSelected ? 'bg-black/20 text-black font-black' : 'bg-surface-2 text-text-tertiary'
+                                                }`}>
+                                                    {count}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Secondary Controls Bar: Filter, Grid/List, Sort Selector & Matches Count */}
+                            <div className="flex items-center justify-between gap-2 pt-0.5 px-0.5">
+                                <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setShowFilters(true)}
-                                        className="lg:hidden flex-1 h-9 sm:h-12 px-4 text-black rounded-lg sm:rounded-xl font-black text-[9px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 uppercase shadow"
+                                        className="lg:hidden h-9 px-3.5 text-black rounded-lg font-black text-[10px] tracking-wider transition-all flex items-center gap-1.5 uppercase shadow active:scale-95"
                                         style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
                                     >
-                                        <Settings2 size={13} /> Filter
+                                        <Settings2 size={12} /> Filter
                                     </button>
+                                    <span className="text-[9px] font-black uppercase tracking-[0.15em] text-text-tertiary">
+                                        <span className="text-text-primary">{filteredProducts.length}</span> units
+                                        {selectedCategory !== 'All' && <span className="text-gold-primary ml-1.5 font-bold">· {selectedCategory}</span>}
+                                    </span>
+                                </div>
 
-                                    {/* Grid view switcher */}
+                                <div className="flex items-center gap-2">
                                     <div className="hidden md:flex items-center bg-surface-2 rounded-xl p-1 border border-glass-border">
                                         <button
                                             onClick={() => setDisplayMode('grid')}
-                                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${displayMode === 'grid' ? 'bg-surface-1 text-gold-primary shadow-sm border border-glass-border' : 'text-text-tertiary hover:text-text-primary'}`}
-                                        > <LayoutGrid size={15} /> </button>
+                                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${displayMode === 'grid' ? 'bg-surface-1 text-gold-primary shadow-sm border border-glass-border' : 'text-text-tertiary hover:text-text-primary'}`}
+                                        > <LayoutGrid size={14} /> </button>
                                         <button
                                             onClick={() => setDisplayMode('list')}
-                                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${displayMode === 'list' ? 'bg-surface-1 text-gold-primary shadow-sm border border-glass-border' : 'text-text-tertiary hover:text-text-primary'}`}
-                                        > <List size={15} /> </button>
+                                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${displayMode === 'list' ? 'bg-surface-1 text-gold-primary shadow-sm border border-glass-border' : 'text-text-tertiary hover:text-text-primary'}`}
+                                        > <List size={14} /> </button>
                                     </div>
 
-                                    {/* Custom Styled Sort Selector */}
-                                    <div className="relative min-w-[160px] h-12 flex items-center bg-[#151515] border border-[#343434] focus-within:border-[#A67C35] rounded-xl px-4 transition-all">
+                                    <div className="relative h-9 flex items-center bg-[#151515] border border-[#343434] focus-within:border-[#A67C35] rounded-lg px-3 transition-all">
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="w-full bg-transparent text-[10px] font-bold uppercase tracking-wider text-[#F8F3E8] appearance-none cursor-pointer outline-none pr-6"
+                                            className="w-full bg-transparent text-[10px] font-bold uppercase tracking-wider text-[#F8F3E8] appearance-none cursor-pointer outline-none pr-5"
                                         >
-                                            <option value="featured" className="bg-[#151515] text-[#F8F3E8]">Featured Sort</option>
+                                            <option value="featured" className="bg-[#151515] text-[#F8F3E8]">Featured</option>
                                             <option value="priceAsc" className="bg-[#151515] text-[#F8F3E8]">Price: Low to High</option>
                                             <option value="priceDesc" className="bg-[#151515] text-[#F8F3E8]">Price: High to Low</option>
                                             <option value="nameAsc" className="bg-[#151515] text-[#F8F3E8]">Name: A to Z</option>
                                         </select>
-                                        <ChevronDown size={14} className="absolute right-4 text-[#A67C35] pointer-events-none" />
+                                        <ChevronDown size={12} className="absolute right-2.5 text-[#A67C35] pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* Status indicators */}
-                        <div className="flex items-center justify-between mb-6 px-2">
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-tertiary">
-                                Matches: <span className="text-text-primary ml-1.5">{filteredProducts.length} hardware units</span>
-                                {selectedCategory !== 'All' && <span className="ml-3">Node: <span className="text-gold-primary">{selectedCategory}</span></span>}
-                            </span>
                         </div>
 
                         {/* Inventory Grid */}
@@ -324,22 +397,38 @@ function ShopContent() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowFilters(false)}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[200]"
+                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200]"
                         />
                         <motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 35, stiffness: 400 }}
-                            className="fixed inset-y-0 right-0 w-full max-w-xs bg-surface-1 border-l border-glass-border z-[210] shadow-2xl flex flex-col pt-20"
+                            transition={{ type: 'spring', damping: 30, stiffness: 350 }}
+                            className="fixed inset-y-0 right-0 w-full sm:w-[380px] max-w-full bg-[#141414] border-l border-[#343434] z-[210] shadow-2xl flex flex-col"
                         >
-                            <div className="p-6 flex items-center justify-between border-b border-glass-border">
-                                <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Configuration</h3>
-                                <button onClick={() => setShowFilters(false)} className="w-10 h-10 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-secondary hover:text-text-primary transition-all">
-                                    <X size={18} />
+                            {/* Mobile Drawer Header */}
+                            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-[#343434] bg-[#1A1A1A]">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-lg bg-[#A67C35]/15 border border-[#A67C35]/40 flex items-center justify-center text-[#A67C35]">
+                                        <Settings2 size={16} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-[#F8F3E8] uppercase tracking-wider">Catalog Filters</h3>
+                                        <span className="text-[9px] text-[#A67C35] font-bold uppercase tracking-widest">
+                                            {filteredProducts.length} matching units
+                                        </span>
+                                    </div>
+                                </div>
+                                <button 
+                                    onClick={() => setShowFilters(false)} 
+                                    className="w-8 h-8 rounded-lg bg-[#242424] border border-[#343434] hover:border-[#A67C35] flex items-center justify-center text-[#CFCFCF] hover:text-white transition-all active:scale-95"
+                                >
+                                    <X size={16} />
                                 </button>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-6">
+
+                            {/* Mobile Drawer Body with Detailed Filters */}
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
                                 <FilterSidebar
                                     categories={categories}
                                     selectedCategories={[selectedCategory]}
@@ -349,16 +438,32 @@ function ShopContent() {
                                     minPrice={minPrice}
                                     setMinPrice={setMinPrice}
                                     isRetail={isRetail}
+                                    inStockOnly={inStockOnly}
+                                    setInStockOnly={setInStockOnly}
+                                    sortBy={sortBy}
+                                    setSortBy={setSortBy}
+                                    totalProductsCount={filteredProducts.length}
+                                    onResetAll={handleClearFilters}
+                                    isMobileDrawer={true}
                                     className="bg-transparent border-none shadow-none p-0"
                                 />
                             </div>
-                            <div className="p-6 bg-surface-2 border-t border-glass-border">
+
+                            {/* Mobile Drawer Sticky Footer */}
+                            <div className="p-4 bg-[#1A1A1A] border-t border-[#343434] flex items-center gap-3">
+                                <button
+                                    onClick={handleClearFilters}
+                                    className="h-11 px-4 text-[10px] font-bold uppercase tracking-wider text-[#8E8E9A] hover:text-white transition-colors bg-[#242424] border border-[#343434] rounded-xl shrink-0 active:scale-95"
+                                >
+                                    Clear All
+                                </button>
                                 <button
                                     onClick={() => setShowFilters(false)}
-                                    className="w-full h-12 text-black font-black rounded-xl hover:opacity-90 transition-all shadow-md uppercase tracking-[0.2em] text-[9px]"
+                                    className="flex-1 h-11 text-black font-black rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-md uppercase tracking-[0.15em] text-[10px] flex items-center justify-center gap-1.5"
                                     style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
                                 >
-                                    Confirm filters
+                                    <span>Show {filteredProducts.length} Units</span>
+                                    <ChevronRight size={13} strokeWidth={2.5} />
                                 </button>
                             </div>
                         </motion.div>
