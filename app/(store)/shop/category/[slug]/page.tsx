@@ -134,10 +134,10 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
             />
 
-            <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-28 md:pt-40 pb-24 selection:bg-[#A67C35]/30">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-2 sm:pt-4 md:pt-6 pb-20 selection:bg-[#A67C35]/30">
+                <div className="max-w-[1400px] mx-auto px-3.5 sm:px-6 md:px-12">
                     {/* Visual Breadcrumbs */}
-                    <div className="mb-8">
+                    <div className="mb-3 sm:mb-6">
                         <Breadcrumbs
                             items={[
                                 { label: 'Inventory', href: '/shop' },

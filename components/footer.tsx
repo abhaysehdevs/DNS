@@ -39,15 +39,15 @@ export function Footer() {
     };
 
     return (
-        <footer className="relative bg-[#151515] border-t border-[#343434] pt-20 pb-10 overflow-hidden mt-auto">
+        <footer className="relative bg-[#151515] border-t border-[#343434] pt-10 sm:pt-20 pb-24 sm:pb-10 overflow-hidden mt-auto">
             {/* Top Gold Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#A67C35]/40 to-transparent" />
             
             {/* Ambient Shadow glow */}
             <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full pointer-events-none opacity-20 bg-gradient-to-br from-[#A67C35] to-transparent blur-[120px]" />
 
-            <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 mb-16 text-left">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 mb-8 sm:mb-16 text-left">
                     
                     {/* Brand details Column - Col Span 3 */}
                     <div className="lg:col-span-3 flex flex-col space-y-6">

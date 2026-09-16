@@ -57,7 +57,7 @@ export default function WishlistPage() {
     }, [wishlist]);
 
     return (
-        <div className="min-h-screen bg-[#0A0A0F] text-[#F5F5F7] pt-32 md:pt-48 pb-24 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
+        <div className="min-h-screen bg-[#0A0A0F] text-[#F5F5F7] pt-2 sm:pt-4 md:pt-6 pb-20 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
             
             {/* Ambient Background */}
             <div className="fixed inset-0 pointer-events-none">

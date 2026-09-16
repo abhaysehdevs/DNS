@@ -161,7 +161,7 @@ function ShopContent() {
         });
 
     return (
-        <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-44 pb-24 selection:bg-gold-primary/30 overflow-x-hidden">
+        <div className="min-h-screen bg-surface-2 text-text-primary pt-2 sm:pt-4 md:pt-6 pb-20 selection:bg-gold-primary/30 overflow-x-hidden">
             
             {/* Ambient Background Glows */}
             <div className="fixed inset-0 pointer-events-none z-0">
@@ -169,33 +169,33 @@ function ShopContent() {
                 <div className="absolute bottom-[20%] right-[-5%] w-[40vw] h-[40vw] bg-cyan-glow/5 dark:bg-cyan-glow/3 blur-[120px] rounded-full" />
             </div>
 
-            <div className="container mx-auto px-4 md:px-8 relative z-10">
+            <div className="container mx-auto px-3.5 sm:px-6 md:px-8 relative z-10">
                 
                 {/* Breadcrumbs & Title */}
-                <motion.div style={{ y: headerY }} className="mb-12">
-                    <div className="flex items-center gap-2 mb-4">
+                <motion.div style={{ y: headerY }} className="mb-3 sm:mb-6">
+                    <div className="flex items-center gap-1.5 mb-1.5">
                         <Link href="/" className="text-[9px] font-black uppercase tracking-[0.2em] text-text-tertiary hover:text-gold-primary transition-colors">Home</Link>
                         <ChevronRight size={10} className="text-text-tertiary" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gold-primary">Technical Catalog</span>
                     </div>
 
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-2 sm:gap-6">
                         <div>
                             <motion.div 
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-gold text-gold-primary text-[8px] font-black uppercase tracking-[0.2em] mb-4 shadow"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full glass-gold text-gold-primary text-[7.5px] font-black uppercase tracking-[0.18em] mb-1.5 shadow"
                             >
-                                <Sparkles size={11} className="animate-pulse" /> Precision Workshop Units
+                                <Sparkles size={10} className="animate-pulse" /> Precision Workshop Units
                             </motion.div>
-                            <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-none uppercase text-text-primary">
+                            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-none uppercase text-text-primary">
                                 Our <span className="text-transparent bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text">Hardware</span>
                             </h1>
                         </div>
                     </div>
                 </motion.div>
 
-                <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
                     
                     {/* Left Sticky Filters Sidebar */}
                     <aside className="hidden lg:block w-[260px] shrink-0 sticky top-36 self-start">
@@ -216,13 +216,13 @@ function ShopContent() {
                     <main className="flex-1 min-w-0">
                         
                         {/* Search & Sort Panel */}
-                        <div className="mb-8">
-                            <div className="flex flex-col md:flex-row gap-3 items-center bg-surface-1 border border-glass-border p-2.5 rounded-2xl shadow-xl relative z-50">
+                        <div className="mb-4 sm:mb-6">
+                            <div className="flex flex-col md:flex-row gap-2.5 sm:gap-3 items-center bg-surface-1 border border-glass-border p-2 sm:p-2.5 rounded-xl sm:rounded-2xl shadow-xl relative z-50">
                                 
                                 {/* Search input */}
                                 <div className="flex-1 relative w-full" ref={searchContainerRef}>
-                                    <div className="relative h-12 flex items-center">
-                                        <Search className={`absolute left-5 transition-all duration-300 ${isSearchFocused ? 'text-gold-primary scale-110' : 'text-text-tertiary'}`} size={16} />
+                                    <div className="relative h-10 sm:h-12 flex items-center">
+                                        <Search className={`absolute left-3.5 sm:left-5 transition-all duration-300 ${isSearchFocused ? 'text-gold-primary scale-110' : 'text-text-tertiary'}`} size={15} />
                                         <input
                                             type="text"
                                             placeholder="Query inventory (e.g. casting, tweezers, rolling mill)..."
@@ -230,13 +230,13 @@ function ShopContent() {
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             onFocus={() => setIsSearchFocused(true)}
                                             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                            className="w-full h-full bg-transparent pl-12 pr-10 text-xs font-black placeholder-text-tertiary text-text-primary focus:outline-none transition-all"
+                                            className="w-full h-full bg-transparent pl-10 sm:pl-12 pr-10 text-xs font-black placeholder-text-tertiary text-text-primary focus:outline-none transition-all"
                                         />
                                         {searchQuery && (
                                             <button
                                                 onClick={() => setSearchQuery('')}
-                                                className="absolute right-5 w-6 h-6 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-tertiary hover:text-text-primary transition-all"
-                                            > <X size={12} /> </button>
+                                                className="absolute right-3.5 sm:right-5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-2 border border-glass-border flex items-center justify-center text-text-tertiary hover:text-text-primary transition-all"
+                                            > <X size={11} /> </button>
                                         )}
                                     </div>
                                     <SearchAutocomplete
@@ -251,10 +251,10 @@ function ShopContent() {
                                     {/* Mobile Filter toggle */}
                                     <button
                                         onClick={() => setShowFilters(true)}
-                                        className="lg:hidden flex-1 h-12 px-5 text-black rounded-xl font-black text-[9px] tracking-[0.2em] transition-all flex items-center justify-center gap-2 uppercase shadow"
+                                        className="lg:hidden flex-1 h-9 sm:h-12 px-4 text-black rounded-lg sm:rounded-xl font-black text-[9px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 uppercase shadow"
                                         style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
                                     >
-                                        <Settings2 size={14} /> Filter
+                                        <Settings2 size={13} /> Filter
                                     </button>
 
                                     {/* Grid view switcher */}

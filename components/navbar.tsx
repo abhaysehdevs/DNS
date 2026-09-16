@@ -144,7 +144,7 @@ export function Navbar() {
             >
                 {/* 1. TOP ANNOUNCEMENT BAR */}
                 <div 
-                    className="w-full border-b border-[#343434] py-2 px-4 md:px-6 transition-all duration-500"
+                    className="w-full border-b border-[#343434] py-1.5 md:py-2 px-3 md:px-6 transition-all duration-500"
                     style={{
                         backgroundColor: announcements.length > 0 ? announcements[currentAnnIndex].background_color : '#1E1E1E'
                     }}
@@ -194,19 +194,19 @@ export function Navbar() {
                 </div>
 
                 {/* 2. MAIN HEADER BAR */}
-                <div className="w-full py-4 px-4 md:px-6">
-                    <div className="container mx-auto flex items-center justify-between gap-3 md:gap-6">
+                <div className="w-full py-2.5 md:py-4 px-3 md:px-6">
+                    <div className="container mx-auto flex items-center justify-between gap-2.5 md:gap-6">
                         {/* Logo & Brand Identity */}
-                        <Link href="/" className="flex items-center gap-3 md:gap-4 shrink-0 group">
-                            <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-[#1E1E1E] border border-[#343434] flex items-center justify-center relative overflow-hidden group-hover:border-[#A67C35]/60 transition-all duration-500 shadow-2xl shrink-0">
+                        <Link href="/" className="flex items-center gap-2.5 md:gap-4 shrink-0 group">
+                            <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 rounded-full bg-[#1E1E1E] border border-[#343434] flex items-center justify-center relative overflow-hidden group-hover:border-[#A67C35]/60 transition-all duration-500 shadow-2xl shrink-0">
                                 <div className="absolute inset-0 bg-[#A67C35]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <img src="/images/logo.png" className="w-10 h-10 md:w-16 md:h-16 object-contain relative z-10 scale-105 group-hover:scale-110 transition-transform duration-300" alt="Dinanath & Sons Logo" onError={(e) => {
+                                <img src="/images/logo.png" className="w-7 h-7 sm:w-10 sm:h-10 md:w-16 md:h-16 object-contain relative z-10 scale-105 group-hover:scale-110 transition-transform duration-300" alt="Dinanath & Sons Logo" onError={(e) => {
                                     (e.target as HTMLImageElement).src = '/logo.png';
                                 }} />
                             </div>
                             <div className="flex flex-col text-left">
-                                <span className="text-base xs:text-lg md:text-2xl font-black font-display text-[#F8F3E8] tracking-wider uppercase leading-none group-hover:text-[#A67C35] transition-colors">Dinanath & Sons</span>
-                                <span className="text-[8px] md:text-[9.5px] font-bold text-[#A67C35] tracking-[0.25em] uppercase mt-1.5 hidden sm:block">Jewellery Tools & Equipment — Since 1960</span>
+                                <span className="text-sm sm:text-base md:text-2xl font-black font-display text-[#F8F3E8] tracking-wider uppercase leading-none group-hover:text-[#A67C35] transition-colors">Dinanath & Sons</span>
+                                <span className="text-[8px] md:text-[9.5px] font-bold text-[#A67C35] tracking-[0.25em] uppercase mt-1 hidden sm:block">Jewellery Tools & Equipment — Since 1960</span>
                             </div>
                         </Link>
 
@@ -295,7 +295,7 @@ export function Navbar() {
                                  onMouseLeave={handleMouseLeave}
                                  className="flex items-center gap-2.5 group"
                             >
-                                <div className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] relative group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] relative group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
                                     <ShoppingCart size={16} />
                                     {cart.length > 0 && (
                                         <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#D12A1C] text-white text-[8px] font-black rounded-full flex items-center justify-center shadow animate-pulse">{cart.length}</span>
@@ -308,7 +308,7 @@ export function Navbar() {
                             </Link>
 
                             {/* Mobile Hamburger toggle */}
-                            <button onClick={() => setIsMenuOpen(true)} className="lg:hidden w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#F8F3E8]"><Menu size={20} /></button>
+                            <button onClick={() => setIsMenuOpen(true)} className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#F8F3E8]"><Menu size={18} /></button>
                         </div>
                     </div>
                 </div>
@@ -379,10 +379,10 @@ export function Navbar() {
                         {/* AI Assistant Quick Trigger */}
                         <button
                             onClick={() => window.dispatchEvent(new CustomEvent('open-ai-assistant'))}
-                            className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600/20 to-indigo-600/20 hover:from-blue-600/30 hover:to-indigo-600/30 border border-blue-500/30 text-blue-400 hover:text-blue-300 text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm group shrink-0 ml-4"
-                            title="Open Dinanath AI Electrical & Load Advisor"
+                            className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#A67C35]/10 hover:bg-[#A67C35]/25 border border-[#A67C35]/40 text-[#A67C35] hover:text-[#DFCE9F] text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm group shrink-0 ml-4"
+                            title="Open Dinanath AI Jewellery Tools Assistant"
                         >
-                            <Sparkles size={13} className="text-blue-400 group-hover:rotate-12 transition-transform" />
+                            <Sparkles size={13} className="text-[#A67C35] group-hover:rotate-12 transition-transform" />
                             <span>Ask Dinanath AI</span>
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         </button>

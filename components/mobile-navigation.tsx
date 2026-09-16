@@ -17,15 +17,15 @@ export function MobileBottomNav() {
     ];
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-[100] px-4 pb-4 animate-in fade-in duration-300">
-            <div className="h-[68px] flex items-center justify-around px-4 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)] bg-[#1E1E1E]/95 backdrop-blur-2xl border border-[#343434]">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-[100] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] animate-in fade-in duration-300 pointer-events-none">
+            <div className="pointer-events-auto h-[62px] flex items-center justify-around px-2 rounded-full shadow-[0_12px_36px_rgba(0,0,0,0.8)] bg-[#1A1A1A]/95 backdrop-blur-2xl border border-[#343434] max-w-md mx-auto">
                 {navItems.map((item, i) => {
                     const isActive = pathname === item.href;
                     return (
                         <Link
                             key={i}
                             href={item.href}
-                            className="relative flex flex-col items-center justify-center gap-1 group min-w-[60px]"
+                            className="relative flex flex-col items-center justify-center gap-1 group min-w-[54px] py-1"
                             onClick={(e) => {
                                 if (item.isAction) {
                                     e.preventDefault();
@@ -39,12 +39,12 @@ export function MobileBottomNav() {
                             {isActive && (
                                 <motion.div
                                     layoutId="mobile-nav-pill"
-                                    className="absolute -inset-x-2 -inset-y-1 rounded-full -z-10 bg-[#A67C35]/10 border border-[#A67C35]/20"
+                                    className="absolute -inset-x-1.5 -inset-y-0.5 rounded-full -z-10 bg-[#A67C35]/15 border border-[#A67C35]/30"
                                     transition={{ type: "spring", damping: 25, stiffness: 350 }}
                                 />
                             )}
-                            <item.icon size={20} className={isActive ? 'text-[#A67C35]' : 'text-[#8E8E9A]'} strokeWidth={2} />
-                            <span className={`text-[8px] font-bold uppercase tracking-[0.1em] ${isActive ? 'text-[#A67C35]' : 'text-[#CFCFCF]'}`}>
+                            <item.icon size={19} className={isActive ? 'text-[#A67C35]' : 'text-[#8E8E9A] group-hover:text-[#F8F3E8]'} strokeWidth={2} />
+                            <span className={`text-[8px] font-bold uppercase tracking-[0.08em] ${isActive ? 'text-[#A67C35]' : 'text-[#CFCFCF]'}`}>
                                 {item.label}
                             </span>
                         </Link>

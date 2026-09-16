@@ -19,7 +19,7 @@ export default function StoreLayout({
       <LanguagePopup />
       <AIAssistant />
       <MobileBottomNav />
-      <main className="flex-1 pt-20 md:pt-24 pb-28 md:pb-0">
+      <main className="flex-1 pt-[82px] sm:pt-[92px] md:pt-24 pb-24 md:pb-0">
         {children}
       </main>
       <Footer />

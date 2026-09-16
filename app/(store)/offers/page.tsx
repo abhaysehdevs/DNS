@@ -109,9 +109,9 @@ export default function OffersPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-32 pb-20 px-6">
+        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-2 sm:pt-4 md:pt-6 pb-20 px-3.5 sm:px-6">
             <div className="container mx-auto max-w-7xl">
-                <div className="mb-10 flex items-center gap-4">
+                <div className="mb-4 sm:mb-8 flex items-center gap-4">
                     <Link href="/shop" className="text-xs font-bold text-[#8E8E9A] hover:text-[#A67C35] transition-colors flex items-center gap-2">
                         <ArrowLeft size={16} /> BACK TO CATALOG
                     </Link>

@@ -351,7 +351,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-40 md:pt-60 pb-24 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
+        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-2 sm:pt-4 md:pt-6 pb-20 noise-overlay selection:bg-[#C9A84C]/30 overflow-x-hidden">
             
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/5 blur-[120px] rounded-full" />

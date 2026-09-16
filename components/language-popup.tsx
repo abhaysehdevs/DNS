@@ -103,93 +103,119 @@ export function LanguagePopup() {
     return (
         <AnimatePresence>
             {isVisible && (
-                <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center pointer-events-none p-4 sm:p-0">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-3.5 sm:p-4">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
+                        className="absolute inset-0 bg-black/75 backdrop-blur-md pointer-events-auto"
                         onClick={handleDismiss}
                     />
 
                     {/* Popup Card */}
                     <motion.div
-                        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="relative bg-black border-4 border-[#F5D800] rounded-none p-6 w-full max-w-md shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] pointer-events-auto overflow-hidden text-white"
+                        transition={{ duration: 0.25 }}
+                        className="relative bg-[#141414]/95 border border-[#A67C35]/40 rounded-2xl p-4 sm:p-5 w-full max-w-sm sm:max-w-md shadow-2xl backdrop-blur-2xl pointer-events-auto overflow-hidden text-[#F8F3E8]"
                     >
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-[#F5D800] text-black p-2 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                        <Languages size={22} strokeWidth={2.5} />
+                        {/* Ambient Gold Glow */}
+                        <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-[#A67C35]/20 blur-[60px] pointer-events-none" />
+
+                        <div className="relative z-10 space-y-3.5">
+                            {/* Header */}
+                            <div className="flex justify-between items-center pb-2 border-b border-[#303030]">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-xl bg-[#A67C35]/15 border border-[#A67C35]/40 flex items-center justify-center text-[#A67C35] shrink-0">
+                                        <Languages size={17} strokeWidth={2.2} />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-black text-white uppercase tracking-wider">Choose Language</h3>
-                                        <p className="text-[10px] text-[#F5D800] font-bold uppercase tracking-widest mt-0.5">अपनी भाषा चुनें</p>
+                                        <h3 className="text-sm sm:text-base font-black font-display text-white uppercase tracking-wider leading-none">Choose Language</h3>
+                                        <p className="text-[9px] text-[#DFCE9F] font-bold uppercase tracking-wider mt-0.5 leading-none">अपनी भाषा चुनें</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={handleDismiss}
-                                    className="text-gray-400 hover:text-white transition-colors p-1 border border-transparent hover:border-white/20"
+                                    className="w-7 h-7 rounded-full bg-[#202020] border border-[#343434] hover:border-[#A67C35] flex items-center justify-center text-[#8E8E9A] hover:text-white transition-colors cursor-pointer"
                                 >
-                                    <X size={20} />
+                                    <X size={15} />
                                 </button>
                             </div>
 
-                            <p className="text-gray-300 mb-6 text-xs leading-relaxed font-semibold uppercase tracking-wide">
-                                Select your preferred language for precision browsing.
-                                <br />
-                                <span className="text-gray-500 text-[10px] block mt-1">आप अपनी क्षेत्रीय भाषा में वेबसाइट देख सकते हैं।</span>
-                            </p>
-
-                            <div className="grid grid-cols-2 gap-3 max-h-[250px] overflow-y-auto pr-1 custom-scrollbar">
-                                {LANGUAGES.map((lang) => (
-                                    <button
-                                        key={lang.code}
-                                        onClick={() => handleSelectLanguage(lang.code)}
-                                        className={`flex flex-col items-start p-3 rounded-none border-2 transition-all ${language === lang.code
-                                            ? 'bg-[#F5D800] border-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-black'
-                                            : 'bg-[#151515] border-white/10 text-gray-300 hover:border-[#F5D800] hover:text-white'
-                                            }`}
-                                    >
-                                        <span className="text-sm font-black">{lang.native}</span>
-                                        <span className={`text-[10px] font-bold ${language === lang.code ? 'text-black/60' : 'text-gray-500'}`}>{lang.name}</span>
-                                    </button>
-                                ))}
+                            {/* Languages Grid */}
+                            <div>
+                                <div className="text-[9px] font-mono font-bold tracking-wider text-[#8E8E9A] uppercase mb-1.5">
+                                    Regional Language / भाषा
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {LANGUAGES.map((lang) => {
+                                        const isSelected = language === lang.code;
+                                        return (
+                                            <button
+                                                key={lang.code}
+                                                onClick={() => handleSelectLanguage(lang.code)}
+                                                className={`flex items-center justify-between px-3 py-2 rounded-xl border text-left transition-all cursor-pointer ${
+                                                    isSelected
+                                                        ? 'bg-[#A67C35] border-[#A67C35] text-black shadow-md font-bold'
+                                                        : 'bg-[#1C1C1C] border-[#2E2E2E] text-[#D0D0D5] hover:border-[#A67C35]/50 hover:text-white'
+                                                }`}
+                                            >
+                                                <span className="text-xs font-bold leading-none">{lang.native}</span>
+                                                <span className={`text-[8.5px] uppercase tracking-wider font-mono ${isSelected ? 'text-black/70' : 'text-[#888]'}`}>
+                                                    {lang.name}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             {/* Currency Selector */}
-                            <div className="mt-6 border-t-2 border-white/15 pt-6">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="bg-[#F5D800] text-black p-2 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                        <Globe size={18} strokeWidth={2.5} />
+                            <div className="pt-2 border-t border-[#303030]">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <div className="flex items-center gap-1.5">
+                                        <Globe size={13} className="text-[#A67C35]" />
+                                        <span className="text-[9px] font-mono font-bold tracking-wider text-[#8E8E9A] uppercase">
+                                            Currency / मुद्रा
+                                        </span>
                                     </div>
-                                    <div>
-                                        <h4 className="text-xs font-black text-white uppercase tracking-wider">Choose Currency</h4>
-                                        <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wider block mt-0.5">Dynamic Exchange Conversion</span>
-                                    </div>
+                                    <span className="text-[8px] text-[#A67C35] font-mono font-bold">
+                                        Auto-Converted
+                                    </span>
                                 </div>
 
-                                <div className="grid grid-cols-3 gap-2">
-                                    {CURRENCIES.map((curr) => (
-                                        <button
-                                            key={curr.code}
-                                            onClick={() => handleSelectCurrency(curr.code)}
-                                            className={`flex items-center justify-center gap-2.5 py-3 px-2 rounded-none border-2 text-xs font-black uppercase tracking-wider transition-all ${
-                                                currencyData.code === curr.code
-                                                    ? 'bg-[#F5D800] border-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
-                                                    : 'bg-[#151515] border-white/10 text-gray-400 hover:border-white/20 hover:text-white'
-                                            }`}
-                                        >
-                                            <span className="text-sm">{curr.symbol}</span>
-                                            <span>{curr.code}</span>
-                                        </button>
-                                    ))}
+                                <div className="grid grid-cols-5 gap-1.5">
+                                    {CURRENCIES.map((curr) => {
+                                        const isSelected = currencyData.code === curr.code;
+                                        return (
+                                            <button
+                                                key={curr.code}
+                                                onClick={() => handleSelectCurrency(curr.code)}
+                                                className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl border text-center transition-all cursor-pointer ${
+                                                    isSelected
+                                                        ? 'bg-[#A67C35] border-[#A67C35] text-black shadow-md font-bold'
+                                                        : 'bg-[#1C1C1C] border-[#2E2E2E] text-[#A0A0A5] hover:border-[#A67C35]/50 hover:text-white'
+                                                }`}
+                                            >
+                                                <span className="text-xs font-bold leading-none">{curr.symbol}</span>
+                                                <span className={`text-[8px] font-mono mt-0.5 leading-none uppercase ${isSelected ? 'text-black/80 font-black' : 'text-[#888]'}`}>
+                                                    {curr.code}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
+
+                            {/* Done Button */}
+                            <button
+                                onClick={handleDismiss}
+                                className="w-full h-8.5 bg-[#252525] border border-[#3E3E3E] hover:border-[#A67C35] text-[#F8F3E8] hover:text-[#A67C35] font-bold uppercase tracking-wider text-[9px] rounded-xl transition-all flex items-center justify-center mt-1 cursor-pointer"
+                            >
+                                Continue Browsing
+                            </button>
                         </div>
                     </motion.div>
                 </div>

@@ -170,16 +170,16 @@ export default function Home() {
             <Hero />
 
             {/* 1. TRUST STRIP */}
-            <section className="relative z-30 bg-[#1E1E1E] border-y border-[#343434] py-8 px-6">
+            <section className="relative z-30 bg-[#1E1E1E] border-y border-[#343434] py-5 sm:py-8 px-3 sm:px-6">
                 <div className="container mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-6">
                         {trustStripItems.map((item, i) => (
-                            <div key={i} className="flex flex-col items-center text-center p-3 group">
-                                <div className="w-10 h-10 rounded-lg bg-[#242424] border border-[#343434] flex items-center justify-center mb-3 text-[#A67C35] group-hover:scale-110 transition-transform">
-                                    <item.icon size={18} strokeWidth={2} />
+                            <div key={i} className="flex flex-col items-center text-center p-2 sm:p-3 group">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#242424] border border-[#343434] flex items-center justify-center mb-2 sm:mb-3 text-[#A67C35] group-hover:scale-110 transition-transform">
+                                    <item.icon size={16} strokeWidth={2} />
                                 </div>
-                                <h4 className="text-[10px] font-bold text-[#F8F3E8] uppercase tracking-wider mb-0.5">{item.title}</h4>
-                                <p className="text-[8px] text-[#CFCFCF] tracking-wide uppercase font-semibold">{item.desc}</p>
+                                <h4 className="text-[9.5px] sm:text-[10px] font-bold text-[#F8F3E8] uppercase tracking-wider mb-0.5">{item.title}</h4>
+                                <p className="text-[7.5px] sm:text-[8px] text-[#CFCFCF] tracking-wide uppercase font-semibold">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -187,18 +187,18 @@ export default function Home() {
             </section>
 
             {/* 2. CATEGORIES SECTION */}
-            <section className="py-24 px-6 bg-[#151515] border-b border-[#343434] relative">
+            <section className="py-10 sm:py-16 md:py-24 px-3.5 sm:px-6 bg-[#151515] border-b border-[#343434] relative">
                 <div className="container mx-auto">
-                    <div className="text-center mb-16">
-                        <div className="h-0.5 w-16 bg-[#A67C35] mx-auto mb-4" />
-                        <h2 className="text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-2">Shop By Category</h2>
-                        <p className="text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
+                    <div className="text-center mb-8 sm:mb-16">
+                        <div className="h-0.5 w-12 sm:w-16 bg-[#A67C35] mx-auto mb-3 sm:mb-4" />
+                        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1.5 sm:mb-2">Shop By Category</h2>
+                        <p className="text-[8.5px] sm:text-[10px] font-bold text-[#A67C35] uppercase tracking-[0.25em]">Precision crafted tool catalogs</p>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-6">
                         {homeCategories.map((cat, i) => (
                             <Link href={cat.href} key={i} className="group flex flex-col bg-[#242424] border border-[#343434] hover:border-[#A67C35] rounded-xl overflow-hidden shadow-lg transition-all hover:-translate-y-1">
-                                <div className="aspect-[4/3] w-full bg-[#1E1E1E] p-4 flex items-center justify-center overflow-hidden relative">
+                                <div className="aspect-[4/3] w-full bg-[#1E1E1E] p-3 sm:p-4 flex items-center justify-center overflow-hidden relative">
                                     <img 
                                         src={cat.img} 
                                         alt={cat.name} 
@@ -208,13 +208,13 @@ export default function Home() {
                                         }}
                                     />
                                 </div>
-                                <div className="p-4 flex items-center justify-between gap-2 border-t border-[#343434]">
-                                    <div className="flex flex-col text-left">
-                                        <h4 className="text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider">{cat.name}</h4>
-                                        <span className="text-[8px] text-[#8E8E9A] uppercase font-bold mt-0.5">{cat.count}</span>
+                                <div className="p-2.5 sm:p-4 flex items-center justify-between gap-1.5 sm:gap-2 border-t border-[#343434]">
+                                    <div className="flex flex-col text-left min-w-0">
+                                        <h4 className="text-[10px] sm:text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider truncate">{cat.name}</h4>
+                                        <span className="text-[7.5px] sm:text-[8px] text-[#8E8E9A] uppercase font-bold mt-0.5">{cat.count}</span>
                                     </div>
-                                    <div className="w-6 h-6 rounded-full bg-[#343434] group-hover:bg-[#A67C35] group-hover:text-black flex items-center justify-center text-[#CFCFCF] transition-colors">
-                                        <ChevronRight size={12} strokeWidth={2.5} />
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#343434] group-hover:bg-[#A67C35] group-hover:text-black flex items-center justify-center text-[#CFCFCF] transition-colors shrink-0">
+                                        <ChevronRight size={11} strokeWidth={2.5} />
                                     </div>
                                 </div>
                             </Link>
@@ -229,19 +229,19 @@ export default function Home() {
                     const colProducts = collectionsProducts[col.id] || [];
                     if (colProducts.length === 0) return null;
                     return (
-                        <section key={col.id} className="py-24 px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
+                        <section key={col.id} className="py-10 sm:py-16 md:py-24 px-3.5 sm:px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
                             <div className="container mx-auto">
-                                <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#343434] pb-6 gap-4 text-center sm:text-left">
+                                <div className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-16 border-b border-[#343434] pb-4 sm:pb-6 gap-3 sm:gap-4 text-center sm:text-left">
                                     <div>
-                                        <h2 className="text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">{col.name}</h2>
-                                        <p className="text-[9px] font-bold text-[#A67C35] uppercase tracking-[0.2em]">Curated {col.name.toLowerCase()} catalog</p>
+                                        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">{col.name}</h2>
+                                        <p className="text-[8px] sm:text-[9px] font-bold text-[#A67C35] uppercase tracking-[0.2em]">Curated {col.name.toLowerCase()} catalog</p>
                                     </div>
-                                    <Link href={`/shop?cat=${col.query.replace('category=', '')}`} className="group text-[10px] font-bold text-[#CFCFCF] hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                                    <Link href={`/shop?cat=${col.query.replace('category=', '')}`} className="group text-[9px] sm:text-[10px] font-bold text-[#CFCFCF] hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
                                         <span>View Collection</span>
                                         <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                                     </Link>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-6">
                                     {colProducts.map((product) => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}
@@ -252,26 +252,26 @@ export default function Home() {
                 })
             ) : (
                 /* Fallback New Arrivals */
-                <section className="py-24 px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
+                <section className="py-10 sm:py-16 md:py-24 px-3.5 sm:px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
                     <div className="container mx-auto">
-                        <div className="flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-[#343434] pb-6 gap-4 text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-16 border-b border-[#343434] pb-4 sm:pb-6 gap-3 sm:gap-4 text-center sm:text-left">
                             <div>
-                                <h2 className="text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">New Arrivals</h2>
-                                <p className="text-[9px] font-bold text-[#A67C35] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
+                                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display text-[#F8F3E8] tracking-wider uppercase mb-1">New Arrivals</h2>
+                                <p className="text-[8px] sm:text-[9px] font-bold text-[#A67C35] uppercase tracking-[0.2em]">Latest machinery updates and tool modifications</p>
                             </div>
-                            <Link href="/shop" className="group text-[10px] font-bold text-[#CFCFCF] hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                            <Link href="/shop" className="group text-[9px] sm:text-[10px] font-bold text-[#CFCFCF] hover:text-[#A67C35] uppercase tracking-widest flex items-center gap-2 transition-colors">
                                 <span>View All Products</span>
                                 <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
                         </div>
 
                         {loading ? (
-                            <div className="flex flex-col items-center justify-center py-20 gap-4">
+                            <div className="flex flex-col items-center justify-center py-16 sm:py-20 gap-4">
                                 <Loader2 className="w-8 h-8 animate-spin text-[#A67C35]" />
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#A67C35]">Loading inventory...</span>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-6">
                                 {newArrivals.map((product) => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}
@@ -282,17 +282,17 @@ export default function Home() {
             )}
 
             {/* 4. ABOUT & WHY CHOOSE US (Dark theme background) */}
-            <section className="py-24 px-6 bg-[#151515] border-b border-[#343434] relative">
+            <section className="py-10 sm:py-16 md:py-24 px-3.5 sm:px-6 bg-[#151515] border-b border-[#343434] relative">
                 <div className="container mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-start">
                         
                         {/* About Us Description */}
-                        <div className="lg:col-span-7 flex flex-col text-left space-y-6">
-                            <h4 className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#A67C35] border-b border-[#343434] pb-2">About Dinanath & Sons</h4>
-                            <h2 className="text-3xl md:text-5xl font-bold font-display tracking-wider uppercase text-[#F8F3E8] leading-tight">
-                                India's Trusted Jewelry Tool <br/> Experts Since 1960
+                        <div className="lg:col-span-7 flex flex-col text-left space-y-4 sm:space-y-6">
+                            <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] text-[#A67C35] border-b border-[#343434] pb-2">About Dinanath & Sons</h4>
+                            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display tracking-wider uppercase text-[#F8F3E8] leading-tight">
+                                India's Trusted Jewelry Tool <br className="hidden sm:inline"/> Experts Since 1960
                             </h2>
-                            <div className="text-sm text-[#CFCFCF] font-medium leading-relaxed space-y-4">
+                            <div className="text-xs sm:text-sm text-[#CFCFCF] font-medium leading-relaxed space-y-3 sm:space-y-4">
                                 <p>
                                     Established in 1960 by <strong>Mr. Dinanath Sehdev</strong>, our company began with a humble workshop in Maliwara, Chandni Chowk, Delhi. We set out with a singular target: to supply master jewellers with precision tools that match their artistry.
                                 </p>
@@ -300,9 +300,9 @@ export default function Home() {
                                     Through three generations of dedication, Dinanath & Sons has evolved into India's trusted authority for jewelry-making machinery, metallurgical equipment, and finishing consumables. We partner directly with casting workshops and manufacturers nationwide to raise production efficiency.
                                 </p>
                             </div>
-                            <div className="pt-4">
+                            <div className="pt-2 sm:pt-4">
                                 <Link href="/about">
-                                    <button className="h-12 px-8 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9px] rounded-lg transition-all hover:scale-105 active:scale-95 shadow-md">
+                                    <button className="h-10 sm:h-12 px-6 sm:px-8 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[8.5px] sm:text-[9px] rounded-lg transition-all hover:scale-105 active:scale-95 shadow-md">
                                         Know More About Us
                                     </button>
                                 </Link>
@@ -310,22 +310,17 @@ export default function Home() {
                         </div>
 
                         {/* Why Choose Us */}
-                        <div className="lg:col-span-5 flex flex-col space-y-8 text-left bg-[#1E1E1E] border border-[#343434] rounded-xl p-8 shadow-xl">
+                        <div className="lg:col-span-5 flex flex-col space-y-6 sm:space-y-8 text-left bg-[#1E1E1E] border border-[#343434] rounded-xl p-5 sm:p-8 shadow-xl">
                             <div>
-                                <h3 className="text-xl md:text-2xl font-bold font-display text-[#A67C35] uppercase tracking-wider mb-2">Why Choose Us?</h3>
-                                <p className="text-[9px] text-[#8E8E9A] uppercase tracking-widest font-bold border-b border-[#343434] pb-4">Our legacy directives</p>
+                                <h3 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-[#A67C35] uppercase tracking-wider mb-1.5 sm:mb-2">Why Choose Us?</h3>
+                                <p className="text-[8px] sm:text-[9px] text-[#8E8E9A] uppercase tracking-widest font-bold border-b border-[#343434] pb-3 sm:pb-4">Our legacy directives</p>
                             </div>
 
-                            <div className="space-y-6">
+                            <div className="space-y-4 sm:space-y-6">
                                 {whyChooseUsItems.map((item, i) => (
-                                    <div key={i} className="flex gap-4 items-start">
-                                        <div className="w-7 h-7 rounded-full bg-[#242424] border border-[#343434] text-[#A67C35] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow">
-                                            {i + 1}
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <h4 className="text-xs font-bold text-[#F8F3E8] uppercase tracking-wider mb-1">{item.title}</h4>
-                                            <p className="text-[10px] text-[#CFCFCF] font-medium leading-normal">{item.desc}</p>
-                                        </div>
+                                    <div key={i} className="flex flex-col text-left">
+                                        <h4 className="text-xs sm:text-sm font-bold text-[#F8F3E8] uppercase tracking-wider">{item.title}</h4>
+                                        <p className="text-[11px] sm:text-xs text-[#8E8E9A] mt-1">{item.desc}</p>
                                     </div>
                                 ))}
                             </div>
@@ -336,11 +331,11 @@ export default function Home() {
             </section>
 
             {/* 5. NEWSLETTER FORM (Rich Charcoal background) */}
-            <section className="py-20 px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
+            <section className="py-10 sm:py-16 md:py-20 px-3.5 sm:px-6 bg-[#1E1E1E] relative border-b border-[#343434]">
                 <div className="absolute right-0 bottom-0 w-[25vw] h-[25vw] bg-[#A67C35]/5 blur-[90px] rounded-full pointer-events-none opacity-40" />
                 <div className="container mx-auto max-w-4xl">
-                    <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-                        <div className="flex-1 text-center md:text-left space-y-4">
+                    <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
+                        <div className="flex-1 text-center md:text-left space-y-2 sm:space-y-4">
                             <h2 className="text-2xl md:text-4xl font-bold font-display uppercase tracking-wider text-[#F8F3E8]">Newsletter</h2>
                             <p className="text-xs text-[#CFCFCF] font-semibold leading-relaxed uppercase tracking-wide">
                                 Subscribe to get updates on new arrivals, offers, and technical logs.
@@ -352,19 +347,19 @@ export default function Home() {
                                     Thanks for subscribing!
                                 </div>
                             ) : (
-                                <form className="flex flex-col sm:flex-row gap-3.5" onSubmit={handleNewsletterSubmit}>
+                                <form className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5" onSubmit={handleNewsletterSubmit}>
                                     <input 
                                         required 
                                         type="email" 
                                         placeholder="ENTER YOUR EMAIL" 
                                         value={newsletterEmail}
                                         onChange={e => setNewsletterEmail(e.target.value)}
-                                        className="flex-1 h-12 bg-[#151515] border border-[#343434] rounded-lg px-4 text-xs font-semibold tracking-wider text-[#F8F3E8] focus:outline-none focus:border-[#A67C35] transition-all placeholder-[#8E8E9A]" 
+                                        className="flex-1 h-10 sm:h-12 bg-[#151515] border border-[#343434] rounded-lg px-4 text-xs font-semibold tracking-wider text-[#F8F3E8] focus:outline-none focus:border-[#A67C35] transition-all placeholder-[#8E8E9A]" 
                                     />
                                     <button 
                                         type="submit" 
                                         disabled={submitting}
-                                        className="h-12 bg-[#A67C35] hover:bg-[#8A6232] disabled:opacity-50 text-black font-bold px-8 rounded-lg text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow flex items-center justify-center"
+                                        className="h-10 sm:h-12 bg-[#A67C35] hover:bg-[#8A6232] disabled:opacity-50 text-black font-bold px-6 sm:px-8 rounded-lg text-[9px] sm:text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow flex items-center justify-center"
                                     >
                                         {submitting ? <Loader2 className="animate-spin" size={16} /> : 'Subscribe'}
                                     </button>
