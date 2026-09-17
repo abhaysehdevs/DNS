@@ -28,7 +28,6 @@ export function LanguagePopup() {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        // Show popup after a short delay if user hasn't seen it
         if (!hasSeenLanguagePopup) {
             const timer = setTimeout(() => {
                 setIsVisible(true);
@@ -68,7 +67,6 @@ export function LanguagePopup() {
             }
         }
 
-        // Short delay to let the state save before reload
         setTimeout(() => {
             window.location.reload();
         }, 150);
@@ -109,36 +107,33 @@ export function LanguagePopup() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-black/75 backdrop-blur-md pointer-events-auto"
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto"
                         onClick={handleDismiss}
                     />
 
                     {/* Popup Card */}
                     <motion.div
-                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.25 }}
-                        className="relative bg-[#141414]/95 border border-[#A67C35]/40 rounded-2xl p-4 sm:p-5 w-full max-w-sm sm:max-w-md shadow-2xl backdrop-blur-2xl pointer-events-auto overflow-hidden text-[#F8F3E8]"
+                        transition={{ duration: 0.2 }}
+                        className="relative bg-white border border-[#E8E2D5] rounded-2xl p-4 sm:p-5 w-full max-w-sm sm:max-w-md shadow-2xl pointer-events-auto overflow-hidden text-[#18181B]"
                     >
-                        {/* Ambient Gold Glow */}
-                        <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-[#A67C35]/20 blur-[60px] pointer-events-none" />
-
                         <div className="relative z-10 space-y-3.5">
                             {/* Header */}
-                            <div className="flex justify-between items-center pb-2 border-b border-[#303030]">
+                            <div className="flex justify-between items-center pb-2 border-b border-[#E8E2D5]">
                                 <div className="flex items-center gap-2.5">
-                                    <div className="w-8 h-8 rounded-xl bg-[#A67C35]/15 border border-[#A67C35]/40 flex items-center justify-center text-[#A67C35] shrink-0">
+                                    <div className="w-8 h-8 rounded-xl bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#966E2E] shrink-0">
                                         <Languages size={17} strokeWidth={2.2} />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm sm:text-base font-black font-display text-white uppercase tracking-wider leading-none">Choose Language</h3>
-                                        <p className="text-[9px] text-[#DFCE9F] font-bold uppercase tracking-wider mt-0.5 leading-none">अपनी भाषा चुनें</p>
+                                        <h3 className="text-sm sm:text-base font-black font-display text-[#18181B] uppercase tracking-wider leading-none">Choose Language</h3>
+                                        <p className="text-[9px] text-[#966E2E] font-bold uppercase tracking-wider mt-0.5 leading-none">अपनी भाषा चुनें</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={handleDismiss}
-                                    className="w-7 h-7 rounded-full bg-[#202020] border border-[#343434] hover:border-[#A67C35] flex items-center justify-center text-[#8E8E9A] hover:text-white transition-colors cursor-pointer"
+                                    className="w-7 h-7 rounded-full bg-[#FAF9F5] border border-[#E8E2D5] hover:bg-[#F3EFE6] flex items-center justify-center text-[#71717A] hover:text-[#18181B] transition-colors cursor-pointer"
                                 >
                                     <X size={15} />
                                 </button>
@@ -146,7 +141,7 @@ export function LanguagePopup() {
 
                             {/* Languages Grid */}
                             <div>
-                                <div className="text-[9px] font-mono font-bold tracking-wider text-[#8E8E9A] uppercase mb-1.5">
+                                <div className="text-[9px] font-mono font-bold tracking-wider text-[#71717A] uppercase mb-1.5">
                                     Regional Language / भाषा
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
@@ -158,12 +153,12 @@ export function LanguagePopup() {
                                                 onClick={() => handleSelectLanguage(lang.code)}
                                                 className={`flex items-center justify-between px-3 py-2 rounded-xl border text-left transition-all cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-[#A67C35] border-[#A67C35] text-black shadow-md font-bold'
-                                                        : 'bg-[#1C1C1C] border-[#2E2E2E] text-[#D0D0D5] hover:border-[#A67C35]/50 hover:text-white'
+                                                        ? 'bg-[#966E2E] border-[#966E2E] text-white shadow-xs font-bold'
+                                                        : 'bg-[#FAF9F5] border-[#E8E2D5] text-[#18181B] hover:border-[#966E2E]/50'
                                                 }`}
                                             >
                                                 <span className="text-xs font-bold leading-none">{lang.native}</span>
-                                                <span className={`text-[8.5px] uppercase tracking-wider font-mono ${isSelected ? 'text-black/70' : 'text-[#888]'}`}>
+                                                <span className={`text-[8.5px] uppercase tracking-wider font-mono ${isSelected ? 'text-white/80' : 'text-[#71717A]'}`}>
                                                     {lang.name}
                                                 </span>
                                             </button>
@@ -173,15 +168,15 @@ export function LanguagePopup() {
                             </div>
 
                             {/* Currency Selector */}
-                            <div className="pt-2 border-t border-[#303030]">
+                            <div className="pt-2 border-t border-[#E8E2D5]">
                                 <div className="flex items-center justify-between mb-1.5">
                                     <div className="flex items-center gap-1.5">
-                                        <Globe size={13} className="text-[#A67C35]" />
-                                        <span className="text-[9px] font-mono font-bold tracking-wider text-[#8E8E9A] uppercase">
+                                        <Globe size={13} className="text-[#966E2E]" />
+                                        <span className="text-[9px] font-mono font-bold tracking-wider text-[#71717A] uppercase">
                                             Currency / मुद्रा
                                         </span>
                                     </div>
-                                    <span className="text-[8px] text-[#A67C35] font-mono font-bold">
+                                    <span className="text-[8px] text-[#966E2E] font-mono font-bold">
                                         Auto-Converted
                                     </span>
                                 </div>
@@ -195,12 +190,12 @@ export function LanguagePopup() {
                                                 onClick={() => handleSelectCurrency(curr.code)}
                                                 className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl border text-center transition-all cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-[#A67C35] border-[#A67C35] text-black shadow-md font-bold'
-                                                        : 'bg-[#1C1C1C] border-[#2E2E2E] text-[#A0A0A5] hover:border-[#A67C35]/50 hover:text-white'
+                                                        ? 'bg-[#966E2E] border-[#966E2E] text-white shadow-xs font-bold'
+                                                        : 'bg-[#FAF9F5] border-[#E8E2D5] text-[#52525B] hover:border-[#966E2E]/50 hover:text-[#18181B]'
                                                 }`}
                                             >
                                                 <span className="text-xs font-bold leading-none">{curr.symbol}</span>
-                                                <span className={`text-[8px] font-mono mt-0.5 leading-none uppercase ${isSelected ? 'text-black/80 font-black' : 'text-[#888]'}`}>
+                                                <span className={`text-[8px] font-mono mt-0.5 leading-none uppercase ${isSelected ? 'text-white font-bold' : 'text-[#71717A]'}`}>
                                                     {curr.code}
                                                 </span>
                                             </button>
@@ -212,7 +207,7 @@ export function LanguagePopup() {
                             {/* Done Button */}
                             <button
                                 onClick={handleDismiss}
-                                className="w-full h-8.5 bg-[#252525] border border-[#3E3E3E] hover:border-[#A67C35] text-[#F8F3E8] hover:text-[#A67C35] font-bold uppercase tracking-wider text-[9px] rounded-xl transition-all flex items-center justify-center mt-1 cursor-pointer"
+                                className="w-full h-9 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-wider text-[9px] rounded-xl transition-all flex items-center justify-center mt-1 cursor-pointer shadow-xs"
                             >
                                 Continue Browsing
                             </button>

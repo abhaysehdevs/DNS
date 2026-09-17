@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'User Account & Orders | Dinanath & Sons',
+    title: 'User Account & Orders',
     description: 'Manage your profile, order history, shipping addresses, and wholesale status.',
     robots: {
         index: false,

@@ -16,10 +16,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const { id } = await params;
     const post = await getBlogPostByIdOrSlug(id);
     if (!post) {
-        return { title: 'Post Not Found | Dinanath & Sons' };
+        return { 
+            title: 'Post Not Found',
+            robots: { index: false, follow: false }
+        };
     }
-    const title = `${post.title} | Dinanath & Sons Blog`;
-    const description = post.excerpt;
+    const title = post.title;
+    const description = post.excerpt ? (post.excerpt.length > 155 ? `${post.excerpt.slice(0, 152).trim()}...` : post.excerpt) : post.title;
     const canonicalUrl = `https://dinanathandsons.com/blog/${post.id}`;
     const image = post.image || 'https://dinanathandsons.com/placeholder.jpg';
 

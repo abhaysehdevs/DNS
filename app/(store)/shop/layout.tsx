@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Shop Jewellery Tools & Goldsmith Equipment | Dinanath & Sons',
-    description: 'Browse India’s complete catalog of professional jewelry making tools, goldsmith hand tools, casting machinery, and polishing supplies with pan-India delivery.',
+    title: 'Shop Jewellery Tools, Goldsmith Machinery & Supplies',
+    description: 'Explore India’s complete catalog of professional jewelry making tools, casting machinery, pliers, and polishing buffs. Wholesale MOQ pricing & pan-India dispatch.',
     alternates: {
         canonical: 'https://dinanathandsons.com/shop',
     },
     openGraph: {
-        title: 'Shop Jewellery Tools & Goldsmith Equipment | Dinanath & Sons',
-        description: 'Browse our complete catalog of professional jewellery making tools, casting machinery, and precision instruments.',
+        title: 'Shop Jewellery Tools, Goldsmith Machinery & Supplies | Dinanath & Sons',
+        description: 'Explore India’s complete catalog of professional jewelry making tools, casting machinery, pliers, and polishing buffs. Wholesale MOQ pricing & pan-India dispatch.',
         url: 'https://dinanathandsons.com/shop',
     }
 };

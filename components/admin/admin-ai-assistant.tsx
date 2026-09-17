@@ -270,7 +270,7 @@ export default function AdminAiAssistant({
             const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
             const formattedParts = parts.map((part, pIdx) => {
                 if (part.startsWith('**') && part.endsWith('**')) {
-                    return <strong key={pIdx} className="font-bold text-white">{part.slice(2, -2)}</strong>;
+                    return <strong key={pIdx} className="font-bold text-[#18181B]">{part.slice(2, -2)}</strong>;
                 }
                 return part;
             });
@@ -278,7 +278,7 @@ export default function AdminAiAssistant({
             if (isBullet) {
                 return (
                     <div key={idx} className="flex items-start gap-2 my-1 text-sm">
-                        <span className="text-blue-400 mt-0.5">•</span>
+                        <span className="text-[#966E2E] mt-0.5">•</span>
                         <span>{formattedParts}</span>
                     </div>
                 );
@@ -293,12 +293,12 @@ export default function AdminAiAssistant({
     };
 
     const renderChatContent = () => (
-        <div className="flex flex-col h-full bg-surface-1 text-text-primary">
+        <div className="flex flex-col h-full bg-white text-[#18181B]">
             {/* Header */}
-            <div className="p-4 border-b border-glass-border bg-surface-2/80 backdrop-blur flex items-center justify-between">
+            <div className="p-4 border-b border-[#E8E2D5] bg-[#FAF9F5] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="relative p-2 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl shadow-lg shadow-blue-500/20">
-                        <Sparkles className="text-white animate-pulse" size={18} />
+                    <div className="relative p-2 bg-[#966E2E] text-white rounded-xl shadow-sm">
+                        <Sparkles size={18} />
                         <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -306,12 +306,12 @@ export default function AdminAiAssistant({
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <h2 className="font-bold text-base tracking-tight text-white">DNS Admin AI</h2>
-                            <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                            <h2 className="font-bold text-base tracking-tight text-[#18181B]">DNS Admin AI</h2>
+                            <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 rounded-full bg-[#966E2E]/10 text-[#966E2E] border border-[#966E2E]/20">
                                 Full Control
                             </span>
                         </div>
-                        <p className="text-xs text-text-tertiary">Voice & Command Executive Engine</p>
+                        <p className="text-xs text-[#71717A]">Voice & Command Executive Engine</p>
                     </div>
                 </div>
 
@@ -319,7 +319,7 @@ export default function AdminAiAssistant({
                     <button
                         onClick={handleClearChat}
                         title="Clear Chat"
-                        className="p-1.5 text-text-tertiary hover:text-red-400 hover:bg-surface-3 rounded-lg transition-colors"
+                        className="p-1.5 text-[#71717A] hover:text-rose-600 hover:bg-[#FAF9F5] rounded-lg transition-colors cursor-pointer"
                     >
                         <Trash2 size={16} />
                     </button>
@@ -331,13 +331,13 @@ export default function AdminAiAssistant({
                                     router.push('/admin/ai');
                                 }}
                                 title="Open Fullscreen Hub"
-                                className="p-1.5 text-text-tertiary hover:text-text-primary hover:bg-surface-3 rounded-lg transition-colors"
+                                className="p-1.5 text-[#71717A] hover:text-[#18181B] hover:bg-[#FAF9F5] rounded-lg transition-colors cursor-pointer"
                             >
                                 <Maximize2 size={16} />
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1.5 text-text-tertiary hover:text-text-primary hover:bg-surface-3 rounded-lg transition-colors"
+                                className="p-1.5 text-[#71717A] hover:text-[#18181B] hover:bg-[#FAF9F5] rounded-lg transition-colors cursor-pointer"
                             >
                                 <X size={18} />
                             </button>
@@ -347,13 +347,13 @@ export default function AdminAiAssistant({
             </div>
 
             {/* Quick Prompts Bar */}
-            <div className="p-2 border-b border-glass-border bg-surface-2/40 overflow-x-auto flex gap-2 no-scrollbar">
+            <div className="p-2 border-b border-[#E8E2D5] bg-[#FAF9F5]/70 overflow-x-auto flex gap-2 no-scrollbar">
                 {quickPrompts.map((qp, i) => (
                     <button
                         key={i}
                         disabled={loading}
                         onClick={() => handleSend(qp.cmd)}
-                        className="whitespace-nowrap px-2.5 py-1 text-xs rounded-full bg-surface-3 hover:bg-blue-600/20 hover:text-blue-300 hover:border-blue-500/30 border border-glass-border text-text-secondary transition-all cursor-pointer flex-shrink-0"
+                        className="whitespace-nowrap px-2.5 py-1 text-xs rounded-full bg-white hover:bg-[#966E2E] hover:text-white border border-[#E8E2D5] text-[#52525B] transition-all cursor-pointer flex-shrink-0 shadow-2xs"
                     >
                         {qp.label}
                     </button>
@@ -370,7 +370,7 @@ export default function AdminAiAssistant({
                             className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
                         >
                             {!isUser && (
-                                <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-400">
+                                <div className="w-8 h-8 rounded-lg bg-[#966E2E]/10 border border-[#966E2E]/20 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#966E2E]">
                                     <Bot size={18} />
                                 </div>
                             )}
@@ -379,11 +379,15 @@ export default function AdminAiAssistant({
                                 <div
                                     className={`p-3.5 rounded-2xl ${
                                         isUser
-                                            ? 'bg-blue-600 text-white rounded-tr-none shadow-md shadow-blue-600/20'
-                                            : 'bg-surface-2 border border-glass-border text-text-primary rounded-tl-none'
+                                            ? 'bg-[#966E2E] text-white rounded-tr-none shadow-sm'
+                                            : 'bg-[#FAF9F5] border border-[#E8E2D5] text-[#18181B] rounded-tl-none'
                                     }`}
                                 >
-                                    {formatMessageText(msg.content)}
+                                    {isUser ? (
+                                        <p className="text-sm my-0.5 leading-relaxed">{msg.content}</p>
+                                    ) : (
+                                        formatMessageText(msg.content)
+                                    )}
                                 </div>
 
                                 {/* Action Result Card */}
@@ -393,16 +397,16 @@ export default function AdminAiAssistant({
                                         animate={{ opacity: 1, y: 0 }}
                                         className={`p-3 rounded-xl border text-xs flex flex-col gap-2 ${
                                             msg.actionResult.success
-                                                ? 'bg-emerald-950/30 border-emerald-500/30 text-emerald-200'
-                                                : 'bg-red-950/30 border-red-500/30 text-red-200'
+                                                ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                                                : 'bg-rose-50 border-rose-200 text-rose-800'
                                         }`}
                                     >
                                         <div className="flex items-center justify-between font-semibold">
                                             <div className="flex items-center gap-1.5">
                                                 {msg.actionResult.success ? (
-                                                    <CheckCircle2 size={14} className="text-emerald-400" />
+                                                    <CheckCircle2 size={14} className="text-emerald-600" />
                                                 ) : (
-                                                    <AlertCircle size={14} className="text-red-400" />
+                                                    <AlertCircle size={14} className="text-rose-600" />
                                                 )}
                                                 <span className="uppercase tracking-wider font-mono">
                                                     Action: {msg.actionResult.action.replace('_', ' ')}
@@ -414,7 +418,7 @@ export default function AdminAiAssistant({
                                                         router.push(msg.actionResult!.navigationUrl!);
                                                         if (!isPageMode) setIsOpen(false);
                                                     }}
-                                                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                                                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-white text-[#18181B] border border-[#E8E2D5] hover:bg-[#FAF9F5] transition-colors cursor-pointer"
                                                 >
                                                     View Page <ExternalLink size={11} />
                                                 </button>
@@ -423,13 +427,13 @@ export default function AdminAiAssistant({
                                     </motion.div>
                                 )}
 
-                                <span className={`text-[10px] text-text-tertiary block px-1 ${isUser ? 'text-right' : 'text-left'}`}>
+                                <span className={`text-[10px] text-[#71717A] block px-1 ${isUser ? 'text-right' : 'text-left'}`}>
                                     {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                             </div>
 
                             {isUser && (
-                                <div className="w-8 h-8 rounded-lg bg-surface-3 border border-glass-border flex items-center justify-center flex-shrink-0 mt-0.5 text-text-secondary">
+                                <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center flex-shrink-0 mt-0.5 text-[#52525B]">
                                     <UserIcon size={16} />
                                 </div>
                             )}
@@ -438,11 +442,11 @@ export default function AdminAiAssistant({
                 })}
 
                 {loading && (
-                    <div className="flex gap-3 items-center text-text-secondary text-xs">
-                        <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                    <div className="flex gap-3 items-center text-[#52525B] text-xs">
+                        <div className="w-8 h-8 rounded-lg bg-[#966E2E]/10 border border-[#966E2E]/20 flex items-center justify-center text-[#966E2E]">
                             <Loader2 size={16} className="animate-spin" />
                         </div>
-                        <div className="p-3 bg-surface-2 border border-glass-border rounded-2xl rounded-tl-none flex items-center gap-2">
+                        <div className="p-3 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl rounded-tl-none flex items-center gap-2">
                             <span className="animate-pulse">AI is executing your command on the admin panel...</span>
                         </div>
                     </div>
@@ -451,7 +455,7 @@ export default function AdminAiAssistant({
             </div>
 
             {/* Input Bar */}
-            <div className="p-3 border-t border-glass-border bg-surface-2/60 backdrop-blur">
+            <div className="p-3 border-t border-[#E8E2D5] bg-[#FAF9F5]">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -466,9 +470,9 @@ export default function AdminAiAssistant({
                             onChange={(e) => setInput(e.target.value)}
                             placeholder={isListening ? 'Listening to voice command...' : 'Command AI: "Add product...", "Summarize orders"...'}
                             disabled={loading}
-                            className={`w-full bg-surface-3 border ${
-                                isListening ? 'border-red-500 animate-pulse' : 'border-glass-border focus:border-blue-500'
-                            } text-text-primary text-sm rounded-xl px-4 py-3 outline-none transition-all pr-12`}
+                            className={`w-full bg-white border ${
+                                isListening ? 'border-rose-500 animate-pulse' : 'border-[#E8E2D5] focus:border-[#966E2E]'
+                            } text-[#18181B] placeholder-[#A1A1AA] text-sm rounded-xl px-4 py-3 outline-none transition-all pr-12`}
                         />
                         {speechSupported && (
                             <button
@@ -477,8 +481,8 @@ export default function AdminAiAssistant({
                                 title={isListening ? 'Stop listening' : 'Voice command (hands-free)'}
                                 className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all cursor-pointer ${
                                     isListening
-                                        ? 'bg-red-500 text-white shadow-lg shadow-red-500/30 animate-bounce'
-                                        : 'text-text-tertiary hover:text-blue-400 hover:bg-surface-2'
+                                        ? 'bg-rose-500 text-white shadow-md animate-bounce'
+                                        : 'text-[#71717A] hover:text-[#966E2E] hover:bg-[#FAF9F5]'
                                 }`}
                             >
                                 {isListening ? <MicOff size={16} /> : <Mic size={16} />}
@@ -489,14 +493,14 @@ export default function AdminAiAssistant({
                     <button
                         type="submit"
                         disabled={loading || !input.trim()}
-                        className="p-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-xl shadow-lg shadow-blue-600/20 transition-all cursor-pointer flex-shrink-0"
+                        className="p-3 bg-[#966E2E] hover:bg-[#7D5A25] disabled:opacity-40 text-white rounded-xl shadow-sm transition-all cursor-pointer flex-shrink-0"
                     >
                         {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
                     </button>
                 </form>
-                <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-text-tertiary">
+                <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-[#71717A]">
                     <span>Press <strong>Enter</strong> to send • <strong>Ctrl+K</strong> to toggle</span>
-                    {speechSupported && <span className="text-blue-400">🎙️ Voice dictation available</span>}
+                    {speechSupported && <span className="text-[#966E2E]">🎙️ Voice dictation available</span>}
                 </div>
             </div>
         </div>
@@ -505,7 +509,7 @@ export default function AdminAiAssistant({
     // If used as dedicated page component (/admin/ai)
     if (isPageMode) {
         return (
-            <div className="h-[calc(100vh-8.5rem)] rounded-2xl border border-glass-border overflow-hidden shadow-2xl">
+            <div className="h-[calc(100vh-8.5rem)] rounded-2xl border border-[#E8E2D5] overflow-hidden shadow-sm">
                 {renderChatContent()}
             </div>
         );
@@ -519,7 +523,7 @@ export default function AdminAiAssistant({
                 onClick={() => setIsOpen(true)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-full shadow-2xl shadow-blue-600/40 border border-white/20 cursor-pointer group"
+                className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 bg-[#966E2E] hover:bg-[#7D5A25] text-white rounded-full shadow-xl border border-white/20 cursor-pointer group"
                 title="Open DNS Admin AI Assistant (Ctrl+K)"
             >
                 <div className="relative">
@@ -544,14 +548,14 @@ export default function AdminAiAssistant({
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
                         />
                         <motion.div
                             initial={{ x: 450, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: 450, opacity: 0 }}
                             transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-                            className="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] max-w-full z-50 shadow-2xl border-l border-glass-border flex flex-col overflow-hidden"
+                            className="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] max-w-full z-50 shadow-2xl border-l border-[#E8E2D5] flex flex-col overflow-hidden"
                         >
                             {renderChatContent()}
                         </motion.div>

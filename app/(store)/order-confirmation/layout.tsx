@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Order Confirmation | Dinanath & Sons",
+    title: "Order Confirmation",
     description: "Your order details and transaction logs have been processed successfully. Operator tracking metrics are active.",
     robots: {
         index: false,

@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Track Order & Shipment Status | Dinanath & Sons',
-    description: 'Track your Dinanath & Sons order delivery status in real time using your Order ID or shipment AWB tracking number.',
+    title: 'Track Order & Shipment Status',
+    description: 'Check real-time delivery and courier tracking status for your Dinanath & Sons jewellery tool shipment across India.',
     alternates: {
         canonical: 'https://dinanathandsons.com/track-order',
     },
     openGraph: {
-        title: 'Track Order Status | Dinanath & Sons',
-        description: 'Track your tool shipment and logistics delivery status.',
+        title: 'Track Order & Shipment Status | Dinanath & Sons',
+        description: 'Check real-time delivery and courier tracking status for your Dinanath & Sons jewellery tool shipment across India.',
         url: 'https://dinanathandsons.com/track-order',
     }
 };

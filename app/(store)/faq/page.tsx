@@ -55,21 +55,21 @@ export default function FAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-44 pb-24 noise-overlay selection:bg-gold-primary/30 overflow-x-hidden">
-            <div className="container mx-auto px-6 relative z-10 max-w-4xl">
+        <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] pt-4 sm:pt-6 md:pt-8 pb-16 noise-overlay selection:bg-[#966E2E]/20 overflow-x-hidden">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-4xl">
                 
-                <div className="text-center mb-16">
+                <div className="text-center mb-6 sm:mb-8">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-3 px-6 py-2 rounded-full glass text-text-secondary text-[9px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm"
+                        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#E8E2D5] text-[#71717A] text-[9px] font-black uppercase tracking-[0.2em] mb-3 shadow-xs"
                     >
-                        <MessageSquare size={14} className="text-[#A67C35]" /> Store Policies & Knowledge Center
+                        <MessageSquare size={13} className="text-[#966E2E]" /> Store Policies & Knowledge Center
                     </motion.div>
-                    <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight uppercase leading-[0.9]">
-                        Store Policies & <span className="bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text text-transparent">Support</span>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-3 tracking-tight uppercase leading-[0.9] text-[#18181B] font-display">
+                        Store Policies & <span className="bg-gradient-to-r from-[#18181B] to-[#966E2E] bg-clip-text text-transparent">Support</span>
                     </h1>
-                    <p className="text-text-secondary text-xs font-bold uppercase tracking-widest max-w-xl mx-auto">Standardized shipping rules, return policy, and B2B terms for Dinanath & Sons</p>
+                    <p className="text-[#71717A] text-[10px] sm:text-xs font-bold uppercase tracking-widest max-w-xl mx-auto">Standardized shipping rules, return policy, and B2B terms for Dinanath & Sons</p>
                 </div>
 
                 {/* Category Policy Tabs */}
@@ -83,8 +83,8 @@ export default function FAQ() {
                                 onClick={() => { setActiveTab(idx); setOpenIndex(0); }}
                                 className={`px-5 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
                                     isActive 
-                                        ? 'bg-[#A67C35] text-black shadow-lg scale-105' 
-                                        : 'bg-[#1E1E1E] text-[#8E8E9A] hover:text-[#F8F3E8] border border-[#343434]'
+                                        ? 'bg-[#966E2E] text-white shadow-md scale-105' 
+                                        : 'bg-white text-[#71717A] hover:text-[#18181B] border border-[#E8E2D5]'
                                 }`}
                             >
                                 <Icon size={16} />
@@ -99,8 +99,8 @@ export default function FAQ() {
                     {POLICIES[activeTab].items.map((item, index) => (
                         <div 
                             key={index} 
-                            className={`bg-[#1E1E1E] rounded-2xl border transition-all duration-300 overflow-hidden ${
-                                openIndex === index ? 'border-[#A67C35] shadow-lg' : 'border-[#343434] hover:border-[#343434]/80'
+                            className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden ${
+                                openIndex === index ? 'border-[#966E2E] shadow-md' : 'border-[#E8E2D5] hover:border-[#D8D2C5]'
                             }`}
                         >
                             <button
@@ -108,14 +108,14 @@ export default function FAQ() {
                                 className="w-full flex justify-between items-center p-6 text-left transition-all cursor-pointer"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${openIndex === index ? 'bg-[#A67C35] text-black' : 'bg-[#151515] text-[#A67C35]'}`}>
+                                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${openIndex === index ? 'bg-[#966E2E] text-white' : 'bg-[#FAF9F5] text-[#966E2E] border border-[#E8E2D5]'}`}>
                                         <Zap size={15} />
                                     </div>
-                                    <span className={`text-sm md:text-base font-bold uppercase tracking-wide ${openIndex === index ? 'text-[#F8F3E8]' : 'text-[#CFCFCF]'}`}>
+                                    <span className={`text-sm md:text-base font-bold uppercase tracking-wide ${openIndex === index ? 'text-[#18181B]' : 'text-[#52525B]'}`}>
                                         {item.question}
                                     </span>
                                 </div>
-                                <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform ${openIndex === index ? 'rotate-180 bg-[#A67C35] text-black' : 'text-[#8E8E9A]'}`}>
+                                <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform ${openIndex === index ? 'rotate-180 bg-[#966E2E] text-white' : 'text-[#71717A] bg-[#FAF9F5]'}`}>
                                     <ChevronDown size={16} />
                                 </div>
                             </button>
@@ -127,7 +127,7 @@ export default function FAQ() {
                                         animate={{ height: 'auto', opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
                                     >
-                                        <div className="px-6 pb-6 pt-0 text-[#CFCFCF] text-xs md:text-sm leading-relaxed font-normal border-t border-[#343434]/40 mt-2 pt-4">
+                                        <div className="px-6 pb-6 pt-0 text-[#52525B] text-xs md:text-sm leading-relaxed font-normal border-t border-[#E8E2D5]/70 mt-2 pt-4">
                                             {item.answer}
                                         </div>
                                     </motion.div>
@@ -138,10 +138,10 @@ export default function FAQ() {
                 </div>
 
                 {/* Footer Inquiry Prompt */}
-                <div className="mt-16 text-center bg-[#1E1E1E] p-8 rounded-3xl border border-[#343434] shadow-xl">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E8E9A] mb-4">Have further technical queries about tools or bulk machinery?</p>
+                <div className="mt-16 text-center bg-white p-8 rounded-3xl border border-[#E8E2D5] shadow-sm">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#71717A] mb-4">Have further technical queries about tools or bulk machinery?</p>
                     <Link href="/contact">
-                        <button className="text-xs font-bold uppercase tracking-widest text-[#A67C35] hover:underline cursor-pointer border-none bg-transparent">
+                        <button className="text-xs font-bold uppercase tracking-widest text-[#966E2E] hover:underline cursor-pointer border-none bg-transparent">
                             Contact Support (info@dinanathandsons.com) →
                         </button>
                     </Link>

@@ -102,25 +102,25 @@ export default function NewArrivalsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#151515] flex flex-col items-center justify-center gap-6">
-                <Loader2 className="animate-spin text-[#A67C35]" size={36} />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#CFCFCF]">Loading New Arrivals</span>
+            <div className="min-h-screen bg-[#FAF9F5] flex flex-col items-center justify-center gap-6">
+                <Loader2 className="animate-spin text-[#966E2E]" size={36} />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#71717A]">Loading New Arrivals</span>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-2 sm:pt-4 md:pt-6 pb-20 px-3.5 sm:px-6">
+        <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] pt-2 sm:pt-4 md:pt-6 pb-20 px-3.5 sm:px-6 selection:bg-[#966E2E]/20">
             <div className="container mx-auto max-w-7xl">
                 <div className="mb-4 sm:mb-8 flex items-center gap-4">
-                    <Link href="/shop" className="text-xs font-bold text-[#8E8E9A] hover:text-[#A67C35] transition-colors flex items-center gap-2">
+                    <Link href="/shop" className="text-xs font-bold text-[#71717A] hover:text-[#966E2E] transition-colors flex items-center gap-2">
                         <ArrowLeft size={16} /> BACK TO CATALOG
                     </Link>
                 </div>
 
-                <div className="mb-16 text-center md:text-left space-y-4">
-                    <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight font-display">{pageDetails.title}</h1>
-                    <p className="text-xs text-[#CFCFCF] font-semibold leading-relaxed uppercase tracking-wider max-w-xl">
+                <div className="mb-6 sm:mb-8 text-center md:text-left space-y-2">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight font-display text-[#18181B]">{pageDetails.title}</h1>
+                    <p className="text-xs text-[#52525B] font-semibold leading-relaxed uppercase tracking-wider max-w-xl">
                         {pageDetails.subtitle}
                     </p>
                 </div>
@@ -129,7 +129,7 @@ export default function NewArrivalsPage() {
                     {products.length > 0 ? (
                         <ProductGrid products={products} loading={false} onClearFilters={() => {}} displayMode="grid" />
                     ) : (
-                        <div className="text-center py-20 text-[#8E8E9A] border-2 border-dashed border-[#343434] rounded-3xl font-bold uppercase text-[10px] tracking-wider">
+                        <div className="text-center py-20 text-[#71717A] border-2 border-dashed border-[#E8E2D5] rounded-3xl font-bold uppercase text-[10px] tracking-wider bg-white shadow-sm">
                             No products found in this selection. Check back soon!
                         </div>
                     )}

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Secure Portal Login | Dinanath & Sons",
+    title: "Secure Portal Login",
     description: "Access your Dinanath & Sons operator portal to review order logs, wholesale contracts, and B2B calibration parameters.",
     robots: {
         index: false,

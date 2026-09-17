@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Shipping & Delivery Policy | Pan-India Dispatch | Dinanath & Sons',
-    description: 'Information regarding order dispatch timelines, logistics partners, pan-India courier delivery, and secure transit insurance for Dinanath & Sons tools.',
+    title: 'Shipping & Delivery Policy — Fast Pan-India Dispatch',
+    description: 'Learn about our dispatch timelines, verified courier partners, secure packaging, and pan-India shipping rates for jewelry tools and machinery.',
     alternates: {
         canonical: 'https://dinanathandsons.com/shipping-policy',
     },
     openGraph: {
-        title: 'Shipping & Delivery Policy | Dinanath & Sons',
-        description: 'Pan-India shipping terms and dispatch protocols for retail and wholesale orders.',
+        title: 'Shipping & Delivery Policy — Fast Pan-India Dispatch | Dinanath & Sons',
+        description: 'Learn about our dispatch timelines, verified courier partners, secure packaging, and pan-India shipping rates for jewelry tools and machinery.',
         url: 'https://dinanathandsons.com/shipping-policy',
     }
 };

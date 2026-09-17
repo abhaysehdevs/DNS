@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Returns & Replacement Policy | Dinanath & Sons',
-    description: 'Learn about our 7-day inspection window, replacement process for transit-damaged goods, and return guidelines for tools and machinery.',
+    title: 'Returns & Replacement Policy — 7-Day Guarantee',
+    description: 'Review our straightforward 7-day return and replacement policy for precision jewelry tools and workshop equipment. Quick inspection and dedicated support.',
     alternates: {
         canonical: 'https://dinanathandsons.com/return-policy',
     },
     openGraph: {
-        title: 'Returns & Replacement Policy | Dinanath & Sons',
-        description: 'Hassle-free 7-day return and exchange policy for Dinanath & Sons customers.',
+        title: 'Returns & Replacement Policy — 7-Day Guarantee | Dinanath & Sons',
+        description: 'Review our straightforward 7-day return and replacement policy for precision jewelry tools and workshop equipment. Quick inspection and dedicated support.',
         url: 'https://dinanathandsons.com/return-policy',
     }
 };

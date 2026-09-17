@@ -66,7 +66,7 @@ export default function Blog() {
     const regularPosts = filteredPosts.slice(featuredPost ? 1 : 0);
 
     return (
-        <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-48 pb-24 noise-overlay selection:bg-gold-primary/30 overflow-x-hidden blueprint-grid">
+        <div className="min-h-screen bg-surface-2 text-text-primary pt-4 sm:pt-6 md:pt-8 pb-16 noise-overlay selection:bg-gold-primary/30 overflow-x-hidden blueprint-grid">
             
             {/* Ambient Background */}
             <div className="fixed inset-0 pointer-events-none">
@@ -74,22 +74,22 @@ export default function Blog() {
                 <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
             </div>
 
-            <div className="container mx-auto px-6 relative z-10">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 
                 {/* Header */}
-                <div className="max-w-4xl mx-auto text-center mb-24">
+                <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-10">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-3 px-6 py-2 rounded-full glass-gold text-gold-primary text-[9px] font-black uppercase tracking-[0.3em] mb-10"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-gold text-gold-primary text-[8.5px] font-black uppercase tracking-[0.25em] mb-3 shadow-xs"
                     >
-                        <Sparkles size={14} /> Industrial Journal
+                        <Sparkles size={13} /> Industrial Journal
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-6xl md:text-8xl font-black mb-8 tracking-tighter uppercase leading-[0.85]"
+                        className="text-4xl sm:text-6xl md:text-7xl font-black mb-3 tracking-tighter uppercase leading-[0.9]"
                     >
                         Mastering <br />
                         <span className="bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text text-transparent">The Craft</span>
@@ -98,14 +98,14 @@ export default function Blog() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-text-secondary text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-medium"
+                        className="text-text-secondary text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-medium"
                     >
                         Deep-dive technical analysis, metallurgical insights, and factory engineering protocols for the jewelry elite.
                     </motion.p>
                 </div>
 
                 {/* Control Bar */}
-                <div className="flex flex-col lg:flex-row gap-8 justify-between items-center mb-16 glass-strong p-4 rounded-[2.5rem] border border-glass-border sticky top-32 z-30">
+                <div className="flex flex-col lg:flex-row gap-4 justify-between items-center mb-8 glass-strong p-3 rounded-2xl border border-glass-border sticky top-32 z-30">
                     <div className="flex gap-3 overflow-x-auto w-full lg:w-auto pb-4 lg:pb-0 scrollbar-hide px-2">
                         {categories.map(category => (
                             <button
@@ -159,17 +159,17 @@ export default function Blog() {
                                         animate={{ opacity: 1, scale: 1 }}
                                         className="perspective-2000"
                                     >
-                                        <Link href={`/blog/${featuredPost.id}`} className="group block relative rounded-[3rem] overflow-hidden glass-strong border border-glass-border hover:border-gold-primary/30 transition-all duration-700 hover:shadow-[0_40px_100px_rgba(0,0,0,0.5)] glow-gold-hover">
+                                        <Link href={`/blog/${featuredPost.id}`} className="group block relative rounded-[3rem] overflow-hidden glass-strong border border-glass-border hover:border-gold-primary/40 transition-all duration-700 hover:shadow-xl">
                                             <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
                                                 <div className="relative h-80 lg:h-auto overflow-hidden">
-                                                    <div className="absolute inset-0 bg-surface-1/20 group-hover:bg-transparent transition-colors z-10" />
+                                                    <div className="absolute inset-0 bg-surface-1/10 group-hover:bg-transparent transition-colors z-10" />
                                                     <img
                                                         src={featuredPost.image}
                                                         alt={featuredPost.title}
                                                         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[2000ms] ease-out"
                                                     />
                                                     <div className="absolute top-10 left-10 z-20">
-                                                        <span className="glass-gold text-gold-primary text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-[0.3em] shadow-xl">
+                                                        <span className="glass-gold text-gold-primary text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-[0.3em] shadow-sm">
                                                             Featured Content
                                                         </span>
                                                     </div>
@@ -183,7 +183,7 @@ export default function Blog() {
                                                         </span>
                                                     </div>
 
-                                                    <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[0.9] uppercase tracking-tighter group-hover:text-[#C9A84C] transition-colors duration-500">
+                                                    <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[0.9] uppercase tracking-tighter group-hover:text-gold-primary transition-colors duration-500">
                                                         {featuredPost.title}
                                                     </h2>
 
@@ -193,7 +193,7 @@ export default function Blog() {
 
                                                      <div className="mt-auto flex items-center justify-between pt-10 border-t border-glass-border">
                                                          <div className="flex items-center gap-4">
-                                                             <div className="w-12 h-12 rounded-2xl glass-gold flex items-center justify-center font-black text-[#0A0A0F] text-sm">
+                                                             <div className="w-12 h-12 rounded-2xl glass-gold flex items-center justify-center font-black text-gold-primary text-sm">
                                                                  {featuredPost.author.charAt(0)}
                                                              </div>
                                                              <div>
@@ -201,7 +201,7 @@ export default function Blog() {
                                                                  <p className="text-[9px] text-text-secondary font-black uppercase tracking-[0.2em] mt-1">{featuredPost.date}</p>
                                                              </div>
                                                          </div>
-                                                         <div className="w-16 h-16 rounded-full glass flex items-center justify-center group-hover:bg-gold-primary group-hover:text-[#0A0A0F] transition-all duration-500 group-hover:rotate-45">
+                                                         <div className="w-16 h-16 rounded-full glass flex items-center justify-center group-hover:bg-gold-primary group-hover:text-white transition-all duration-500 group-hover:rotate-45">
                                                              <ArrowRight size={24} />
                                                          </div>
                                                      </div>
@@ -280,8 +280,8 @@ export default function Blog() {
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
                     
                     <div className="relative z-10">
-                        <div className="w-20 h-20 glass-gold rounded-3xl flex items-center justify-center mx-auto mb-10 shadow-2xl">
-                            <Mail size={32} className="text-[#0A0A0F]" />
+                        <div className="w-20 h-20 glass-gold rounded-3xl flex items-center justify-center mx-auto mb-10 shadow-md">
+                            <Mail size={32} className="text-gold-primary" />
                         </div>
                         <h3 className="text-4xl md:text-6xl font-black text-text-primary mb-6 uppercase tracking-tighter leading-none">Stay at the <br /><span className="bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text text-transparent">Forefront</span></h3>
                         <p className="text-text-secondary max-w-xl mx-auto mb-12 text-lg font-medium leading-relaxed">
@@ -289,7 +289,7 @@ export default function Blog() {
                         </p>
 
                         {subscribed ? (
-                            <div className="text-emerald-500 font-bold uppercase tracking-wider text-sm bg-emerald-500/10 border border-emerald-500/20 px-6 py-4 rounded-xl max-w-lg mx-auto">
+                            <div className="text-emerald-700 font-bold uppercase tracking-wider text-sm bg-emerald-50 border border-emerald-200 px-6 py-4 rounded-xl max-w-lg mx-auto">
                                 Thanks for subscribing!
                             </div>
                         ) : (
@@ -300,12 +300,12 @@ export default function Blog() {
                                     required
                                     value={newsletterEmail}
                                     onChange={e => setNewsletterEmail(e.target.value)}
-                                    className="flex-1 h-18 bg-surface-1/20 border border-glass-border rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] text-text-primary focus:outline-none focus:border-gold-primary/30 transition-all placeholder-text-tertiary/40"
+                                    className="flex-1 h-18 bg-surface-1/40 border border-glass-border rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] text-text-primary focus:outline-none focus:border-gold-primary/50 transition-all placeholder-text-tertiary"
                                 />
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="h-18 glass-gold text-[#0A0A0F] font-black px-10 rounded-2xl text-[10px] uppercase tracking-[0.3em] transition-all hover:shadow-2xl hover:-translate-y-1 active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                                    className="h-18 bg-gold-primary hover:bg-[#7D5A25] text-white font-black px-10 rounded-2xl text-[10px] uppercase tracking-[0.3em] transition-all hover:shadow-xl hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
                                 >
                                     {submitting ? <Loader2 className="animate-spin" size={16} /> : 'Synchronize'}
                                 </button>

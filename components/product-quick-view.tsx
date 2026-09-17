@@ -3,7 +3,7 @@
 import { Product, getProductGallery } from '@/lib/data';
 import { useAppStore } from '@/lib/store';
 import { translations } from '@/lib/translations';
-import { X, ShoppingCart, MessageCircle, Star, Heart, Eye, PlayCircle, Layers, ShieldCheck, Zap } from 'lucide-react';
+import { X, ShoppingCart, Star, Heart, Eye, PlayCircle, ShieldCheck, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -15,7 +15,7 @@ import { ShareButton } from './share-button';
 import { getProductUrl } from '@/lib/slug';
 
 export function ProductQuickView({ product, isOpen, onClose }: { product: Product, isOpen: boolean, onClose: () => void }) {
-    const { language, cart, addToCart, wishlist, toggleWishlist } = useAppStore();
+    const { language, addToCart, wishlist } = useAppStore();
     const t = translations[language];
     const isWishlisted = wishlist.includes(product.id);
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
@@ -57,72 +57,60 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 overflow-hidden">
-                    {/* Backdrop with sophisticated blur */}
+                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-[#06060C]/90 backdrop-blur-2xl cursor-pointer"
+                        className="absolute inset-0 bg-black/40 backdrop-blur-md cursor-pointer"
                     />
 
                     {/* Modal Content */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, rotateX: 10, y: 40 }}
-                        animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, rotateX: -10, y: 40 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative w-full max-w-6xl max-h-[90vh] bg-[#0A0A0F] border border-white/[0.04] rounded-[2.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col md:flex-row noise-overlay perspective-2000"
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="relative w-full max-w-5xl max-h-[90vh] bg-white border border-[#E8E2D5] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
                     >
-                        {/* Ambient Glows */}
-                        <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-20"
-                            style={{ background: 'radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, transparent 70%)' }}
-                        />
-                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-10"
-                            style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)' }}
-                        />
-
                         {/* Action buttons (Share & Close) */}
-                        <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
+                        <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
                             <ShareButton product={product} variant="icon" />
                             <button
                                 onClick={onClose}
-                                className="w-10 h-10 md:w-12 md:h-12 glass hover:bg-white/10 rounded-full flex items-center justify-center text-[#5A5A6A] hover:text-[#F5F5F7] transition-all group"
+                                className="w-10 h-10 bg-[#FAF9F5] border border-[#E8E2D5] hover:bg-[#F0EBE0] rounded-full flex items-center justify-center text-[#52525B] hover:text-[#18181B] transition-all group shadow-sm"
                                 title="Close dialog"
                             >
-                                <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                                <X size={18} className="group-hover:rotate-90 transition-transform duration-200" />
                             </button>
                         </div>
 
                         <div className="flex flex-col md:flex-row w-full overflow-y-auto md:overflow-hidden">
                             
                             {/* Left: Interactive Media Gallery */}
-                            <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col items-center justify-center relative overflow-hidden bg-white/[0.01]">
+                            <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col items-center justify-center relative overflow-hidden bg-[#FAF9F5]">
                                 
                                 {/* Badges */}
-                                <div className="absolute top-8 left-8 flex flex-col gap-3 z-10">
-                                    <span className="glass-gold text-[#C9A84C] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg">
+                                <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">
+                                    <span className="bg-white border border-[#E8E2D5] text-[#966E2E] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-[0.15em] shadow-xs">
                                         {product.category}
                                     </span>
                                     {!product.inStock && (
-                                        <span className="bg-red-500/10 text-red-500 border border-red-500/20 text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg">
+                                        <span className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-[0.15em] shadow-xs">
                                             Out of Stock
                                         </span>
                                     )}
                                 </div>
 
-                                {/* Main Media with floating animation */}
+                                {/* Main Media */}
                                 <motion.div
                                     key={selectedMediaIndex}
-                                    initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
-                                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                                    className="w-full aspect-square relative flex items-center justify-center mb-10 translate-z-60 preserve-3d"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="w-full aspect-square relative flex items-center justify-center mb-6"
                                 >
-                                    <motion.div
-                                        animate={{ y: [0, -10, 0] }}
-                                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                        className="w-full h-full flex items-center justify-center"
-                                    >
+                                    <div className="w-full h-full flex items-center justify-center p-4">
                                         {gallery[selectedMediaIndex]?.type === 'video' ? (
                                             <video
                                                 src={gallery[selectedMediaIndex].url}
@@ -130,7 +118,7 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                 autoPlay
                                                 loop
                                                 muted
-                                                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_40px_rgba(201,168,76,0.15)]"
+                                                className="w-full h-full object-contain drop-shadow-sm"
                                                 poster={gallery[selectedMediaIndex].thumbnailUrl}
                                             />
                                         ) : (
@@ -138,20 +126,20 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                 src={gallery[selectedMediaIndex]?.url || product.primaryImage}
                                                 alt={product.name}
                                                 containerClassName="w-full h-full"
-                                                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+                                                className="w-full h-full object-contain drop-shadow-sm"
                                             />
                                         )}
-                                    </motion.div>
+                                    </div>
                                 </motion.div>
 
                                 {/* Thumbnails */}
                                 {gallery.length > 1 && (
-                                    <div className="flex gap-4 overflow-x-auto w-full pb-2 scrollbar-hide justify-center px-4">
+                                    <div className="flex gap-3 overflow-x-auto w-full pb-2 justify-center px-4">
                                         {gallery.map((media, idx) => (
                                             <button
                                                 key={media.id || idx}
                                                 onClick={() => setSelectedMediaIndex(idx)}
-                                                className={`relative flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden transition-all duration-500 glass ${selectedMediaIndex === idx ? 'border-[#C9A84C]/50 scale-110 shadow-[0_0_20px_rgba(201,168,76,0.2)]' : 'opacity-40 hover:opacity-80'}`}
+                                                className={`relative flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden transition-all duration-300 bg-white border ${selectedMediaIndex === idx ? 'border-[#966E2E] shadow-sm scale-105' : 'border-[#E8E2D5] opacity-60 hover:opacity-100'}`}
                                             >
                                                 <SecureImage
                                                     src={media.type === 'video' ? (media.thumbnailUrl || media.url) : media.url}
@@ -160,8 +148,8 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                                     className="w-full h-full object-cover"
                                                 />
                                                 {media.type === 'video' && (
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                                        <PlayCircle size={24} className="text-[#C9A84C]" />
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                                        <PlayCircle size={20} className="text-[#966E2E]" />
                                                     </div>
                                                 )}
                                             </button>
@@ -171,35 +159,35 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                             </div>
 
                             {/* Right: Detailed Info */}
-                            <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center relative z-10 border-l border-white/[0.04]">
+                            <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center relative z-10 border-t md:border-t-0 md:border-l border-[#E8E2D5] bg-white">
                                 
-                                <div className="space-y-8">
+                                <div className="space-y-6">
                                     <div>
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <div className="flex items-center gap-1.5 glass px-3 py-1.5 rounded-full">
-                                                <Star size={14} className="text-[#C9A84C] fill-[#C9A84C]" />
-                                                <span className="text-xs text-[#F5F5F7] font-black">{rating > 0 ? rating.toFixed(1) : 'NEW'}</span>
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="flex items-center gap-1.5 bg-[#FAF9F5] border border-[#E8E2D5] px-2.5 py-1 rounded-full">
+                                                <Star size={13} className="text-[#966E2E] fill-[#966E2E]" />
+                                                <span className="text-xs text-[#18181B] font-bold">{rating > 0 ? rating.toFixed(1) : 'NEW'}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-[#5A5A6A] text-[10px] font-black uppercase tracking-[0.2em]">
-                                                <ShieldCheck size={14} /> Professional Grade
+                                            <div className="flex items-center gap-1.5 text-[#71717A] text-[10px] font-bold uppercase tracking-[0.15em]">
+                                                <ShieldCheck size={13} className="text-[#966E2E]" /> Professional Grade
                                             </div>
                                         </div>
 
-                                        <h2 className="text-4xl md:text-5xl font-black text-[#F5F5F7] leading-tight mb-6 tracking-tight uppercase">
+                                        <h2 className="text-2xl md:text-3xl font-black text-[#18181B] leading-tight mb-3 uppercase">
                                             {product.name}
                                         </h2>
 
-                                        <p className="text-[#8E8E9A] text-base leading-relaxed mb-8 font-medium">
+                                        <p className="text-[#52525B] text-sm leading-relaxed mb-6 font-normal">
                                             {product.description}
                                         </p>
 
                                         {/* Attributes */}
                                         {product.variantAttributes && Object.keys(product.variantAttributes).length > 0 && (
-                                            <div className="flex flex-wrap gap-3 mb-10">
+                                            <div className="flex flex-wrap gap-2.5 mb-6">
                                                 {Object.entries(product.variantAttributes).map(([key, value]) => (
-                                                    <div key={key} className="glass rounded-xl px-4 py-2 flex flex-col">
-                                                        <span className="text-[9px] uppercase tracking-[0.2em] text-[#5A5A6A] font-bold mb-0.5">{key}</span>
-                                                        <span className="text-xs text-[#F5F5F7] font-black uppercase">{value as string}</span>
+                                                    <div key={key} className="bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl px-3 py-1.5 flex flex-col">
+                                                        <span className="text-[8.5px] uppercase tracking-[0.15em] text-[#71717A] font-bold">{key}</span>
+                                                        <span className="text-xs text-[#18181B] font-bold uppercase">{value as string}</span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -207,52 +195,43 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                     </div>
 
                                     {/* Action Box */}
-                                    <div className="glass-strong rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                            <Zap size={100} className="text-[#C9A84C]" />
-                                        </div>
-
-                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8 relative z-10">
+                                    <div className="bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl p-6 shadow-xs relative overflow-hidden">
+                                        <div className="flex justify-between items-end mb-6 relative z-10">
                                             <div>
-                                                <p className="text-[10px] text-[#5A5A6A] uppercase tracking-[0.25em] font-black mb-2">
+                                                <p className="text-[10px] text-[#71717A] uppercase tracking-[0.2em] font-bold mb-1">
                                                     Price
                                                 </p>
-                                                <div className="flex items-baseline gap-4">
-                                                    <span className="text-4xl font-black text-[#C9A84C]">
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-3xl font-black text-[#966E2E]">
                                                         <Currency value={currentPrice} />
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-                                            <div className="flex items-center glass rounded-2xl overflow-hidden h-16 w-full sm:w-auto p-1">
+                                        <div className="flex flex-col sm:flex-row gap-3 relative z-10">
+                                            <div className="flex items-center bg-white border border-[#E8E2D5] rounded-xl overflow-hidden h-12 w-full sm:w-auto p-1">
                                                 <button
                                                     onClick={() => setQty(Math.max(1, qty - 1))}
-                                                    className="w-12 h-full hover:bg-white/5 text-[#5A5A6A] hover:text-[#F5F5F7] transition-colors flex items-center justify-center font-black text-xl"
+                                                    className="w-10 h-full hover:bg-[#FAF9F5] text-[#52525B] hover:text-[#18181B] transition-colors flex items-center justify-center font-bold text-lg"
                                                 >-</button>
-                                                <div className="flex-1 sm:w-16 flex items-center justify-center font-black text-[#F5F5F7] text-xl tabular-nums">
+                                                <div className="flex-1 sm:w-12 flex items-center justify-center font-bold text-[#18181B] text-base tabular-nums">
                                                     {qty}
                                                 </div>
                                                 <button
                                                     onClick={() => setQty(qty + 1)}
-                                                    className="w-12 h-full hover:bg-white/5 text-[#5A5A6A] hover:text-[#F5F5F7] transition-colors flex items-center justify-center font-black text-xl"
+                                                    className="w-10 h-full hover:bg-[#FAF9F5] text-[#52525B] hover:text-[#18181B] transition-colors flex items-center justify-center font-bold text-lg"
                                                 >+</button>
                                             </div>
                                             
                                             <Button
                                                 onClick={handleAddToCart}
                                                 disabled={!product.inStock}
-                                                className={`flex-1 h-16 text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all relative overflow-hidden group/btn ${!product.inStock ? 'opacity-50 grayscale' : ''}`}
-                                                style={{
-                                                    background: 'linear-gradient(135deg, #E8D48B, #C9A84C, #8B6914)',
-                                                    color: '#0A0A0F'
-                                                }}
+                                                className={`flex-1 h-12 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold text-xs uppercase tracking-[0.15em] rounded-xl transition-all shadow-sm ${!product.inStock ? 'opacity-50 grayscale' : ''}`}
                                             >
-                                                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700 skew-x-[20deg]" />
                                                 {product.inStock ? (
-                                                    <div className="flex items-center justify-center gap-3">
-                                                        <ShoppingCart size={18} /> Add to Collection
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <ShoppingCart size={16} /> Add to Cart
                                                     </div>
                                                 ) : 'Out of Stock'}
                                             </Button>
@@ -260,13 +239,13 @@ export function ProductQuickView({ product, isOpen, onClose }: { product: Produc
                                     </div>
 
                                     {/* Footer Link */}
-                                    <div className="flex items-center justify-center pt-4">
+                                    <div className="flex items-center justify-center pt-2">
                                         <Link
                                             href={getProductUrl(product)}
                                             onClick={onClose}
-                                            className="text-[#5A5A6A] hover:text-[#C9A84C] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 transition-all group/link"
+                                            className="text-[#71717A] hover:text-[#966E2E] text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 transition-all"
                                         >
-                                            Analysis & Full Specifications <Eye size={16} className="group-hover/link:scale-110 transition-transform" />
+                                            View Full Product Details <Eye size={14} />
                                         </Link>
                                     </div>
                                 </div>

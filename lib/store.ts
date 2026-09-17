@@ -162,7 +162,7 @@ export const useAppStore = create<AppState>()(
             hasSeenLanguagePopup: false,
             viewedProducts: [],
             wishlist: [],
-            theme: 'dark',
+            theme: 'light',
 
             // Default Admin Settings
             adminSettings: {
@@ -174,7 +174,7 @@ export const useAppStore = create<AppState>()(
                 emailNotifications: true,
                 stockAlerts: true,
                 taxRate: 18,
-                theme: 'dark',
+                theme: 'light',
                 taxId: 'GSTIN27AAAAA1111A1Z1',
                 legalBusinessName: 'Dinanath & Sons Private Limited',
                 shippingOrigin: 'Maliwara, Chandni Chowk, New Delhi, India',
@@ -199,7 +199,7 @@ export const useAppStore = create<AppState>()(
             })),
             setUser: (user) => set({ user }), // New
             setHasSeenLanguagePopup: (hasSeenLanguagePopup) => set({ hasSeenLanguagePopup }),
-            setTheme: (theme) => set({ theme: 'dark' }),
+            setTheme: (theme) => set({ theme: 'light' }),
 
             viewProduct: (productId) => set((state) => {
                 const newViewed = [productId, ...state.viewedProducts.filter(id => id !== productId)].slice(0, 6);

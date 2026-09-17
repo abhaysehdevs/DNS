@@ -197,8 +197,8 @@ function ShopContent() {
             
             {/* Ambient Background Glows */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[10%] left-[-5%] w-[40vw] h-[40vw] bg-gold-muted blur-[120px] rounded-full opacity-60" />
-                <div className="absolute bottom-[20%] right-[-5%] w-[40vw] h-[40vw] bg-cyan-glow/5 dark:bg-cyan-glow/3 blur-[120px] rounded-full" />
+                <div className="absolute top-[10%] left-[-5%] w-[40vw] h-[40vw] bg-[#966E2E]/5 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[20%] right-[-5%] w-[40vw] h-[40vw] bg-[#966E2E]/5 blur-[120px] rounded-full" />
             </div>
 
             <div className="container mx-auto px-3.5 sm:px-6 md:px-8 relative z-10">
@@ -246,7 +246,7 @@ function ShopContent() {
                             setSortBy={setSortBy}
                             totalProductsCount={filteredProducts.length}
                             onResetAll={handleClearFilters}
-                            className="bg-[#181818] border border-[#343434] rounded-2xl p-4 shadow-xl max-h-[82vh] overflow-y-auto custom-scrollbar"
+                            className="bg-white border border-[#E8E2D5] rounded-2xl p-4 shadow-xs max-h-[82vh] overflow-y-auto custom-scrollbar"
                         />
                     </aside>
 
@@ -300,20 +300,20 @@ function ShopContent() {
                                             <button
                                                 key={cat.key}
                                                 onClick={() => handleCategoryChange(cat.key)}
-                                                className={`group flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[10px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 whitespace-nowrap active:scale-95 ${
+                                                className={`group flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[10px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 whitespace-nowrap active:scale-95 cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-gradient-to-r from-[#DFCE9F] via-[#C5A059] to-[#9E7B35] text-black shadow-md shadow-[#C5A059]/20 font-black border border-[#DFCE9F]'
-                                                        : 'bg-surface-1/90 hover:bg-surface-2 text-text-secondary hover:text-text-primary border border-glass-border/70 hover:border-gold-primary/40'
+                                                        ? 'bg-[#966E2E] text-white shadow-xs font-bold border border-[#966E2E]'
+                                                        : 'bg-white hover:bg-[#FAF9F5] text-[#52525B] hover:text-[#18181B] border border-[#E8E2D5] hover:border-[#966E2E]/40'
                                                 }`}
                                             >
                                                 <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-lg flex items-center justify-center transition-colors ${
-                                                    isSelected ? 'bg-black/15 text-black' : 'bg-surface-2 text-gold-primary group-hover:text-gold-secondary'
+                                                    isSelected ? 'bg-white/20 text-white' : 'bg-[#FAF9F5] text-[#966E2E]'
                                                 }`}>
                                                     <Icon size={11} />
                                                 </span>
                                                 <span>{cat.label}</span>
                                                 <span className={`text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded-md font-mono ${
-                                                    isSelected ? 'bg-black/20 text-black font-black' : 'bg-surface-2 text-text-tertiary'
+                                                    isSelected ? 'bg-white/20 text-white font-bold' : 'bg-[#FAF9F5] text-[#71717A]'
                                                 }`}>
                                                     {count}
                                                 </span>
@@ -328,8 +328,7 @@ function ShopContent() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setShowFilters(true)}
-                                        className="lg:hidden h-9 px-3.5 text-black rounded-lg font-black text-[10px] tracking-wider transition-all flex items-center gap-1.5 uppercase shadow active:scale-95"
-                                        style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
+                                        className="lg:hidden h-9 px-3.5 bg-[#966E2E] hover:bg-[#7D5A25] text-white rounded-lg font-bold text-[10px] tracking-wider transition-all flex items-center gap-1.5 uppercase shadow-xs active:scale-95 cursor-pointer"
                                     >
                                         <Settings2 size={12} /> Filter
                                     </button>
@@ -351,18 +350,18 @@ function ShopContent() {
                                         > <List size={14} /> </button>
                                     </div>
 
-                                    <div className="relative h-9 flex items-center bg-[#151515] border border-[#343434] focus-within:border-[#A67C35] rounded-lg px-3 transition-all">
+                                    <div className="relative h-9 flex items-center bg-white border border-[#E8E2D5] focus-within:border-[#966E2E] rounded-lg px-3 transition-all shadow-xs">
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="w-full bg-transparent text-[10px] font-bold uppercase tracking-wider text-[#F8F3E8] appearance-none cursor-pointer outline-none pr-5"
+                                            className="w-full bg-transparent text-[10px] font-bold uppercase tracking-wider text-[#18181B] appearance-none cursor-pointer outline-none pr-5"
                                         >
-                                            <option value="featured" className="bg-[#151515] text-[#F8F3E8]">Featured</option>
-                                            <option value="priceAsc" className="bg-[#151515] text-[#F8F3E8]">Price: Low to High</option>
-                                            <option value="priceDesc" className="bg-[#151515] text-[#F8F3E8]">Price: High to Low</option>
-                                            <option value="nameAsc" className="bg-[#151515] text-[#F8F3E8]">Name: A to Z</option>
+                                            <option value="featured" className="bg-white text-[#18181B]">Featured</option>
+                                            <option value="priceAsc" className="bg-white text-[#18181B]">Price: Low to High</option>
+                                            <option value="priceDesc" className="bg-white text-[#18181B]">Price: High to Low</option>
+                                            <option value="nameAsc" className="bg-white text-[#18181B]">Name: A to Z</option>
                                         </select>
-                                        <ChevronDown size={12} className="absolute right-2.5 text-[#A67C35] pointer-events-none" />
+                                        <ChevronDown size={12} className="absolute right-2.5 text-[#966E2E] pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
@@ -397,38 +396,38 @@ function ShopContent() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowFilters(false)}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200]"
+                            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200]"
                         />
                         <motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-                            className="fixed inset-y-0 right-0 w-full sm:w-[380px] max-w-full bg-[#141414] border-l border-[#343434] z-[210] shadow-2xl flex flex-col"
+                            className="fixed inset-y-0 right-0 w-full sm:w-[380px] max-w-full bg-white border-l border-[#E8E2D5] z-[210] shadow-2xl flex flex-col text-[#18181B]"
                         >
                             {/* Mobile Drawer Header */}
-                            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-[#343434] bg-[#1A1A1A]">
+                            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-[#E8E2D5] bg-[#FAF9F5]">
                                 <div className="flex items-center gap-2.5">
-                                    <div className="w-8 h-8 rounded-lg bg-[#A67C35]/15 border border-[#A67C35]/40 flex items-center justify-center text-[#A67C35]">
+                                    <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#966E2E]">
                                         <Settings2 size={16} />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-bold text-[#F8F3E8] uppercase tracking-wider">Catalog Filters</h3>
-                                        <span className="text-[9px] text-[#A67C35] font-bold uppercase tracking-widest">
+                                        <h3 className="text-sm font-bold text-[#18181B] uppercase tracking-wider">Catalog Filters</h3>
+                                        <span className="text-[9px] text-[#966E2E] font-bold uppercase tracking-widest">
                                             {filteredProducts.length} matching units
                                         </span>
                                     </div>
                                 </div>
                                 <button 
                                     onClick={() => setShowFilters(false)} 
-                                    className="w-8 h-8 rounded-lg bg-[#242424] border border-[#343434] hover:border-[#A67C35] flex items-center justify-center text-[#CFCFCF] hover:text-white transition-all active:scale-95"
+                                    className="w-8 h-8 rounded-lg bg-white border border-[#E8E2D5] hover:border-[#966E2E] flex items-center justify-center text-[#71717A] hover:text-[#18181B] transition-all active:scale-95 cursor-pointer shadow-xs"
                                 >
                                     <X size={16} />
                                 </button>
                             </div>
 
                             {/* Mobile Drawer Body with Detailed Filters */}
-                            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4 bg-white">
                                 <FilterSidebar
                                     categories={categories}
                                     selectedCategories={[selectedCategory]}
@@ -450,17 +449,16 @@ function ShopContent() {
                             </div>
 
                             {/* Mobile Drawer Sticky Footer */}
-                            <div className="p-4 bg-[#1A1A1A] border-t border-[#343434] flex items-center gap-3">
+                            <div className="p-4 bg-[#FAF9F5] border-t border-[#E8E2D5] flex items-center gap-3">
                                 <button
                                     onClick={handleClearFilters}
-                                    className="h-11 px-4 text-[10px] font-bold uppercase tracking-wider text-[#8E8E9A] hover:text-white transition-colors bg-[#242424] border border-[#343434] rounded-xl shrink-0 active:scale-95"
+                                    className="h-11 px-4 text-[10px] font-bold uppercase tracking-wider text-[#71717A] hover:text-[#18181B] transition-colors bg-white border border-[#E8E2D5] rounded-xl shrink-0 active:scale-95 cursor-pointer shadow-xs"
                                 >
                                     Clear All
                                 </button>
                                 <button
                                     onClick={() => setShowFilters(false)}
-                                    className="flex-1 h-11 text-black font-black rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-md uppercase tracking-[0.15em] text-[10px] flex items-center justify-center gap-1.5"
-                                    style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
+                                    className="flex-1 h-11 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold rounded-xl active:scale-95 transition-all shadow-sm uppercase tracking-[0.15em] text-[10px] flex items-center justify-center gap-1.5 cursor-pointer"
                                 >
                                     <span>Show {filteredProducts.length} Units</span>
                                     <ChevronRight size={13} strokeWidth={2.5} />

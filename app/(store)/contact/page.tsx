@@ -129,12 +129,12 @@ export default function Contact() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
-            <div className="min-h-screen bg-surface-2 text-text-primary pt-32 md:pt-44 pb-24 selection:bg-gold-primary/30 overflow-x-hidden blueprint-grid">
+            <div className="min-h-screen bg-surface-2 text-text-primary pt-4 sm:pt-6 md:pt-8 pb-16 selection:bg-gold-primary/30 overflow-x-hidden blueprint-grid">
             
             {/* Ambient Background Elements */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[10%] right-[-5%] w-[40vw] h-[40vw] bg-gold-muted blur-[120px] rounded-full animate-pulse-glow" />
-                <div className="absolute bottom-[20%] left-[-5%] w-[40vw] h-[40vw] bg-cyan-glow/5 dark:bg-cyan-glow/3 blur-[120px] rounded-full" />
+                <div className="absolute top-[10%] right-[-5%] w-[40vw] h-[40vw] bg-gold-muted blur-[120px] rounded-full" />
+                <div className="absolute bottom-[20%] left-[-5%] w-[40vw] h-[40vw] bg-amber-500/5 blur-[120px] rounded-full" />
             </div>
 
             <div className="container mx-auto px-6 relative z-10">
@@ -144,24 +144,24 @@ export default function Contact() {
                     <motion.div 
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-20"
+                        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6 mb-8 sm:mb-12"
                     >
                         <div className="max-w-2xl">
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-gold text-gold-primary text-[8px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm">
+                            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-gold text-gold-primary text-[8px] font-black uppercase tracking-[0.3em] mb-3 shadow-xs">
                                 <Headphones size={12} /> Direct Support Channels
                             </div>
-                            <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter uppercase mb-4 leading-[0.85] text-text-primary">
+                            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-2 leading-[0.9] text-text-primary">
                                 Contact <br/>
                                 <span className="text-transparent bg-gradient-to-r from-text-primary to-gold-primary bg-clip-text">Us</span>
                             </h1>
                         </div>
-                        <p className="text-text-secondary text-base font-medium max-w-sm mb-2 leading-relaxed">
+                        <p className="text-text-secondary text-sm sm:text-base font-medium max-w-sm mb-2 leading-relaxed">
                             Based in Delhi, India. Helping jewelry manufacturing setups in over 40 countries.
                         </p>
                     </motion.div>
  
                     {/* Support tiers */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
                         {supportTiers.map((tier, i) => (
                             <motion.div
                                 key={i}

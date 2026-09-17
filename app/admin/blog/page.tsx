@@ -282,14 +282,14 @@ export default function AdminBlogPage() {
     });
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 bg-[#FAF9F5] min-h-screen text-[#18181B]">
             {/* Header Title */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1E1E1E] p-6 rounded-2xl border border-[#343434] shadow-lg">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E8E2D5] shadow-sm">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-black text-[#F8F3E8] uppercase tracking-wider flex items-center gap-3">
-                        <FileText className="text-[#A67C35]" size={28} /> Blog CMS & Editorial Suite
+                    <h1 className="text-2xl md:text-3xl font-black text-[#18181B] uppercase tracking-wider flex items-center gap-3">
+                        <FileText className="text-[#966E2E]" size={28} /> Blog CMS & Editorial Suite
                     </h1>
-                    <p className="text-xs text-[#8E8E9A] font-bold uppercase tracking-widest mt-1">
+                    <p className="text-xs text-[#71717A] font-bold uppercase tracking-widest mt-1">
                         Create, upload media, and publish technical guides & news for Dinanath & Sons
                     </p>
                 </div>
@@ -298,7 +298,7 @@ export default function AdminBlogPage() {
                     <Link
                         href="/blog"
                         target="_blank"
-                        className="h-12 px-5 rounded-xl bg-[#151515] hover:bg-[#252525] text-[#F8F3E8] font-bold uppercase text-[10px] tracking-widest transition-all flex items-center gap-2 border border-[#343434]"
+                        className="h-12 px-5 rounded-xl bg-[#FAF9F5] hover:bg-[#F3EFE6] text-[#18181B] font-bold uppercase text-[10px] tracking-widest transition-all flex items-center gap-2 border border-[#E8E2D5]"
                     >
                         <Eye size={15} />
                         <span>View Live Blog</span>
@@ -306,7 +306,7 @@ export default function AdminBlogPage() {
 
                     <button
                         onClick={() => handleOpenModal()}
-                        className="h-12 px-6 rounded-xl bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase text-[10px] tracking-widest transition-all flex items-center gap-2 shadow-md cursor-pointer border-none"
+                        className="h-12 px-6 rounded-xl bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase text-[10px] tracking-widest transition-all flex items-center gap-2 shadow-sm cursor-pointer border-none"
                     >
                         <Plus size={16} strokeWidth={3} />
                         <span>Create New Article</span>
@@ -315,15 +315,15 @@ export default function AdminBlogPage() {
             </div>
 
             {/* Filter and Search Bar */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-[#1E1E1E] p-4 rounded-xl border border-[#343434]">
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white p-4 rounded-xl border border-[#E8E2D5] shadow-sm">
                 <div className="relative w-full sm:w-80">
-                    <Search size={16} className="absolute left-4 top-3.5 text-[#8E8E9A]" />
+                    <Search size={16} className="absolute left-4 top-3.5 text-[#71717A]" />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search blog articles..."
-                        className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl pl-11 pr-4 text-xs text-[#F8F3E8] font-bold placeholder-[#8E8E9A] focus:outline-none"
+                        className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl pl-11 pr-4 text-xs text-[#18181B] font-bold placeholder-[#A1A1AA] focus:outline-none"
                     />
                 </div>
 
@@ -332,10 +332,10 @@ export default function AdminBlogPage() {
                         <button
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
-                            className={`px-3 py-2 rounded-lg text-[9.5px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
+                            className={`px-3 py-2 rounded-lg text-[9.5px] font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                                 selectedCategory === cat
-                                    ? 'bg-[#A67C35] text-black font-black'
-                                    : 'bg-[#151515] text-[#8E8E9A] hover:text-[#F8F3E8] border border-[#343434]'
+                                    ? 'bg-[#966E2E] text-white font-black shadow-sm'
+                                    : 'bg-[#FAF9F5] text-[#71717A] hover:text-[#18181B] border border-[#E8E2D5]'
                             }`}
                         >
                             {cat}
@@ -347,23 +347,23 @@ export default function AdminBlogPage() {
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
-                    <div key={post.id} className="bg-[#1E1E1E] border border-[#343434] hover:border-[#A67C35] rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg transition-all group">
-                        <div className="relative h-48 bg-[#151515] overflow-hidden">
+                    <div key={post.id} className="bg-white border border-[#E8E2D5] hover:border-[#966E2E] rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm transition-all group">
+                        <div className="relative h-48 bg-[#FAF9F5] overflow-hidden">
                             <img 
                                 src={post.image || '/placeholder.jpg'} 
                                 alt={post.title} 
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                             />
-                            <div className="absolute top-3 left-3 bg-[#151515]/90 backdrop-blur-sm border border-[#343434] text-[#A67C35] text-[8px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded">
+                            <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm border border-[#E8E2D5] text-[#966E2E] text-[8px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
                                 {post.category}
                             </div>
-                            <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-[8px] font-mono font-bold uppercase px-2 py-1 rounded flex items-center gap-1">
+                            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm border border-[#E8E2D5] text-[8px] font-mono font-bold uppercase px-2 py-1 rounded flex items-center gap-1 shadow-sm">
                                 {post.isPublished !== false ? (
-                                    <span className="text-green-400 flex items-center gap-1">
+                                    <span className="text-emerald-700 flex items-center gap-1">
                                         <CheckCircle2 size={10} /> Published
                                     </span>
                                 ) : (
-                                    <span className="text-amber-400 flex items-center gap-1">
+                                    <span className="text-amber-700 flex items-center gap-1">
                                         <AlertCircle size={10} /> Draft
                                     </span>
                                 )}
@@ -372,19 +372,19 @@ export default function AdminBlogPage() {
 
                         <div className="p-5 flex-1 flex flex-col justify-between">
                             <div>
-                                <div className="flex items-center gap-2 text-[9px] text-[#8E8E9A] font-mono uppercase font-bold mb-2">
+                                <div className="flex items-center gap-2 text-[9px] text-[#71717A] font-mono uppercase font-bold mb-2">
                                     <Calendar size={12} /> {post.date} • <Clock size={12} /> {post.readTime}
                                 </div>
-                                <h3 className="font-bold text-[#F8F3E8] text-sm uppercase leading-snug line-clamp-2 mb-2 group-hover:text-[#A67C35] transition-colors">
+                                <h3 className="font-bold text-[#18181B] text-sm uppercase leading-snug line-clamp-2 mb-2 group-hover:text-[#966E2E] transition-colors">
                                     {post.title}
                                 </h3>
-                                <p className="text-xs text-[#CFCFCF] line-clamp-3 font-normal leading-relaxed mb-4">
+                                <p className="text-xs text-[#52525B] line-clamp-3 font-normal leading-relaxed mb-4">
                                     {post.excerpt}
                                 </p>
                             </div>
 
-                            <div className="pt-4 border-t border-[#343434] flex items-center justify-between">
-                                <span className="text-[8.5px] font-mono text-[#8E8E9A] uppercase font-bold truncate max-w-[130px]">
+                            <div className="pt-4 border-t border-[#E8E2D5] flex items-center justify-between">
+                                <span className="text-[8.5px] font-mono text-[#71717A] uppercase font-bold truncate max-w-[130px]">
                                     {post.author}
                                 </span>
                                 
@@ -393,7 +393,7 @@ export default function AdminBlogPage() {
                                         href={`/blog/${post.id}`}
                                         target="_blank"
                                         title="View Live Article"
-                                        className="w-8 h-8 rounded-lg bg-[#151515] border border-[#343434] text-gray-300 hover:text-white hover:bg-gray-800 flex items-center justify-center transition-colors"
+                                        className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] text-[#71717A] hover:text-[#18181B] hover:bg-[#F3EFE6] flex items-center justify-center transition-colors"
                                     >
                                         <ExternalLink size={13} />
                                     </Link>
@@ -401,7 +401,7 @@ export default function AdminBlogPage() {
                                     <button
                                         onClick={() => handleOpenModal(post)}
                                         title="Edit Article"
-                                        className="w-8 h-8 rounded-lg bg-[#151515] border border-[#343434] text-[#A67C35] hover:bg-[#A67C35] hover:text-black flex items-center justify-center transition-colors cursor-pointer"
+                                        className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] text-[#966E2E] hover:bg-[#966E2E] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                                     >
                                         <Edit2 size={13} />
                                     </button>
@@ -409,7 +409,7 @@ export default function AdminBlogPage() {
                                     <button
                                         onClick={() => handleDeletePost(post.id)}
                                         title="Delete Article"
-                                        className="w-8 h-8 rounded-lg bg-[#151515] border border-[#343434] text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                                        className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                                     >
                                         <Trash2 size={13} />
                                     </button>
@@ -429,23 +429,23 @@ export default function AdminBlogPage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                         />
 
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="relative w-full max-w-3xl bg-[#1E1E1E] border border-[#343434] rounded-2xl p-6 md:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto custom-scrollbar"
+                            className="relative w-full max-w-3xl bg-white border border-[#E8E2D5] rounded-2xl p-6 md:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto custom-scrollbar"
                         >
-                            <div className="flex items-center justify-between mb-6 pb-3 border-b border-[#343434]">
-                                <h2 className="text-xl font-black text-[#F8F3E8] uppercase tracking-wider flex items-center gap-2">
-                                    <Sparkles className="text-[#A67C35]" size={20} />
+                            <div className="flex items-center justify-between mb-6 pb-3 border-b border-[#E8E2D5]">
+                                <h2 className="text-xl font-black text-[#18181B] uppercase tracking-wider flex items-center gap-2">
+                                    <Sparkles className="text-[#966E2E]" size={20} />
                                     {editingPost ? 'Edit Blog Article' : 'Publish New Technical Article'}
                                 </h2>
                                 <button 
                                     onClick={() => setIsModalOpen(false)}
-                                    className="p-2 text-gray-500 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                                    className="p-2 text-[#71717A] hover:text-[#18181B] rounded-lg hover:bg-black/5 transition-colors cursor-pointer"
                                 >
                                     <X size={18} />
                                 </button>
@@ -454,7 +454,7 @@ export default function AdminBlogPage() {
                             <form onSubmit={handleSavePost} className="space-y-6">
                                 {/* Title */}
                                 <div>
-                                    <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                    <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                         Article Title
                                     </label>
                                     <input
@@ -463,30 +463,30 @@ export default function AdminBlogPage() {
                                         value={formData.title}
                                         onChange={(e) => handleTitleChange(e.target.value)}
                                         placeholder="e.g. Master Gold Casting Techniques & Temperature Parameters"
-                                        className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] focus:outline-none"
+                                        className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-bold text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                     />
                                 </div>
 
                                 {/* URL Slug & Category */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                             URL Slug (Auto-generated)
                                         </label>
-                                        <div className="flex items-center bg-[#151515] border border-[#343434] rounded-xl px-3 focus-within:border-[#A67C35]">
-                                            <span className="text-[10px] text-gray-500 font-mono">/blog/</span>
+                                        <div className="flex items-center bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl px-3 focus-within:border-[#966E2E]">
+                                            <span className="text-[10px] text-[#71717A] font-mono">/blog/</span>
                                             <input
                                                 required
                                                 type="text"
                                                 value={formData.slug}
                                                 onChange={(e) => setFormData({ ...formData, slug: toBlogSlug(e.target.value) })}
                                                 placeholder="article-slug"
-                                                className="w-full h-11 bg-transparent text-xs font-mono text-[#F8F3E8] focus:outline-none pl-1"
+                                                className="w-full h-11 bg-transparent text-xs font-mono text-[#18181B] focus:outline-none pl-1"
                                             />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                             Category
                                         </label>
                                         <input
@@ -495,21 +495,21 @@ export default function AdminBlogPage() {
                                             value={formData.category}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                             placeholder="e.g. Guides, Technical, Metallurgy"
-                                            className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] focus:outline-none"
+                                            className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-bold text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                         />
                                     </div>
                                 </div>
 
-                                {/* --- DIRECT COVER IMAGE UPLOAD (KEY REQUIREMENT) --- */}
+                                {/* --- DIRECT COVER IMAGE UPLOAD --- */}
                                 <div>
                                     <div className="flex items-center justify-between mb-2">
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest">
                                             Article Cover Photo (Upload Directly)
                                         </label>
                                         <button
                                             type="button"
                                             onClick={() => setShowDirectUrlInput(!showDirectUrlInput)}
-                                            className="text-[9px] font-mono text-[#A67C35] hover:underline uppercase"
+                                            className="text-[9px] font-mono text-[#966E2E] hover:underline uppercase cursor-pointer"
                                         >
                                             {showDirectUrlInput ? 'Hide URL input' : 'Or enter image link'}
                                         </button>
@@ -518,8 +518,8 @@ export default function AdminBlogPage() {
                                     {/* Upload Dropzone / Image Preview */}
                                     <div className="space-y-3">
                                         {formData.image ? (
-                                            <div className="relative rounded-2xl overflow-hidden border border-[#343434] bg-[#151515] p-3 flex flex-col sm:flex-row items-center gap-4">
-                                                <div className="relative w-full sm:w-48 h-32 rounded-xl overflow-hidden bg-black shrink-0 border border-gray-800">
+                                            <div className="relative rounded-2xl overflow-hidden border border-[#E8E2D5] bg-[#FAF9F5] p-3 flex flex-col sm:flex-row items-center gap-4">
+                                                <div className="relative w-full sm:w-48 h-32 rounded-xl overflow-hidden bg-white shrink-0 border border-[#E8E2D5]">
                                                     <img 
                                                         src={formData.image} 
                                                         alt="Cover preview" 
@@ -529,11 +529,11 @@ export default function AdminBlogPage() {
 
                                                 <div className="flex-1 space-y-2 text-center sm:text-left">
                                                     <div className="flex items-center justify-center sm:justify-start gap-2">
-                                                        <span className="text-[10px] font-bold text-green-400 bg-green-950/40 border border-green-800/40 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                                                             <Check size={11} /> Photo Selected
                                                         </span>
                                                     </div>
-                                                    <p className="text-[10px] text-gray-400 font-mono truncate max-w-sm">
+                                                    <p className="text-[10px] text-[#71717A] font-mono truncate max-w-sm">
                                                         {formData.image}
                                                     </p>
                                                     <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
@@ -541,14 +541,14 @@ export default function AdminBlogPage() {
                                                             type="button"
                                                             onClick={() => fileInputRef.current?.click()}
                                                             disabled={uploadingImage}
-                                                            className="px-3 py-1.5 rounded-lg bg-[#A67C35] hover:bg-[#8A6232] text-black text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer"
+                                                            className="px-3 py-1.5 rounded-lg bg-[#966E2E] hover:bg-[#7D5A25] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer"
                                                         >
                                                             <Upload size={12} /> Change Photo
                                                         </button>
                                                         <button
                                                             type="button"
                                                             onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
-                                                            className="px-3 py-1.5 rounded-lg bg-red-900/20 hover:bg-red-900/40 text-red-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer border border-red-800/30"
+                                                            className="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer border border-red-200"
                                                         >
                                                             <X size={12} /> Remove
                                                         </button>
@@ -558,22 +558,22 @@ export default function AdminBlogPage() {
                                         ) : (
                                             <div 
                                                 onClick={() => fileInputRef.current?.click()}
-                                                className="border-2 border-dashed border-[#343434] hover:border-[#A67C35] rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-[#151515]/50 hover:bg-[#151515] transition-all group"
+                                                className="border-2 border-dashed border-[#E8E2D5] hover:border-[#966E2E] rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-[#FAF9F5] hover:bg-[#F3EFE6] transition-all group"
                                             >
                                                 {uploadingImage ? (
                                                     <div className="flex flex-col items-center gap-2 py-4">
-                                                        <Loader2 size={32} className="animate-spin text-[#A67C35]" />
-                                                        <span className="text-xs font-bold text-white uppercase tracking-wider">Compressing & Uploading WebP...</span>
+                                                        <Loader2 size={32} className="animate-spin text-[#966E2E]" />
+                                                        <span className="text-xs font-bold text-[#18181B] uppercase tracking-wider">Compressing & Uploading WebP...</span>
                                                     </div>
                                                 ) : (
                                                     <>
-                                                        <div className="w-14 h-14 rounded-2xl bg-[#1E1E1E] group-hover:bg-[#A67C35]/10 flex items-center justify-center mb-3 transition-colors">
-                                                            <Upload size={24} className="text-[#8E8E9A] group-hover:text-[#A67C35]" />
+                                                        <div className="w-14 h-14 rounded-2xl bg-white border border-[#E8E2D5] group-hover:bg-[#966E2E]/10 flex items-center justify-center mb-3 transition-colors">
+                                                            <Upload size={24} className="text-[#71717A] group-hover:text-[#966E2E]" />
                                                         </div>
-                                                        <p className="text-sm font-bold text-white uppercase tracking-wider mb-1">
+                                                        <p className="text-sm font-bold text-[#18181B] uppercase tracking-wider mb-1">
                                                             Click to Upload Cover Image
                                                         </p>
-                                                        <p className="text-[10px] text-gray-500 font-bold">
+                                                        <p className="text-[10px] text-[#71717A] font-bold">
                                                             PNG, JPG, or WebP. Auto-converts to optimized WebP.
                                                         </p>
                                                     </>
@@ -598,7 +598,7 @@ export default function AdminBlogPage() {
                                                     value={formData.image}
                                                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                                                     placeholder="Or paste direct image URL (e.g. https://... or /blog-1.jpg)"
-                                                    className="w-full h-10 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-mono text-[#F8F3E8] focus:outline-none"
+                                                    className="w-full h-10 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-mono text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                                 />
                                             </div>
                                         )}
@@ -608,7 +608,7 @@ export default function AdminBlogPage() {
                                 {/* Author, Role, Read Time */}
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div>
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                             Author Name
                                         </label>
                                         <input
@@ -617,11 +617,11 @@ export default function AdminBlogPage() {
                                             value={formData.author}
                                             onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                                             placeholder="e.g. Dinanath Technical Team"
-                                            className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] focus:outline-none"
+                                            className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-bold text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                             Author Title / Role
                                         </label>
                                         <input
@@ -629,11 +629,11 @@ export default function AdminBlogPage() {
                                             value={formData.authorRole}
                                             onChange={(e) => setFormData({ ...formData, authorRole: e.target.value })}
                                             placeholder="e.g. Technical Director"
-                                            className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] focus:outline-none"
+                                            className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-bold text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                             Read Time
                                         </label>
                                         <div className="flex items-center gap-2">
@@ -643,12 +643,12 @@ export default function AdminBlogPage() {
                                                 value={formData.readTime}
                                                 onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
                                                 placeholder="e.g. 5 min read"
-                                                className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] focus:outline-none"
+                                                className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-bold text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setFormData(prev => ({ ...prev, readTime: calculateReadTime(prev.content) }))}
-                                                className="h-11 px-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-[9px] font-bold uppercase whitespace-nowrap"
+                                                className="h-11 px-3 bg-[#FAF9F5] border border-[#E8E2D5] hover:bg-[#F3EFE6] text-[#52525B] rounded-xl text-[9px] font-bold uppercase whitespace-nowrap cursor-pointer"
                                                 title="Auto-calculate read time"
                                             >
                                                 Auto
@@ -660,7 +660,7 @@ export default function AdminBlogPage() {
                                 {/* Tags & Publishing Status */}
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
                                     <div className="sm:col-span-2">
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                             Tags (Comma Separated)
                                         </label>
                                         <input
@@ -668,21 +668,21 @@ export default function AdminBlogPage() {
                                             value={formData.tags}
                                             onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                             placeholder="e.g. Tools, Casting, Maintenance"
-                                            className="w-full h-11 bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl px-4 text-xs font-bold text-[#F8F3E8] focus:outline-none"
+                                            className="w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl px-4 text-xs font-bold text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block">
+                                        <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block">
                                             Publication Status
                                         </label>
                                         <div 
                                             onClick={() => setFormData(prev => ({ ...prev, isPublished: !prev.isPublished }))}
-                                            className="h-11 bg-[#151515] border border-[#343434] rounded-xl px-4 flex items-center justify-between cursor-pointer hover:border-gray-600 transition-colors"
+                                            className="h-11 bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl px-4 flex items-center justify-between cursor-pointer hover:border-[#966E2E] transition-colors"
                                         >
-                                            <span className="text-xs font-bold text-white">
+                                            <span className="text-xs font-bold text-[#18181B]">
                                                 {formData.isPublished ? 'Published Live' : 'Draft / Hidden'}
                                             </span>
-                                            <div className={`w-8 h-4 rounded-full relative transition-colors ${formData.isPublished ? 'bg-green-600' : 'bg-gray-700'}`}>
+                                            <div className={`w-8 h-4 rounded-full relative transition-colors ${formData.isPublished ? 'bg-emerald-600' : 'bg-gray-300'}`}>
                                                 <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${formData.isPublished ? 'left-4.5' : 'left-0.5'}`} />
                                             </div>
                                         </div>
@@ -691,7 +691,7 @@ export default function AdminBlogPage() {
 
                                 {/* Excerpt */}
                                 <div>
-                                    <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                    <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                         Excerpt (Summary for Previews)
                                     </label>
                                     <textarea
@@ -700,13 +700,13 @@ export default function AdminBlogPage() {
                                         value={formData.excerpt}
                                         onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                                         placeholder="Brief technical summary displayed on blog catalog cards..."
-                                        className="w-full bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl p-3 text-xs text-[#F8F3E8] font-medium focus:outline-none"
+                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl p-3 text-xs text-[#18181B] placeholder-[#A1A1AA] font-medium focus:outline-none"
                                     />
                                 </div>
 
                                 {/* Full Content */}
                                 <div>
-                                    <label className="text-[9px] font-mono font-bold text-[#8E8E9A] uppercase tracking-widest block mb-1.5">
+                                    <label className="text-[9px] font-mono font-bold text-[#71717A] uppercase tracking-widest block mb-1.5">
                                         Full Article Body (HTML or Markdown)
                                     </label>
                                     <textarea
@@ -715,23 +715,23 @@ export default function AdminBlogPage() {
                                         value={formData.content}
                                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                         placeholder="Full article content body... Supports <h3>, <p>, <blockquote>, <ul>, <li> or Markdown."
-                                        className="w-full bg-[#151515] border border-[#343434] focus:border-[#A67C35] rounded-xl p-4 text-xs text-[#F8F3E8] font-mono focus:outline-none leading-relaxed"
+                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] focus:border-[#966E2E] rounded-xl p-4 text-xs text-[#18181B] font-mono placeholder-[#A1A1AA] focus:outline-none leading-relaxed"
                                     />
                                 </div>
 
                                 {/* Actions */}
-                                <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#343434]">
+                                <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E8E2D5]">
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="px-6 py-2.5 rounded-xl border border-[#343434] text-[#8E8E9A] hover:text-[#F8F3E8] font-bold text-xs uppercase tracking-wider"
+                                        className="px-6 py-2.5 rounded-xl border border-[#E8E2D5] bg-[#FAF9F5] hover:bg-[#F3EFE6] text-[#71717A] hover:text-[#18181B] font-bold text-xs uppercase tracking-wider cursor-pointer"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={loading || uploadingImage}
-                                        className="px-6 py-2.5 rounded-xl bg-[#A67C35] hover:bg-[#8A6232] disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider shadow-md border-none cursor-pointer flex items-center gap-2"
+                                        className="px-6 py-2.5 rounded-xl bg-[#966E2E] hover:bg-[#7D5A25] disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider shadow-sm border-none cursor-pointer flex items-center gap-2"
                                     >
                                         {loading && <Loader2 size={14} className="animate-spin" />}
                                         <span>{editingPost ? 'Update Article' : 'Publish Article'}</span>

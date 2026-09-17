@@ -25,7 +25,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
     if (!cat) {
         return {
-            title: 'Category Not Found | Dinanath & Sons',
+            title: 'Category Not Found',
             robots: {
                 index: false,
                 follow: false,
@@ -134,7 +134,7 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
             />
 
-            <div className="min-h-screen bg-[#151515] text-[#F8F3E8] pt-2 sm:pt-4 md:pt-6 pb-20 selection:bg-[#A67C35]/30">
+            <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] pt-2 sm:pt-4 md:pt-6 pb-20 selection:bg-[#966E2E]/20">
                 <div className="max-w-[1400px] mx-auto px-3.5 sm:px-6 md:px-12">
                     {/* Visual Breadcrumbs */}
                     <div className="mb-3 sm:mb-6">
@@ -147,27 +147,27 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                     </div>
 
                     {/* Category Header with Single H1 */}
-                    <header className="mb-12 bg-[#1E1E1E] border border-[#343434] rounded-2xl p-8 md:p-12 relative overflow-hidden">
+                    <header className="mb-12 bg-white border border-[#E8E2D5] rounded-2xl p-8 md:p-12 relative overflow-hidden shadow-sm">
                         <div className="max-w-3xl relative z-10">
-                            <span className="text-[10px] font-mono font-bold text-[#A67C35] uppercase tracking-[0.3em] block mb-3">
+                            <span className="text-[10px] font-mono font-bold text-[#966E2E] uppercase tracking-[0.3em] block mb-3">
                                 Official Category Catalog • Dinanath & Sons
                             </span>
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-[#F8F3E8] uppercase tracking-wide mb-4 leading-tight">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-[#18181B] uppercase tracking-wide mb-4 leading-tight">
                                 {cat.h1}
                             </h1>
-                            <p className="text-sm md:text-base text-[#CFCFCF] font-medium leading-relaxed mb-6">
+                            <p className="text-sm md:text-base text-[#52525B] font-medium leading-relaxed mb-6">
                                 {cat.description}
                             </p>
-                            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#8E8E9A]">
-                                <div className="flex items-center gap-1.5 text-[#A67C35]">
+                            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#71717A]">
+                                <div className="flex items-center gap-1.5 text-[#966E2E]">
                                     <ShieldCheck size={14} /> Tested for Workshop Reliability
                                 </div>
-                                <div className="h-3 w-px bg-[#343434]" />
+                                <div className="h-3 w-px bg-[#E8E2D5]" />
                                 <div className="flex items-center gap-1.5">
                                     <Truck size={14} /> Pan-India Dispatch from Chandni Chowk
                                 </div>
-                                <div className="h-3 w-px bg-[#343434]" />
-                                <div className="flex items-center gap-1.5 text-white">
+                                <div className="h-3 w-px bg-[#E8E2D5]" />
+                                <div className="flex items-center gap-1.5 text-[#18181B] font-bold">
                                     <Package size={14} /> {products.length} Products in Stock
                                 </div>
                             </div>
@@ -177,11 +177,11 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
 
                     {/* Category Products Grid */}
                     <section className="mb-20">
-                        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#343434]">
-                            <h2 className="text-lg md:text-xl font-bold font-display uppercase tracking-wider text-[#F8F3E8]">
+                        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E8E2D5]">
+                            <h2 className="text-lg md:text-xl font-bold font-display uppercase tracking-wider text-[#18181B]">
                                 Available {cat.name} ({products.length})
                             </h2>
-                            <span className="text-[10px] font-mono text-[#8E8E9A] uppercase">
+                            <span className="text-[10px] font-mono text-[#71717A] uppercase">
                                 Showing direct stock
                             </span>
                         </div>
@@ -193,9 +193,9 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-20 text-center bg-[#1E1E1E] rounded-2xl border border-[#343434]">
-                                <p className="text-sm text-[#8E8E9A] mb-4">No products found in this category currently.</p>
-                                <Link href="/shop" className="text-xs text-[#A67C35] font-bold uppercase tracking-wider">
+                            <div className="py-20 text-center bg-white rounded-2xl border border-[#E8E2D5] shadow-sm">
+                                <p className="text-sm text-[#71717A] mb-4">No products found in this category currently.</p>
+                                <Link href="/shop" className="text-xs text-[#966E2E] font-bold uppercase tracking-wider">
                                     View Full Inventory
                                 </Link>
                             </div>
@@ -203,8 +203,8 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                     </section>
 
                     {/* Cross-Category Internal Links (Real Crawlable <a> Tags) */}
-                    <section className="bg-[#1E1E1E] border border-[#343434] rounded-2xl p-8">
-                        <h3 className="text-sm font-bold uppercase tracking-widest text-[#F8F3E8] mb-6">
+                    <section className="bg-white border border-[#E8E2D5] rounded-2xl p-8 shadow-sm">
+                        <h3 className="text-sm font-bold uppercase tracking-widest text-[#18181B] mb-6">
                             Explore Related Jewellery Making Categories
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -212,12 +212,12 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                                 <Link
                                     key={c.slug}
                                     href={`/shop/category/${c.slug}`}
-                                    className="p-3.5 rounded-xl bg-[#242424] hover:bg-[#A67C35]/15 border border-[#343434] hover:border-[#A67C35] text-left transition-all group"
+                                    className="p-3.5 rounded-xl bg-[#FAF9F5] hover:bg-[#F3EFE6] border border-[#E8E2D5] hover:border-[#966E2E]/50 text-left transition-all group"
                                 >
-                                    <h4 className="text-xs font-bold text-[#F8F3E8] group-hover:text-[#A67C35] transition-colors mb-1">
+                                    <h4 className="text-xs font-bold text-[#18181B] group-hover:text-[#966E2E] transition-colors mb-1">
                                         {c.name}
                                     </h4>
-                                    <p className="text-[9px] text-[#8E8E9A] line-clamp-2">
+                                    <p className="text-[9px] text-[#71717A] line-clamp-2">
                                         {c.subtitle}
                                     </p>
                                 </Link>

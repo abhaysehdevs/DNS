@@ -31,7 +31,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
 
     if (!rawProduct) {
         return {
-            title: 'Product Not Found | Dinanath & Sons',
+            title: 'Product Not Found',
             robots: {
                 index: false,
                 follow: false,
@@ -40,9 +40,13 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     }
 
     const category = rawProduct.category || 'Jewellery Tools';
-    const title = (rawProduct as any).seo_title || `${rawProduct.name} | ${category} | Dinanath & Sons`;
-    const description = (rawProduct as any).seo_description || 
-        (rawProduct.description ? `${rawProduct.description.slice(0, 140)}... Buy at Dinanath & Sons.` : `Buy ${rawProduct.name} at Dinanath & Sons. Professional ${category.toLowerCase()} for goldsmiths and jewellery manufacturing workshops.`);
+    let baseTitle = (rawProduct as any).seo_title || `${rawProduct.name} | ${category}`;
+    baseTitle = baseTitle.replace(/\s*\|\s*Dinanath\s*&\s*Sons.*$/i, '').trim();
+
+    const rawDesc = (rawProduct as any).seo_description || rawProduct.description || '';
+    const description = rawDesc 
+        ? (rawDesc.length > 155 ? `${rawDesc.slice(0, 152).trim()}...` : rawDesc)
+        : `Buy ${rawProduct.name} at Dinanath & Sons. Professional ${category.toLowerCase()} for goldsmiths and manufacturing workshops. Pan-India delivery.`;
     
     const rawImage = rawProduct.primaryImage || rawProduct.image || rawProduct.image_url || '/placeholder.jpg';
     const image = rawImage.startsWith('http') ? rawImage : `https://dinanathandsons.com${rawImage.startsWith('/') ? '' : '/'}${rawImage}`;
@@ -50,13 +54,13 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     const canonicalUrl = `https://dinanathandsons.com/shop/${canonicalSlug}`;
 
     return {
-        title,
+        title: baseTitle,
         description,
         alternates: {
             canonical: canonicalUrl,
         },
         openGraph: {
-            title,
+            title: baseTitle,
             description,
             images: [
                 {
@@ -70,7 +74,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
         },
         twitter: {
             card: 'summary_large_image',
-            title,
+            title: baseTitle,
             description,
             images: [image],
         }

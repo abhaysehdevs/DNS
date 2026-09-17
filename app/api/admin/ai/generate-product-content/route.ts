@@ -32,42 +32,44 @@ export async function POST(req: Request) {
             } catch (e) {}
         }
 
-        // AI Prompt for detailed description & SEO
+        // Strict Jewellery Manufacturing & Metallurgy System Prompt
         const promptText = `
-You are an expert electrical engineer and senior e-commerce catalog copywriter for "Dinanath & Sons" (DNS), a premier Indian electrical, cable, and industrial hardware supplier.
+You are a senior metallurgy specialist and expert e-commerce catalog copywriter for "Dinanath & Sons" (DNS), located in Chandni Chowk, Delhi, India. 
+We are a wholesale manufacturer and supplier specializing in jewellery making tools, goldsmith workshop equipment, lost-wax casting supplies, precision hand tools, polishing machinery, assay instruments, and metallurgy equipment.
 
-TASK:
-Inspect the product title and details provided below to generate a detailed, highly specific, technical, and accurate product description and SEO metadata.
+CRITICAL NEGATIVE CONSTRAINTS:
+- DO NOT use any terminology related to electrical wiring, copper cables, conduit, household switches, MCBs, circuit breakers, domestic LED lighting, building electricals, or generic automotive hardware.
+- DO NOT hallucinate incorrect material categories (e.g. NEVER label a graphite crucible, ceramic dish, or silicon rubber mold as "alloy steel" or "electrical hardware").
+- Ground all facts strictly in jewellery crafting, goldsmithing, silversmithing, lost-wax casting, stone-setting, polishing, or metallurgy.
 
 PRODUCT DATA:
 - Product Title: "${name}"
 - Category: "${category}"
 - Brand: "${brand || 'Dinanath & Sons Certified'}"
 - Model Number: "${model_number || 'N/A'}"
-- Retail Price: ₹${retail_price}
+- Wholesale/Retail Price: ₹${retail_price}
 - Primary Image URL: "${image || (gallery[0]?.url || 'N/A')}"
 - Existing Specifications: ${JSON.stringify(specifications)}
 
-REQUIREMENTS:
-1. DESCRIPTION:
-   Write a comprehensive, professional, 3-to-4 paragraph product narrative.
-   - Paragraph 1: Overview, engineering grade, core function, and manufacturing standards (e.g. 100% Electrolytic Copper, Flame Retardant FR-LSH, ISI certified, high conductivity, thermal resilience).
-   - Paragraph 2: Technical specifications, voltage grade (e.g. 1100V), insulation, load compatibility, and efficiency.
-   - Paragraph 3: Practical installation use-cases (e.g. domestic appliances like 1.5 Ton AC/geyser, commercial panel wiring, industrial motor feeds) and safety tips.
-   - Add bulleted key features and highlights.
-2. SEO METADATA:
-   - "seo_title": Under 60 characters, high-intent title with main keywords and brand (e.g. "${name} | Dinanath & Sons").
-   - "seo_description": 140-160 characters search preview snippet detailing specs, durability, and pan-India shipping notice.
-   - "seo_keywords": 8-12 comma-separated keywords including product name, variations, category, and Delhi wholesale search terms.
-
-OUTPUT FORMAT:
-Return strictly valid JSON only (no markdown code blocks, no backticks):
+OUTPUT REQUIREMENTS:
+You MUST respond with a strictly valid, structured JSON object with the following isolated keys:
 {
-  "description": "...",
-  "seo_title": "...",
-  "seo_description": "...",
-  "seo_keywords": "..."
+  "marketingDescription": "A professional 3-to-4 paragraph wholesale product description. Paragraph 1: Metallurgy overview, craftsmanship grade, and primary jewellery workshop function. Paragraph 2: Material composition, heat/wear resistance, precision tolerances, and operational durability. Paragraph 3: Workshop use cases (e.g. lost-wax casting, hand-forging, ring resizing, stone setting, high-lustre finishing). Include 4-5 bulleted highlights.",
+  "metaTitle": "High-intent search title under 60 characters (e.g., 'Buy ${name} | Dinanath & Sons Delhi').",
+  "metaDescription": "Search snippet between 140-160 characters describing tool durability, gold/silver workshop suitability, and pan-India wholesale dispatch.",
+  "keywords": "8-12 comma-separated keywords covering jewellery making tools, goldsmith supplies, Delhi wholesale, and specific product synonyms.",
+  "technicalSpecs": {
+    "Material": "Accurate material (e.g. High-Density Isostatically Pressed Graphite, High-Carbon Tool Steel, Quartz Ceramic, etc.)",
+    "Application": "Jewellery manufacturing, casting, or goldsmithing use-case",
+    "Grade / Finish": "Precision workshop grade or surface treatment",
+    "Compatibility": "Gold, Silver, Brass, Platinum, or workshop machinery compatibility"
+  }
 }
+
+STRICT RULE FOR technicalSpecs:
+- Do NOT include any SEO fields (such as 'slug', 'metaTitle', 'keywords', or 'metaDescription') inside the technicalSpecs object. Only include physical, operational, and material attributes.
+
+Return ONLY the raw JSON object. Do not wrap in markdown backticks or commentary.
 `;
 
         let generatedData: any = null;
@@ -119,7 +121,7 @@ Return strictly valid JSON only (no markdown code blocks, no backticks):
                     body: JSON.stringify({
                         contents: [{ parts }],
                         generationConfig: {
-                            temperature: 0.3,
+                            temperature: 0.2,
                             maxOutputTokens: 1500,
                             responseMimeType: 'application/json'
                         }
@@ -143,48 +145,120 @@ Return strictly valid JSON only (no markdown code blocks, no backticks):
             }
         }
 
-        // Highly specific intelligent fallback generator if API key is not set or request failed
+        // Domain-Accurate Jewellery Manufacturing Fallback Generator
         if (!generatedData) {
             const cleanName = name.trim();
             const brandName = brand || 'Dinanath & Sons Certified';
-            const catName = category || 'Electrical & Hardware';
+            const catName = category || 'Jewellery Tools';
 
-            // Technical details deduction from product name
-            const isCable = /wire|cable|cord|lead/i.test(cleanName);
-            const isSwitch = /switch|socket|plug|regulator/i.test(cleanName);
-            const isMcb = /mcb|mccb|breaker|fuse|distribution/i.test(cleanName);
-            const isLight = /light|led|panel|bulb|flood|tube/i.test(cleanName);
+            const isCrucible = /crucible|melting|dish|ingot|graphite|clay/i.test(cleanName);
+            const isRollingMill = /rolling|mill|roller|wire.*draw|drawplate/i.test(cleanName);
+            const isPolisher = /polish|tumbler|magnetic|rotary|ultrasonic|dialux|buff/i.test(cleanName);
+            const isHandTool = /plier|tweezer|saw|blade|hammer|mandrel|dapping|punch/i.test(cleanName);
+            const isCasting = /casting|flask|vacuum|vulcaniz|wax|injector|invest/i.test(cleanName);
+            const isTester = /tester|karat|touchstone|caliper|gauge|microscope|loupe/i.test(cleanName);
 
+            let material = 'High-Grade Jewellery Workshop Tooling Material';
             let specificDetails = '';
-            if (isCable) {
-                specificDetails = `Engineered with 99.97% pure electrolytic grade multi-strand copper conductor conforming to IS 694 standards. Features premium Flame Retardant Lead-Free (FR-LF) PVC insulation offering extraordinary thermal stability up to 70°C and superior dielectric strength against high voltage surges. Highly flexible and designed for concealed conduit wiring in residential, commercial, and industrial installations.`;
-            } else if (isSwitch) {
-                specificDetails = `Manufactured from virgin flame-retardant polycarbonate with silver-cadmium contacts for zero sparking and ultra-smooth tactile operation. Tested for over 100,000 continuous switching cycles with captive silver-inlay screw terminals providing effortless cable termination.`;
-            } else if (isMcb) {
-                specificDetails = `High breaking capacity circuit breaker engineered with bi-metallic overload protection and magnetic short-circuit trip mechanism. Conforms to IEC 60898-1 standards with arc chute quenching chambers for instant fault clearance.`;
-            } else if (isLight) {
-                specificDetails = `Equipped with high-lumen SMD LED chips (100+ Lumens/Watt) integrated into a heavy-gauge die-cast aluminum heat sink. Features high power factor (>0.95) isolated surge-protected driver delivering flicker-free, energy-efficient illumination with a rated lifespan exceeding 30,000 burn hours.`;
+            let specsDict: Record<string, string> = {};
+
+            if (isCrucible) {
+                material = 'High-Purity Thermal Shock Resistant Fine-Grain Graphite';
+                specificDetails = `Engineered for high-temperature metallurgical melting of precious metals including 24K/22K gold, fine silver, copper alloys, and brass. Manufactured from premium isostatically pressed high-density graphite with superior oxidation resistance and ultra-low porosity, preventing molten metal absorption and slag adhesion. Designed for continuous duty in induction, gas, or electric resistance furnaces up to 1800°C.`;
+                specsDict = {
+                    'Material': 'High-Density Fine-Grain Isostatic Graphite',
+                    'Maximum Temperature': '1800°C (3272°F)',
+                    'Precious Metal Compatibility': 'Gold, Fine Silver, Copper, Brass Alloys',
+                    'Thermal Resistance': 'Rapid Thermal Shock Proof',
+                    'Country of Origin': 'India (Dinanath & Sons Certified)'
+                };
+            } else if (isRollingMill) {
+                material = 'Induction-Hardened High-Carbon Alloy Tool Steel (HRC 60-62)';
+                specificDetails = `Heavy-duty reduction rolling mill precision engineered for sheet, wire, and pattern embossing in professional goldsmithing workshops. Features precision-ground, mirror-polished reduction rollers with high torque helical gear drive, delivering uniform metal thickness reduction without surface micro-cracking or grain distortion.`;
+                specsDict = {
+                    'Roller Material': 'High-Carbon Tool Steel (Induction Hardened)',
+                    'Roller Hardness': '60-62 HRC',
+                    'Gear Ratio': '4:1 High-Torque Mechanical Reduction',
+                    'Application': 'Gold, Silver & Copper Sheet & Wire Ingot Reduction',
+                    'Finish': 'Precision Mirror Ground Rolls'
+                };
+            } else if (isPolisher) {
+                material = 'Industrial Grade Mechanical Finishing Chassis with Neodymium Magnetic Array';
+                specificDetails = `High-efficiency jewellery polishing and surface deburring system designed for rapid cleaning of intricate filigree, kundan mounts, and cast jewellery. Utilizes high-energy vortex agitation to drive microscopic stainless steel pins into the finest recesses without rounding sharp stone seats or damaging prongs.`;
+                specsDict = {
+                    'Finishing Medium': 'Stainless Steel Micro-Pins & Finishing Compound',
+                    'Application': 'Cast Jewellery Finishing, Kundan mounts, Filigree Deburring',
+                    'Motor Type': 'Heavy-Duty Continuous Induction Motor',
+                    'Safety Standard': 'Overload Thermal Cut-Off Protected'
+                };
+            } else if (isHandTool) {
+                material = 'Drop-Forged Surgical-Grade Stainless Steel';
+                specificDetails = `Ergonomically designed goldsmith hand tool with precision box-joint alignment and induction-hardened working jaws. Ensures zero play, non-marring contact on precious metal surfaces, and maximum tactile control during delicate stone setting, wire looping, and metal forming operations.`;
+                specsDict = {
+                    'Material': 'Drop-Forged Stainless Steel',
+                    'Joint Construction': 'Precision Box-Joint with Dual Leaf Springs',
+                    'Jaw Finish': 'Anti-Glare Satin Finish (Non-Marring)',
+                    'Application': 'Stone Setting, Prong Bending & Bench Work'
+                };
+            } else if (isCasting) {
+                material = 'Heat-Resistant Cast Metallurgy Alloy & Heavy-Duty Silicone';
+                specificDetails = `Professional-grade lost-wax casting apparatus engineered for porosity-free jewellery production. Provides uniform thermal heat distribution and consistent pressure transfer, guaranteeing defect-free reproduction of micro-details in gold and silver castings.`;
+                specsDict = {
+                    'Application': 'Lost-Wax Investment Casting & Mold Making',
+                    'Thermal Stability': 'High Thermal Cycling Resilience',
+                    'Compatibility': 'Universal Investment Powder & Flask Sizes'
+                };
+            } else if (isTester) {
+                material = 'Micro-Calibrated Metallurgical Analytical Grade Components';
+                specificDetails = `High-precision metallurgical assay testing instrument designed for instant non-destructive verification of precious metal purity (karat verification) and physical gemstone dimensions. Ensures absolute commercial security for jewellery retailers, bullion traders, and pawnshops.`;
+                specsDict = {
+                    'Measurement Type': 'Precision Karat Assay / Dimensional Verification',
+                    'Accuracy': 'High Precision Analytical Grade',
+                    'Application': 'Hallmarking, Bullion Verification & Goldsmith QA'
+                };
             } else {
-                specificDetails = `Precision-engineered hardware tool crafted from industrial-grade alloy steel with anti-corrosive protective coating. Designed for demanding continuous workshop duty and compliant with rigorous quality control benchmarks.`;
+                material = 'Precision Bench-Grade Jewellery Manufacturing Metallurgy Grade';
+                specificDetails = `Manufactured to stringent Indian goldsmithing standards for demanding continuous workshop duty. Tested for dimensional fidelity, chemical resistance against pickling solutions and workshop fluxes, and long service life.`;
+                specsDict = {
+                    'Material': material,
+                    'Application': 'Professional Goldsmith & Jewellery Workshop Bench Use',
+                    'Durability': 'Heavy-Duty Commercial Workshop Grade'
+                };
             }
 
-            const fallbackDescription = `${cleanName} by ${brandName} is a professional-grade ${catName.toLowerCase()} solution built for superior durability, safety, and operational efficiency.\n\n${specificDetails}\n\nIdeal for electricians, residential architects, and industrial contractors requiring uncompromising reliability. Packaged with full quality inspection assurance and supported by Dinanath & Sons pan-India logistics and direct B2B warranty support.`;
+            const fallbackDescription = `${cleanName} by ${brandName} is a professional-grade ${catName.toLowerCase()} engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\n${specificDetails}\n\n• Engineered with premium ${material.toLowerCase()} for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.`;
 
-            const fallbackSeoTitle = `${cleanName} | Buy Online at Dinanath & Sons`.slice(0, 60);
-            const fallbackSeoDesc = `Buy authentic ${cleanName} by ${brandName} online at best prices. High-durability ${catName.toLowerCase()} with fast pan-India shipping from Dinanath & Sons.`.slice(0, 160);
-            const fallbackKeywords = `${cleanName.toLowerCase()}, buy ${cleanName.toLowerCase()}, ${catName.toLowerCase()}, ${brandName.toLowerCase()}, electrical supplies delhi, dinanath and sons, wholesale prices, buy electrical hardware`;
+            const fallbackSeoTitle = `${cleanName} | Jewellery Making Tools | Dinanath & Sons`.slice(0, 60);
+            const fallbackSeoDesc = `Buy authentic ${cleanName} by ${brandName} online at wholesale prices. Professional ${catName.toLowerCase()} for goldsmiths with fast pan-India delivery.`.slice(0, 160);
+            const fallbackKeywords = `${cleanName.toLowerCase()}, jewellery making tools, goldsmith equipment delhi, dinanath and sons, wholesale jewellery tools chandni chowk, casting tools, ${catName.toLowerCase()}`;
 
             generatedData = {
-                description: fallbackDescription,
-                seo_title: fallbackSeoTitle,
-                seo_description: fallbackSeoDesc,
-                seo_keywords: fallbackKeywords
+                marketingDescription: fallbackDescription,
+                metaTitle: fallbackSeoTitle,
+                metaDescription: fallbackSeoDesc,
+                keywords: fallbackKeywords,
+                technicalSpecs: specsDict
             };
         }
 
+        // Normalize response object to support both strict structured keys and legacy aliases
+        const normalizedResponse = {
+            marketingDescription: generatedData.marketingDescription || generatedData.description || '',
+            metaTitle: generatedData.metaTitle || generatedData.seo_title || '',
+            metaDescription: generatedData.metaDescription || generatedData.seo_description || '',
+            keywords: generatedData.keywords || generatedData.seo_keywords || '',
+            technicalSpecs: generatedData.technicalSpecs || generatedData.specifications || {},
+            // Backward compatibility aliases
+            description: generatedData.marketingDescription || generatedData.description || '',
+            seo_title: generatedData.metaTitle || generatedData.seo_title || '',
+            seo_description: generatedData.metaDescription || generatedData.seo_description || '',
+            seo_keywords: generatedData.keywords || generatedData.seo_keywords || '',
+            specifications: generatedData.technicalSpecs || generatedData.specifications || {}
+        };
+
         return NextResponse.json({
             success: true,
-            data: generatedData
+            data: normalizedResponse
         });
     } catch (err: any) {
         console.error('Error generating product content:', err);

@@ -127,6 +127,7 @@ export function Navbar() {
         { href: '/shop/category/packaging', label: 'PACKAGING & DISPLAY' },
         { href: '/new-arrivals', label: 'NEW ARRIVALS' },
         { href: '/offers', label: 'OFFERS' },
+        { href: '/blog', label: 'BLOG' },
         { href: '/about', label: 'ABOUT' },
         { href: '/contact', label: 'CONTACT' }
     ];
@@ -146,44 +147,44 @@ export function Navbar() {
                 initial={{ y: 0 }}
                 animate={{ y: visible ? 0 : -120 }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-[#151515] border-b border-[#343434] transition-all animate-in fade-in duration-300"
+                className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-white/95 backdrop-blur-md border-b border-[#E8E2D5] transition-all animate-in fade-in duration-300"
             >
                 {/* 1. TOP ANNOUNCEMENT BAR */}
                 <div 
-                    className="w-full border-b border-[#343434] py-1.5 md:py-2 px-3 md:px-6 transition-all duration-500"
+                    className="w-full border-b border-[#E8E2D5] py-1.5 md:py-2 px-3 md:px-6 transition-all duration-500"
                     style={{
-                        backgroundColor: announcements.length > 0 ? announcements[currentAnnIndex].background_color : '#1E1E1E'
+                        backgroundColor: announcements.length > 0 ? announcements[currentAnnIndex].background_color : '#F5F2EB'
                     }}
                 >
                     <div className="container mx-auto flex justify-between items-center text-[8.5px] sm:text-[10px] font-semibold uppercase tracking-wider">
                         <div 
                             className="flex items-center gap-2 justify-center w-full md:w-auto text-center md:text-left"
                             style={{
-                                color: announcements.length > 0 ? announcements[currentAnnIndex].text_color : '#CFCFCF'
+                                color: announcements.length > 0 ? announcements[currentAnnIndex].text_color : '#52525B'
                             }}
                         >
-                            <span className="text-[#A67C35] font-bold">★</span>
+                            <span className="text-[#966E2E] font-bold">★</span>
                             <span>{announcements.length > 0 ? announcements[currentAnnIndex].message : "India's Trusted Jewellery Tool Experts Since 1960"}</span>
                         </div>
-                        <div className="hidden md:flex items-center gap-6 text-text-primary font-bold">
-                            <Link href="/about" className="hover:text-[#A67C35] transition-colors">About Us</Link>
-                            <Link href="/contact" className="hover:text-[#A67C35] transition-colors">Contact Us</Link>
+                        <div className="hidden md:flex items-center gap-6 text-[#52525B] font-bold">
+                            <Link href="/about" className="hover:text-[#966E2E] transition-colors">About Us</Link>
+                            <Link href="/contact" className="hover:text-[#966E2E] transition-colors">Contact Us</Link>
                             <Link 
                                 href="/track-order" 
                                 onMouseMove={(e) => handleMouseMove(e, "Live Dispatch Tracker: Input AWB codes or customer manifest credentials.")}
                                 onMouseLeave={handleMouseLeave}
-                                className="hover:text-[#A67C35] transition-colors"
+                                className="hover:text-[#966E2E] transition-colors"
                             >
                                 Track Order
                             </Link>
-                            <div className="w-px h-3 bg-[#343434]" />
+                            <div className="w-px h-3 bg-[#E8E2D5]" />
                             <div 
                                 onClick={() => window.dispatchEvent(new CustomEvent('open-language-popup'))}
                                 onMouseMove={(e) => handleMouseMove(e, "Language Settings: Toggle displays between 8 regional languages and currency presets.")}
                                 onMouseLeave={handleMouseLeave}
-                                className="flex items-center gap-1.5 cursor-pointer hover:text-[#A67C35] transition-colors"
+                                className="flex items-center gap-1.5 cursor-pointer hover:text-[#966E2E] transition-colors"
                             >
-                                <Globe size={11} className="text-[#A67C35]" />
+                                <Globe size={11} className="text-[#966E2E]" />
                                 <span>{currencyData.code} | {
                                     language === 'en' ? 'English' :
                                     language === 'hi' ? 'हिन्दी' :
@@ -204,15 +205,15 @@ export function Navbar() {
                     <div className="container mx-auto flex items-center justify-between gap-2.5 md:gap-6">
                         {/* Logo & Brand Identity */}
                         <Link href="/" className="flex items-center gap-2.5 md:gap-4 shrink-0 group">
-                            <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 rounded-full bg-[#1E1E1E] border border-[#343434] flex items-center justify-center relative overflow-hidden group-hover:border-[#A67C35]/60 transition-all duration-500 shadow-2xl shrink-0">
-                                <div className="absolute inset-0 bg-[#A67C35]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 rounded-full bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center relative overflow-hidden group-hover:border-[#966E2E]/60 transition-all duration-500 shadow-md shrink-0">
+                                <div className="absolute inset-0 bg-[#966E2E]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <img src="/images/logo.png" className="w-7 h-7 sm:w-10 sm:h-10 md:w-16 md:h-16 object-contain relative z-10 scale-105 group-hover:scale-110 transition-transform duration-300" alt="Dinanath & Sons Logo" onError={(e) => {
                                     (e.target as HTMLImageElement).src = '/logo.png';
                                 }} />
                             </div>
                             <div className="flex flex-col text-left">
-                                <span className="text-sm sm:text-base md:text-2xl font-black font-display text-[#F8F3E8] tracking-wider uppercase leading-none group-hover:text-[#A67C35] transition-colors">Dinanath & Sons</span>
-                                <span className="text-[8px] md:text-[9.5px] font-bold text-[#A67C35] tracking-[0.25em] uppercase mt-1 hidden sm:block">Jewellery Tools & Equipment — Since 1960</span>
+                                <span className="text-sm sm:text-base md:text-2xl font-black font-display text-[#18181B] tracking-wider uppercase leading-none group-hover:text-[#966E2E] transition-colors">Dinanath & Sons</span>
+                                <span className="text-[8px] md:text-[9.5px] font-bold text-[#966E2E] tracking-[0.25em] uppercase mt-1 hidden sm:block">Jewellery Tools & Equipment — Since 1960</span>
                             </div>
                         </Link>
 
@@ -222,7 +223,7 @@ export function Navbar() {
                                 onSubmit={handleSearchSubmit} 
                                 onMouseMove={(e) => handleMouseMove(e, "Search Catalog: Scan our collection of machinery, tools, and industrial accessories.")}
                                 onMouseLeave={handleMouseLeave}
-                                className="relative flex items-center w-full h-11 bg-[#1E1E1E] border border-[#343434] rounded-lg overflow-hidden focus-within:border-[#A67C35] transition-all"
+                                className="relative flex items-center w-full h-11 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg overflow-hidden focus-within:border-[#966E2E] focus-within:bg-white transition-all"
                             >
                                 <input
                                     type="text"
@@ -230,9 +231,9 @@ export function Navbar() {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onFocus={() => setIsSearchFocused(true)}
-                                    className="w-full h-full bg-transparent pl-4 pr-12 text-xs text-[#F8F3E8] placeholder-[#8E8E9A] focus:outline-none font-medium"
+                                    className="w-full h-full bg-transparent pl-4 pr-12 text-xs text-[#18181B] placeholder-[#78716C] focus:outline-none font-medium"
                                 />
-                                <button type="submit" className="absolute right-0 top-0 bottom-0 w-11 bg-[#A67C35] hover:bg-[#8A6232] transition-colors flex items-center justify-center text-black">
+                                <button type="submit" className="absolute right-0 top-0 bottom-0 w-11 bg-[#966E2E] hover:bg-[#7A541E] transition-colors flex items-center justify-center text-white">
                                     <Search size={16} />
                                 </button>
                             </form>
@@ -244,7 +245,7 @@ export function Navbar() {
                         </div>
 
                         {/* User Action Tools - Right */}
-                        <div className="flex items-center gap-2.5 md:gap-6 shrink-0 text-[#F8F3E8]">
+                        <div className="flex items-center gap-2.5 md:gap-6 shrink-0 text-[#18181B]">
 
                             {/* Account Link */}
                             <Link 
@@ -253,12 +254,12 @@ export function Navbar() {
                                  onMouseLeave={handleMouseLeave}
                                  className="hidden md:flex items-center gap-2.5 group"
                             >
-                                <div className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
+                                <div className="w-10 h-10 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#52525B] group-hover:text-[#966E2E] group-hover:border-[#966E2E]/40 transition-colors">
                                     <User size={16} />
                                 </div>
                                 <div className="hidden xl:flex flex-col text-left">
-                                    <span className="text-[8px] text-[#8E8E9A] font-bold uppercase tracking-wider leading-none">{user ? 'Signed In' : 'Account'}</span>
-                                    <span className="text-[10px] text-[#F8F3E8] font-bold mt-1 group-hover:text-[#A67C35] transition-colors uppercase leading-none truncate max-w-[120px]">
+                                    <span className="text-[8px] text-[#78716C] font-bold uppercase tracking-wider leading-none">{user ? 'Signed In' : 'Account'}</span>
+                                    <span className="text-[10px] text-[#18181B] font-bold mt-1 group-hover:text-[#966E2E] transition-colors uppercase leading-none truncate max-w-[120px]">
                                         {user ? (user.name || 'My Account') : 'Login / Register'}
                                     </span>
                                 </div>
@@ -272,15 +273,15 @@ export function Navbar() {
                                  onMouseLeave={handleMouseLeave}
                                  className="hidden md:flex items-center gap-2.5 group"
                             >
-                                <div className="w-10 h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] relative group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
+                                <div className="w-10 h-10 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#52525B] relative group-hover:text-[#966E2E] group-hover:border-[#966E2E]/40 transition-colors">
                                     <Heart size={16} />
                                     {wishlist.length > 0 && (
-                                        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#A67C35] text-black text-[8px] font-black rounded-full flex items-center justify-center shadow">{wishlist.length}</span>
+                                        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#966E2E] text-white text-[8px] font-black rounded-full flex items-center justify-center shadow">{wishlist.length}</span>
                                     )}
                                 </div>
                                 <div className="hidden xl:flex flex-col text-left">
-                                    <span className="text-[8px] text-[#8E8E9A] font-bold uppercase tracking-wider leading-none">Wishlist</span>
-                                    <span className="text-[10px] text-[#F8F3E8] font-bold mt-1 group-hover:text-[#A67C35] transition-colors uppercase leading-none">Your Wishlist</span>
+                                    <span className="text-[8px] text-[#78716C] font-bold uppercase tracking-wider leading-none">Wishlist</span>
+                                    <span className="text-[10px] text-[#18181B] font-bold mt-1 group-hover:text-[#966E2E] transition-colors uppercase leading-none">Your Wishlist</span>
                                 </div>
                             </Link>
 
@@ -291,51 +292,51 @@ export function Navbar() {
                                  onMouseLeave={handleMouseLeave}
                                  className="flex items-center gap-2.5 group"
                             >
-                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#CFCFCF] relative group-hover:text-[#A67C35] group-hover:border-[#A67C35]/30 transition-colors">
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#52525B] relative group-hover:text-[#966E2E] group-hover:border-[#966E2E]/40 transition-colors">
                                     <ShoppingCart size={16} />
                                     {cart.length > 0 && (
                                         <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#D12A1C] text-white text-[8px] font-black rounded-full flex items-center justify-center shadow animate-pulse">{cart.length}</span>
                                     )}
                                 </div>
                                 <div className="hidden xl:flex flex-col text-left">
-                                    <span className="text-[8px] text-[#8E8E9A] font-bold uppercase tracking-wider leading-none">Cart</span>
-                                    <span className="text-[10px] text-[#F8F3E8] font-bold mt-1 group-hover:text-[#A67C35] transition-colors uppercase leading-none">Your Cart</span>
+                                    <span className="text-[8px] text-[#78716C] font-bold uppercase tracking-wider leading-none">Cart</span>
+                                    <span className="text-[10px] text-[#18181B] font-bold mt-1 group-hover:text-[#966E2E] transition-colors uppercase leading-none">Your Cart</span>
                                 </div>
                             </Link>
 
                             {/* Mobile Hamburger toggle */}
-                            <button onClick={() => setIsMenuOpen(true)} className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#F8F3E8]"><Menu size={18} /></button>
+                            <button onClick={() => setIsMenuOpen(true)} className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#18181B]"><Menu size={18} /></button>
                         </div>
                     </div>
                 </div>
 
                 {/* 2.5 MOBILE STICKY SEARCH BAR - Directly below Dinanath & Sons */}
-                <div className="block lg:hidden w-full px-3 pb-2.5 pt-1 border-t border-[#343434]/40 bg-[#151515] relative z-20" ref={mobileSearchRef}>
+                <div className="block lg:hidden w-full px-3 pb-2.5 pt-1 border-t border-[#E8E2D5] bg-white relative z-20" ref={mobileSearchRef}>
                     <form 
                         onSubmit={handleSearchSubmit} 
-                        className="relative flex items-center w-full h-10 bg-[#1E1E1E] border border-[#343434] hover:border-[#A67C35]/60 focus-within:border-[#A67C35] rounded-xl overflow-hidden shadow-md transition-all px-3"
+                        className="relative flex items-center w-full h-10 bg-[#FAF9F5] border border-[#E8E2D5] hover:border-[#966E2E]/60 focus-within:border-[#966E2E] rounded-xl overflow-hidden shadow-sm transition-all px-3"
                     >
-                        <Search size={15} className="text-[#A67C35] mr-2 shrink-0" />
+                        <Search size={15} className="text-[#966E2E] mr-2 shrink-0" />
                         <input
                             type="text"
                             placeholder="Search 500+ tools, machines, equipment..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onFocus={() => setIsSearchFocused(true)}
-                            className="w-full bg-transparent text-xs text-[#F8F3E8] placeholder-[#8E8E9A] focus:outline-none font-medium"
+                            className="w-full bg-transparent text-xs text-[#18181B] placeholder-[#78716C] focus:outline-none font-medium"
                         />
                         {searchQuery ? (
                             <button 
                                 type="button" 
                                 onClick={() => setSearchQuery('')}
-                                className="text-[#8E8E9A] hover:text-[#F8F3E8] p-1 mr-1"
+                                className="text-[#78716C] hover:text-[#18181B] p-1 mr-1"
                             >
                                 <X size={14} />
                             </button>
                         ) : null}
                         <button 
                             type="submit" 
-                            className="bg-[#A67C35] hover:bg-[#8A6232] text-black font-black text-[9px] uppercase tracking-wider px-2.5 py-1.5 rounded-lg shrink-0 transition-colors shadow"
+                            className="bg-[#966E2E] hover:bg-[#7A541E] text-white font-black text-[9px] uppercase tracking-wider px-2.5 py-1.5 rounded-lg shrink-0 transition-colors shadow"
                         >
                             Search
                         </button>
@@ -348,15 +349,15 @@ export function Navbar() {
                 </div>
 
                 {/* 3. NAVIGATION BAR & CATEGORY SELECTOR */}
-                <div className="hidden lg:block w-full bg-[#1A1A1A] border-t border-[#343434]">
+                <div className="hidden lg:block w-full bg-[#FAF9F5] border-t border-[#E8E2D5]">
                     <div className="container mx-auto flex items-center">
                         {/* Categories Dropdown Trigger */}
-                        <div className="relative shrink-0 py-3 pr-6 border-r border-[#343434]">
+                        <div className="relative shrink-0 py-3 pr-6 border-r border-[#E8E2D5]">
                             <button 
                                 onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
                                 onMouseMove={(e) => handleMouseMove(e, "Category Taxonomy: Scan tool catalogs sorted by operational categories.")}
                                 onMouseLeave={handleMouseLeave}
-                                className="flex items-center gap-2 bg-[#A67C35] hover:bg-[#8A6232] text-black font-bold uppercase tracking-widest text-[9px] px-6 py-2.5 rounded-lg transition-colors shadow"
+                                className="flex items-center gap-2 bg-[#966E2E] hover:bg-[#7A541E] text-white font-bold uppercase tracking-widest text-[9px] px-6 py-2.5 rounded-lg transition-colors shadow"
                             >
                                 <Menu size={12} strokeWidth={3} />
                                 <span>All Categories</span>
@@ -370,7 +371,7 @@ export function Navbar() {
                                         initial={{ opacity: 0, y: 15 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: 15 }}
-                                        className="absolute top-full left-0 bg-[#1E1E1E] border border-[#343434] rounded-lg shadow-[0_15px_50px_rgba(0,0,0,0.8)] mt-2 w-56 overflow-hidden z-[101]"
+                                        className="absolute top-full left-0 bg-white border border-[#E8E2D5] rounded-lg shadow-xl mt-2 w-56 overflow-hidden z-[101]"
                                     >
                                         <div className="flex flex-col py-2">
                                             {categoryList.map((cat, i) => (
@@ -378,7 +379,7 @@ export function Navbar() {
                                                     key={i} 
                                                     href={cat.href}
                                                     onClick={() => setIsCategoriesDropdownOpen(false)}
-                                                    className="px-6 py-3 text-[10px] font-bold text-[#CFCFCF] hover:text-black hover:bg-[#A67C35] uppercase tracking-wider transition-all"
+                                                    className="px-6 py-3 text-[10px] font-bold text-[#52525B] hover:text-[#18181B] hover:bg-[#FAF9F5] uppercase tracking-wider transition-all"
                                                 >
                                                     {cat.name}
                                                 </Link>
@@ -398,11 +399,11 @@ export function Navbar() {
                                         key={i} 
                                         href={link.href} 
                                         className={`px-4 py-4 text-[9px] font-bold uppercase tracking-[0.2em] transition-all relative group shrink-0 ${
-                                            isActive ? 'text-[#A67C35]' : 'text-[#CFCFCF] hover:text-[#A67C35]'
+                                            isActive ? 'text-[#966E2E]' : 'text-[#52525B] hover:text-[#966E2E]'
                                         }`}
                                     >
                                         {link.label}
-                                        <span className={`absolute bottom-2 left-4 right-4 h-0.5 bg-[#A67C35] transition-all duration-300 ${
+                                        <span className={`absolute bottom-2 left-4 right-4 h-0.5 bg-[#966E2E] transition-all duration-300 ${
                                             isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100'
                                         }`} />
                                     </Link>
@@ -413,12 +414,12 @@ export function Navbar() {
                         {/* AI Assistant Quick Trigger */}
                         <button
                             onClick={() => window.dispatchEvent(new CustomEvent('open-ai-assistant'))}
-                            className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#A67C35]/10 hover:bg-[#A67C35]/25 border border-[#A67C35]/40 text-[#A67C35] hover:text-[#DFCE9F] text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm group shrink-0 ml-4"
+                            className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#966E2E]/10 hover:bg-[#966E2E]/20 border border-[#966E2E]/30 text-[#966E2E] text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm group shrink-0 ml-4"
                             title="Open Dinanath AI Jewellery Tools Assistant"
                         >
-                            <Sparkles size={13} className="text-[#A67C35] group-hover:rotate-12 transition-transform" />
+                            <Sparkles size={13} className="text-[#966E2E] group-hover:rotate-12 transition-transform" />
                             <span>Ask Dinanath AI</span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         </button>
                     </div>
                 </div>
@@ -433,34 +434,34 @@ export function Navbar() {
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 z-[200] flex lg:hidden"
                     >
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setIsMenuOpen(false)} />
+                        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
                         
                         <motion.div 
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                            className="relative ml-auto w-full max-w-xs bg-[#151515] border-l border-[#343434] p-8 flex flex-col justify-between h-full shadow-2xl overflow-y-auto"
+                            className="relative ml-auto w-full max-w-xs bg-white border-l border-[#E8E2D5] p-8 flex flex-col justify-between h-full shadow-2xl overflow-y-auto"
                         >
                             <div>
-                                <div className="flex justify-between items-center mb-8 border-b border-[#343434] pb-4">
+                                <div className="flex justify-between items-center mb-8 border-b border-[#E8E2D5] pb-4">
                                     <div className="flex items-center gap-2">
-                                        <Shield className="text-[#A67C35]" size={16} />
-                                        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#8E8E9A]">Menu Navigation</span>
+                                        <Shield className="text-[#966E2E]" size={16} />
+                                        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#78716C]">Menu Navigation</span>
                                     </div>
-                                    <button onClick={() => setIsMenuOpen(false)} className="w-8 h-8 rounded-full bg-[#1E1E1E] border border-[#343434] flex items-center justify-center text-[#F8F3E8] hover:text-[#A67C35]"><X size={16} /></button>
+                                    <button onClick={() => setIsMenuOpen(false)} className="w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center text-[#18181B] hover:text-[#966E2E]"><X size={16} /></button>
                                 </div>
 
                                 <div className="mb-6">
-                                    <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full h-10 bg-[#1E1E1E] border border-[#343434] rounded-lg overflow-hidden">
+                                    <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full h-10 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg overflow-hidden">
                                         <input
                                             type="text"
                                             placeholder="Search tools..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-full h-full bg-transparent pl-4 pr-10 text-xs text-[#F8F3E8] focus:outline-none"
+                                            className="w-full h-full bg-transparent pl-4 pr-10 text-xs text-[#18181B] focus:outline-none"
                                         />
-                                        <button type="submit" className="absolute right-0 w-10 h-full bg-[#A67C35] flex items-center justify-center text-black">
+                                        <button type="submit" className="absolute right-0 w-10 h-full bg-[#966E2E] flex items-center justify-center text-white">
                                             <Search size={14} />
                                         </button>
                                     </form>
@@ -472,7 +473,7 @@ export function Navbar() {
                                             key={i} 
                                             href={link.href} 
                                             onClick={() => setIsMenuOpen(false)}
-                                            className="block text-left text-xs font-bold uppercase tracking-widest text-[#CFCFCF] hover:text-[#A67C35] py-2 border-b border-[#343434]/40"
+                                            className="block text-left text-xs font-bold uppercase tracking-widest text-[#52525B] hover:text-[#966E2E] py-2 border-b border-[#E8E2D5]/50"
                                         >
                                             {link.label}
                                         </Link>
@@ -480,12 +481,12 @@ export function Navbar() {
                                 </nav>
                             </div>
 
-                            <div className="pt-8 border-t border-[#343434] space-y-6">
+                            <div className="pt-8 border-t border-[#E8E2D5] space-y-6">
                                 <button 
                                     onClick={() => { setIsMenuOpen(false); window.dispatchEvent(new CustomEvent('open-language-popup')); }} 
-                                    className="w-full h-11 rounded-lg border border-[#343434] bg-[#1E1E1E] text-[#CFCFCF] font-bold uppercase tracking-wider text-[8px] flex items-center justify-center gap-2"
+                                    className="w-full h-11 rounded-lg border border-[#E8E2D5] bg-[#FAF9F5] text-[#18181B] font-bold uppercase tracking-wider text-[8px] flex items-center justify-center gap-2 hover:border-[#966E2E]"
                                 >
-                                    <Globe size={12} className="text-[#A67C35]" />
+                                    <Globe size={12} className="text-[#966E2E]" />
                                     Choose Language ({
                                         language === 'en' ? 'English' :
                                         language === 'hi' ? 'हिन्दी' :
@@ -504,7 +505,7 @@ export function Navbar() {
             </AnimatePresence>
             {hoveredTooltip && (
                 <div 
-                    className="fixed z-[9999] pointer-events-none bg-[#1E1E1E]/95 border border-[#A67C35] text-[#F8F3E8] text-[9px] font-black uppercase tracking-widest px-4 py-2.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg whitespace-normal max-w-xs transition-opacity duration-200 hidden md:block"
+                    className="fixed z-[9999] pointer-events-none bg-white/95 border border-[#966E2E] text-[#18181B] text-[9px] font-black uppercase tracking-widest px-4 py-2.5 shadow-lg rounded-lg whitespace-normal max-w-xs transition-opacity duration-200 hidden md:block"
                     style={{
                         left: `${mousePos.x + 15}px`,
                         top: `${mousePos.y + 15}px`

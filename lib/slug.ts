@@ -87,7 +87,37 @@ export function normalizeProduct(rawProduct: any): any {
     const wholesalePrice = rawProduct.wholesale_price !== undefined ? Number(rawProduct.wholesale_price) : (rawProduct.wholesalePrice !== undefined ? Number(rawProduct.wholesalePrice) : undefined);
     const wholesaleMOQ = Number(rawProduct.wholesale_moq ?? rawProduct.wholesaleMOQ ?? 1);
     const inStock = rawProduct.in_stock !== undefined ? Boolean(rawProduct.in_stock) : (rawProduct.inStock !== undefined ? Boolean(rawProduct.inStock) : true);
-    
+
+    let variantsList: any[] = [];
+    if (Array.isArray(rawProduct.variants)) {
+        variantsList = rawProduct.variants;
+    } else if (typeof rawProduct.variants === 'string' && rawProduct.variants.trim()) {
+        try {
+            const parsed = JSON.parse(rawProduct.variants);
+            if (Array.isArray(parsed)) variantsList = parsed;
+        } catch (e) {}
+    } else if (rawProduct.specifications?.variants) {
+        if (Array.isArray(rawProduct.specifications.variants)) {
+            variantsList = rawProduct.specifications.variants;
+        } else if (typeof rawProduct.specifications.variants === 'string') {
+            try {
+                const parsed = JSON.parse(rawProduct.specifications.variants);
+                if (Array.isArray(parsed)) variantsList = parsed;
+            } catch (e) {}
+        }
+    }
+
+    // Isolate technical specifications from SEO keys
+    const cleanSpecs: Record<string, string> = {};
+    const SEO_RESERVED = new Set(['slug', 'seo_title', 'seo_description', 'seo_keywords', 'meta_title', 'meta_description', 'variants']);
+    if (specs && typeof specs === 'object') {
+        for (const [k, v] of Object.entries(specs)) {
+            if (!SEO_RESERVED.has(k.toLowerCase().trim())) {
+                cleanSpecs[k] = typeof v === 'string' ? v : String(v ?? '');
+            }
+        }
+    }
+
     return {
         id,
         name,
@@ -113,8 +143,8 @@ export function normalizeProduct(rawProduct: any): any {
         dimensions: rawProduct.dimensions,
         warrantyInfo: rawProduct.warranty_info || rawProduct.warrantyInfo,
         features: rawProduct.features || [],
-        specifications: specs,
-        variants: rawProduct.variants || [],
+        specifications: cleanSpecs,
+        variants: variantsList,
         variantType: rawProduct.variant_type || rawProduct.variantType || 'Size',
         seo_title: rawProduct.seo_title || rawProduct.meta_title || specs.seo_title || rawProduct.seoTitle,
         seo_description: rawProduct.seo_description || rawProduct.meta_description || specs.seo_description || rawProduct.seoDescription,
@@ -137,7 +167,18 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
         // 1. Try Supabase exact ID
         for (const target of targetsToTry) {
             const { data: byId } = await supabase.from('products').select('*').eq('id', target).maybeSingle();
-            if (byId) return normalizeProduct(byId);
+            if (byId) {
+                // If variants are empty on the parent product, check for linked product_variants child rows
+                if (!byId.variants || (Array.isArray(byId.variants) && byId.variants.length === 0)) {
+                    try {
+                        const { data: childVariants } = await supabase.from('product_variants').select('*').eq('product_id', byId.id);
+                        if (childVariants && childVariants.length > 0) {
+                            byId.variants = childVariants;
+                        }
+                    } catch (e) {}
+                }
+                return normalizeProduct(byId);
+            }
         }
 
         // 2. Try Supabase exact slug

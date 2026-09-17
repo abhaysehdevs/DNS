@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "About Dinanath & Sons | Jewellery Tool Heritage Since 1960 | Chandni Chowk",
-    description: "Discover the 60+ year heritage of Dinanath & Sons, founded in 1960 in Maliwara, Chandni Chowk, Delhi. Supplying master goldsmiths and modern jewellery manufacturers with precision tools and casting machinery.",
+    title: "About Us — 60+ Years Goldsmith Heritage in Chandni Chowk",
+    description: "Founded in 1960 in Maliwara, Chandni Chowk, Dinanath & Sons is India's trusted manufacturer and distributor of professional jewelry tools and machinery.",
     keywords: [
         'goldsmith tools history', 
         'jewelry tool manufacturer India', 
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
         canonical: 'https://dinanathandsons.com/about',
     },
     openGraph: {
-        title: "About Dinanath & Sons | Jewellery Tool Heritage Since 1960",
-        description: "Discover the heritage of Dinanath & Sons in Maliwara, Chandni Chowk, Delhi. Supplying professional goldsmith tools, casting machinery, and precision rolling mills since 1960.",
+        title: "About Us — 60+ Years Goldsmith Heritage in Chandni Chowk | Dinanath & Sons",
+        description: "Founded in 1960 in Maliwara, Chandni Chowk, Dinanath & Sons is India's trusted manufacturer and distributor of professional jewelry tools and machinery.",
         url: 'https://dinanathandsons.com/about',
     }
 };

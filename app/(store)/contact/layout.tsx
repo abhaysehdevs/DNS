@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Contact Dinanath & Sons | Chandni Chowk Store & Wholesale Support",
-    description: "Visit Dinanath & Sons at Shop 1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi - 110006. Inquire for wholesale pricing, machine calibration, and pan-India dispatch.",
+    title: "Contact Us — Chandni Chowk Store & Wholesale Inquiries",
+    description: "Visit our Chandni Chowk store or contact our technical team for jewelry tool inquiries, machinery quotes, and B2B wholesale orders. Call +91 9953435647.",
     keywords: [
         'contact jewelry machinery', 
         'jewelry tools supplier Delhi', 
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
         canonical: 'https://dinanathandsons.com/contact',
     },
     openGraph: {
-        title: "Contact Dinanath & Sons | Chandni Chowk Store & Wholesale Support",
-        description: "Visit Dinanath & Sons in Maliwara, Chandni Chowk, Delhi. Direct contact for wholesale quotes, machine calibration, and tool orders.",
+        title: "Contact Us — Chandni Chowk Store & Wholesale Inquiries | Dinanath & Sons",
+        description: "Visit our Chandni Chowk store or contact our technical team for jewelry tool inquiries, machinery quotes, and B2B wholesale orders. Call +91 9953435647.",
         url: 'https://dinanathandsons.com/contact',
     }
 };

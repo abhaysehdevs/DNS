@@ -60,18 +60,19 @@ export default function SeedPage() {
     };
 
     return (
-        <div className="p-10 bg-black text-white min-h-screen font-mono">
-            <h1 className="text-2xl mb-4">Database Seeder</h1>
+        <div className="p-10 bg-[#FAF9F5] text-[#18181B] min-h-screen font-mono">
+            <h1 className="text-2xl font-bold mb-4 text-[#18181B]">Database Seeder</h1>
             <button
                 onClick={seedDatabase}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                className="bg-[#966E2E] hover:bg-[#7D5A25] text-white px-5 py-2.5 rounded-xl font-sans font-medium transition shadow-sm"
             >
                 Start Seeding
             </button>
-            <div className="mt-4 p-4 border border-gray-800 rounded bg-gray-900">
-                <p className="font-bold border-b border-gray-700 pb-2 mb-2">Status: {status}</p>
+            <div className="mt-6 p-4 border border-[#E8E2D5] rounded-2xl bg-white shadow-sm">
+                <p className="font-bold border-b border-[#E8E2D5] pb-2 mb-2 text-[#966E2E]">Status: {status}</p>
+                {log.length === 0 && <p className="text-xs text-[#71717A]">No operations executed yet.</p>}
                 {log.map((line, i) => (
-                    <div key={i} className="text-sm text-gray-300">{line}</div>
+                    <div key={i} className="text-sm text-[#52525B]">{line}</div>
                 ))}
             </div>
         </div>

@@ -11,9 +11,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function SignupPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#151515] flex flex-col items-center justify-center gap-6">
-                <div className="w-12 h-12 rounded-full border-2 border-[#C9A84C]/20 border-t-[#C9A84C] animate-spin" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A84C]">Loading Registration</span>
+            <div className="min-h-screen bg-[#FAF9F5] flex flex-col items-center justify-center gap-6">
+                <div className="w-12 h-12 rounded-full border-2 border-[#966E2E]/20 border-t-[#966E2E] animate-spin" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#966E2E]">Loading Registration</span>
             </div>
         }>
             <SignupContent />
@@ -100,31 +100,24 @@ function SignupContent() {
     };
 
     return (
-        <div className="min-h-screen bg-[#151515] text-[#F8F3E8] flex items-center justify-center p-6 noise-overlay selection:bg-[#C9A84C]/30 relative overflow-hidden">
-            
-            {/* Ambient Lighting */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/5 blur-[120px] rounded-full" />
-            </div>
-
+        <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] flex items-center justify-center p-6 selection:bg-[#966E2E]/20 relative overflow-hidden">
             <motion.div
                 initial={{ opacity: 0, y: 40, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="w-full max-w-lg bg-[#1E1E1E] rounded-[3rem] p-8 md:p-14 border border-white/5 shadow-2xl relative z-10"
+                className="w-full max-w-lg bg-white rounded-[3rem] p-8 md:p-14 border border-[#E8E2D5] shadow-xl relative z-10"
             >
                 <div className="mb-8 text-center relative z-10">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 text-[#C9A84C] text-[9px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm"
+                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#966E2E]/10 border border-[#966E2E]/20 text-[#966E2E] text-[9px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm"
                     >
                         <ShieldCheck size={14} /> Dinanath & Sons Member
                     </motion.div>
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase leading-[0.9] mb-3 text-[#F8F3E8]">
-                        Create <span className="bg-gradient-to-r from-[#F8F3E8] via-[#E8D48B] to-[#C9A84C] bg-clip-text text-transparent">Account</span>
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase leading-[0.9] mb-3 text-[#18181B]">
+                        Create <span className="text-[#966E2E]">Account</span>
                     </h1>
-                    <p className="text-[#86868B] text-xs font-bold uppercase tracking-[0.2em]">Join India&apos;s leading jewelry tooling network</p>
+                    <p className="text-[#52525B] text-xs font-bold uppercase tracking-[0.2em]">Join India&apos;s leading jewelry tooling network</p>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -133,9 +126,9 @@ function SignupContent() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-xs font-bold uppercase tracking-wider"
+                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3 text-red-600 text-xs font-bold uppercase tracking-wider"
                         >
-                            <AlertCircle size={18} className="shrink-0 text-red-400" />
+                            <AlertCircle size={18} className="shrink-0 text-red-600" />
                             <span>{error}</span>
                         </motion.div>
                     )}
@@ -144,9 +137,9 @@ function SignupContent() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3 text-emerald-400 text-xs font-bold uppercase tracking-wider"
+                            className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold uppercase tracking-wider"
                         >
-                            <CheckCircle size={18} className="shrink-0 text-emerald-400" />
+                            <CheckCircle size={18} className="shrink-0 text-emerald-700" />
                             <span>{successMessage}</span>
                         </motion.div>
                     )}
@@ -158,10 +151,10 @@ function SignupContent() {
                         type="button"
                         onClick={() => handleSocialLogin('google')}
                         disabled={!!socialLoading || loading}
-                        className="w-full h-14 bg-[#151515] hover:bg-[#242424] border border-white/10 hover:border-[#C9A84C]/40 rounded-2xl flex items-center justify-center gap-4 transition-all group font-bold text-xs uppercase tracking-wider text-[#F8F3E8] disabled:opacity-50 shadow-sm"
+                        className="w-full h-14 bg-[#FAF9F5] hover:bg-[#F4EFE6] border border-[#E8E2D5] hover:border-[#966E2E]/40 rounded-2xl flex items-center justify-center gap-4 transition-all group font-bold text-xs uppercase tracking-wider text-[#18181B] disabled:opacity-50 shadow-sm"
                     >
                         {socialLoading === 'google' ? (
-                            <Loader2 className="animate-spin text-[#C9A84C]" size={18} />
+                            <Loader2 className="animate-spin text-[#966E2E]" size={18} />
                         ) : (
                             <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -174,53 +167,53 @@ function SignupContent() {
                     </button>
                 </div>
 
-                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em] text-[#86868B] my-8">
-                    <div className="absolute inset-0 flex items-center"><div className="w-full h-px bg-white/10" /></div>
-                    <span className="bg-[#1E1E1E] px-4 relative z-10">Or register with email</span>
+                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em] text-[#71717A] my-8">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full h-px bg-[#E8E2D5]" /></div>
+                    <span className="bg-white px-4 relative z-10">Or register with email</span>
                 </div>
 
                 <form onSubmit={handleSignup} className="space-y-6 relative z-10">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Full Name</label>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B] ml-2">Full Name</label>
                         <div className="relative group">
-                            <UserIcon className="absolute left-6 top-1/2 -translate-y-1/2 text-[#86868B] group-focus-within:text-[#C9A84C] transition-colors" size={18} />
+                            <UserIcon className="absolute left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={18} />
                             <input
                                 type="text"
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full h-16 bg-[#151515] border border-white/10 rounded-2xl pl-16 pr-6 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-medium text-xs uppercase"
+                                className="w-full h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl pl-16 pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs uppercase"
                                 placeholder="Abhay Sehdev"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Email Address</label>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B] ml-2">Email Address</label>
                         <div className="relative group">
-                            <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-[#86868B] group-focus-within:text-[#C9A84C] transition-colors" size={18} />
+                            <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={18} />
                             <input
                                 type="email"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full h-16 bg-[#151515] border border-white/10 rounded-2xl pl-16 pr-6 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-medium text-xs uppercase"
+                                className="w-full h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl pl-16 pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs uppercase"
                                 placeholder="name@domain.com"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">Password</label>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B] ml-2">Password</label>
                         <div className="relative group">
-                            <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-[#86868B] group-focus-within:text-[#C9A84C] transition-colors" size={18} />
+                            <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={18} />
                             <input
                                 type="password"
                                 required
                                 minLength={6}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-16 bg-[#151515] border border-white/10 rounded-2xl pl-16 pr-6 text-[#F8F3E8] placeholder-[#86868B] focus:border-[#C9A84C] focus:outline-none transition-all font-medium text-xs"
+                                className="w-full h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl pl-16 pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -229,7 +222,7 @@ function SignupContent() {
                     <button
                         type="submit"
                         disabled={loading || !!socialLoading}
-                        className="w-full h-16 bg-gradient-to-r from-[#E8D48B] to-[#C9A84C] hover:opacity-95 text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl relative overflow-hidden transition-all shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
+                        className="w-full h-16 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl relative overflow-hidden transition-all shadow-lg hover:-translate-y-0.5 disabled:opacity-50"
                     >
                         {loading ? (
                             <div className="flex items-center justify-center gap-3">
@@ -244,10 +237,10 @@ function SignupContent() {
                     </button>
                 </form>
 
-                <div className="mt-8 text-center relative z-10 pt-6 border-t border-white/10">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#86868B]">
+                <div className="mt-8 text-center relative z-10 pt-6 border-t border-[#E8E2D5]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#52525B]">
                         Already have an account?{' '}
-                        <Link href={`/login${nextPath !== '/account' ? `?next=${encodeURIComponent(nextPath)}` : ''}`} className="text-[#C9A84C] hover:underline ml-2 font-black">Sign In</Link>
+                        <Link href={`/login${nextPath !== '/account' ? `?next=${encodeURIComponent(nextPath)}` : ''}`} className="text-[#966E2E] hover:underline ml-2 font-black">Sign In</Link>
                     </p>
                 </div>
             </motion.div>

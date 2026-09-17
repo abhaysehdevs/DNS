@@ -2,8 +2,8 @@
 
 import { Product } from '@/lib/data';
 import { ProductCard } from '@/components/product-card';
-import { SearchX, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { SearchX } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ProductGridProps {
     products: Product[];
@@ -14,20 +14,20 @@ interface ProductGridProps {
 
 export function ProductGrid({ products, loading, onClearFilters, displayMode = 'grid' }: ProductGridProps) {
 
-    // Enhanced Skeleton Loader
+    // Skeleton Loader
     const ProductSkeleton = () => (
-        <div className="glass rounded-[2rem] overflow-hidden animate-pulse">
-            <div className="aspect-square bg-white/[0.03]" />
-            <div className="p-6 space-y-4">
+        <div className="bg-white border border-[#E8E2D5] rounded-2xl overflow-hidden animate-pulse shadow-xs">
+            <div className="aspect-square bg-[#FAF9F5]" />
+            <div className="p-4 space-y-3">
                 <div className="flex gap-2">
-                    <div className="h-2.5 bg-white/[0.05] rounded-full w-8" />
-                    <div className="h-2.5 bg-white/[0.05] rounded-full w-12" />
+                    <div className="h-2.5 bg-[#E8E2D5] rounded-full w-8" />
+                    <div className="h-2.5 bg-[#E8E2D5] rounded-full w-12" />
                 </div>
-                <div className="h-4 bg-white/[0.08] rounded-full w-3/4" />
-                <div className="h-3 bg-white/[0.05] rounded-full w-full" />
-                <div className="flex justify-between items-center pt-4">
-                    <div className="h-6 bg-white/[0.1] rounded-full w-20" />
-                    <div className="h-10 bg-white/[0.1] rounded-xl w-10" />
+                <div className="h-3.5 bg-[#E8E2D5] rounded-full w-3/4" />
+                <div className="h-3 bg-[#FAF9F5] rounded-full w-full" />
+                <div className="flex justify-between items-center pt-2">
+                    <div className="h-5 bg-[#E8E2D5] rounded-full w-16" />
+                    <div className="h-4 bg-[#FAF9F5] rounded-md w-10" />
                 </div>
             </div>
         </div>
@@ -48,19 +48,18 @@ export function ProductGrid({ products, loading, onClearFilters, displayMode = '
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center justify-center py-24 sm:py-32 bg-[#1E1E1E] rounded-2xl sm:rounded-[3rem] border border-[#343434] text-center px-4"
+                className="flex flex-col items-center justify-center py-20 sm:py-28 bg-white rounded-2xl border border-[#E8E2D5] text-center px-4 shadow-xs"
             >
-                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mb-6 shadow-2xl" style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}>
-                    <SearchX size={32} className="text-[#0A0A0F]" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-5 bg-[#FAF9F5] border border-[#E8E2D5] text-[#966E2E] shadow-sm">
+                    <SearchX size={30} />
                 </div>
-                <h3 className="text-xl sm:text-3xl font-black text-[#F8F3E8] mb-2 sm:mb-4 tracking-tight uppercase">No matching tools found</h3>
-                <p className="text-[#8E8E9A] max-w-md mx-auto mb-6 sm:mb-10 text-xs sm:text-base font-medium leading-relaxed">
+                <h3 className="text-lg sm:text-2xl font-black text-[#18181B] mb-2 tracking-tight uppercase">No matching tools found</h3>
+                <p className="text-[#71717A] max-w-md mx-auto mb-6 text-xs sm:text-sm font-normal leading-relaxed">
                     We couldn't find any products matching your current filters or search terms. Try expanding your search or clearing filters.
                 </p>
                 <button
                     onClick={onClearFilters}
-                    className="px-8 sm:px-10 py-3 sm:py-4 text-[#0A0A0F] font-black rounded-xl hover:scale-105 transition-all text-[9px] sm:text-[10px] uppercase tracking-[0.2em] shadow-lg"
-                    style={{ background: 'linear-gradient(135deg, #DFCE9F, #C5A059)' }}
+                    className="px-6 py-2.5 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold rounded-xl transition-all text-[9.5px] uppercase tracking-[0.15em] shadow-sm cursor-pointer"
                 >
                     Reset Filters
                 </button>

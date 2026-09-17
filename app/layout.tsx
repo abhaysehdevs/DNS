@@ -18,9 +18,6 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinanathandsons.com'),
-  alternates: {
-    canonical: 'https://dinanathandsons.com',
-  },
   title: {
     default: "Dinanath & Sons | Jewellery Tools, Goldsmith Equipment & Machinery Since 1960",
     template: "%s | Dinanath & Sons"
@@ -97,7 +94,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#151515',
+  themeColor: '#FAF9F5',
 };
 
 export default function RootLayout({
@@ -107,7 +104,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
       <head>
         <script
           type="application/ld+json"

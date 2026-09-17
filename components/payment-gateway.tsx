@@ -273,29 +273,29 @@ export function PaymentGateway({
                     className="relative w-full max-w-2xl bg-[#FFFFFF] border border-black/[0.06] rounded-[2.5rem] shadow-2xl overflow-hidden text-[#1D1D1F] z-10 flex flex-col md:flex-row h-[620px] md:h-[570px]"
                 >
                     {/* Left Panel: Invoice Details */}
-                    <div className="w-full md:w-5/12 bg-gradient-to-b from-[#1E1E1E] to-[#121212] p-8 flex flex-col justify-between text-white border-b md:border-b-0 md:border-r border-[#343434]/40">
+                    <div className="w-full md:w-5/12 bg-gradient-to-b from-[#FAF9F5] to-[#F3EFE6] p-8 flex flex-col justify-between text-[#18181B] border-b md:border-b-0 md:border-r border-[#E8E2D5]">
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#A67C35]/15 border border-[#A67C35]/30 text-[#A67C35] text-[8px] font-black uppercase tracking-[0.25em] mb-8">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#966E2E]/10 border border-[#966E2E]/25 text-[#966E2E] text-[8px] font-black uppercase tracking-[0.25em] mb-8">
                                 <Lock size={10} /> Secure Settlement
                             </div>
-                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#8E8E9A] mb-1">Invoice Order</p>
-                            <h3 className="text-sm font-black font-mono tracking-tight text-white uppercase mb-6">{orderId}</h3>
+                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#71717A] mb-1">Invoice Order</p>
+                            <h3 className="text-sm font-black font-mono tracking-tight text-[#18181B] uppercase mb-6">{orderId}</h3>
                             
-                            <div className="space-y-4 pt-4 border-t border-[#343434]/40">
+                            <div className="space-y-4 pt-4 border-t border-[#E8E2D5]">
                                 <div>
-                                    <span className="text-[8px] font-black uppercase tracking-widest text-[#8E8E9A] block mb-1">Customer</span>
-                                    <span className="text-[10px] font-bold text-[#F8F3E8] uppercase tracking-wider block">{customerName}</span>
+                                    <span className="text-[8px] font-black uppercase tracking-widest text-[#71717A] block mb-1">Customer</span>
+                                    <span className="text-[10px] font-bold text-[#18181B] uppercase tracking-wider block">{customerName}</span>
                                 </div>
                                 <div>
-                                    <span className="text-[8px] font-black uppercase tracking-widest text-[#8E8E9A] block mb-1">Phone Coordinates</span>
-                                    <span className="text-[10px] font-bold text-[#F8F3E8] block">{customerPhone}</span>
+                                    <span className="text-[8px] font-black uppercase tracking-widest text-[#71717A] block mb-1">Phone Coordinates</span>
+                                    <span className="text-[10px] font-bold text-[#18181B] block">{customerPhone}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="pt-6 border-t border-[#343434]/40">
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#8E8E9A] block mb-2">Grand Amount</span>
-                            <span className="text-3xl font-black text-[#A67C35] tracking-tight tabular-nums"><Currency value={amount} /></span>
+                        <div className="pt-6 border-t border-[#E8E2D5]">
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#71717A] block mb-2">Grand Amount</span>
+                            <span className="text-3xl font-black text-[#966E2E] tracking-tight tabular-nums"><Currency value={amount} /></span>
                         </div>
                     </div>
 
@@ -314,19 +314,19 @@ export function PaymentGateway({
                             {/* Live Razorpay Gateway Direct Display */}
                             {!isProcessing && (
                                 <div className="space-y-8 py-4 text-center">
-                                    <div className="w-16 h-16 rounded-full bg-[#A67C35]/15 text-[#A67C35] flex items-center justify-center mx-auto mb-2 border border-[#A67C35]/30 shadow-md">
+                                    <div className="w-16 h-16 rounded-full bg-[#966E2E]/10 text-[#966E2E] flex items-center justify-center mx-auto mb-2 border border-[#966E2E]/25 shadow-xs">
                                         <ShieldCheck size={32} />
                                     </div>
                                     <div className="space-y-2">
-                                        <h4 className="text-base font-black uppercase tracking-wider text-[#1D1D1F]">Secure Payment Portal</h4>
-                                        <p className="text-xs text-[#8E8E9A] leading-relaxed uppercase tracking-wider max-w-sm mx-auto font-semibold">
+                                        <h4 className="text-base font-black uppercase tracking-wider text-[#18181B]">Secure Payment Portal</h4>
+                                        <p className="text-xs text-[#71717A] leading-relaxed uppercase tracking-wider max-w-sm mx-auto font-medium">
                                             Supports live credit & debit cards, Netbanking, UPI apps (GPay, PhonePe, Paytm), and EMI options securely via Razorpay.
                                         </p>
                                     </div>
                                     
                                     <button 
                                         onClick={handleRazorpayPayment}
-                                        className="w-full h-15 bg-[#A67C35] hover:bg-[#8A6232] text-black font-black uppercase text-[10px] tracking-[0.25em] rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 cursor-pointer border-none"
+                                        className="w-full h-14 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase text-[10px] tracking-[0.25em] rounded-2xl shadow-md transition-all hover:-translate-y-0.5 cursor-pointer border-none"
                                     >
                                         Pay ₹{amount.toLocaleString()} via Razorpay
                                     </button>

@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Terms of Service | Dinanath & Sons Hardware Store',
-    description: 'Official Terms of Service governing website access, online and wholesale orders, B2B quotes, and payments with Dinanath & Sons Hardware Store.',
+    title: 'Terms of Service & Workshop Equipment Conditions',
+    description: 'Read the official terms and conditions governing retail purchases, B2B wholesale supply, and machine orders at Dinanath & Sons Hardware Store, Delhi.',
     alternates: {
         canonical: 'https://dinanathandsons.com/terms',
     },
     openGraph: {
-        title: 'Terms of Service | Dinanath & Sons',
-        description: 'Terms and conditions for retail purchases and wholesale supply contracts.',
+        title: 'Terms of Service & Workshop Equipment Conditions | Dinanath & Sons',
+        description: 'Read the official terms and conditions governing retail purchases, B2B wholesale supply, and machine orders at Dinanath & Sons Hardware Store, Delhi.',
         url: 'https://dinanathandsons.com/terms',
     }
 };

@@ -95,33 +95,33 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0A0A0F] text-[#F8F3E8] flex items-center justify-center p-6 relative overflow-hidden selection:bg-[#C9A84C]/30">
+        <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] flex items-center justify-center p-6 relative overflow-hidden selection:bg-[#966E2E]/20">
             
             {/* Ambient Background Glow */}
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-[#C9A84C]/10 blur-[140px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-500/10 blur-[140px] rounded-full" />
+                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-[#966E2E]/5 blur-[140px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-amber-500/5 blur-[140px] rounded-full" />
             </div>
 
             <motion.div
                 initial={{ opacity: 0, y: 30, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="w-full max-w-md bg-[#151515] border border-white/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative z-10 text-left"
+                className="w-full max-w-md bg-white border border-[#E8E2D5] rounded-[2.5rem] p-8 md:p-10 shadow-xl relative z-10 text-left"
             >
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 rounded-2xl bg-[#1E1E1E] border border-[#C9A84C]/30 flex items-center justify-center mx-auto mb-5 shadow-lg">
-                        <ShieldCheck size={32} className="text-[#C9A84C]" />
+                    <div className="w-16 h-16 rounded-2xl bg-[#FAF9F5] border border-[#E8E2D5] flex items-center justify-center mx-auto mb-5 shadow-sm">
+                        <ShieldCheck size={32} className="text-[#966E2E]" />
                     </div>
 
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 text-[#C9A84C] text-[9px] font-black uppercase tracking-[0.3em] mb-3">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF9F5] border border-[#E8E2D5] text-[#966E2E] text-[9px] font-black uppercase tracking-[0.3em] mb-3">
                         Dinanath & Sons Admin
                     </div>
 
-                    <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-[#F8F3E8]">
-                        Admin <span className="bg-gradient-to-r from-[#F8F3E8] via-[#E8D48B] to-[#C9A84C] bg-clip-text text-transparent">Portal</span>
+                    <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-[#18181B]">
+                        Admin <span className="text-[#966E2E]">Portal</span>
                     </h1>
-                    <p className="text-[#86868B] text-xs font-bold uppercase tracking-wider mt-2">
+                    <p className="text-[#71717A] text-xs font-bold uppercase tracking-wider mt-2">
                         Enter authorized admin email to proceed
                     </p>
                 </div>
@@ -133,9 +133,9 @@ export default function AdminLoginPage() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-start gap-3 text-red-400 text-xs font-bold leading-relaxed"
+                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3 text-red-700 text-xs font-bold leading-relaxed"
                         >
-                            <AlertCircle size={18} className="shrink-0 mt-0.5 text-red-400" />
+                            <AlertCircle size={18} className="shrink-0 mt-0.5 text-red-600" />
                             <span>{errorMsg}</span>
                         </motion.div>
                     )}
@@ -145,9 +145,9 @@ export default function AdminLoginPage() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center gap-3 text-emerald-400 text-xs font-bold"
+                            className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold"
                         >
-                            <CheckCircle2 size={18} className="shrink-0 text-emerald-400" />
+                            <CheckCircle2 size={18} className="shrink-0 text-emerald-600" />
                             <span>{successMsg}</span>
                         </motion.div>
                     )}
@@ -158,10 +158,10 @@ export default function AdminLoginPage() {
                     type="button"
                     onClick={handleGoogleAdminLogin}
                     disabled={googleLoading || loading}
-                    className="w-full h-14 bg-[#1E1E1E] hover:bg-[#252525] border border-white/10 hover:border-[#C9A84C]/40 rounded-2xl flex items-center justify-center gap-3 font-bold text-xs uppercase tracking-wider text-[#F8F3E8] transition-all mb-6 shadow-sm disabled:opacity-50"
+                    className="w-full h-14 bg-[#FAF9F5] hover:bg-[#F3EFE6] border border-[#E8E2D5] hover:border-[#966E2E]/40 rounded-2xl flex items-center justify-center gap-3 font-bold text-xs uppercase tracking-wider text-[#18181B] transition-all mb-6 shadow-sm disabled:opacity-50 cursor-pointer"
                 >
                     {googleLoading ? (
-                        <Loader2 className="animate-spin text-[#C9A84C]" size={18} />
+                        <Loader2 className="animate-spin text-[#966E2E]" size={18} />
                     ) : (
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -173,19 +173,19 @@ export default function AdminLoginPage() {
                     <span>Sign in with Admin Google</span>
                 </button>
 
-                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em] text-[#86868B] my-6">
-                    <div className="absolute inset-0 flex items-center"><div className="w-full h-px bg-white/10" /></div>
-                    <span className="bg-[#151515] px-3 relative z-10">Or Enter Admin Email</span>
+                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em] text-[#71717A] my-6">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full h-px bg-[#E8E2D5]" /></div>
+                    <span className="bg-white px-3 relative z-10">Or Enter Admin Email</span>
                 </div>
 
                 {/* Email Direct Login Form */}
                 <form onSubmit={handleEmailSubmit} className="space-y-5">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#86868B] ml-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#71717A] ml-2">
                             Admin Email Address
                         </label>
                         <div className="relative group">
-                            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-[#86868B] group-focus-within:text-[#C9A84C] transition-colors" size={18} />
+                            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={18} />
                             <input
                                 required
                                 type="email"
@@ -193,7 +193,7 @@ export default function AdminLoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="admin@domain.com"
                                 autoComplete="off"
-                                className="w-full h-14 bg-[#1E1E1E] border border-white/10 rounded-2xl pl-14 pr-5 text-[#F8F3E8] placeholder-[#555] focus:border-[#C9A84C] focus:outline-none transition-all font-bold text-xs"
+                                className="w-full h-14 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl pl-14 pr-5 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-bold text-xs"
                             />
                         </div>
                     </div>
@@ -201,7 +201,7 @@ export default function AdminLoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full h-14 bg-gradient-to-r from-[#E8D48B] via-[#C9A84C] to-[#A67C35] hover:opacity-95 text-[#0A0A0F] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                        className="w-full h-14 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                     >
                         {loading ? (
                             <div className="flex items-center gap-2">
@@ -217,8 +217,8 @@ export default function AdminLoginPage() {
                     </button>
                 </form>
 
-                <div className="mt-8 text-center pt-4 border-t border-white/5">
-                    <p className="text-[9px] font-mono text-[#86868B] uppercase tracking-widest">
+                <div className="mt-8 text-center pt-4 border-t border-[#E8E2D5]">
+                    <p className="text-[9px] font-mono text-[#71717A] uppercase tracking-widest">
                         Protected Zone • Dinanath & Sons Control System
                     </p>
                 </div>

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Shopping Cart | Dinanath & Sons Precision Tools",
+    title: "Shopping Cart",
     description: "Review and complete the procurement of your gold casting machines, goldsmith hand tools, and workshop equipment.",
     robots: {
         index: false,

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-    ChevronDown, X, Check, Filter, RotateCcw, 
+    ChevronDown, Check, Filter, RotateCcw, 
     Sliders, Compass, Wrench, Package, Droplets, Award, Flame, Tag, LayoutGrid,
     CheckCircle2, ArrowUpDown
 } from 'lucide-react';
@@ -107,19 +107,19 @@ export function FilterSidebar({
         <div className={`flex flex-col text-left ${className}`}>
             {/* Desktop Header */}
             {!isMobileDrawer && (
-                <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#343434]">
+                <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#E8E2D5]">
                     <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-md bg-[#A67C35]/15 border border-[#A67C35]/30 flex items-center justify-center text-[#A67C35]">
+                        <div className="w-6 h-6 rounded-md bg-[#966E2E]/10 border border-[#966E2E]/25 flex items-center justify-center text-[#966E2E]">
                             <Filter size={13} />
                         </div>
-                        <h3 className="text-xs font-bold text-[#F8F3E8] uppercase tracking-wider">
+                        <h3 className="text-xs font-bold text-[#18181B] uppercase tracking-wider">
                             Filter Options
                         </h3>
                     </div>
                     {hasActiveFilters && onResetAll && (
                         <button
                             onClick={onResetAll}
-                            className="flex items-center gap-1 text-[9px] font-bold text-[#A67C35] hover:text-[#DFCE9F] transition-colors uppercase tracking-wider"
+                            className="flex items-center gap-1 text-[9px] font-bold text-[#966E2E] hover:text-[#7D5A25] transition-colors uppercase tracking-wider cursor-pointer"
                         >
                             <RotateCcw size={10} /> Reset
                         </button>
@@ -130,17 +130,17 @@ export function FilterSidebar({
             <div className="space-y-4">
                 
                 {/* 1. Availability Filter (In Stock Only) */}
-                <div className="bg-[#181818] border border-[#343434] rounded-xl p-3">
+                <div className="bg-white border border-[#E8E2D5] rounded-xl p-3 shadow-xs">
                     <button
                         onClick={() => toggleSection('stock')}
-                        className="flex items-center justify-between w-full text-left"
+                        className="flex items-center justify-between w-full text-left cursor-pointer"
                     >
-                        <span className="text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-1.5">
-                            <CheckCircle2 size={13} className="text-[#A67C35]" /> Stock Availability
+                        <span className="text-[11px] font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-1.5">
+                            <CheckCircle2 size={13} className="text-[#966E2E]" /> Stock Availability
                         </span>
                         <ChevronDown
                             size={14}
-                            className={`text-[#8E8E9A] transition-transform duration-300 ${openSections.includes('stock') ? 'rotate-180' : ''}`}
+                            className={`text-[#71717A] transition-transform duration-300 ${openSections.includes('stock') ? 'rotate-180' : ''}`}
                         />
                     </button>
 
@@ -155,29 +155,29 @@ export function FilterSidebar({
                                 <div className="pt-3 flex flex-col gap-2">
                                     <button
                                         onClick={() => setInStockOnly && setInStockOnly(false)}
-                                        className={`flex items-center justify-between p-2 rounded-lg text-xs font-semibold transition-all ${
+                                        className={`flex items-center justify-between p-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                                             !inStockOnly
-                                                ? 'bg-[#A67C35]/15 border border-[#A67C35] text-[#DFCE9F]'
-                                                : 'bg-[#222222] border border-transparent text-[#8E8E9A] hover:text-white'
+                                                ? 'bg-[#966E2E]/10 border border-[#966E2E] text-[#966E2E]'
+                                                : 'bg-[#FAF9F5] border border-[#E8E2D5] text-[#71717A] hover:text-[#18181B]'
                                         }`}
                                     >
                                         <span>All Inventory</span>
-                                        {!inStockOnly && <Check size={13} className="text-[#A67C35]" />}
+                                        {!inStockOnly && <Check size={13} className="text-[#966E2E]" />}
                                     </button>
 
                                     <button
                                         onClick={() => setInStockOnly && setInStockOnly(true)}
-                                        className={`flex items-center justify-between p-2 rounded-lg text-xs font-semibold transition-all ${
+                                        className={`flex items-center justify-between p-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                                             inStockOnly
-                                                ? 'bg-[#A67C35]/15 border border-[#A67C35] text-[#DFCE9F]'
-                                                : 'bg-[#222222] border border-transparent text-[#8E8E9A] hover:text-white'
+                                                ? 'bg-[#966E2E]/10 border border-[#966E2E] text-[#966E2E]'
+                                                : 'bg-[#FAF9F5] border border-[#E8E2D5] text-[#71717A] hover:text-[#18181B]'
                                         }`}
                                     >
                                         <div className="flex items-center gap-1.5">
                                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                             <span>Ready to Ship (In Stock)</span>
                                         </div>
-                                        {inStockOnly && <Check size={13} className="text-[#A67C35]" />}
+                                        {inStockOnly && <Check size={13} className="text-[#966E2E]" />}
                                     </button>
                                 </div>
                             </motion.div>
@@ -186,17 +186,17 @@ export function FilterSidebar({
                 </div>
 
                 {/* 2. Categories Filter */}
-                <div className="bg-[#181818] border border-[#343434] rounded-xl p-3">
+                <div className="bg-white border border-[#E8E2D5] rounded-xl p-3 shadow-xs">
                     <button
                         onClick={() => toggleSection('categories')}
-                        className="flex items-center justify-between w-full text-left"
+                        className="flex items-center justify-between w-full text-left cursor-pointer"
                     >
-                        <span className="text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-1.5">
-                            <Tag size={13} className="text-[#A67C35]" /> Catalog Categories
+                        <span className="text-[11px] font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-1.5">
+                            <Tag size={13} className="text-[#966E2E]" /> Catalog Categories
                         </span>
                         <ChevronDown
                             size={14}
-                            className={`text-[#8E8E9A] transition-transform duration-300 ${openSections.includes('categories') ? 'rotate-180' : ''}`}
+                            className={`text-[#71717A] transition-transform duration-300 ${openSections.includes('categories') ? 'rotate-180' : ''}`}
                         />
                     </button>
 
@@ -216,17 +216,17 @@ export function FilterSidebar({
                                             <button
                                                 key={cat}
                                                 onClick={() => onCategoryChange(cat)}
-                                                className={`flex items-center justify-between w-full py-2 px-2.5 rounded-lg text-xs transition-all ${
+                                                className={`flex items-center justify-between w-full py-2 px-2.5 rounded-lg text-xs transition-all cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-gradient-to-r from-[#DFCE9F] via-[#C5A059] to-[#9E7B35] text-black font-bold shadow'
-                                                        : 'text-[#CFCFCF] hover:bg-[#252525] hover:text-white'
+                                                        ? 'bg-[#966E2E] text-white font-bold shadow-xs'
+                                                        : 'text-[#52525B] hover:bg-[#FAF9F5] hover:text-[#18181B]'
                                                 }`}
                                             >
                                                 <div className="flex items-center gap-2 min-w-0">
-                                                    <Icon size={13} className={isSelected ? 'text-black' : 'text-[#A67C35]'} />
+                                                    <Icon size={13} className={isSelected ? 'text-white' : 'text-[#966E2E]'} />
                                                     <span className="truncate">{getCategoryDisplayName(cat)}</span>
                                                 </div>
-                                                {isSelected && <Check size={12} className="text-black shrink-0 ml-1" />}
+                                                {isSelected && <Check size={12} className="text-white shrink-0 ml-1" />}
                                             </button>
                                         );
                                     })}
@@ -238,17 +238,17 @@ export function FilterSidebar({
 
                 {/* 3. Price Range Section (Retail Only) */}
                 {isRetail && (
-                    <div className="bg-[#181818] border border-[#343434] rounded-xl p-3">
+                    <div className="bg-white border border-[#E8E2D5] rounded-xl p-3 shadow-xs">
                         <button
                             onClick={() => toggleSection('price')}
-                            className="flex items-center justify-between w-full text-left"
+                            className="flex items-center justify-between w-full text-left cursor-pointer"
                         >
-                            <span className="text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider">
+                            <span className="text-[11px] font-bold text-[#18181B] uppercase tracking-wider">
                                 Budget Range (₹)
                             </span>
                             <ChevronDown
                                 size={14}
-                                className={`text-[#8E8E9A] transition-transform duration-300 ${openSections.includes('price') ? 'rotate-180' : ''}`}
+                                className={`text-[#71717A] transition-transform duration-300 ${openSections.includes('price') ? 'rotate-180' : ''}`}
                             />
                         </button>
 
@@ -272,10 +272,10 @@ export function FilterSidebar({
                                                             setMinPrice(preset.min);
                                                             setPriceRange(preset.max);
                                                         }}
-                                                        className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all ${
+                                                        className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
                                                             isActive
-                                                                ? 'bg-[#A67C35] text-black shadow'
-                                                                : 'bg-[#252525] text-[#8E8E9A] hover:text-white border border-[#343434]'
+                                                                ? 'bg-[#966E2E] text-white shadow-xs'
+                                                                : 'bg-[#FAF9F5] text-[#71717A] hover:text-[#18181B] border border-[#E8E2D5]'
                                                         }`}
                                                     >
                                                         {preset.label}
@@ -287,13 +287,13 @@ export function FilterSidebar({
                                         {/* Range Indicator */}
                                         <div className="flex items-center justify-between text-xs pt-1">
                                             <div className="flex flex-col">
-                                                <span className="text-[8px] text-[#8E8E9A] uppercase tracking-wider">Min</span>
-                                                <span className="font-bold text-[#F8F3E8]"><Currency value={minPrice} /></span>
+                                                <span className="text-[8px] text-[#71717A] uppercase tracking-wider">Min</span>
+                                                <span className="font-bold text-[#18181B]"><Currency value={minPrice} /></span>
                                             </div>
-                                            <div className="w-4 h-px bg-[#343434]" />
+                                            <div className="w-4 h-px bg-[#E8E2D5]" />
                                             <div className="flex flex-col text-right">
-                                                <span className="text-[8px] text-[#8E8E9A] uppercase tracking-wider">Max</span>
-                                                <span className="font-bold text-[#A67C35]"><Currency value={priceRange} /></span>
+                                                <span className="text-[8px] text-[#71717A] uppercase tracking-wider">Max</span>
+                                                <span className="font-bold text-[#966E2E]"><Currency value={priceRange} /></span>
                                             </div>
                                         </div>
 
@@ -309,7 +309,7 @@ export function FilterSidebar({
                                                     const val = Number(e.target.value);
                                                     if (val <= priceRange) setMinPrice(val);
                                                 }}
-                                                className="absolute w-full accent-[#A67C35] h-1 bg-[#2E2E2E] rounded-full appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
+                                                className="absolute w-full accent-[#966E2E] h-1 bg-[#E8E2D5] rounded-full appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
                                                 style={{ zIndex: minPrice > priceRange - 500 ? 5 : 3 }}
                                             />
                                             <input 
@@ -322,7 +322,7 @@ export function FilterSidebar({
                                                     const val = Number(e.target.value);
                                                     if (val >= minPrice) setPriceRange(val);
                                                 }}
-                                                className="absolute w-full accent-[#A67C35] h-1 bg-transparent rounded-full appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
+                                                className="absolute w-full accent-[#966E2E] h-1 bg-transparent rounded-full appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"
                                                 style={{ zIndex: 4 }}
                                             />
                                         </div>
@@ -335,17 +335,17 @@ export function FilterSidebar({
 
                 {/* 4. Sort Order Filter */}
                 {setSortBy && (
-                    <div className="bg-[#181818] border border-[#343434] rounded-xl p-3">
+                    <div className="bg-white border border-[#E8E2D5] rounded-xl p-3 shadow-xs">
                         <button
                             onClick={() => toggleSection('sort')}
-                            className="flex items-center justify-between w-full text-left"
+                            className="flex items-center justify-between w-full text-left cursor-pointer"
                         >
-                            <span className="text-[11px] font-bold text-[#F8F3E8] uppercase tracking-wider flex items-center gap-1.5">
-                                <ArrowUpDown size={13} className="text-[#A67C35]" /> Sorting Sequence
+                            <span className="text-[11px] font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-1.5">
+                                <ArrowUpDown size={13} className="text-[#966E2E]" /> Sorting Sequence
                             </span>
                             <ChevronDown
                                 size={14}
-                                className={`text-[#8E8E9A] transition-transform duration-300 ${openSections.includes('sort') ? 'rotate-180' : ''}`}
+                                className={`text-[#71717A] transition-transform duration-300 ${openSections.includes('sort') ? 'rotate-180' : ''}`}
                             />
                         </button>
 
@@ -367,14 +367,14 @@ export function FilterSidebar({
                                             <button
                                                 key={opt.id}
                                                 onClick={() => setSortBy(opt.id)}
-                                                className={`flex items-center justify-between py-1.5 px-2.5 rounded-lg text-xs transition-all ${
+                                                className={`flex items-center justify-between py-1.5 px-2.5 rounded-lg text-xs transition-all cursor-pointer ${
                                                     sortBy === opt.id
-                                                        ? 'bg-[#A67C35]/15 text-[#DFCE9F] font-bold'
-                                                        : 'text-[#8E8E9A] hover:text-white hover:bg-[#222222]'
+                                                        ? 'bg-[#966E2E]/10 text-[#966E2E] font-bold'
+                                                        : 'text-[#71717A] hover:text-[#18181B] hover:bg-[#FAF9F5]'
                                                 }`}
                                             >
                                                 <span>{opt.label}</span>
-                                                {sortBy === opt.id && <Check size={12} className="text-[#A67C35]" />}
+                                                {sortBy === opt.id && <Check size={12} className="text-[#966E2E]" />}
                                             </button>
                                         ))}
                                     </div>
@@ -383,7 +383,6 @@ export function FilterSidebar({
                         </AnimatePresence>
                     </div>
                 )}
-
 
             </div>
         </div>
