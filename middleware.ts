@@ -1,18 +1,7 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { createClient } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  const host = request.headers.get('host') || '';
-
-  // 1. Canonical Domain Redirection: Force apex domain (strip www.)
-  if (host.startsWith('www.')) {
-    const newHost = host.replace(/^www\./, '');
-    const url = request.nextUrl.clone();
-    url.host = newHost;
-    url.protocol = 'https';
-    return NextResponse.redirect(url, { status: 301 });
-  }
-
   return await createClient(request);
 }
 
