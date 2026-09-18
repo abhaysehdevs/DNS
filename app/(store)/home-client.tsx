@@ -12,12 +12,11 @@ import {
 import Link from 'next/link';
 
 const homeCategories = [
-    { name: 'Hand Tools', count: '120+ Products', img: '/images/products/ss-plier.png', href: '/shop/category/hand-tools' },
-    { name: 'Machines', count: '45+ Products', img: '/images/products/sand-blasting-dust-collector-machine.png', href: '/shop/category/machines' },
-    { name: 'Polishing & Buffs', count: '60+ Products', img: '/images/products/cloth-buff.png', href: '/shop/category/polishing' },
-    { name: 'Cleaning Solutions', count: '25+ Products', img: '/images/products/tik-tak-silver-cleaner.png', href: '/shop/category/chemicals' },
-    { name: 'Packaging & Cards', count: '30+ Products', img: '/images/packaging/silver-coins-5gms.png', href: '/shop/category/packaging' },
-    { name: 'Certified Bullion', count: '50+ Products', img: '/images/products/silver-coin-20g.png', href: '/shop/category/bullion' }
+    { name: 'Hand Tools', count: '120+ Products', img: '/categories/hand-tools.png', href: '/shop/category/hand-tools' },
+    { name: 'Machines', count: '45+ Products', img: '/categories/machinery.png', href: '/shop/category/machines' },
+    { name: 'Polishing & Buffs', count: '60+ Products', img: '/categories/cleaning-buffs.png', href: '/shop/category/polishing' },
+    { name: 'Cleaning Solutions', count: '25+ Products', img: '/categories/cleaning-solutions.png', href: '/shop/category/chemicals' },
+    { name: 'Packaging & Cards', count: '30+ Products', img: '/categories/packaging-and-cards.png', href: '/shop/category/packaging' }
 ];
 
 const whyChooseUsItems = [
@@ -180,14 +179,14 @@ export function HomeClient() {
                     </div>
 
                     {/* All categories in a single row */}
-                    <div className="grid grid-cols-6 gap-1.5 sm:gap-3 md:gap-5 w-full">
+                    <div className="grid grid-cols-5 gap-1.5 sm:gap-3 md:gap-5 w-full">
                         {homeCategories.map((cat, i) => (
                             <Link 
                                 href={cat.href} 
                                 key={i} 
                                 className="group flex flex-col items-center text-center bg-white hover:bg-[#FAF9F5] border border-[#E8E2D5] hover:border-[#966E2E] rounded-lg sm:rounded-2xl p-1.5 sm:p-3 transition-all duration-300 shadow-xs hover:-translate-y-1 active:scale-95"
                             >
-                                <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-md sm:rounded-xl bg-[#FAF9F5] p-1.5 sm:p-2.5 flex items-center justify-center overflow-hidden border border-[#E8E2D5] group-hover:border-[#966E2E]/50 transition-colors">
+                                <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-md sm:rounded-xl bg-white p-1 sm:p-2 flex items-center justify-center overflow-hidden border border-[#E8E2D5] group-hover:border-[#966E2E]/50 transition-colors">
                                     <img 
                                         src={cat.img} 
                                         alt={cat.name} 
