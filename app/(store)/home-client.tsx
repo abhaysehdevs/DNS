@@ -184,9 +184,9 @@ export function HomeClient() {
                             <Link 
                                 href={cat.href} 
                                 key={i} 
-                                className="group flex flex-col items-center text-center bg-white hover:bg-[#FAF9F5] border border-[#E8E2D5] hover:border-[#966E2E] rounded-lg sm:rounded-2xl p-1.5 sm:p-3 transition-all duration-300 shadow-xs hover:-translate-y-1 active:scale-95"
+                                className="group flex flex-col items-center text-center bg-white hover:bg-[#FAF9F5] border border-[#E8E2D5] hover:border-[#966E2E] rounded-lg sm:rounded-2xl p-1.5 sm:p-3 md:p-4 lg:p-5 transition-all duration-300 shadow-xs hover:-translate-y-1 active:scale-95"
                             >
-                                <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-md sm:rounded-xl bg-white p-1 sm:p-2 flex items-center justify-center overflow-hidden border border-[#E8E2D5] group-hover:border-[#966E2E]/50 transition-colors">
+                                <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-28 md:h-28 lg:w-36 lg:h-36 xl:w-44 xl:h-44 rounded-md sm:rounded-xl md:rounded-2xl bg-white p-1 sm:p-2 md:p-2.5 lg:p-3 flex items-center justify-center overflow-hidden border border-[#E8E2D5] group-hover:border-[#966E2E]/50 transition-colors">
                                     <img 
                                         src={cat.img} 
                                         alt={cat.name} 
@@ -196,10 +196,10 @@ export function HomeClient() {
                                         }}
                                     />
                                 </div>
-                                <h4 className="text-[7.5px] sm:text-[10px] md:text-xs font-bold text-[#18181B] group-hover:text-[#966E2E] transition-colors uppercase tracking-tight sm:tracking-normal line-clamp-2 leading-tight mt-1 sm:mt-2">
+                                <h4 className="text-[7.5px] sm:text-[10px] md:text-xs lg:text-sm font-bold text-[#18181B] group-hover:text-[#966E2E] transition-colors uppercase tracking-tight sm:tracking-normal line-clamp-2 leading-tight mt-1 sm:mt-2 md:mt-3">
                                     {cat.name}
                                 </h4>
-                                <span className="hidden sm:inline-block text-[7.5px] sm:text-[8.5px] text-[#71717A] uppercase font-bold mt-0.5">
+                                <span className="hidden sm:inline-block text-[7.5px] sm:text-[8.5px] md:text-[10px] text-[#71717A] uppercase font-bold mt-0.5 md:mt-1">
                                     {cat.count}
                                 </span>
                             </Link>
