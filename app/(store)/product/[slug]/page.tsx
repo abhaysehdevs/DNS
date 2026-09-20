@@ -21,7 +21,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     baseTitle = baseTitle.replace(/\s*\|\s*Dinanath\s*&\s*Sons.*$/i, '').trim();
 
     const rawDesc = rawProduct.seo_description || rawProduct.description || '';
-    const description = rawDesc 
+    const description = rawDesc
         ? (rawDesc.length > 155 ? `${rawDesc.slice(0, 152).trim()}...` : rawDesc)
         : `Buy ${rawProduct.name} at Dinanath & Sons. Professional ${category.toLowerCase()} for goldsmiths and manufacturing workshops. Pan-India delivery.`;
 

@@ -49,6 +49,48 @@ export function AIAssistant() {
     ]);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 10-second inactivity auto-close for mobile view
+    const resetInactivityTimer = () => {
+        if (inactivityTimerRef.current) {
+            clearTimeout(inactivityTimerRef.current);
+        }
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            inactivityTimerRef.current = setTimeout(() => {
+                setIsOpen(false);
+            }, 10000);
+        }
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+            return;
+        }
+
+        // Start inactivity countdown when opened on mobile
+        resetInactivityTimer();
+
+        const handleActivity = () => {
+            resetInactivityTimer();
+        };
+
+        window.addEventListener('touchstart', handleActivity, { passive: true });
+        window.addEventListener('pointerdown', handleActivity, { passive: true });
+        window.addEventListener('keydown', handleActivity);
+
+        return () => {
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+            window.removeEventListener('touchstart', handleActivity);
+            window.removeEventListener('pointerdown', handleActivity);
+            window.removeEventListener('keydown', handleActivity);
+        };
+    }, [isOpen]);
 
     // Auto-scroll on new message
     useEffect(() => {
@@ -152,6 +194,8 @@ export function AIAssistant() {
                         initial={{ opacity: 0, y: 40, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 40, scale: 0.95 }}
+                        onPointerDown={resetInactivityTimer}
+                        onTouchStart={resetInactivityTimer}
                         className="fixed inset-x-3 bottom-20 sm:inset-auto sm:bottom-6 sm:right-6 z-[200] sm:w-[420px] h-[520px] sm:h-[620px] max-h-[calc(100svh-100px)] bg-white border border-[#E8E2D5] rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden text-left"
                     >
                         {/* Chat Header */}

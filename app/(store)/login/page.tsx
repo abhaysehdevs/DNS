@@ -116,25 +116,25 @@ function LoginContent() {
     };
 
     return (
-        <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] flex items-center justify-center p-6 selection:bg-[#966E2E]/20 relative overflow-hidden">
+        <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] flex items-center justify-center p-3 sm:p-6 selection:bg-[#966E2E]/20 relative overflow-hidden">
             <motion.div
-                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="w-full max-w-lg bg-white rounded-[3rem] p-8 md:p-14 border border-[#E8E2D5] shadow-xl relative z-10"
+                className="w-full max-w-lg bg-white rounded-3xl sm:rounded-[3rem] p-5 sm:p-8 md:p-14 border border-[#E8E2D5] shadow-xl relative z-10"
             >
                 {/* Header */}
-                <div className="mb-8 text-center relative z-10">
+                <div className="mb-4 sm:mb-8 text-center relative z-10">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#966E2E]/10 border border-[#966E2E]/20 text-[#966E2E] text-[9px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm"
+                        className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#966E2E]/10 border border-[#966E2E]/20 text-[#966E2E] text-[8.5px] sm:text-[9px] font-black uppercase tracking-[0.25em] mb-3 sm:mb-6 shadow-xs"
                     >
-                        <ShieldCheck size={14} /> Client Portal
+                        <ShieldCheck size={13} /> Client Portal
                     </motion.div>
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase leading-[0.9] mb-3 text-[#18181B]">
+                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight uppercase leading-[0.95] mb-1.5 sm:mb-3 text-[#18181B]">
                         Account <span className="text-[#966E2E]">Login</span>
                     </h1>
-                    <p className="text-[#52525B] text-xs font-bold uppercase tracking-[0.2em]">Sign in with Google or Email</p>
+                    <p className="text-[#52525B] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em]">Sign in with Google or Email</p>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -143,9 +143,9 @@ function LoginContent() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3 text-red-600 text-xs font-bold uppercase tracking-wider"
+                            className="mb-4 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl sm:rounded-2xl flex items-center gap-2.5 text-red-600 text-xs font-bold uppercase tracking-wider"
                         >
-                            <AlertCircle size={18} className="shrink-0 text-red-600" />
+                            <AlertCircle size={16} className="shrink-0 text-red-600" />
                             <span>{error}</span>
                         </motion.div>
                     )}
@@ -154,26 +154,26 @@ function LoginContent() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold uppercase tracking-wider"
+                            className="mb-4 p-3 sm:p-4 bg-emerald-50 border border-emerald-200 rounded-xl sm:rounded-2xl flex items-center gap-2.5 text-emerald-700 text-xs font-bold uppercase tracking-wider"
                         >
-                            <CheckCircle size={18} className="shrink-0 text-emerald-700" />
+                            <CheckCircle size={16} className="shrink-0 text-emerald-700" />
                             <span>{successMessage}</span>
                         </motion.div>
                     )}
                 </AnimatePresence>
 
                 {/* Google One-Click Login */}
-                <div className="mb-8">
+                <div className="mb-4 sm:mb-8">
                     <button
                         type="button"
                         onClick={() => handleSocialLogin('google')}
                         disabled={!!socialLoading || loading}
-                        className="w-full h-14 bg-[#FAF9F5] hover:bg-[#F4EFE6] border border-[#E8E2D5] hover:border-[#966E2E]/40 rounded-2xl flex items-center justify-center gap-4 transition-all group font-bold text-xs uppercase tracking-wider text-[#18181B] disabled:opacity-50 shadow-sm"
+                        className="w-full h-12 sm:h-14 bg-[#FAF9F5] hover:bg-[#F4EFE6] border border-[#E8E2D5] hover:border-[#966E2E]/40 rounded-xl sm:rounded-2xl flex items-center justify-center gap-3 sm:gap-4 transition-all group font-bold text-xs uppercase tracking-wider text-[#18181B] disabled:opacity-50 shadow-xs"
                     >
                         {socialLoading === 'google' ? (
                             <Loader2 className="animate-spin text-[#966E2E]" size={18} />
                         ) : (
-                            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
                                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -184,40 +184,40 @@ function LoginContent() {
                     </button>
                 </div>
 
-                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em] text-[#71717A] my-8">
+                <div className="relative flex justify-center text-[8.5px] sm:text-[9px] font-black uppercase tracking-[0.25em] text-[#71717A] my-4 sm:my-8">
                     <div className="absolute inset-0 flex items-center"><div className="w-full h-px bg-[#E8E2D5]" /></div>
-                    <span className="bg-white px-4 relative z-10">Or email & password</span>
+                    <span className="bg-white px-3 sm:px-4 relative z-10">Or email & password</span>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-6 relative z-10">
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B] ml-2">Email Address</label>
+                <form onSubmit={handleLogin} className="space-y-3 sm:space-y-6 relative z-10">
+                    <div className="space-y-1 sm:space-y-2">
+                        <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B] ml-1 sm:ml-2">Email Address</label>
                         <div className="relative group">
-                            <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={18} />
+                            <Mail className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={16} />
                             <input
                                 type="email"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl pl-16 pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs uppercase"
+                                className="w-full h-12 sm:h-14 md:h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl sm:rounded-2xl pl-11 sm:pl-16 pr-4 sm:pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs uppercase"
                                 placeholder="name@domain.com"
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center px-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B]">Password</label>
-                            <Link href="/forgot-password" className="text-[10px] font-bold text-[#966E2E] uppercase tracking-[0.2em] hover:underline">Forgot?</Link>
+                    <div className="space-y-1 sm:space-y-2">
+                        <div className="flex justify-between items-center px-1 sm:px-2">
+                            <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#52525B]">Password</label>
+                            <Link href="/forgot-password" className="text-[9px] sm:text-[10px] font-bold text-[#966E2E] uppercase tracking-[0.2em] hover:underline">Forgot?</Link>
                         </div>
                         <div className="relative group">
-                            <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={18} />
+                            <Lock className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-[#71717A] group-focus-within:text-[#966E2E] transition-colors" size={16} />
                             <input
                                 type="password"
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl pl-16 pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs"
+                                className="w-full h-12 sm:h-14 md:h-16 bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl sm:rounded-2xl pl-11 sm:pl-16 pr-4 sm:pr-6 text-[#18181B] placeholder-[#A1A1AA] focus:border-[#966E2E] focus:outline-none transition-all font-medium text-xs"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -226,25 +226,25 @@ function LoginContent() {
                     <button
                         type="submit"
                         disabled={loading || !!socialLoading}
-                        className="w-full h-16 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl relative overflow-hidden transition-all shadow-lg hover:-translate-y-0.5 disabled:opacity-50"
+                        className="w-full h-12 sm:h-14 md:h-16 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-black text-xs uppercase tracking-[0.2em] rounded-xl sm:rounded-2xl relative overflow-hidden transition-all shadow-md hover:-translate-y-0.5 disabled:opacity-50 mt-2 cursor-pointer"
                     >
                         {loading ? (
-                            <div className="flex items-center justify-center gap-3">
-                                <Loader2 className="animate-spin" size={20} />
+                            <div className="flex items-center justify-center gap-2 sm:gap-3">
+                                <Loader2 className="animate-spin" size={18} />
                                 Signing In...
                             </div>
                         ) : (
-                            <div className="flex items-center justify-center gap-3">
-                                Sign In <ArrowRight size={18} />
+                            <div className="flex items-center justify-center gap-2 sm:gap-3">
+                                Sign In <ArrowRight size={16} />
                             </div>
                         )}
                     </button>
                 </form>
 
-                <div className="mt-8 text-center relative z-10 pt-6 border-t border-[#E8E2D5]">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#52525B]">
+                <div className="mt-4 sm:mt-8 text-center relative z-10 pt-3.5 sm:pt-6 border-t border-[#E8E2D5]">
+                    <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-[#52525B]">
                         Don&apos;t have an account?{' '}
-                        <Link href={`/signup${nextPath !== '/account' ? `?next=${encodeURIComponent(nextPath)}` : ''}`} className="text-[#966E2E] hover:underline ml-2 font-black">Register Now</Link>
+                        <Link href={`/signup${nextPath !== '/account' ? `?next=${encodeURIComponent(nextPath)}` : ''}`} className="text-[#966E2E] hover:underline ml-1.5 font-black">Register Now</Link>
                     </p>
                 </div>
             </motion.div>

@@ -7,9 +7,11 @@ import { ProductCard } from '@/components/product-card';
 import { Product, products as initialLocalProducts } from '@/lib/data';
 import { 
     Loader2, ArrowRight,
-    Mail, Sparkles, CheckCircle
+    Mail, Sparkles, CheckCircle, Tag, Truck, Percent, Clock, BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
+import { BLOG_POSTS, BlogPost } from '@/lib/blog-data';
+import { getAllBlogPosts } from '@/lib/blog';
 
 const homeCategories = [
     { name: 'Hand Tools', count: '120+ Products', img: '/categories/hand-tools.png', href: '/shop/category/hand-tools' },
@@ -19,16 +21,10 @@ const homeCategories = [
     { name: 'Packaging & Cards', count: '30+ Products', img: '/categories/packaging-and-cards.png', href: '/shop/category/packaging' }
 ];
 
-const whyChooseUsItems = [
-    { title: "60+ Years of Trust", desc: "Serving Indian jewellers since 1960." },
-    { title: "Premium Quality Products", desc: "Tested and verified for industrial standards." },
-    { title: "A to Z Solutions for Jewellery Making", desc: "Complete workshop catalog under one roof." },
-    { title: "Trusted by Thousands of Professionals", desc: "Preferred choice of master goldsmiths." },
-    { title: "Excellent Customer Support", desc: "Dedicated expert advice for machine calibration." }
-];
-
 export function HomeClient() {
     const [newArrivals, setNewArrivals] = useState<Product[]>(() => initialLocalProducts.slice(0, 6));
+    const [offerProducts, setOfferProducts] = useState<Product[]>(() => initialLocalProducts.slice(0, 6));
+    const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => BLOG_POSTS.slice(0, 3));
     const [loading, setLoading] = useState(false);
 
     const [featuredCollections, setFeaturedCollections] = useState<any[]>([]);
@@ -150,6 +146,37 @@ export function HomeClient() {
 
         fetchProducts();
         fetchFeaturedCollections();
+
+        // Fetch latest blog posts for the blog glimpse section
+        getAllBlogPosts().then(posts => {
+            if (posts && posts.length > 0) {
+                setBlogPosts(posts.slice(0, 3));
+            }
+        }).catch(err => console.error('Error fetching blog posts for home:', err));
+
+        // Fetch offer products
+        async function fetchOffers() {
+            try {
+                const { data } = await supabase.from('products').select('*').limit(6);
+                if (data && data.length > 0) {
+                    setOfferProducts(data.map((p: any) => ({
+                        id: p.id,
+                        name: p.name,
+                        description: p.description,
+                        retailPrice: p.retail_price,
+                        wholesalePrice: p.wholesale_price,
+                        wholesaleMOQ: p.wholesale_moq,
+                        primaryImage: p.image || p.image_url || '/placeholder.jpg',
+                        image: p.image || p.image_url || '/placeholder.jpg',
+                        gallery: p.gallery || [],
+                        category: p.category,
+                        inStock: p.in_stock,
+                        reviews: p.reviews || []
+                    })));
+                }
+            } catch (e) {}
+        }
+        fetchOffers();
     }, []);
 
     const getCollectionUrl = (query: string) => {
@@ -203,6 +230,77 @@ export function HomeClient() {
                                     {cat.count}
                                 </span>
                             </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* OFFERS & TRADE DEALS WINDOW */}
+            <section className="py-6 sm:py-10 md:py-12 px-3 sm:px-6 bg-gradient-to-b from-[#FAF9F5] via-[#F4EFE6]/60 to-[#FAF9F5] border-b border-[#E8E2D5] relative overflow-hidden">
+                <div className="container mx-auto">
+                    {/* Header */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8 border-b border-[#E8E2D5] pb-3 sm:pb-4 gap-2 sm:gap-4 text-center sm:text-left">
+                        <div>
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#966E2E]/10 border border-[#966E2E]/20 text-[#966E2E] text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] mb-1.5 shadow-xs">
+                                <Sparkles size={11} />
+                                <span>Exclusive Offers & Seasonal Deals</span>
+                            </div>
+                            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display text-[#18181B] tracking-wider uppercase mb-1">
+                                Workshop Offers & Deals
+                            </h2>
+                            <p className="text-[8px] sm:text-[9px] font-bold text-[#966E2E] uppercase tracking-[0.2em]">
+                                Handpicked discounts, verified trade vouchers & bulk savings
+                            </p>
+                        </div>
+                        <Link href="/offers" className="group text-[9px] sm:text-[10px] font-bold text-[#52525B] hover:text-[#966E2E] uppercase tracking-widest flex items-center gap-2 transition-colors">
+                            <span>Explore All Offers</span>
+                            <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
+
+                    {/* Promo Cards Banner Row */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 mb-5 sm:mb-8">
+                        <div className="bg-white border border-[#E8E2D5] rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 shadow-xs hover:border-[#966E2E]/50 transition-all text-left">
+                            <div className="w-10 h-10 rounded-xl bg-amber-50 text-[#966E2E] border border-amber-200 flex items-center justify-center shrink-0">
+                                <Tag size={18} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-[8px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-[#FAF9F5] border border-[#E8E2D5] text-[#966E2E]">WORKSHOP10</span>
+                                    <span className="text-[7.5px] font-bold uppercase text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">Active</span>
+                                </div>
+                                <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#18181B] mt-0.5 truncate">Flat 10% Off Hand Tools</h4>
+                                <p className="text-[9.5px] text-[#71717A] truncate">Use code on precision tweezers & pliers</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white border border-[#E8E2D5] rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 shadow-xs hover:border-[#966E2E]/50 transition-all text-left">
+                            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shrink-0">
+                                <Truck size={18} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <span className="text-[8px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">Pan-India</span>
+                                <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#18181B] mt-0.5 truncate">Free Shipping Over ₹1,999</h4>
+                                <p className="text-[9.5px] text-[#71717A] truncate">Direct insured delivery from Chandni Chowk</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white border border-[#E8E2D5] rounded-2xl p-3.5 sm:p-4 flex items-center gap-3 shadow-xs hover:border-[#966E2E]/50 transition-all text-left">
+                            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 border border-purple-200 flex items-center justify-center shrink-0">
+                                <Percent size={18} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <span className="text-[8px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">Wholesale MOQ</span>
+                                <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#18181B] mt-0.5 truncate">B2B Manufacturing Deals</h4>
+                                <p className="text-[9.5px] text-[#71717A] truncate">Up to 25% margin savings with GST invoice</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Curated Offers Product Grid */}
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 md:gap-6">
+                        {offerProducts.map((product) => (
+                            <ProductCard key={`offer-${product.id}`} product={product} />
                         ))}
                     </div>
                 </div>
@@ -266,10 +364,10 @@ export function HomeClient() {
                 </section>
             )}
 
-            {/* 4. ABOUT & WHY CHOOSE US */}
+            {/* 4. ABOUT & WORKSHOP BLOG GLIMPSE */}
             <section className="py-6 sm:py-10 md:py-12 px-3.5 sm:px-6 bg-[#FAF9F5] border-b border-[#E8E2D5] relative">
                 <div className="container mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-start">
                         
                         {/* About Us Description */}
                         <div className="lg:col-span-7 flex flex-col text-left space-y-4 sm:space-y-6">
@@ -294,20 +392,65 @@ export function HomeClient() {
                             </div>
                         </div>
 
-                        {/* Why Choose Us */}
-                        <div className="lg:col-span-5 flex flex-col space-y-6 sm:space-y-8 text-left bg-white border border-[#E8E2D5] rounded-2xl p-5 sm:p-8 shadow-xs">
-                            <div>
-                                <h3 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-[#966E2E] uppercase tracking-wider mb-1.5 sm:mb-2">Why Choose Us?</h3>
-                                <p className="text-[8px] sm:text-[9px] text-[#71717A] uppercase tracking-widest font-bold border-b border-[#E8E2D5] pb-3 sm:pb-4">Our legacy directives</p>
+                        {/* Glimpse of Blog Section (Replacing Why Choose Us - Mobile-Optimized) */}
+                        <div className="lg:col-span-5 flex flex-col space-y-3 sm:space-y-4 text-left bg-white border border-[#E8E2D5] rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xs">
+                            <div className="flex items-center justify-between border-b border-[#E8E2D5] pb-2.5">
+                                <div>
+                                    <h3 className="text-base sm:text-xl font-bold font-display text-[#966E2E] uppercase tracking-wider">
+                                        Workshop Journal
+                                    </h3>
+                                    <p className="text-[7.5px] sm:text-[8.5px] text-[#71717A] uppercase tracking-widest font-bold">
+                                        Glimpse of Latest Guides & Insights
+                                    </p>
+                                </div>
+                                <Link href="/blog" className="text-[8.5px] sm:text-[9.5px] font-bold text-[#966E2E] hover:underline uppercase tracking-wider flex items-center gap-1">
+                                    <span>View All</span>
+                                    <ArrowRight size={11} />
+                                </Link>
                             </div>
 
-                            <div className="space-y-4 sm:space-y-6">
-                                {whyChooseUsItems.map((item, i) => (
-                                    <div key={i} className="flex flex-col text-left">
-                                        <h4 className="text-xs sm:text-sm font-bold text-[#18181B] uppercase tracking-wider">{item.title}</h4>
-                                        <p className="text-[11px] sm:text-xs text-[#71717A] mt-1">{item.desc}</p>
-                                    </div>
+                            <div className="space-y-2.5 sm:space-y-3">
+                                {blogPosts.slice(0, 3).map((post) => (
+                                    <Link 
+                                        key={post.id} 
+                                        href={`/blog/${post.id}`}
+                                        className="group flex gap-2.5 sm:gap-3 p-2 rounded-xl hover:bg-[#FAF9F5] border border-transparent hover:border-[#E8E2D5] transition-all"
+                                    >
+                                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-[#FAF9F5] border border-[#E8E2D5] shrink-0">
+                                            <img 
+                                                src={post.image} 
+                                                alt={post.title} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = '/placeholder.jpg';
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                            <div className="flex items-center gap-2 text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider text-[#966E2E] mb-0.5">
+                                                <span>{post.category}</span>
+                                                <span>•</span>
+                                                <span className="text-[#71717A] flex items-center gap-1"><Clock size={9} /> {post.readTime}</span>
+                                            </div>
+                                            <h4 className="text-[11px] sm:text-xs font-bold text-[#18181B] group-hover:text-[#966E2E] transition-colors line-clamp-2 uppercase tracking-tight leading-snug">
+                                                {post.title}
+                                            </h4>
+                                            <p className="text-[9.5px] sm:text-[10px] text-[#71717A] line-clamp-1 mt-0.5 font-normal">
+                                                {post.excerpt}
+                                            </p>
+                                        </div>
+                                    </Link>
                                 ))}
+                            </div>
+
+                            <div className="pt-2 border-t border-[#E8E2D5]">
+                                <Link href="/blog">
+                                    <button className="w-full h-9 sm:h-10 bg-[#FAF9F5] hover:bg-[#F4EFE6] border border-[#E8E2D5] hover:border-[#966E2E]/40 rounded-xl text-[8.5px] sm:text-[9.5px] font-bold uppercase tracking-[0.18em] text-[#18181B] flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                                        <BookOpen size={13} className="text-[#966E2E]" />
+                                        <span>Read All Workshop Guides</span>
+                                        <ArrowRight size={11} className="text-[#966E2E]" />
+                                    </button>
+                                </Link>
                             </div>
                         </div>
 
