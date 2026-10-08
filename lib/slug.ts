@@ -67,7 +67,25 @@ export const LEGACY_SLUG_REDIRECTS: Record<string, string> = {
 
 export function getCanonicalProductSlug(product: any): string {
     if (!product) return '';
-    return product.slug || product.specifications?.slug || toSlug(product.name) || String(product.id);
+    if (product.slug) return String(product.slug).trim();
+    if (product.specifications?.slug) return String(product.specifications.slug).trim();
+
+    const baseSlug = toSlug(product.name);
+    if (!baseSlug) return String(product.id || '');
+
+    // Fallback: If no explicit slug is present, make deterministic suffix from SKU or ID to avoid collisions
+    const rawSku = product.sku || '';
+    const skuDigits = String(rawSku).replace(/\D/g, '').slice(-4);
+    if (skuDigits) {
+        return `${baseSlug}-${skuDigits}`;
+    }
+
+    const idSuffix = product.id ? String(product.id).replace(/\D/g, '').slice(-4) : '';
+    if (idSuffix) {
+        return `${baseSlug}-${idSuffix}`;
+    }
+
+    return baseSlug;
 }
 
 export function getProductUrl(product: { id: string; name: string; slug?: string; specifications?: any }): string {
@@ -181,7 +199,7 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
             }
         }
 
-        // 2. Try Supabase exact slug
+        // 2. Try Supabase exact slug column (if it exists)
         for (const target of targetsToTry) {
             try {
                 const { data: bySlug, error: slugErr } = await supabase.from('products').select('*').eq('slug', target).maybeSingle();
@@ -191,18 +209,35 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
             }
         }
 
-        // 3. Query DB products and match by specifications.slug, slug, generated toSlug(name), or id
+        // 3. Query all DB products and match with priority
         const { data: allDb } = await supabase.from('products').select('*');
         if (allDb && allDb.length > 0) {
+            // Priority A: Exact ID or exact canonical slug (p.slug or p.specifications.slug)
             for (const target of targetsToTry) {
-                const found = allDb.find((p: any) => 
+                const exactMatch = allDb.find((p: any) => 
                     p.id === target ||
                     p.slug === target ||
                     p.specifications?.slug === target ||
-                    toSlug(p.name) === target ||
                     (p.specifications?.slug && toSlug(p.specifications.slug) === target)
                 );
-                if (found) return normalizeProduct(found);
+                if (exactMatch) return normalizeProduct(exactMatch);
+            }
+
+            // Priority B: Exact SKU match
+            for (const target of targetsToTry) {
+                const skuMatch = allDb.find((p: any) => p.sku && toSlug(p.sku) === target);
+                if (skuMatch) return normalizeProduct(skuMatch);
+            }
+
+            // Priority C: Base name match (only if single match or exact fallback)
+            for (const target of targetsToTry) {
+                const nameMatches = allDb.filter((p: any) => toSlug(p.name) === target);
+                if (nameMatches.length === 1) {
+                    return normalizeProduct(nameMatches[0]);
+                } else if (nameMatches.length > 1) {
+                    const candidate = nameMatches.find((p: any) => !p.specifications?.slug || p.specifications?.slug === target);
+                    return normalizeProduct(candidate || nameMatches[0]);
+                }
             }
         }
     } catch (err) {

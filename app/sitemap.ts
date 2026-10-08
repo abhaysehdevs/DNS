@@ -90,6 +90,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly',
             priority: 0.5,
         },
+        {
+            url: `${baseUrl}/google-merchant-feed.html`,
+            lastModified: now,
+            changeFrequency: 'daily',
+            priority: 0.8,
+        },
     ]
 
     // 2. Canonical Category Routes
@@ -106,7 +112,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const { data: products } = await supabase
             .from('products')
             .select('*')
-            .eq('in_stock', true)
 
         const catalogProducts = (products && products.length > 0)
             ? products 

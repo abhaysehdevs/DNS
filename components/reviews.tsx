@@ -140,104 +140,139 @@ export function Reviews({ initialReviews = [], productId }: { initialReviews?: R
     };
 
     return (
-        <div className="bg-white border border-[#E8E2D5] rounded-2xl p-8 text-[#18181B] relative overflow-hidden shadow-xs">
-            <div className="absolute top-0 right-0 bg-[#966E2E] text-white font-mono text-[9px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-bl-xl shadow-xs">
-                Customer Feedback
-            </div>
-
-            <h3 className="text-2xl font-black text-[#18181B] uppercase tracking-wider mb-6 flex items-center gap-3">
-                Verified Reviews
-            </h3>
-
-            <div className="flex items-center gap-6 mb-8 bg-[#FAF9F5] p-5 border border-[#E8E2D5] rounded-xl">
-                <div className="text-4xl font-black text-[#966E2E] tracking-tight">{averageRating.toFixed(1)}</div>
+        <div className="bg-white border border-[#E8E2D5] rounded-2xl p-5 sm:p-7 md:p-8 text-[#18181B] relative overflow-hidden shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E8E2D5] pb-4 mb-6">
                 <div>
-                    <div className="flex text-[#966E2E] gap-1">
-                        {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={16} fill={i < Math.round(averageRating) ? "currentColor" : "none"} strokeWidth={2} />
-                        ))}
-                    </div>
-                    <p className="text-[10px] text-[#71717A] font-bold uppercase tracking-widest mt-1">{reviews.length} Verified Customer Reviews</p>
+                    <h3 className="text-xl sm:text-2xl font-black text-[#18181B] uppercase tracking-wider flex items-center gap-2.5">
+                        Verified Reviews & Ratings
+                    </h3>
+                    <p className="text-[10px] text-[#71717A] font-bold uppercase tracking-widest mt-0.5">
+                        Authentic workshop feedback from verified buyers
+                    </p>
+                </div>
+                <div className="bg-[#966E2E] text-white font-mono text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-md shadow-xs">
+                    Customer Feedback
                 </div>
             </div>
 
-            {/* Review List */}
-            <div className="space-y-4 mb-8 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                {reviews.length === 0 && <p className="text-[#71717A] italic text-xs font-normal">No reviews yet. Be the first to share your feedback!</p>}
-                {reviews.map((review, idx) => (
-                    <div key={review.id || idx} className="bg-[#FAF9F5] border border-[#E8E2D5] p-5 rounded-xl hover:border-[#966E2E]/50 transition-all duration-300">
-                        <div className="flex justify-between items-start mb-3 flex-wrap gap-2">
-                            <div className="flex items-center gap-2.5">
-                                <div className="bg-white p-2 rounded-lg border border-[#E8E2D5] text-[#966E2E] shadow-xs"><User size={14} strokeWidth={2.5} /></div>
-                                <div className="flex flex-col items-start gap-0.5">
-                                    <span className="font-bold text-[#18181B] uppercase tracking-wide text-xs">{review.userName}</span>
-                                    {review.verifiedPurchase && (
-                                        <span className="bg-[#966E2E]/10 text-[#966E2E] font-bold text-[8px] uppercase tracking-widest px-2 py-0.5 rounded border border-[#966E2E]/30">
-                                            Verified Buyer
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                            <span className="text-[9px] text-[#71717A] font-mono uppercase font-bold">{review.date}</span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+                
+                {/* Left Column: Rating Overview & Review Form */}
+                <div className="lg:col-span-5 space-y-4">
+                    {/* Score Summary Box */}
+                    <div className="flex items-center gap-4 bg-[#FAF9F5] p-4 sm:p-5 border border-[#E8E2D5] rounded-xl">
+                        <div className="text-3xl sm:text-4xl font-black text-[#966E2E] tracking-tight shrink-0">
+                            {averageRating > 0 ? averageRating.toFixed(1) : '5.0'}
                         </div>
-                        <div className="flex text-[#966E2E] mb-2 gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} strokeWidth={2} />
-                            ))}
-                        </div>
-                        <p className="text-[#52525B] text-xs leading-relaxed font-normal">{review.comment}</p>
-                    </div>
-                ))}
-            </div>
-
-            {/* Write Review */}
-            <div className="border-t border-[#E8E2D5] pt-6">
-                <h4 className="font-bold text-[#18181B] text-base uppercase tracking-wider mb-4">Write a Product Review</h4>
-                {user ? (
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-[#71717A] uppercase tracking-widest">Rating:</span>
-                            <div className="flex gap-1.5">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                    <button
-                                        key={star}
-                                        type="button"
-                                        onClick={() => setRating(star)}
-                                        className="text-[#966E2E] hover:scale-110 transition-transform cursor-pointer"
-                                    >
-                                        <Star size={20} fill={star <= rating ? "currentColor" : "none"} strokeWidth={2} />
-                                    </button>
+                        <div>
+                            <div className="flex text-[#966E2E] gap-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                    <Star 
+                                        key={i} 
+                                        size={15} 
+                                        fill={i < Math.round(averageRating > 0 ? averageRating : 5) ? "currentColor" : "none"} 
+                                        strokeWidth={2} 
+                                    />
                                 ))}
                             </div>
+                            <p className="text-[10px] text-[#71717A] font-bold uppercase tracking-widest mt-1">
+                                {reviews.length > 0 ? `${reviews.length} Verified Customer Reviews` : 'Verified Quality Rating'}
+                            </p>
                         </div>
-                        <textarea
-                            className="w-full bg-[#FAF9F5] border border-[#E8E2D5] p-4 text-xs text-[#18181B] focus:border-[#966E2E] focus:outline-none placeholder-[#A1A1AA] transition-colors rounded-xl font-normal"
-                            rows={3}
-                            placeholder="Share your technical feedback and build quality experience with this product..."
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            required
-                        />
-                        <Button
-                            type="submit"
-                            className="bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-widest text-[9.5px] px-8 py-3 rounded-xl shadow-xs transition-all flex items-center gap-2 border-none cursor-pointer"
-                            disabled={submitting}
-                        >
-                            {submitting ? <Loader2 className="animate-spin" size={14} /> : null}
-                            {submitting ? 'Submitting Feedback...' : 'Publish Review'}
-                        </Button>
-                    </form>
-                ) : (
-                    <div className="bg-[#FAF9F5] border border-[#E8E2D5] p-6 text-center rounded-xl">
-                        <p className="text-xs text-[#18181B] font-bold uppercase tracking-wider mb-1">Customer Account Required</p>
-                        <p className="text-[10px] text-[#71717A] mb-4 uppercase font-semibold">Log in with your customer account to post product reviews.</p>
-                        <Link href="/login">
-                            <Button className="bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-widest text-[9px] px-6 py-2.5 rounded-xl shadow-xs border-none cursor-pointer">
-                                Login to Review
-                            </Button>
-                        </Link>
                     </div>
-                )}
+
+                    {/* Write Review Form Card */}
+                    <div className="bg-[#FAF9F5] border border-[#E8E2D5] p-4 sm:p-5 rounded-xl">
+                        <h4 className="font-bold text-[#18181B] text-xs uppercase tracking-wider mb-3">Write a Product Review</h4>
+                        {user ? (
+                            <form onSubmit={handleSubmit} className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[11px] font-bold text-[#71717A] uppercase tracking-wider">Your Rating:</span>
+                                    <div className="flex gap-1">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setRating(star)}
+                                                className="text-[#966E2E] hover:scale-110 transition-transform cursor-pointer p-0.5"
+                                            >
+                                                <Star size={18} fill={star <= rating ? "currentColor" : "none"} strokeWidth={2} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <textarea
+                                    className="w-full bg-white border border-[#E8E2D5] p-3 text-xs text-[#18181B] focus:border-[#966E2E] focus:outline-none placeholder-[#A1A1AA] transition-colors rounded-lg font-normal resize-none"
+                                    rows={3}
+                                    placeholder="Share your technical feedback and workshop experience..."
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    required
+                                />
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-widest text-[9px] py-2.5 rounded-lg shadow-xs transition-all flex items-center justify-center gap-2 border-none cursor-pointer"
+                                    disabled={submitting}
+                                >
+                                    {submitting ? <Loader2 className="animate-spin" size={13} /> : null}
+                                    {submitting ? 'Submitting Feedback...' : 'Publish Review'}
+                                </Button>
+                            </form>
+                        ) : (
+                            <div className="text-center py-2">
+                                <p className="text-[11px] text-[#71717A] mb-3 uppercase font-semibold">Log in with your customer account to post a review.</p>
+                                <Link href="/login" className="inline-block w-full">
+                                    <Button className="w-full bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-widest text-[9px] py-2 rounded-lg shadow-xs border-none cursor-pointer">
+                                        Login to Review
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right Column: Customer Reviews List */}
+                <div className="lg:col-span-7">
+                    {reviews.length === 0 ? (
+                        <div className="bg-[#FAF9F5] border border-dashed border-[#E8E2D5] rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[220px]">
+                            <Star size={24} className="text-[#966E2E]/40 mb-2" strokeWidth={1.5} />
+                            <h5 className="font-bold text-xs uppercase tracking-wider text-[#18181B] mb-1">No Reviews Yet</h5>
+                            <p className="text-[#71717A] text-xs max-w-sm leading-relaxed">
+                                Be the first verified customer to share your workshop experience and build quality rating for this tool!
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1.5 custom-scrollbar">
+                            {reviews.map((review, idx) => (
+                                <div key={review.id || idx} className="bg-[#FAF9F5] border border-[#E8E2D5] p-4 rounded-xl hover:border-[#966E2E]/50 transition-all duration-200">
+                                    <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <div className="bg-white p-1.5 rounded-lg border border-[#E8E2D5] text-[#966E2E] shadow-xs">
+                                                <User size={13} strokeWidth={2.5} />
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-bold text-[#18181B] uppercase tracking-wide text-xs">{review.userName}</span>
+                                                {review.verifiedPurchase && (
+                                                    <span className="bg-[#966E2E]/10 text-[#966E2E] font-bold text-[7.5px] uppercase tracking-widest px-1.5 py-0.5 rounded border border-[#966E2E]/30">
+                                                        Verified Buyer
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <span className="text-[8.5px] text-[#71717A] font-mono uppercase font-bold">{review.date}</span>
+                                    </div>
+                                    <div className="flex text-[#966E2E] mb-1.5 gap-0.5">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} size={11} fill={i < review.rating ? "currentColor" : "none"} strokeWidth={2} />
+                                        ))}
+                                    </div>
+                                    <p className="text-[#52525B] text-xs leading-relaxed font-normal">{review.comment}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
             </div>
         </div>
     );

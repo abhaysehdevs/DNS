@@ -16,6 +16,7 @@ import { PersonalizedRecommendations } from '@/components/personalized-grid';
 import { SearchAutocomplete } from '@/components/search-autocomplete';
 import { FilterSidebar } from '@/components/shop/filter-sidebar';
 import { ProductGrid } from '@/components/shop/product-grid';
+import { normalizeProduct } from '@/lib/slug';
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 
 const ALL_STORE_CATEGORIES = [
@@ -82,23 +83,7 @@ function ShopContent() {
                 const { data } = await supabase.from('products').select('*');
 
                 if (data && data.length > 0) {
-                    const mappedProducts: Product[] = data.map((p: any) => {
-                        const image = p.image || p.image_url || '/placeholder.jpg';
-                        return {
-                            id: p.id,
-                            name: p.name,
-                            description: p.description,
-                            retailPrice: p.retail_price,
-                            wholesalePrice: p.wholesale_price,
-                            wholesaleMOQ: p.wholesale_moq,
-                            image: image,
-                            primaryImage: image,
-                            gallery: (p.gallery && p.gallery.length > 0) ? p.gallery : [{ id: '1', type: 'image', url: image }],
-                            category: p.category,
-                            inStock: p.in_stock,
-                            reviews: p.reviews || []
-                        };
-                    });
+                    const mappedProducts: Product[] = data.map((p: any) => normalizeProduct(p));
 
                     setCategories(allCategoryKeys);
                     setProducts(mappedProducts);

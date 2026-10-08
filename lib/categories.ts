@@ -132,6 +132,25 @@ export const CATEGORIES: CategoryDefinition[] = [
             'hallmarked bullion Chandni Chowk',
             'pure silver coins wholesale'
         ]
+    },
+    {
+        slug: 'casting-metallurgy',
+        aliases: ['casting', 'metallurgy', 'casting & metallurgy', 'welding'],
+        name: 'Casting & Metallurgy',
+        categoryKey: 'Casting & Metallurgy',
+        seoTitle: 'Jewellery Casting Machines, Crucibles & Metallurgy Supplies',
+        seoDescription: 'High-grade graphite crucibles, manual casting machines, ingot moulds, and melting equipment for gold and silver smiths.',
+        h1: 'Jewellery Casting Equipment & Metallurgical Workshop Tools',
+        subtitle: 'Precision casting machinery, graphite crucibles, and high-temp melting accessories',
+        description: 'Professional metallurgy and lost-wax casting supplies engineered for master goldsmiths and silver casting units. Featuring high-density graphite crucibles, manual centrifugal casting machines, ingot moulds, and electric furnaces.',
+        wholesaleNote: 'Available for jewellery manufacturers with pan-India delivery and direct factory pricing.',
+        keywords: [
+            'jewellery casting machine',
+            'graphite crucible for gold',
+            'ingot mould gold silver',
+            'casting metallurgy supplies',
+            'jewellery melting furnace'
+        ]
     }
 ];
 

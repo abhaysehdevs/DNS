@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { BLOG_POSTS, BlogPost } from '@/lib/blog-data';
 import { getAllBlogPosts } from '@/lib/blog';
+import { normalizeProduct } from '@/lib/slug';
 
 const homeCategories = [
     { name: 'Hand Tools', count: '120+ Products', img: '/categories/hand-tools.png', href: '/shop/category/hand-tools' },
@@ -66,20 +67,7 @@ export function HomeClient() {
             try {
                 const { data } = await supabase.from('products').select('*').limit(6);
                 if (data && data.length > 0) {
-                    const mappedProducts: Product[] = data.map((p: any) => ({
-                        id: p.id,
-                        name: p.name,
-                        description: p.description,
-                        retailPrice: p.retail_price,
-                        wholesalePrice: p.wholesale_price,
-                        wholesaleMOQ: p.wholesale_moq,
-                        primaryImage: p.image || p.image_url || '/placeholder.jpg',
-                        image: p.image || p.image_url || '/placeholder.jpg',
-                        gallery: p.gallery || [],
-                        category: p.category,
-                        inStock: p.in_stock,
-                        reviews: p.reviews || []
-                    }));
+                    const mappedProducts: Product[] = data.map((p: any) => normalizeProduct(p));
                     setNewArrivals(mappedProducts);
                 } else {
                     import('@/lib/data').then((module) => {
@@ -120,20 +108,7 @@ export function HomeClient() {
                                 .limit(col.display_limit || 8);
                             
                             if (prods && prods.length > 0) {
-                                prodsMap[col.id] = prods.map((p: any) => ({
-                                    id: p.id,
-                                    name: p.name,
-                                    description: p.description,
-                                    retailPrice: p.retail_price,
-                                    wholesalePrice: p.wholesale_price,
-                                    wholesaleMOQ: p.wholesale_moq,
-                                    primaryImage: p.image || p.image_url || '/placeholder.jpg',
-                                    image: p.image || p.image_url || '/placeholder.jpg',
-                                    gallery: p.gallery || [],
-                                    category: p.category,
-                                    inStock: p.in_stock,
-                                    reviews: p.reviews || []
-                                }));
+                                prodsMap[col.id] = prods.map((p: any) => normalizeProduct(p));
                             }
                         }
                     }

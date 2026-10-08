@@ -16,7 +16,7 @@ import { translations } from '@/lib/translations';
 import { 
     ShoppingCart, Truck, RotateCcw, Lock, FileText, Heart, 
     PlayCircle, Loader2, Star, Zap, Check, CheckCircle2, ShieldCheck, Scale, Ruler,
-    MessageSquare
+    MessageSquare, Maximize2, X, ChevronLeft, ChevronRight, ZoomIn
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -74,6 +74,7 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
     const [qty, setQty] = useState(1);
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
     const [addedAlert, setAddedAlert] = useState(false);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
     useEffect(() => {
         if (product) {
@@ -150,6 +151,21 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
 
     const gallery = getProductGallery(product);
     const isWishlisted = wishlist.includes(product.id);
+
+    useEffect(() => {
+        if (!isLightboxOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setIsLightboxOpen(false);
+            if (e.key === 'ArrowRight' && gallery.length > 1) {
+                setSelectedMediaIndex((prev) => (prev + 1) % gallery.length);
+            }
+            if (e.key === 'ArrowLeft' && gallery.length > 1) {
+                setSelectedMediaIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isLightboxOpen, gallery.length]);
 
     const activeDisplayImage = (selectedVariant && selectedVariant.image) 
         ? selectedVariant.image 
@@ -244,32 +260,61 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-14 items-start">
                     
                     {/* LEFT COLUMN: Gallery View & Thumbnails */}
-                    <div className="lg:col-span-6 space-y-2.5 sm:space-y-4">
-                        <div className="relative aspect-[4/3] sm:aspect-square max-h-[250px] sm:max-h-[460px] mx-auto w-full bg-white border border-[#E8E2D5] rounded-2xl overflow-hidden flex items-center justify-center group shadow-xs p-2.5 sm:p-6">
+                    <div className="lg:col-span-6 space-y-3 sm:space-y-4">
+                        <div 
+                            onClick={() => {
+                                if (gallery[selectedMediaIndex]?.type !== 'video') {
+                                    setIsLightboxOpen(true);
+                                }
+                            }}
+                            className={`relative w-full min-h-[300px] sm:min-h-[420px] md:min-h-[480px] max-h-[520px] bg-white border border-[#E8E2D5] hover:border-[#966E2E]/60 rounded-2xl overflow-hidden flex items-center justify-center group shadow-xs p-4 sm:p-8 transition-all ${gallery[selectedMediaIndex]?.type !== 'video' ? 'cursor-zoom-in' : ''}`}
+                        >
                             {gallery[selectedMediaIndex]?.type === 'video' ? (
-                                <video src={gallery[selectedMediaIndex].url} controls autoPlay className="w-full h-full object-contain" />
+                                <video src={gallery[selectedMediaIndex].url} controls autoPlay className="w-full h-full max-h-[460px] object-contain rounded-xl" />
                             ) : (
-                                <SecureImage src={activeDisplayImage} containerClassName="w-full h-full" className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" alt={product.name} />
+                                <SecureImage 
+                                    src={activeDisplayImage} 
+                                    containerClassName="w-full h-full flex items-center justify-center" 
+                                    className="w-full h-full max-h-[440px] object-contain transition-transform duration-500 group-hover:scale-105" 
+                                    alt={product.name} 
+                                />
                             )}
                             
                             {/* Badges Overlay */}
-                            <div className="absolute top-2.5 left-2.5 sm:top-5 sm:left-5 flex gap-1.5 sm:gap-2.5">
-                                {product.brand && <span className="bg-[#966E2E] text-white text-[7.5px] sm:text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 sm:px-3 sm:py-1 rounded shadow-xs">{product.brand}</span>}
-                                {!product.inStock && <span className="bg-[#D12A1C] text-white text-[7.5px] sm:text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 sm:px-3 sm:py-1 rounded shadow-xs">Out of Stock</span>}
+                            <div className="absolute top-3 left-3 sm:top-5 sm:left-5 flex gap-1.5 sm:gap-2.5 z-10 pointer-events-none">
+                                {product.brand && <span className="bg-[#966E2E] text-white text-[8px] sm:text-[9.5px] font-bold uppercase tracking-widest px-2.5 py-1 rounded shadow-xs">{product.brand}</span>}
+                                {!product.inStock && <span className="bg-[#D12A1C] text-white text-[8px] sm:text-[9.5px] font-bold uppercase tracking-widest px-2.5 py-1 rounded shadow-xs">Out of Stock</span>}
                             </div>
+
+                            {/* Clickable Zoom indicator button */}
+                            {gallery[selectedMediaIndex]?.type !== 'video' && (
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsLightboxOpen(true);
+                                    }}
+                                    className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 bg-white/90 hover:bg-white backdrop-blur-md border border-[#E8E2D5] hover:border-[#966E2E] text-[#18181B] hover:text-[#966E2E] px-3 py-1.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider cursor-pointer z-10"
+                                    title="Click to view full screen"
+                                >
+                                    <Maximize2 size={13} />
+                                    <span>Zoom</span>
+                                </button>
+                            )}
                         </div>
 
                         {/* Thumbnail Bar */}
                         {gallery.length > 1 && (
-                            <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-1 scrollbar-hide">
+                            <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-1.5 scrollbar-thin">
                                 {gallery.map((media, idx) => (
                                     <button 
                                         key={idx}
+                                        type="button"
                                         onClick={() => setSelectedMediaIndex(idx)}
-                                        className={`relative shrink-0 w-11 h-11 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden border bg-white p-1 flex items-center justify-center transition-all ${selectedMediaIndex === idx ? 'border-[#966E2E] scale-105 shadow-xs' : 'border-[#E8E2D5] opacity-60 hover:opacity-100'}`}
+                                        className={`relative shrink-0 w-12 h-12 sm:w-18 sm:h-18 rounded-xl overflow-hidden border bg-white p-1.5 flex items-center justify-center transition-all cursor-pointer ${selectedMediaIndex === idx ? 'border-[#966E2E] ring-2 ring-[#966E2E]/30 scale-105 shadow-xs' : 'border-[#E8E2D5] opacity-70 hover:opacity-100'}`}
                                     >
                                         <SecureImage src={media.url} containerClassName="w-full h-full" className="w-full h-full object-contain" alt={`${product.name} thumbnail ${idx + 1}`} />
-                                        {media.type === 'video' && <div className="absolute inset-0 flex items-center justify-center bg-black/30"><PlayCircle size={14} className="text-[#966E2E]" /></div>}
+                                        {media.type === 'video' && <div className="absolute inset-0 flex items-center justify-center bg-black/30"><PlayCircle size={16} className="text-[#966E2E]" /></div>}
                                     </button>
                                 ))}
                             </div>
@@ -592,58 +637,143 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                     </div>
                 </div>
 
-                {/* 4. TECHNICAL SPECIFICATIONS SECTION */}
-                <div className="mt-28 space-y-8">
-                    <div className="border-b border-[#E8E2D5] pb-4 text-left">
-                        <h2 className="text-2xl md:text-3xl font-bold font-display text-[#18181B] uppercase tracking-wider">Technical Specifications</h2>
-                        <p className="text-[#71717A] text-[9px] font-bold uppercase tracking-widest mt-1">In-depth engineering & manufacturing details</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <div className={`${product.features && product.features.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-1 text-left`}>
-                            {Object.entries(product.specifications || {}).map(([key, val], idx) => (
-                                <div key={key} className={`flex py-4 px-6 rounded-lg border border-transparent ${idx % 2 === 0 ? 'bg-white shadow-xs' : ''}`}>
-                                    <span className="w-1/3 text-[9px] font-bold text-[#71717A] uppercase tracking-widest self-center">{key}</span>
-                                    <span className="flex-1 text-xs font-bold text-[#18181B] uppercase tracking-wider">{val}</span>
-                                </div>
-                            ))}
-                            {Object.entries(product.specifications || {}).length === 0 && (
-                                <div className="py-8 text-[#71717A] italic text-sm">No technical specs configured for this model.</div>
-                            )}
+                {/* 4. TECHNICAL SPECIFICATIONS SECTION (Only shown when specifications or features exist) */}
+                {(hasTechnicalSpecs || (product.features && product.features.length > 0)) && (
+                    <div className="mt-12 sm:mt-16 space-y-6">
+                        <div className="border-b border-[#E8E2D5] pb-3 text-left">
+                            <h2 className="text-xl sm:text-2xl font-bold font-display text-[#18181B] uppercase tracking-wider">Technical Specifications</h2>
+                            <p className="text-[#71717A] text-[9px] font-bold uppercase tracking-widest mt-0.5">In-depth engineering & manufacturing details</p>
                         </div>
                         
-                        {/* Model highlights (only if configured on product) */}
-                        {product.features && product.features.length > 0 && (
-                            <div className="lg:col-span-4 bg-white border border-[#E8E2D5] rounded-xl p-6 space-y-6 text-left h-fit shadow-xs">
-                                <h3 className="text-sm font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-2 border-b border-[#E8E2D5] pb-3">
-                                    <Zap size={14} className="text-[#966E2E]" /> Core Features
-                                </h3>
-                                <div className="grid grid-cols-1 gap-4">
-                                    {product.features.map((feat, i) => (
-                                        <div key={i} className="flex items-start gap-3">
-                                            <div className="w-5 h-5 rounded-full bg-[#FAF9F5] text-[#966E2E] border border-[#E8E2D5] flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-                                                <Check size={10} strokeWidth={3} />
-                                            </div>
-                                            <p className="text-[#52525B] text-xs font-normal leading-relaxed">{feat}</p>
-                                        </div>
-                                    ))}
-                                </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div className={`${product.features && product.features.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-1 text-left`}>
+                                {Object.entries(product.specifications || {}).map(([key, val], idx) => (
+                                    <div key={key} className={`flex py-3 px-5 rounded-lg border border-transparent ${idx % 2 === 0 ? 'bg-white shadow-xs' : ''}`}>
+                                        <span className="w-1/3 text-[9px] font-bold text-[#71717A] uppercase tracking-widest self-center">{key}</span>
+                                        <span className="flex-1 text-xs font-bold text-[#18181B] uppercase tracking-wider">{val}</span>
+                                    </div>
+                                ))}
                             </div>
-                        )}
+                            
+                            {/* Model highlights (only if configured on product) */}
+                            {product.features && product.features.length > 0 && (
+                                <div className="lg:col-span-4 bg-white border border-[#E8E2D5] rounded-xl p-5 space-y-4 text-left h-fit shadow-xs">
+                                    <h3 className="text-sm font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-2 border-b border-[#E8E2D5] pb-2.5">
+                                        <Zap size={14} className="text-[#966E2E]" /> Core Features
+                                    </h3>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {product.features.map((feat, i) => (
+                                            <div key={i} className="flex items-start gap-2.5">
+                                                <div className="w-5 h-5 rounded-full bg-[#FAF9F5] text-[#966E2E] border border-[#E8E2D5] flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                                                    <Check size={10} strokeWidth={3} />
+                                                </div>
+                                                <p className="text-[#52525B] text-xs font-normal leading-relaxed">{feat}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Reviews */}
-                <div className="mt-28">
+                <div className="mt-12 sm:mt-16">
                     <Reviews initialReviews={product.reviews || []} productId={product.id} />
                 </div>
                 
                 {/* Related Products */}
-                <div className="mt-28">
+                <div className="mt-12 sm:mt-16">
                     <RelatedProducts currentProduct={product} />
                 </div>
 
             </div>
+
+            {/* Full-Screen Interactive Lightbox Modal */}
+            <AnimatePresence>
+                {isLightboxOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 select-none"
+                        onClick={() => setIsLightboxOpen(false)}
+                    >
+                        {/* Top Bar */}
+                        <div className="flex items-center justify-between text-white z-10" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90 truncate max-w-xs sm:max-w-md">
+                                    {product.name}
+                                </span>
+                                <span className="text-[10px] sm:text-xs font-mono font-bold text-white/60 bg-white/10 px-2.5 py-0.5 rounded-full">
+                                    {selectedMediaIndex + 1} / {gallery.length}
+                                </span>
+                            </div>
+                            <button 
+                                type="button"
+                                onClick={() => setIsLightboxOpen(false)}
+                                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white hover:text-[#966E2E] transition-colors cursor-pointer"
+                                title="Close (Esc)"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Main Stage with Prev / Next */}
+                        <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                            {gallery.length > 1 && (
+                                <button 
+                                    type="button"
+                                    onClick={() => setSelectedMediaIndex((prev) => (prev - 1 + gallery.length) % gallery.length)}
+                                    className="absolute left-2 sm:left-6 z-20 p-3 rounded-full bg-black/60 hover:bg-[#966E2E] text-white transition-all cursor-pointer backdrop-blur-sm border border-white/10"
+                                    title="Previous Image (Left Arrow)"
+                                >
+                                    <ChevronLeft size={24} />
+                                </button>
+                            )}
+
+                            <div className="max-h-[75vh] max-w-[85vw] flex items-center justify-center p-2">
+                                {gallery[selectedMediaIndex]?.type === 'video' ? (
+                                    <video src={gallery[selectedMediaIndex].url} controls autoPlay className="max-h-[75vh] max-w-[85vw] object-contain rounded-xl" />
+                                ) : (
+                                    <img 
+                                        src={gallery[selectedMediaIndex]?.url || activeDisplayImage} 
+                                        alt={product.name} 
+                                        className="max-h-[75vh] max-w-[85vw] object-contain rounded-xl shadow-2xl transition-transform duration-300" 
+                                    />
+                                )}
+                            </div>
+
+                            {gallery.length > 1 && (
+                                <button 
+                                    type="button"
+                                    onClick={() => setSelectedMediaIndex((prev) => (prev + 1) % gallery.length)}
+                                    className="absolute right-2 sm:right-6 z-20 p-3 rounded-full bg-black/60 hover:bg-[#966E2E] text-white transition-all cursor-pointer backdrop-blur-sm border border-white/10"
+                                    title="Next Image (Right Arrow)"
+                                >
+                                    <ChevronRight size={24} />
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Bottom Thumbnail Strip */}
+                        {gallery.length > 1 && (
+                            <div className="flex justify-center gap-2 sm:gap-3 overflow-x-auto py-2 z-10" onClick={(e) => e.stopPropagation()}>
+                                {gallery.map((media, idx) => (
+                                    <button
+                                        key={idx}
+                                        type="button"
+                                        onClick={() => setSelectedMediaIndex(idx)}
+                                        className={`relative shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer p-1 bg-black/40 ${selectedMediaIndex === idx ? 'border-[#966E2E] scale-110' : 'border-white/20 opacity-50 hover:opacity-100'}`}
+                                    >
+                                        <img src={media.url} alt={`thumb-${idx}`} className="w-full h-full object-contain" />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
