@@ -91,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.5,
         },
         {
-            url: `${baseUrl}/google-merchant-feed.html`,
+            url: `${baseUrl}/google-merchant-feed.xml`,
             lastModified: now,
             changeFrequency: 'daily',
             priority: 0.8,

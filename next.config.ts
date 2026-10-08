@@ -14,15 +14,27 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/google-merchant-feed',
-        destination: '/google-merchant-feed.html',
+        destination: '/google-merchant-feed.xml',
+      },
+      {
+        source: '/merchant-feed.xml',
+        destination: '/google-merchant-feed.xml',
+      },
+      {
+        source: '/google-products.xml',
+        destination: '/google-merchant-feed.xml',
+      },
+      {
+        source: '/feed.xml',
+        destination: '/google-merchant-feed.xml',
       },
       {
         source: '/merchant-feed.html',
-        destination: '/google-merchant-feed.html',
+        destination: '/google-merchant-feed.xml',
       },
       {
         source: '/google-products.html',
-        destination: '/google-merchant-feed.html',
+        destination: '/google-merchant-feed.xml',
       },
     ];
   },
