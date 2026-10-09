@@ -243,7 +243,7 @@ export function Hero() {
                             <div className="flex items-center gap-2.5 pt-2">
                                 <Link href="/shop" className="flex-1">
                                     <button className="w-full h-10 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-wider text-[10px] rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                                        <span>Explore 500+ Tools</span>
+                                        <span>Explore 110+ Tools</span>
                                         <ArrowRight size={13} strokeWidth={2.5} />
                                     </button>
                                 </Link>
@@ -261,9 +261,9 @@ export function Hero() {
                     <div className="grid grid-cols-4 gap-1.5 w-full pt-1">
                         {[
                             { label: "60+ YRS", sub: "Heritage" },
-                            { label: "500+", sub: "Tools" },
+                            { label: "110+", sub: "Tools" },
                             { label: "PAN INDIA", sub: "Dispatch" },
-                            { label: "100%", sub: "Genuine" }
+                            { label: "DELHI", sub: "Storefront" }
                         ].map((stat, idx) => (
                             <div key={idx} className="bg-white border border-[#E8E2D5] rounded-xl py-2 px-1 text-center shadow-xs">
                                 <div className="text-[11px] font-black text-[#966E2E] font-mono leading-none">{stat.label}</div>
@@ -398,9 +398,9 @@ export function Hero() {
                             <div className="grid grid-cols-4 gap-3 pt-4 w-full">
                                 {[
                                     { label: "60+ YRS", sub: "Heritage Excellence" },
-                                    { label: "500+", sub: "Jewellery Tools" },
+                                    { label: "110+", sub: "Jewellery Tools" },
                                     { label: "PAN INDIA", sub: "Fast Dispatch" },
-                                    { label: "100%", sub: "Quality Assured" }
+                                    { label: "DELHI", sub: "Chandni Chowk" }
                                 ].map((stat, idx) => (
                                     <div key={idx} className="bg-white border border-[#E8E2D5] rounded-xl p-2.5 text-center shadow-xs">
                                         <div className="text-sm font-black text-[#966E2E] uppercase font-mono">{stat.label}</div>

@@ -1,11 +1,11 @@
-
 import type { Metadata } from 'next';
 import { Cinzel, Inter, Roboto, Noto_Sans_Devanagari } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import Script from 'next/script';
-
 import { AuthListener } from '@/components/auth-listener';
+import { SITE_CONFIG, getAbsoluteUrl } from '@/lib/site-config';
+import { RETURN_POLICY } from '@/lib/policies';
 
 const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-display' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -17,61 +17,41 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://dinanathandsons.com'),
+  metadataBase: new URL(SITE_CONFIG.baseUrl),
   title: {
-    default: "Dinanath & Sons | Jewellery Tools, Goldsmith Equipment & Machinery Since 1960",
+    default: "Dinanath & Sons | Jewellery Tools & Goldsmith Equipment Since 1960",
     template: "%s | Dinanath & Sons"
   },
-  description: 'India’s premier wholesale and retail supplier of professional jewellery making tools, goldsmith equipment, casting machinery, and polishing consumables. Serving jewelers since 1960 in Chandni Chowk, Delhi.',
-  keywords: [
-    'jewellery tools',
-    'jewelry tools',
-    'goldsmith tools',
-    'jewellery tools wholesale',
-    'jewellery tools shop',
-    'jewellery tools Chandni Chowk',
-    'jewellery tools wholesale Delhi',
-    'jewellery equipment supplier India',
-    'jewelry machinery',
-    'precision tooling',
-    'casting equipment',
-    'gold testing kit',
-    'suhaga borax flux',
-    'coin packing cards',
-    'jewellery display trays',
-    'polishing consumables',
-    'rolling mills wholesale Delhi',
-    'micro-soldering jewelry'
-  ],
-  authors: [{ name: "Dinanath & Sons" }],
-  creator: "Dinanath & Sons",
-  publisher: "Dinanath & Sons",
+  description: "India's premier supplier of jewellery making tools, goldsmith equipment, and casting machinery. Established 1960 in Maliwara, Chandni Chowk, Delhi.",
+  authors: [{ name: SITE_CONFIG.businessName }],
+  creator: SITE_CONFIG.businessName,
+  publisher: SITE_CONFIG.businessName,
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "Dinanath & Sons | Premium Jewellery Tools & Machinery Since 1960",
-    description: 'Leading wholesale and retail supplier of professional jewellery making tools, machinery, and consumables across India.',
-    url: 'https://dinanathandsons.com',
-    siteName: "Dinanath & Sons",
+    title: "Dinanath & Sons | Jewellery Tools, Goldsmith Equipment & Machinery Since 1960",
+    description: "India's premier supplier of professional jewellery making tools, goldsmith equipment, casting machinery, and polishing consumables.",
+    url: SITE_CONFIG.baseUrl,
+    siteName: SITE_CONFIG.businessName,
     locale: 'en_IN',
     type: 'website',
     images: [
       {
-        url: 'https://dinanathandsons.com/icon.png',
-        width: 512,
-        height: 512,
-        alt: "Dinanath & Sons Precision Jewellery Tools",
+        url: getAbsoluteUrl('/og-image.jpg'),
+        width: 1200,
+        height: 630,
+        alt: "Dinanath & Sons - Precision Jewellery Tools Since 1960",
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Dinanath & Sons | Premium Jewellery Tools & Machinery Since 1960",
-    description: 'Leading wholesale and retail supplier of professional jewellery making tools and goldsmith machinery.',
-    images: ['https://dinanathandsons.com/icon.png'],
+    title: "Dinanath & Sons | Jewellery Tools, Goldsmith Equipment & Machinery Since 1960",
+    description: "India's premier supplier of professional jewellery making tools, goldsmith equipment, and casting machinery.",
+    images: [getAbsoluteUrl('/og-image.jpg')],
   },
   robots: {
     index: true,
@@ -83,6 +63,9 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
   },
   icons: {
     icon: '/favicon.ico',
@@ -97,74 +80,101 @@ export const viewport = {
   themeColor: '#FAF9F5',
 };
 
-export default function RootLayout({
+const siteGraphSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_CONFIG.baseUrl}/#organization`,
+      "name": SITE_CONFIG.businessName,
+      "legalName": SITE_CONFIG.legalName,
+      "url": SITE_CONFIG.baseUrl,
+      "logo": getAbsoluteUrl('/logo.png'),
+      "foundingDate": SITE_CONFIG.foundingYear,
+      "sameAs": [...SITE_CONFIG.sameAs],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": SITE_CONFIG.contact.phone,
+        "contactType": "customer service",
+        "email": SITE_CONFIG.contact.email,
+        "areaServed": "IN",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": SITE_CONFIG.address.streetAddress,
+        "addressLocality": SITE_CONFIG.address.addressLocality,
+        "addressRegion": SITE_CONFIG.address.addressRegion,
+        "postalCode": SITE_CONFIG.address.postalCode,
+        "addressCountry": SITE_CONFIG.address.addressCountry
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "IN",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": RETURN_POLICY.windowDays,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn",
+        "merchantReturnLink": getAbsoluteUrl('/return-policy')
+      }
+    },
+    {
+      "@type": "Store",
+      "@id": `${SITE_CONFIG.baseUrl}/#store`,
+      "name": SITE_CONFIG.businessName,
+      "image": getAbsoluteUrl('/headquarters_storefront.png'),
+      "telephone": SITE_CONFIG.contact.phone,
+      "priceRange": "₹₹",
+      "currenciesAccepted": "INR",
+      "paymentAccepted": "Cash, Credit Card, UPI, Net Banking, Bank Wire",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": SITE_CONFIG.address.streetAddress,
+        "addressLocality": SITE_CONFIG.address.addressLocality,
+        "addressRegion": SITE_CONFIG.address.addressRegion,
+        "postalCode": SITE_CONFIG.address.postalCode,
+        "addressCountry": SITE_CONFIG.address.addressCountry
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": SITE_CONFIG.geo.latitude,
+        "longitude": SITE_CONFIG.geo.longitude
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "11:00",
+          "closes": "20:00"
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_CONFIG.baseUrl}/#website`,
+      "name": SITE_CONFIG.businessName,
+      "url": SITE_CONFIG.baseUrl
+    }
+  ]
+};
 
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
+    <html lang="en-IN" className="light" style={{ colorScheme: 'light' }}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": "Dinanath & Sons",
-              "legalName": "Dinanath & Sons Hardware Store",
-              "alternateName": ["Dinanath and Sons", "Dinanath Tools", "Dinanath's"],
-              "image": "https://dinanathandsons.com/icon.png",
-              "@id": "https://dinanathandsons.com/#organization",
-              "url": "https://dinanathandsons.com",
-              "telephone": "+919953435647",
-              "foundingDate": "1960",
-              "description": "Established in 1960 in Maliwara, Chandni Chowk, New Delhi, Dinanath & Sons is a premier manufacturer, retail vendor, and wholesale supplier of precision jewellery making tools, goldsmith hand tools, casting machinery, and polishing consumables across India.",
-              "priceRange": "₹₹",
-              "currenciesAccepted": "INR",
-              "paymentAccepted": "Cash, Credit Card, UPI, Net Banking, Bank Wire",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "1914, Chatta Madan Gopal, Maliwara, Chandni Chowk",
-                "addressLocality": "Delhi",
-                "addressRegion": "Delhi",
-                "postalCode": "110006",
-                "addressCountry": "IN"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": 28.6562,
-                "longitude": 77.2309
-              },
-              "areaServed": [
-                { "@type": "Country", "name": "India" },
-                { "@type": "City", "name": "Delhi" },
-                { "@type": "AdministrativeArea", "name": "Chandni Chowk" }
-              ],
-              "openingHoursSpecification": {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": [
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday"
-                ],
-                "opens": "11:00",
-                "closes": "20:00"
-              },
-              "sameAs": [
-                "https://www.facebook.com/dinanathandsons",
-                "https://www.instagram.com/dinanathandsons"
-              ]
-            })
+            __html: JSON.stringify(siteGraphSchema)
           }}
         />
-        {/* Google tag (gtag.js) */}
+        {/* Google Tag / GA4 Loader */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-9HPF6NRR0W"
+          src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.ga4Id}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -172,7 +182,9 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-9HPF6NRR0W');
+            gtag('config', '${SITE_CONFIG.analytics.ga4Id}', {
+              send_page_view: true
+            });
           `}
         </Script>
       </head>
@@ -183,4 +195,3 @@ export default function RootLayout({
     </html>
   );
 }
-

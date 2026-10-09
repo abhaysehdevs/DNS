@@ -1,113 +1,81 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
-import { Product } from '@/lib/data';
-import { useAppStore } from '@/lib/store';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Product, products as localProducts } from '@/lib/data';
+import { normalizeProduct } from '@/lib/slug';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { ProductGrid } from '@/components/shop/product-grid';
+import { ProductCard } from '@/components/product-card';
+import { SITE_CONFIG, getAbsoluteUrl } from '@/lib/site-config';
 
-export default function NewArrivalsPage() {
-    const { mode } = useAppStore();
-    const [products, setProducts] = useState<Product[]>([]);
-    const [pageDetails, setPageDetails] = useState({ title: 'New Arrivals', subtitle: 'Explore our latest arrivals' });
-    const [loading, setLoading] = useState(true);
+export const revalidate = 60;
 
-    useEffect(() => {
-        const fetchPageData = async () => {
-            setLoading(true);
-            try {
-                // 1. Fetch from navigation_pages configuration
-                const { data: pageConfig, error: configError } = await supabase
-                    .from('navigation_pages')
-                    .select('*')
-                    .eq('page_key', 'new-arrivals')
-                    .single();
+export const metadata: Metadata = {
+    title: 'New Arrivals | Jewellery Tools & Machinery | Dinanath & Sons',
+    description: 'Explore the newest jewellery making tools, precision tweezers, casting equipment, and workshop accessories at Dinanath & Sons, Delhi.',
+    alternates: {
+        canonical: getAbsoluteUrl('/new-arrivals'),
+    },
+    openGraph: {
+        title: 'New Arrivals | Jewellery Tools & Machinery | Dinanath & Sons',
+        description: 'Explore the newest jewellery making tools, precision tweezers, casting equipment, and workshop accessories at Dinanath & Sons, Delhi.',
+        url: getAbsoluteUrl('/new-arrivals'),
+        type: 'website',
+    },
+};
 
-                if (!configError && pageConfig) {
-                    setPageDetails({
-                        title: pageConfig.title,
-                        subtitle: pageConfig.subtitle || 'Explore our latest arrivals'
-                    });
+async function getNewArrivalsData(): Promise<{ products: Product[]; pageDetails: { title: string; subtitle: string } }> {
+    let pageDetails = { 
+        title: 'New Arrivals', 
+        subtitle: 'Explore our latest arrivals in jewellery crafting tools and machinery' 
+    };
+    let products: Product[] = [];
 
-                    if (pageConfig.product_ids && pageConfig.product_ids.length > 0) {
-                        const { data: prodData, error: prodError } = await supabase
-                            .from('products')
-                            .select('*')
-                            .in('id', pageConfig.product_ids);
+    try {
+        const { data: pageConfig, error: configError } = await supabase
+            .from('navigation_pages')
+            .select('*')
+            .eq('page_key', 'new-arrivals')
+            .single();
 
-                        if (!prodError && prodData) {
-                            const mapped: Product[] = prodData.map((p: any) => ({
-                                id: p.id,
-                                name: p.name,
-                                description: p.description,
-                                retailPrice: p.retail_price,
-                                wholesalePrice: p.wholesale_price,
-                                wholesaleMOQ: p.wholesale_moq,
-                                image: p.image || p.image_url || '/placeholder.jpg',
-                                primaryImage: p.image || p.image_url || '/placeholder.jpg',
-                                gallery: p.gallery || [],
-                                category: p.category,
-                                inStock: p.in_stock,
-                                reviews: p.reviews || []
-                            }));
-                            setProducts(mapped);
-                            setLoading(false);
-                            return;
-                        }
-                    }
-                }
+        if (!configError && pageConfig) {
+            pageDetails = {
+                title: pageConfig.title || pageDetails.title,
+                subtitle: pageConfig.subtitle || pageDetails.subtitle,
+            };
 
-                // 2. Fallback: Fetch latest 8 products
-                const { data: fallbackData } = await supabase
+            if (pageConfig.product_ids && pageConfig.product_ids.length > 0) {
+                const { data: prodData, error: prodError } = await supabase
                     .from('products')
                     .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(8);
+                    .in('id', pageConfig.product_ids);
 
-                if (fallbackData && fallbackData.length > 0) {
-                    const mapped: Product[] = fallbackData.map((p: any) => ({
-                        id: p.id,
-                        name: p.name,
-                        description: p.description,
-                        retailPrice: p.retail_price,
-                        wholesalePrice: p.wholesale_price,
-                        wholesaleMOQ: p.wholesale_moq,
-                        image: p.image || p.image_url || '/placeholder.jpg',
-                        primaryImage: p.image || p.image_url || '/placeholder.jpg',
-                        gallery: p.gallery || [],
-                        category: p.category,
-                        inStock: p.in_stock,
-                        reviews: p.reviews || []
-                    }));
-                    setProducts(mapped);
-                } else {
-                    const module = await import('@/lib/data');
-                    setProducts(module.products.slice(0, 8));
+                if (!prodError && prodData && prodData.length > 0) {
+                    products = prodData.map((p: any) => normalizeProduct(p));
+                    return { products, pageDetails };
                 }
-            } catch (err) {
-                console.error(err);
-                try {
-                    const module = await import('@/lib/data');
-                    setProducts(module.products.slice(0, 8));
-                } catch (e) {}
-            } finally {
-                setLoading(false);
             }
-        };
+        }
 
-        fetchPageData();
-    }, []);
+        const { data: fallbackData } = await supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(12);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-[#FAF9F5] flex flex-col items-center justify-center gap-6">
-                <Loader2 className="animate-spin text-[#966E2E]" size={36} />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#71717A]">Loading New Arrivals</span>
-            </div>
-        );
+        if (fallbackData && fallbackData.length > 0) {
+            products = fallbackData.map((p: any) => normalizeProduct(p));
+        } else {
+            products = localProducts.slice(0, 12).map((p: any) => normalizeProduct(p));
+        }
+    } catch (e) {
+        products = localProducts.slice(0, 12).map((p: any) => normalizeProduct(p));
     }
+
+    return { products, pageDetails };
+}
+
+export default async function NewArrivalsPage() {
+    const { products, pageDetails } = await getNewArrivalsData();
 
     return (
         <div className="min-h-screen bg-[#FAF9F5] text-[#18181B] pt-2 sm:pt-4 md:pt-6 pb-20 px-3.5 sm:px-6 selection:bg-[#966E2E]/20">
@@ -127,7 +95,11 @@ export default function NewArrivalsPage() {
 
                 <div className="mt-8">
                     {products.length > 0 ? (
-                        <ProductGrid products={products} loading={false} onClearFilters={() => {}} displayMode="grid" />
+                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">
+                            {products.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
                     ) : (
                         <div className="text-center py-20 text-[#71717A] border-2 border-dashed border-[#E8E2D5] rounded-3xl font-bold uppercase text-[10px] tracking-wider bg-white shadow-sm">
                             No products found in this selection. Check back soon!

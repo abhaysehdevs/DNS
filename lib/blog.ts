@@ -50,7 +50,14 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
                 }));
 
             if (dbPosts.length > 0) {
-                return dbPosts;
+                // Merge with local BLOG_POSTS so evergreen technical guides are always included
+                const combined = [...dbPosts];
+                for (const lp of BLOG_POSTS) {
+                    if (!combined.some(p => p.id === lp.id)) {
+                        combined.push(lp);
+                    }
+                }
+                return combined;
             }
         }
     } catch (err) {

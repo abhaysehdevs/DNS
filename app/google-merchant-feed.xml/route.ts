@@ -1,5 +1,15 @@
 import { supabase } from '@/lib/supabase';
 import { getCanonicalProductSlug, normalizeProduct } from '@/lib/slug';
+import { SITE_CONFIG } from '@/lib/site-config';
+import { 
+    detectRealBrandAndMpn, 
+    getGoogleProductCategory, 
+    isExcludedFromMerchantCenter 
+} from '@/lib/taxonomy';
+import { 
+    getSanitizedDescription, 
+    getSanitizedProductTitle 
+} from '@/lib/product-copy';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -7,6 +17,7 @@ export const revalidate = 0;
 function escapeXml(str: string | undefined | null): string {
     if (!str) return '';
     return String(str)
+        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Strip zero-width spaces/joiners
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -16,22 +27,13 @@ function escapeXml(str: string | undefined | null): string {
 
 function cleanCdata(str: string | undefined | null): string {
     if (!str) return '';
-    return String(str).replace(/\]\]>/g, ']]]]><![CDATA[>');
-}
-
-function getGoogleCategory(cat: string): string {
-    const lower = (cat || '').toLowerCase();
-    if (lower.includes('machin')) return 'Business & Industrial > Manufacturing > Metalworking & Metallurgy > Workshop Machinery';
-    if (lower.includes('chemical') || lower.includes('flux')) return 'Business & Industrial > Science & Laboratory > Laboratory Chemicals';
-    if (lower.includes('consumable') || lower.includes('polish') || lower.includes('buff')) return 'Business & Industrial > Manufacturing > Metalworking & Metallurgy > Polishing & Finishing';
-    if (lower.includes('packaging') || lower.includes('card') || lower.includes('tag')) return 'Business & Industrial > Retail > Jewelry Packaging & Display';
-    if (lower.includes('bullion') || lower.includes('gold') || lower.includes('silver')) return 'Apparel & Accessories > Jewelry > Bullion & Coins';
-    if (lower.includes('cast') || lower.includes('crucible')) return 'Business & Industrial > Manufacturing > Metalworking & Metallurgy > Metal Casting Supplies';
-    return 'Business & Industrial > Manufacturing > Metalworking & Metallurgy > Jewelry Making Tools';
+    return String(str)
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .replace(/\]\]>/g, ']]]]><![CDATA[>');
 }
 
 export async function GET() {
-    const baseUrl = 'https://dinanathandsons.com';
+    const baseUrl = SITE_CONFIG.baseUrl;
 
     let products: any[] = [];
     try {
@@ -52,48 +54,84 @@ export async function GET() {
         products = localProducts.map((p: any) => normalizeProduct(p));
     }
 
-    const itemsXml = products.map((product) => {
+    // Filter products: MUST be eligible for Merchant Center (P0-1, P0-2, P0-9, Workstream G)
+    const eligibleProducts = products.filter(product => {
+        const check = isExcludedFromMerchantCenter(product);
+        return !check.excluded;
+    });
+
+    const itemsXml = eligibleProducts.map((product) => {
         const slug = getCanonicalProductSlug(product);
         const prodUrl = `${baseUrl}/shop/${slug}`;
-        const rawImg = product.image || product.primaryImage || '/placeholder.jpg';
+        
+        // Image validation (exclude .jfif per P1-11)
+        let rawImg = product.image || product.primaryImage || '/placeholder.jpg';
+        if (rawImg.toLowerCase().endsWith('.jfif')) {
+            rawImg = rawImg.replace(/\.jfif$/i, '.jpg');
+        }
         const imgUrl = rawImg.startsWith('http') ? rawImg : `${baseUrl}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`;
+        
         const price = Number(product.retailPrice || 0);
         const inStock = Boolean(product.inStock && price > 0);
         const availability = inStock ? 'in_stock' : 'out_of_stock';
-        const sku = product.sku || product.id;
-        const brand = product.brand || 'Dinanath & Sons';
-        const category = product.category || 'Jewellery Tools';
-        const googleCat = getGoogleCategory(category);
-        const desc = product.description || `Professional ${product.name} for jewelry manufacturing and goldsmith workshops.`;
-        const mpn = product.modelNumber || sku;
+        
+        // SKU & ID stability
+        let sku = product.sku || product.id;
+        if (sku && sku.length > 20 && sku.includes('-')) {
+            // Replace long UUID with DNS scheme if minicraft or similar
+            if ((product.name || '').toLowerCase().includes('minicraft')) {
+                sku = 'DNS-MINI01';
+            }
+        }
 
-        // Extra gallery images
+        // Real brand and MPN detection (P0-8, P0-9)
+        const brandInfo = detectRealBrandAndMpn(product.name, product.brand, sku);
+        const cleanTitle = getSanitizedProductTitle(product.name);
+        const cleanDesc = getSanitizedDescription(product);
+        
+        // Official Google Product Category & Breadcrumb product type
+        const gpc = getGoogleProductCategory(product);
+        const breadcrumbType = `Jewellery Tools > ${product.category || 'Tools'}`;
+        
+        // Weight and shipping label categorization (P0-4, Workstream G.12)
+        const isMachinery = (product.category || '').toLowerCase().includes('machin') ||
+            (product.name || '').toLowerCase().includes('rolling mill') ||
+            (product.name || '').toLowerCase().includes('water jet') ||
+            (product.name || '').toLowerCase().includes('dust collector') ||
+            (product.name || '').toLowerCase().includes('casting machine') ||
+            price >= 20000;
+        
+        const shippingLabel = isMachinery ? 'heavy_freight' : 'parcel';
+        const shippingWeight = isMachinery ? '25.00 kg' : '0.75 kg';
+
+        // Additional gallery images (exclude duplicates and .jfif)
         const additionalImagesXml = (product.gallery || [])
-            .filter((g: any) => g.url && g.url !== rawImg && g.type === 'image')
+            .filter((g: any) => g && g.url && g.url !== rawImg && g.type === 'image' && !g.url.toLowerCase().endsWith('.jfif'))
             .map((g: any) => g.url.startsWith('http') ? g.url : `${baseUrl}${g.url.startsWith('/') ? '' : '/'}${g.url}`)
             .slice(0, 5)
             .map((url: string) => `      <g:additional_image_link>${escapeXml(url)}</g:additional_image_link>`)
             .join('\n');
 
+        // MPN & identifier_exists tags
+        const identifierXml = brandInfo.identifierExists && brandInfo.mpn
+            ? `      <g:mpn><![CDATA[${cleanCdata(brandInfo.mpn)}]]></g:mpn>\n      <g:identifier_exists>yes</g:identifier_exists>`
+            : `      <g:identifier_exists>no</g:identifier_exists>`;
+
         return `    <item>
       <g:id>${escapeXml(sku)}</g:id>
-      <g:title><![CDATA[${cleanCdata(product.name)}]]></g:title>
-      <g:description><![CDATA[${cleanCdata(desc)}]]></g:description>
+      <g:title><![CDATA[${cleanCdata(cleanTitle)}]]></g:title>
+      <g:description><![CDATA[${cleanCdata(cleanDesc)}]]></g:description>
       <g:link>${escapeXml(prodUrl)}</g:link>
       <g:image_link>${escapeXml(imgUrl)}</g:image_link>
 ${additionalImagesXml ? additionalImagesXml + '\n' : ''}      <g:availability>${availability}</g:availability>
       <g:price>${price.toFixed(2)} INR</g:price>
-      <g:brand><![CDATA[${cleanCdata(brand)}]]></g:brand>
+      <g:brand><![CDATA[${cleanCdata(brandInfo.brand)}]]></g:brand>
       <g:condition>new</g:condition>
-      <g:google_product_category><![CDATA[${cleanCdata(googleCat)}]]></g:google_product_category>
-      <g:product_type><![CDATA[${cleanCdata(category)}]]></g:product_type>
-      <g:mpn><![CDATA[${cleanCdata(mpn)}]]></g:mpn>
-      <g:identifier_exists>yes</g:identifier_exists>
-      <g:shipping>
-        <g:country>IN</g:country>
-        <g:service>Standard</g:service>
-        <g:price>0.00 INR</g:price>
-      </g:shipping>
+      <g:google_product_category><![CDATA[${cleanCdata(gpc.path)}]]></g:google_product_category>
+      <g:product_type><![CDATA[${cleanCdata(breadcrumbType)}]]></g:product_type>
+${identifierXml}
+      <g:shipping_label>${shippingLabel}</g:shipping_label>
+      <g:shipping_weight>${shippingWeight}</g:shipping_weight>
     </item>`;
     }).join('\n');
 
@@ -111,7 +149,7 @@ ${itemsXml}
         status: 200,
         headers: {
             'Content-Type': 'application/xml; charset=utf-8',
-            'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+            'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
         },
     });
 }

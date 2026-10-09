@@ -7,7 +7,8 @@ import { supabase } from '@/lib/supabase';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { ProductCard } from '@/components/product-card';
 import { normalizeProduct } from '@/lib/slug';
-import { ChevronRight, ShieldCheck, Truck, Package, Layers } from 'lucide-react';
+import { ChevronRight, Wrench, Truck, Package } from 'lucide-react';
+import { SITE_CONFIG, getAbsoluteUrl } from '@/lib/site-config';
 
 export const dynamicParams = true;
 
@@ -25,7 +26,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
     if (!cat) {
         return {
-            title: 'Category Not Found',
+            title: 'Category Not Found | Dinanath & Sons',
             robots: {
                 index: false,
                 follow: false,
@@ -33,34 +34,35 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
         };
     }
 
-    const canonicalUrl = `https://dinanathandsons.com/shop/category/${cat.slug}`;
+    const canonicalUrl = getAbsoluteUrl(`/shop/category/${cat.slug}`);
+    const fullTitle = `${cat.seoTitle} | Dinanath & Sons`;
 
     return {
-        title: cat.seoTitle,
+        title: fullTitle,
         description: cat.seoDescription,
-        keywords: cat.keywords,
         alternates: {
             canonical: canonicalUrl,
         },
         openGraph: {
-            title: cat.seoTitle,
+            title: fullTitle,
             description: cat.seoDescription,
             url: canonicalUrl,
-            siteName: 'Dinanath & Sons',
+            siteName: SITE_CONFIG.businessName,
             type: 'website',
             images: [
                 {
-                    url: 'https://dinanathandsons.com/icon.png',
-                    width: 512,
-                    height: 512,
-                    alt: cat.name,
+                    url: getAbsoluteUrl('/og-image.jpg'),
+                    width: 1200,
+                    height: 630,
+                    alt: `${cat.name} - ${SITE_CONFIG.businessName}`,
                 }
             ],
         },
         twitter: {
             card: 'summary_large_image',
-            title: cat.seoTitle,
+            title: fullTitle,
             description: cat.seoDescription,
+            images: [getAbsoluteUrl('/og-image.jpg')],
         }
     };
 }
@@ -101,6 +103,7 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
     }
 
     const products = await getCategoryProducts(cat.categoryKey);
+    const inStockCount = products.filter(p => p.inStock).length;
 
     const breadcrumbSchema = {
         "@context": "https://schema.org",
@@ -110,19 +113,19 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://dinanathandsons.com"
+                "item": SITE_CONFIG.baseUrl
             },
             {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Shop",
-                "item": "https://dinanathandsons.com/shop"
+                "item": getAbsoluteUrl('/shop')
             },
             {
                 "@type": "ListItem",
                 "position": 3,
                 "name": cat.name,
-                "item": `https://dinanathandsons.com/shop/category/${cat.slug}`
+                "item": getAbsoluteUrl(`/shop/category/${cat.slug}`)
             }
         ]
     };
@@ -140,7 +143,7 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                     <div className="mb-3 sm:mb-6">
                         <Breadcrumbs
                             items={[
-                                { label: 'Inventory', href: '/shop' },
+                                { label: 'Shop', href: '/shop' },
                                 { label: cat.name }
                             ]}
                         />
@@ -160,7 +163,7 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                             </p>
                             <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#71717A]">
                                 <div className="flex items-center gap-1.5 text-[#966E2E]">
-                                    <ShieldCheck size={14} /> Tested for Workshop Reliability
+                                    <Wrench size={14} /> Goldsmith Workshop Supplies
                                 </div>
                                 <div className="h-3 w-px bg-[#E8E2D5]" />
                                 <div className="flex items-center gap-1.5">
@@ -168,11 +171,10 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                                 </div>
                                 <div className="h-3 w-px bg-[#E8E2D5]" />
                                 <div className="flex items-center gap-1.5 text-[#18181B] font-bold">
-                                    <Package size={14} /> {products.length} Products in Stock
+                                    <Package size={14} /> {inStockCount} In Stock ({products.length} Listed)
                                 </div>
                             </div>
                         </div>
-
                     </header>
 
                     {/* Category Products Grid */}
@@ -182,7 +184,7 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
                                 Available {cat.name} ({products.length})
                             </h2>
                             <span className="text-[10px] font-mono text-[#71717A] uppercase">
-                                Showing direct stock
+                                Direct Workshop Inventory
                             </span>
                         </div>
 

@@ -79,7 +79,7 @@ export function Footer() {
                         </p>
                         <div className="flex items-center gap-2 text-[#71717A] hover:text-[#966E2E] transition-colors text-[9px] font-bold uppercase tracking-wider">
                             <ShieldCheck size={13} className="text-[#966E2E]" />
-                            <span>100% Quality Assured</span>
+                            <span>Estd 1960 • Chandni Chowk</span>
                         </div>
                     </div>
 
@@ -116,11 +116,11 @@ export function Footer() {
 
                     {/* Contact Info Column - Col Span 3 */}
                     <div className="col-span-3 flex flex-col space-y-3">
-                        <h4 className="text-[10px] font-bold text-[#966E2E] uppercase tracking-[0.2em] mb-1 border-b border-[#E8E2D5] pb-2">Chandni Chowk Bench</h4>
+                        <h4 className="text-[10px] font-bold text-[#966E2E] uppercase tracking-[0.2em] mb-1 border-b border-[#E8E2D5] pb-2">Chandni Chowk Central Shop</h4>
                         
                         <div className="flex gap-2 items-start text-[10px] text-[#52525B]">
                             <MapPin size={13} className="text-[#966E2E] shrink-0 mt-0.5" />
-                            <span>1914, Maliwara, Chandni Chowk, Delhi - 110006</span>
+                            <span>1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi - 110006, India</span>
                         </div>
                         <div className="flex gap-2 items-center text-[10px] text-[#52525B]">
                             <Phone size={13} className="text-[#966E2E] shrink-0" />
@@ -136,7 +136,7 @@ export function Footer() {
                         </div>
                         <div className="border border-[#E8E2D5] rounded-lg overflow-hidden h-24 w-full shadow-sm mt-2">
                             <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.5975490799736!2d77.22728957630485!3d28.64182997566144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd17c093cae1%3A0x6b7722955cf1c42!2sDariba+Kalan%2C+Chandni+Chowk%2C+Delhi!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                                src="https://maps.google.com/maps?q=1914+Chatta+Madan+Gopal+Maliwara+Chandni+Chowk+Delhi+110006&t=&z=15&ie=UTF8&iwloc=&output=embed" 
                                 className="w-full h-full border-0 opacity-90" 
                                 allowFullScreen={false} 
                                 loading="lazy"
@@ -303,9 +303,10 @@ export function Footer() {
                         ))}
                     </div>
 
-                    {/* Copyright */}
-                    <div className="text-[8.5px] sm:text-[9.5px] font-bold text-[#71717A] uppercase tracking-wider text-center">
-                        <p>&copy; {currentYear} Dinanath & Sons. All Rights Reserved.</p>
+                    {/* Copyright & Legal Seller Disclosure */}
+                    <div className="text-[8px] sm:text-[9px] font-bold text-[#71717A] uppercase tracking-wider text-center space-y-1">
+                        <p>&copy; {currentYear} Dinanath & Sons. All Rights Reserved. • Legal Entity: Dinanath & Sons</p>
+                        <p className="text-[7.5px] text-[#A1A1AA] font-mono">Registered Store: 1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi - 110006, India</p>
                     </div>
                     
                 </div>

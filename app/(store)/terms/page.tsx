@@ -22,10 +22,10 @@ export default function TermsPage() {
                         Terms of <span className="text-[#966E2E]">Service</span>
                     </h1>
                     <p className="text-[#71717A] text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider max-w-xl mx-auto">
-                        Dinanath & Sons • 1914, Maliwara, Chandni Chowk, Delhi - 110006, India
+                        Dinanath & Sons • 1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi - 110006, India
                     </p>
                     <p className="text-[10px] text-[#A1A1AA] font-mono mt-1 uppercase">
-                        Last Updated: September 2026 • Compliant with Indian E-Commerce Regulations
+                        Last Updated: October 2026 • Compliant with Indian E-Commerce Regulations
                     </p>
                 </div>
 

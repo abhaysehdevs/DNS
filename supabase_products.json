@@ -1,0 +1,5573 @@
+[
+  {
+    "id": "61129fb4-8db1-4c58-b316-1efaa0259e83",
+    "created_at": "2026-07-25T05:09:28.061414+00:00",
+    "name": "Big Power Portable Ring Extender Machine",
+    "description": "",
+    "retail_price": 900,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/szkrhuqq78q.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-505361",
+    "specifications": {
+      "slug": "big-power-portable-ring-extender-machine-6014",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "465cd785-6a96-4529-b5f9-0aa24d189379",
+    "created_at": "2026-04-25T13:06:32.389358+00:00",
+    "name": " KUNDAN SET BOX KWALITY 77",
+    "description": "",
+    "retail_price": 190,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/zaq24isq6t.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1777122304473",
+        "name": "KWALITY 77",
+        "price": 190,
+        "inStock": true
+      },
+      {
+        "id": "1777122323072",
+        "name": "KWALITY 88",
+        "price": 260,
+        "inStock": true
+      },
+      {
+        "id": "1777122335604",
+        "name": "KWALITY 99",
+        "price": 290,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Dimensions",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-029137",
+    "specifications": {
+      "slug": "kundan-set-box-kwality-77-5569",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "f5febea7-67ec-4130-9285-58e9e1df62ca",
+    "created_at": "2026-04-25T11:29:09.749576+00:00",
+    "name": "Universal Stand Holder",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xnz7rihe74d.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596415695",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/vo90yv2wdy.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596474136",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6heakgqwins.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-008739",
+    "specifications": {
+      "slug": "universal-stand-holder-4598",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "01efc56f-60f1-4231-be25-512fee4b9fd6",
+    "created_at": "2026-07-25T04:59:37.271569+00:00",
+    "name": "Ring Expanding Machine ",
+    "description": "",
+    "retail_price": 600,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/b2hbqpx2d8p.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789854830440",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/b2hbqpx2d8p.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789855106436",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/1hk5kvpnenx.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-518818",
+    "specifications": {
+      "slug": "ring-expanding-machine-8818"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "e43d6025-8f7a-4e8b-8071-0f19b532f7a8",
+    "created_at": "2026-07-22T15:59:36.016465+00:00",
+    "name": "Ear-piercing stud plain",
+    "description": "",
+    "retail_price": 50,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/w8c78wi3ocd.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784751423831",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/kc2docy9mv.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751424464",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xofcl4pviq.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751424721",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/s6w1ti7mza.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-533246",
+    "specifications": {
+      "slug": "ear-piercing-stud-plain-2607",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "1 DZ Pair",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "20e2721d-c9cb-4bad-8423-5e99d81f039f",
+    "created_at": "2026-07-21T02:17:58.670207+00:00",
+    "name": "DinaNath's jewelers eye loupe 18mm 10x magnification (satin)",
+    "description": "DinaNath's jewelers eye loupe 18mm 10 magnification (satin)",
+    "retail_price": 100,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6jbtfrrl6rd.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600277152",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yub1he3smj.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600277474",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/iuuils64ic.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600277805",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/f2g9uy2ulse.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-573541",
+    "specifications": {
+      "slug": "dinanaths-jewelers-eye-loupe-18mm-10x-magnification-satin-3541"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "546e7a76-c72b-402c-904d-84bb21d7d07b",
+    "created_at": "2026-07-21T02:05:10.1583+00:00",
+    "name": "Set of steel dapping and doming punches used for shaping metal into domes for jewelry making",
+    "description": "set of steel dapping and doming punches used for shaping metal into domes for jewelry making. The set contains multiple graduated punch tips typically made from durable, polished steel alloy. These tools are designed for forming soft metals such as silver, gold, copper, and brass. Commonly available in sets of 12, 18, or 24 pieces, ranging in size to accommodate different project needs",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cnyxulailt6.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599440917",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3lcj326c2gd.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599441271",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yoiufjjpt4a.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-613745",
+    "specifications": {
+      "slug": "set-of-steel-dapping-and-doming-punches-used-for-shaping-metal-into-domes-for-jewelry-making-6444",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "f5a53494-ad9a-4da8-ac3b-8112236fcdf9",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Lakh batti",
+    "description": "Natural sealing wax stick for stone setting.",
+    "retail_price": 80,
+    "wholesale_price": 40,
+    "wholesale_moq": 100,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/7zqw454af72.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597890618",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yqlwfs0nlbk.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597891351",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/5izbidj3u15.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-939711",
+    "specifications": {
+      "slug": "lakh-batti-9054",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "a20c7655-750b-4255-b103-ce6b61d8a64a",
+    "created_at": "2026-07-22T16:06:09.199036+00:00",
+    "name": "Ear Piercing Stud Surgical ",
+    "description": "",
+    "retail_price": 120,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/8c7rw7keun.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784751479978",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/puui88cwqx.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751480369",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/af4ohheo77o.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-523144",
+    "specifications": {
+      "slug": "ear-piercing-stud-surgical-9641",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "02679de2-d180-4684-b9b6-167ecfd44cd2",
+    "created_at": "2026-07-21T01:36:47.048599+00:00",
+    "name": "Dinanath's 10K Powder Coated Red Tweezer",
+    "description": "Anti-magnetic, powder-coated tweezers for electronics and jewelry work.",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/p4s3p2naycd.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597793002",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cd0y73o2l7.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597793336",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/dmxnb24875r.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597793604",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/kv2cvn5dmzj.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597794245",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/p0pli96478f.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-074743",
+    "specifications": {
+      "slug": "dinanath-s-10k-powder-coated-red-tweezer-6376",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "46a4d874-3c02-4c7e-8272-ccfbdc303c4a",
+    "created_at": "2026-07-21T02:25:46.654358+00:00",
+    "name": "Jeweler's saw frame, designed for making intricate cuts in metal",
+    "description": "Jeweler's saw frame, designed for making intricate cuts in metal",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/0udw93rx0q7.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600745170",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cjib6iwoile.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-551127",
+    "specifications": {
+      "slug": "jeweler-s-saw-frame-designed-for-making-intricate-cuts-in-metal-9396",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "a451e807-52d8-4d21-8bc0-b28959709c39",
+    "created_at": "2026-07-21T02:03:21.750304+00:00",
+    "name": "Dinanath's 10x magnifying tripod loupe",
+    "description": "10x magnifying tripod loupe designed for detailed inspection of jewelry and gemstones. The chrome-finished tool features a stable three-legged base for hands-free benchtop use. It is commonly used by jewelers and watchmakers for sorting, grading, and examining small items",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ht1hjk49y3h.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599348874",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/g707r53m3w9.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599349153",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/j2ecsa6788.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-618426",
+    "specifications": {
+      "slug": "dinanath-s-10x-magnifying-tripod-loupe-4399",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "65d5f0d2-c1fd-4789-9b3b-fde81baf035e",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Heavy Duty Ring Enlarger Machine",
+    "description": "Professional ring stretcher and reducer. Cast iron construction.",
+    "retail_price": 8500,
+    "wholesale_price": 6500,
+    "wholesale_moq": 2,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ahg4uz27dhl.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596796755",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/hqtxig4k9s6.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596797498",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/js9ege77rt.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-910863",
+    "specifications": {
+      "slug": "heavy-duty-ring-enlarger-machine-4976",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "617699ce-cac5-4ff6-8b16-828fab172296",
+    "created_at": "2026-07-21T02:14:36.336729+00:00",
+    "name": "Clarion Imported Sand Frosting Media designed for gold and platinum jewelry surface finishing",
+    "description": "Clarion Imported Sand Frosting Media designed for gold and platinum jewelry surface finishing. It is a 1 kg bag used to create a smooth, symmetrical frosted finish on jewelry pieces. The product is rated for grade \"00\" and has an M.R.P. of 350/-.It is typically applied using a sandblasting machine, such as a \"sand blaster\" featured on the packaging.",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/lkf8baajxp.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600005826",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/t657rnn05j.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600006247",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/47oikhwbam.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-578306",
+    "specifications": {
+      "slug": "clarion-imported-sand-frosting-media-designed-for-gold-and-platinum-jewelry-surface-finishing-8306"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "219f8cb1-1e72-4275-9cde-2978b41cf5ec",
+    "created_at": "2026-07-22T16:02:16.316265+00:00",
+    "name": "Ear piercing stud with stone",
+    "description": "",
+    "retail_price": 60,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/lupqegyvx2e.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784751447583",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/y7xjvehxvjf.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751447849",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/a9rt5rvbzgn.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-528997",
+    "specifications": {
+      "slug": "ear-piercing-stud-with-stone-5535",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "60f2c5f9-17da-465c-9146-3019081efb2a",
+    "created_at": "2026-04-25T13:14:55.07345+00:00",
+    "name": "KUNDAN BOX BANGLE",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/niun5wgqql.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1777122868453",
+        "name": "COMMANDER 33",
+        "price": 0,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Dimensions",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-047605",
+    "specifications": {
+      "slug": "kundan-box-bangle-4967",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "2942b0d6-85bf-40cb-95bb-2838214ef6db",
+    "created_at": "2026-07-22T15:52:33.797814+00:00",
+    "name": "Metal ear piercing gun with marking pen and supporting mirror.",
+    "description": "",
+    "retail_price": 300,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/gjt0fxd2o9.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784750697781",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ksned73xoul.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784750698138",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/bartxnni9om.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-543915",
+    "specifications": {
+      "slug": "metal-ear-piercing-gun-with-marking-pen-and-supporting-mirror-3344",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "d6107e7f-2aa0-4238-aa37-a5f7ebfeef7b",
+    "created_at": "2026-07-21T02:23:34.312206+00:00",
+    "name": "Dinanath's 10X magnification, 18 mm lens loupe with a gold-colored finish",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cmhyacpygh4.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600549087",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/5wersqcnofc.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600549434",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/pzv8624o4eg.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-555114",
+    "specifications": {
+      "slug": "dinanath-s-10x-magnification-18-mm-lens-loupe-with-a-gold-colored-finish-1486",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "26ad25de-0651-411c-a769-cc80e3d7a40d",
+    "created_at": "2026-07-21T02:05:47.877844+00:00",
+    "name": "Borax soldering flux dish",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/oh8ld4g0zp.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599538605",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xecm9s4q56q.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599538862",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xdfc2bhf6w.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-606486",
+    "specifications": {
+      "slug": "borax-soldering-flux-dish-6983",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "517b0e13-08b7-4bb3-ac19-a62277081c21",
+    "created_at": "2026-04-25T10:37:34.37546+00:00",
+    "name": "Portable Ring Extender, 1-36 size",
+    "description": "",
+    "retail_price": 2400,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/545e1ji4nub.png",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-979373",
+    "specifications": {
+      "slug": "portable-ring-extender-1-36-size-4219",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "64d84040-06b2-4ac3-a0e1-dec6c9662165",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Lakh bangle choodi",
+    "description": "Lacquer base for bangle making.",
+    "retail_price": 150,
+    "wholesale_price": 90,
+    "wholesale_moq": 50,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/rx7rijg434.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596993371",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/zoamhhshuen.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596993866",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ej96vuq3cpn.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-823331",
+    "specifications": {
+      "slug": "lakh-bangle-choodi-9080",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "cc9496a2-b30b-4171-a92b-3cfe3216255f",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dapping Block (Pasa)",
+    "description": "Brass or steel dapping cube for shaping domes.",
+    "retail_price": 850,
+    "wholesale_price": 550,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/thv3ridsc3.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597388809",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/x4r69kktsjn.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597389357",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/5tiqu2i3o2f.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597390004",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/p1k7hhhf7zo.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-931950",
+    "specifications": {
+      "slug": "dapping-block-pasa-6752",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "86263761-31b0-402f-8755-306051dde7de",
+    "created_at": "2026-04-25T13:15:45.303582+00:00",
+    "name": "KUNDAN BOX DOUBLE BANGLE ",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cwkta54eohv.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-042606",
+    "specifications": {
+      "slug": "kundan-box-double-bangle-1505",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "e020a21b-e90e-4330-b619-f7ce9664564e",
+    "created_at": "2026-07-25T06:13:17.191605+00:00",
+    "name": "Dinanath's Graphite Crucible",
+    "description": "Dinanath's Graphite Crucible by Dinanath & Sons Certified is a professional-grade tools solution built for superior durability, safety, and operational efficiency.\n\nPrecision-engineered hardware tool crafted from industrial-grade alloy steel with anti-corrosive protective coating. Designed for demanding continuous workshop duty and compliant with rigorous quality control benchmarks.\n\nIdeal for electricians, residential architects, and industrial contractors requiring uncompromising reliability. Packaged with full quality inspection assurance and supported by Dinanath & Sons pan-India logistics and direct B2B warranty support.",
+    "retail_price": 28,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/r9yn3b35adg.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789046984317",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/5ycyxkweqn3.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789046984690",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/pvwvwbwzfnr.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789046985008",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/r9yn3b35adg.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1789046427267",
+        "name": "25-25",
+        "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/var-1789853699789-dd6wfmoakjj.webp",
+        "price": 28,
+        "inStock": true
+      },
+      {
+        "id": "1789046434615",
+        "name": "30-30",
+        "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/var-1789853702858-o2kikjww2ek.webp",
+        "price": 34,
+        "inStock": true
+      },
+      {
+        "id": "1789046435376",
+        "name": "35-35",
+        "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/var-1789853704980-lz1d2oirtch.webp",
+        "price": 44,
+        "inStock": true
+      },
+      {
+        "id": "1789046436127",
+        "name": "40-40",
+        "price": 60,
+        "inStock": true
+      },
+      {
+        "id": "1789046436585",
+        "name": "45-45",
+        "price": 70,
+        "inStock": true
+      },
+      {
+        "id": "1789046436774",
+        "name": "50-50",
+        "price": 90,
+        "inStock": true
+      },
+      {
+        "id": "1789046436949",
+        "name": "55-55",
+        "price": 120,
+        "inStock": true
+      },
+      {
+        "id": "1789046437102",
+        "name": "60-60",
+        "price": 140,
+        "inStock": true
+      },
+      {
+        "id": "1789046437291",
+        "name": "65-65",
+        "price": 180,
+        "inStock": true
+      },
+      {
+        "id": "1789046437455",
+        "name": "65-75",
+        "price": 230,
+        "inStock": true
+      },
+      {
+        "id": "1789046437637",
+        "name": "70-70",
+        "price": 230,
+        "inStock": true
+      },
+      {
+        "id": "1789046437820",
+        "name": "70-90",
+        "price": 260,
+        "inStock": true
+      },
+      {
+        "id": "1789046437999",
+        "name": "70-100",
+        "price": 320,
+        "inStock": true
+      },
+      {
+        "id": "1789046438205",
+        "name": "75-75",
+        "price": 300,
+        "inStock": true
+      },
+      {
+        "id": "1789046438402",
+        "name": "75-100",
+        "price": 360,
+        "inStock": true
+      },
+      {
+        "id": "1789046438603",
+        "name": "80-80",
+        "price": 360,
+        "inStock": true
+      },
+      {
+        "id": "1789046438787",
+        "name": "80-100",
+        "price": 432,
+        "inStock": true
+      },
+      {
+        "id": "1789046438966",
+        "name": "90-90",
+        "price": 500,
+        "inStock": true
+      },
+      {
+        "id": "1789046439145",
+        "name": "90-100",
+        "price": 560,
+        "inStock": true
+      },
+      {
+        "id": "1789046439320",
+        "name": "100-100",
+        "price": 660,
+        "inStock": true
+      },
+      {
+        "id": "1789046439511",
+        "name": "100-120",
+        "price": 760,
+        "inStock": true
+      },
+      {
+        "id": "1789046439683",
+        "name": "1 KG",
+        "price": 310,
+        "inStock": true
+      },
+      {
+        "id": "1789046439860",
+        "name": "2 kg",
+        "price": 560,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-891405",
+    "specifications": {
+      "slug": "dinanaths-graphite-crucible-1405"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "Dinanath's Graphite Crucible | Buy Online at Dinanath & Sons",
+    "meta_description": "Buy authentic Dinanath's Graphite Crucible by Dinanath & Sons Certified online at best prices. High-durability tools with fast pan-India shipping from Dinanath "
+  },
+  {
+    "id": "95700572-62bc-42d9-8c1c-65498ea204ed",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "P & C additive",
+    "description": "Polishing and Cleaning additive for magnetic polishers.",
+    "retail_price": 450,
+    "wholesale_price": 300,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/se8br48pynk.webp",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597551374",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/x0tuhzgf3v.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597551959",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ruwsrxt711g.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-903903",
+    "specifications": {
+      "slug": "p-c-additive-5469",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "3b0ea31b-beed-46e9-a2d7-87b8b0806a2b",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Laser 3 + 1 Pointed Flame Torch",
+    "description": "Precision torch with 4 nozzles for different flame sizes.",
+    "retail_price": 1200,
+    "wholesale_price": 850,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/jh8k12818ai.jpg",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-907307",
+    "specifications": {
+      "slug": "laser-3-1-pointed-flame-torch-6817",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "14ec0c19-5147-4ec5-abdb-3b8405f9a685",
+    "created_at": "2026-09-19T21:44:51.266507+00:00",
+    "name": "P.N. Budh Ring Stick / Ring Sizer Stick",
+    "description": "P.N. Budh Ring Stick / Ring Sizer Stick by Dinanath & Sons Certified is a professional-grade consumables engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\nManufactured to stringent Indian goldsmithing standards for demanding continuous workshop duty. Tested for dimensional fidelity, chemical resistance against pickling solutions and workshop fluxes, and long service life.\n\n• Engineered with premium precision bench-grade jewellery manufacturing metallurgy grade for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.",
+    "retail_price": 200,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/87e3z5tkbf.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789854284411",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/87e3z5tkbf.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789854284139",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/a8db7f6kgwd.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-291091",
+    "specifications": {
+      "slug": "pn-budh-ring-stick-ring-sizer-stick-1091",
+      "Material": "Precision Bench-Grade Jewellery Manufacturing Metallurgy Grade",
+      "Durability": "Heavy-Duty Commercial Workshop Grade",
+      "Application": "Professional Goldsmith & Jewellery Workshop Bench Use"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "P.N. Budh Ring Stick / Ring Sizer Stick | Jewellery Making T",
+    "meta_description": "Buy authentic P.N. Budh Ring Stick / Ring Sizer Stick by Dinanath & Sons Certified online at wholesale prices. Professional consumables for goldsmiths with fast"
+  },
+  {
+    "id": "ae73f105-3550-4510-b6c7-206b0773e84e",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Stainless Steel Mini Diagonal Nipper",
+    "description": "Compact side cutter for soft wires and sprues.",
+    "retail_price": 280,
+    "wholesale_price": 160,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/z1on3h1dezg.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596661878",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2d9bmp71m0p.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596662726",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/merhty66zxe.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-947171",
+    "specifications": {
+      "slug": "dinanath-s-stainless-steel-mini-diagonal-nipper-4601",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "c20668b6-c6c1-4c08-bb3d-3b910641934b",
+    "created_at": "2026-09-19T21:49:13.179075+00:00",
+    "name": "1kg Gold Silver Ingot Mould",
+    "description": "1kg Gold Silver Ingot Mold – Heavy-Duty Casting Mold for Bullion Bar & Biscuit Forming",
+    "retail_price": 1200,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ce341dukmr.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789854475916",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ce341dukmr.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789854547758",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/h6bh2c2cf4.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-553321",
+    "specifications": {
+      "slug": "1kg-gold-silver-ingot-mould-3321"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "195c442d-18e3-4084-820f-b0c2d656e830",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Sandasi",
+    "description": "Heat-resistant holding tong (Sandasi) for soldering work.",
+    "retail_price": 180,
+    "wholesale_price": 90,
+    "wholesale_moq": 12,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6b74vp6anoj.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596586243",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/4mj83n758m.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596586842",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/b5q9d39tyof.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596587321",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/kd4gvx2846.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-973588",
+    "specifications": {
+      "slug": "dinanath-s-sandasi-1920",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1fb01fd3-117a-4c80-a5b0-81892ad74865",
+    "created_at": "2026-09-19T22:10:02.804721+00:00",
+    "name": "2 in 1 manual casting machine",
+    "description": "",
+    "retail_price": 125000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/k9gg1s11o5f.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789855767546",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/k9gg1s11o5f.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789855796710",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/r5u55eu0ljc.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-802939",
+    "specifications": {
+      "slug": "2-in-1-manual-casting-machine-2939"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "e005a7d9-e203-4b28-8ca0-16e7c133a5e2",
+    "created_at": "2026-04-25T11:23:11.742551+00:00",
+    "name": "Ring Sizer Plastic",
+    "description": "",
+    "retail_price": 60,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/r78qfrdmbuk.png",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-996424",
+    "specifications": {
+      "slug": "ring-sizer-plastic-8355",
+      "seo_title": "Ring Sizer Plastic | Buy Online at Dinanath & Sons",
+      "seo_keywords": "ring sizer plastic, buy ring sizer plastic, tools, dinanath & sons certified, electrical supplies delhi, dinanath and sons, wholesale prices, buy electrical hardware",
+      "seo_description": "Buy authentic Ring Sizer Plastic by Dinanath & Sons Certified online at best prices. High-durability tools with fast pan-India shipping from Dinanath & Sons."
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "Ring Sizer Plastic | Buy Online at Dinanath & Sons",
+    "meta_description": "Buy authentic Ring Sizer Plastic by Dinanath & Sons Certified online at best prices. High-durability tools with fast pan-India shipping from Dinanath & Sons."
+  },
+  {
+    "id": "71a91fa1-c883-4e04-a681-eee780de3dfe",
+    "created_at": "2026-09-19T22:12:50.444464+00:00",
+    "name": "Water jet with 1.5 hp crompton motor full Stainless Steel Body",
+    "description": "",
+    "retail_price": 60000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nz6a2ttqafa.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789855921954",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nz6a2ttqafa.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789855962480",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/9wmgu37ivck.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-970645",
+    "specifications": {
+      "slug": "water-jet-with-15-hp-crompton-motor-full-stainless-steel-body-0645"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "d3c08575-6a39-4aae-84c9-9967d42af580",
+    "created_at": "2026-09-19T22:15:30.771955+00:00",
+    "name": "Auto clamp wax injector with vaccum pump",
+    "description": "Auto clamp wax injector with vaccum pump by Dinanath & Sons Certified is a professional-grade machinery engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\nProfessional-grade lost-wax casting apparatus engineered for porosity-free jewellery production. Provides uniform thermal heat distribution and consistent pressure transfer, guaranteeing defect-free reproduction of micro-details in gold and silver castings.\n\n• Engineered with premium heat-resistant cast metallurgy alloy & heavy-duty silicone for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.",
+    "retail_price": 80000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/pruhld8gvx9.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789856095931",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/pruhld8gvx9.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789856123961",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xm70puwrfdq.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-130837",
+    "specifications": {
+      "slug": "auto-clamp-wax-injector-with-vaccum-pump-0837",
+      "Application": "Lost-Wax Investment Casting & Mold Making",
+      "Compatibility": "Universal Investment Powder & Flask Sizes",
+      "Thermal Stability": "High Thermal Cycling Resilience"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "Auto clamp wax injector with vaccum pump | Jewellery Making ",
+    "meta_description": "Buy authentic Auto clamp wax injector with vaccum pump by Dinanath & Sons Certified online at wholesale prices. Professional machinery for goldsmiths with fast "
+  },
+  {
+    "id": "8cf29a76-65f0-4c59-b1d4-65d439414fc0",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Diamond Tester",
+    "description": "Portable electronic diamond tester. Distinguishes real diamonds from simulants.",
+    "retail_price": 900,
+    "wholesale_price": 1500,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6vxk0y4um8l.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597500440",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nt1kcta42jm.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597500815",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/n5xwzo34mjq.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597512346",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/29aahljzx52.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597512594",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/g6rqcc0zcwn.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-956903",
+    "specifications": {
+      "slug": "diamond-tester-3717",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "89612b24-5cda-48e9-9552-407c5b734091",
+    "created_at": "2026-04-25T12:57:03.542391+00:00",
+    "name": "Steel Bangle Sizer",
+    "description": "",
+    "retail_price": 1000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/wfzoriamt0p.png",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-026355",
+    "specifications": {
+      "slug": "steel-bangle-sizer-2598",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "71327f0a-8045-47d1-a966-74b5fdf5ec18",
+    "created_at": "2026-07-25T05:57:58.511543+00:00",
+    "name": "Saeshin Strong 204 Micro Motor Polish And Grinding Machine for jewellery polish",
+    "description": "",
+    "retail_price": 3500,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/vmuoufklfpi.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784959077099",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/v99zxi58uuh.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784959077430",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/qrw5cw32kte.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-450644",
+    "specifications": {
+      "slug": "saeshin-strong-204-micro-motor-polish-and-grinding-machine-for-jewellery-polish-0644"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "f50f58d1-1b56-4349-a56a-c309ece269f1",
+    "created_at": "2026-09-19T22:17:54.728754+00:00",
+    "name": "Digital auto clamp vacuum wax injector used for jewelry making and lost-wax casting",
+    "description": "Digital auto clamp vacuum wax injector used for jewelry making and lost-wax casting by Dinanath & Sons Certified is a professional-grade tools engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\nProfessional-grade lost-wax casting apparatus engineered for porosity-free jewellery production. Provides uniform thermal heat distribution and consistent pressure transfer, guaranteeing defect-free reproduction of micro-details in gold and silver castings.\n\n• Engineered with premium heat-resistant cast metallurgy alloy & heavy-duty silicone for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.",
+    "retail_price": 122000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/aznfvbbhol.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789856184714",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/aznfvbbhol.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789856272286",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ndobzszpqma.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-274905",
+    "specifications": {
+      "slug": "digital-auto-clamp-vacuum-wax-injector-used-for-jewelry-making-and-lost-wax-casting-4905",
+      "Application": "Lost-Wax Investment Casting & Mold Making",
+      "Compatibility": "Universal Investment Powder & Flask Sizes",
+      "Thermal Stability": "High Thermal Cycling Resilience"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "Digital auto clamp vacuum wax injector used for jewelry maki",
+    "meta_description": "Buy authentic Digital auto clamp vacuum wax injector used for jewelry making and lost-wax casting by Dinanath & Sons Certified online at wholesale prices. Profe"
+  },
+  {
+    "id": "068e4a0c-8715-4c66-b6e4-8a795d69e695",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Kadi Cutting Katiya",
+    "description": "Traditional Indian style heavy-duty wire cutter (Katiya).",
+    "retail_price": 150,
+    "wholesale_price": 320,
+    "wholesale_moq": 6,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/d4tr18zfed.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596824105",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nq73qn94g69.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596824770",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/d4tr18zfed.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-960638",
+    "specifications": {
+      "slug": "dinanath-s-kadi-cutting-katiya-6881",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "ee57d0a2-8363-478d-b5ff-730635faaea0",
+    "created_at": "2026-04-25T13:24:19.999872+00:00",
+    "name": "Marathon M4 Lab Micromotor",
+    "description": "",
+    "retail_price": 8000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ienkqdlokq.jpg",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1777123404425",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/43zrqi2wvfg.jpg",
+        "type": "image"
+      },
+      {
+        "id": "1777123412392",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yiqnp2sxdde.jpg",
+        "type": "image"
+      },
+      {
+        "id": "1777123417726",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/d4wrdd8vcc7.jpg",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-055146",
+    "specifications": {
+      "slug": "marathon-m4-lab-micromotor-4222",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "a51eb29b-d738-4b29-8aad-2ea0a78a5f41",
+    "created_at": "2026-07-21T01:41:07.746598+00:00",
+    "name": "Dinanath's 10K Powder Coated Stainless Steel Tweezer",
+    "description": "Anti-magnetic, powder-coated tweezers for electronics and jewelry work.",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nw0qs9anfv8.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598065038",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2pwwfsilrub.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598065731",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/rf8oihqdz1.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-071771",
+    "specifications": {
+      "slug": "dinanath-s-10k-powder-coated-stainless-steel-tweezer-2659",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "a7137edb-0cb9-4082-8268-8f9e1cee677c",
+    "created_at": "2026-07-21T01:51:25.592929+00:00",
+    "name": "Enamel Bowl, White with Blue Rim",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/tpukcz16d9m.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598684043",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3m0s673it0m.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598684437",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xl75nvnv56p.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-084812",
+    "specifications": {
+      "slug": "enamel-bowl-white-with-blue-rim-9067",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "6bbe2901-6407-4ee6-9fa4-5dc890f4751e",
+    "created_at": "2026-07-25T05:27:13.448538+00:00",
+    "name": "Magnetic polishing machine",
+    "description": "",
+    "retail_price": 10350,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/zxaqsdhxpfl.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789855627512",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nfg6ng82q.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789855627813",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/zxaqsdhxpfl.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1789048656013",
+        "name": "6 INCH",
+        "price": 10350,
+        "inStock": true
+      },
+      {
+        "id": "1789048656866",
+        "name": "8 INCH",
+        "price": 13200,
+        "inStock": true
+      },
+      {
+        "id": "1789048657480",
+        "name": "10 INCH",
+        "price": 16350,
+        "inStock": true
+      },
+      {
+        "id": "1789048658498",
+        "name": "12 INCH",
+        "price": 24600,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-510743",
+    "specifications": {
+      "slug": "magnetic-polishing-machine-0743"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "5ab9e84f-d941-4805-9a51-6b6445c4dfb2",
+    "created_at": "2026-07-25T05:05:36.808329+00:00",
+    "name": "Ring stretcher machine",
+    "description": "Ring stretcher machine by Dinanath & Sons Certified is a professional-grade tools engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\nManufactured to stringent Indian goldsmithing standards for demanding continuous workshop duty. Tested for dimensional fidelity, chemical resistance against pickling solutions and workshop fluxes, and long service life.\n\n• Engineered with premium precision bench-grade jewellery manufacturing metallurgy grade for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.",
+    "retail_price": 3000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nfbaq942z9.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789856660445",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nfbaq942z9.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789856693837",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yov79w4o72q.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-514887",
+    "specifications": {
+      "slug": "ring-stretcher-machine-4887",
+      "Material": "Precision Bench-Grade Jewellery Manufacturing Metallurgy Grade",
+      "Durability": "Heavy-Duty Commercial Workshop Grade",
+      "Application": "Professional Goldsmith & Jewellery Workshop Bench Use"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "Ring stretcher machine | Jewellery Making Tools | Dinanath &",
+    "meta_description": "Buy authentic Ring stretcher machine by Dinanath & Sons Certified online at wholesale prices. Professional tools for goldsmiths with fast pan-India delivery."
+  },
+  {
+    "id": "cf86a52f-9a56-4751-9fc4-b4345024cd14",
+    "created_at": "2026-07-25T05:44:40.302445+00:00",
+    "name": "Steel Ring Size",
+    "description": "Steel Ring Size by Dinanath & Sons Certified is a professional-grade tools engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\nManufactured to stringent Indian goldsmithing standards for demanding continuous workshop duty. Tested for dimensional fidelity, chemical resistance against pickling solutions and workshop fluxes, and long service life.\n\n• Engineered with premium precision bench-grade jewellery manufacturing metallurgy grade for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.",
+    "retail_price": 250,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/9dztw4r284.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789856865334",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/9dztw4r284.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789856912249",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ee9l5no3ski.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-471298",
+    "specifications": {
+      "slug": "steel-ring-size-1298",
+      "Material": "Precision Bench-Grade Jewellery Manufacturing Metallurgy Grade",
+      "Durability": "Heavy-Duty Commercial Workshop Grade",
+      "Application": "Professional Goldsmith & Jewellery Workshop Bench Use"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "Steel Ring Size | Jewellery Making Tools | Dinanath & Sons",
+    "meta_description": "Buy authentic Steel Ring Size by Dinanath & Sons Certified online at wholesale prices. Professional tools for goldsmiths with fast pan-India delivery."
+  },
+  {
+    "id": "662d792b-2571-49d4-8143-86c408e57a29",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Jewellery File Set",
+    "description": "Set of 6 needle files for precision shaping and finishing.",
+    "retail_price": 450,
+    "wholesale_price": 280,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/soow095z2rl.png",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-964734",
+    "specifications": {
+      "slug": "dinanath-s-jewellery-file-set-2152",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "b20c6712-3cb9-4a19-be1b-b0d6d2045f8a",
+    "created_at": "2026-07-25T05:50:28.031362+00:00",
+    "name": "PINK Jewellery wrapping paper ",
+    "description": "PINK Jewellery wrapping paper by Dinanath & Sons Certified is a professional-grade consumables engineered specifically for master goldsmiths, jewellery manufacturers, and metallurgical workshops.\n\nManufactured to stringent Indian goldsmithing standards for demanding continuous workshop duty. Tested for dimensional fidelity, chemical resistance against pickling solutions and workshop fluxes, and long service life.\n\n• Engineered with premium precision bench-grade jewellery manufacturing metallurgy grade for maximum longevity.\n• Rigorously calibrated for Indian hallmarking standards and fine jewellery production.\n• Designed for smooth, effortless operation at the goldsmith workbench.\n• Supported by Dinanath & Sons direct B2B wholesale warranty and express pan-India dispatch from Chandni Chowk, Delhi.",
+    "retail_price": 50,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/jx6pwnq1zqc.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789049611051",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/jx6pwnq1zqc.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789049611237",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/gztco8wk3lt.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789049611579",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/1iofy22t5yt.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-455984",
+    "specifications": {
+      "slug": "pink-jewellery-wrapping-paper-5984",
+      "Material": "Precision Bench-Grade Jewellery Manufacturing Metallurgy Grade",
+      "Durability": "Heavy-Duty Commercial Workshop Grade",
+      "Application": "Professional Goldsmith & Jewellery Workshop Bench Use"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "PINK Jewellery wrapping paper | Jewellery Making Tools | Din",
+    "meta_description": "Buy authentic PINK Jewellery wrapping paper by Dinanath & Sons Certified online at wholesale prices. Professional consumables for goldsmiths with fast pan-India"
+  },
+  {
+    "id": "89f3d4c0-eba7-4fb3-a441-f86e334bf8df",
+    "created_at": "2026-07-25T05:39:36.058011+00:00",
+    "name": "Electric furnace",
+    "description": "",
+    "retail_price": 5000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/vczofc77rr8.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1789049385822",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/vczofc77rr8.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789049386137",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/fo9002co8w.webp",
+        "type": "image"
+      },
+      {
+        "id": "1789049450869",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/9orbxfpoqhc.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1789048785973",
+        "name": "Normal Quality",
+        "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/var-1789049413465-wzzjk67hof.webp",
+        "price": 5000,
+        "inStock": true
+      },
+      {
+        "id": "1789048786656",
+        "name": "Export Quality",
+        "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/var-1789049407158-ej40ovpn1vn.webp",
+        "price": 6500,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-481355",
+    "specifications": {
+      "slug": "electric-furnace-1355"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "3d320338-cc05-4d7b-a556-de7f14396b0e",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Jewellery Hallmark Tags",
+    "description": "Plastic or paper tags for pricing and hallmarking info.",
+    "retail_price": 300,
+    "wholesale_price": 150,
+    "wholesale_moq": 50,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/19bfnwhiieg.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597354554",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ennzaf7uskh.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597355262",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/g7nocqp9zb.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597355869",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/8wq71ph1edp.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-034189",
+    "specifications": {
+      "slug": "jewellery-hallmark-tags-4189"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "aaa8521f-db91-42ae-b98f-508c0b24b060",
+    "created_at": "2026-07-21T02:01:18.080892+00:00",
+    "name": "Stainless steel bead shovel",
+    "description": "stainless steel bead shovels typically used for sorting diamonds, gemstones, and pearls. They are designed with flat, angled edges specifically to securely scoop and move small, loose jewelry parts. They are often sold in sets of various sizes for convenience in jewelry crafting and sorting. The material is durable and designed for consistent, practical use in gemstone work",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/psojx1qzuor.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599217449",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/fdu65bg9byv.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599217760",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/w9ntjmorrum.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599218099",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/e6mf2eilekt.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-112455",
+    "specifications": {
+      "slug": "stainless-steel-bead-shovel-3283",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "5172297f-f171-43da-bb42-21047dfb0d74",
+    "created_at": "2026-04-25T13:10:24.063056+00:00",
+    "name": "KUNDAN BOX RANIHAR",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xrrl1rfnoae.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1777122546605",
+        "name": "KWALITY 101",
+        "price": 0,
+        "inStock": true
+      },
+      {
+        "id": "1777122554809",
+        "name": "KWALITY 102",
+        "price": 0,
+        "inStock": true
+      }
+    ],
+    "variant_type": "dimension",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-032033",
+    "specifications": {
+      "slug": "kundan-box-ranihar-3805",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "0cca45a5-248a-4b29-8e33-824b9e473741",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Cloth Buff Export Quality",
+    "description": "Soft cotton buffing wheels for high-luster finish.",
+    "retail_price": 120,
+    "wholesale_price": 70,
+    "wholesale_moq": 50,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/t0y4sh7pogi.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597335992",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/bp95gtzz8j.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597336686",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xyk0raiwm7m.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-854608",
+    "specifications": {
+      "slug": "dinanath-s-cloth-buff-export-quality-4504",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "cb070ec2-3cd4-4e76-8151-97d5fdce104e",
+    "created_at": "2026-04-25T13:11:45.172447+00:00",
+    "name": "KUNDAN BOX CHOKER ",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2wnxxxe2qph.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1777122693355",
+        "name": "KLICK 44",
+        "price": 0,
+        "inStock": true
+      },
+      {
+        "id": "1777122694883",
+        "name": "KLICK 55",
+        "price": 0,
+        "inStock": true
+      },
+      {
+        "id": "1777122695069",
+        "name": "KLICK 66",
+        "price": 0,
+        "inStock": true
+      },
+      {
+        "id": "1777122734324",
+        "name": "KLICK 77",
+        "price": 0,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-039036",
+    "specifications": {
+      "slug": "kundan-box-choker-7645",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "0d22a28b-be71-4fb3-97eb-e15b6c7871d0",
+    "created_at": "2026-07-21T01:55:19.67027+00:00",
+    "name": "Dinanath R.T.S. Gold brand wire drawplate",
+    "description": "This is a Dinanath R.T.S. Gold brand wire drawplate, a tool commonly known as a jantri in India, used by goldsmiths to draw wire to specific gauges.The tool is made of steel and features numbered holes ranging from 1 to 51, designed for drawing soft metals like gold and silver.It comes in a sealed plastic package with brand markings for \"Dinanath R.T.S. Gold\" and \"Super\"",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/95yvqg4evjc.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598918231",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/i6ba2ukv9dd.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598918587",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/79g2ncg034p.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-097613",
+    "specifications": {
+      "slug": "dinanath-r-t-s-gold-brand-wire-drawplate-3009",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "766dc822-e15e-4e46-bb5d-a5828641d864",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Ring Measuring Stick",
+    "description": "Aluminum ring stick with A-Z and 1-36 sizing.",
+    "retail_price": 250,
+    "wholesale_price": 150,
+    "wholesale_moq": 20,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mqp7r1ox3ym.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597642363",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xzk8vizfy7.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597642741",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/h9j3vtuts6r.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-862291",
+    "specifications": {
+      "slug": "dinanath-s-ring-measuring-stick-2144",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "6b152cfd-386b-4d16-8d92-a4acdb6ed94e",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's LPG heating torch burners",
+    "description": "Adjustable LPG burner for melting and annealing.",
+    "retail_price": 1500,
+    "wholesale_price": 1100,
+    "wholesale_moq": 3,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mabf3batwb.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597285863",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/1zxxrytc6jk.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597286643",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/x87t95anhz.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597287434",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/tmn2wu8oc.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597288100",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ia1lcj98rd.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-891974",
+    "specifications": {
+      "slug": "dinanath-s-lpg-heating-torch-burners-5534",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1508a152-d61c-4edf-b391-0f02ede3ac5f",
+    "created_at": "2026-04-25T11:29:51.062295+00:00",
+    "name": "HandWise Universal Holder",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/30pcb3tvkgg.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596328903",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/wod0z53v89b.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596487736",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ju75gb10crg.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-018079",
+    "specifications": {
+      "slug": "handwise-universal-holder-6386",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "725c4e28-a1be-4dea-bab0-32b3eaabdb58",
+    "created_at": "2026-04-25T11:34:13.338988+00:00",
+    "name": "Plastic Bangle Sizer",
+    "description": "",
+    "retail_price": 130,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/b0znc9guwci.png",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-021894",
+    "specifications": {
+      "slug": "plastic-bangle-sizer-7002",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "20aa92c7-1495-48c4-a26c-be85923b2692",
+    "created_at": "2026-04-25T13:26:47.966988+00:00",
+    "name": "Marathon M3 Complete Set (Micromotor Engine+Foot Pedal+Control Box+Handpiece stand+Pouch)",
+    "description": "",
+    "retail_price": 4400,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3end61wrbeb.jpg",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1777123574245",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/s4r8s05fjfa.jpg",
+        "type": "image"
+      },
+      {
+        "id": "1777123578244",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/0sfcdutru7ng.jfif",
+        "type": "image"
+      },
+      {
+        "id": "1777123583040",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/7p21sexido6.jpg",
+        "type": "image"
+      },
+      {
+        "id": "1777123587446",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/7elupmebsog.jpg",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-059022",
+    "specifications": {
+      "slug": "marathon-m3-complete-set-micromotor-engine-foot-pedal-control-box-handpiece-stand-pouch-1539",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1f89d6a7-db53-498c-ab74-b5447da4aa46",
+    "created_at": "2026-07-21T01:55:59.018749+00:00",
+    "name": "jeweler's eye loupe with a chrome-finished stand for hands-free use",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xy5q9r5py29.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598957560",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/8guq5stubie.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598957832",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/bngj63y1w6c.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-100544",
+    "specifications": {
+      "slug": "jeweler-s-eye-loupe-with-a-chrome-finished-stand-for-hands-free-use-8506",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "7bb86fe8-2bbc-4dd6-810e-f64565453981",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Tik-Tak Silver Cleaner",
+    "description": "Instant silver cleaning solution. Removes tarnish in seconds.",
+    "retail_price": 200,
+    "wholesale_price": 110,
+    "wholesale_moq": 24,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/7t73eoq3cp3.webp",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597943735",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/4q1h4qxiu6t.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-858225",
+    "specifications": {
+      "slug": "tik-tak-silver-cleaner-9990",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "bf421f27-400f-4cbf-9769-44ef5b59ca86",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath Portable Gas Torch Gun Automatic",
+    "description": "Self-igniting portable torch for quick soldering jobs.",
+    "retail_price": 650,
+    "wholesale_price": 400,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/j9g7ccy50ji.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596682709",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/q4643gfrhd.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596683386",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nekhbliflc.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-888371",
+    "specifications": {
+      "slug": "dinanath-portable-gas-torch-gun-automatic-8062",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "9f475f11-44dc-4d79-834d-2deb86f4b810",
+    "created_at": "2026-04-25T13:28:47.259492+00:00",
+    "name": "MiniCraft Hand Engraver Machine",
+    "description": null,
+    "retail_price": 1200,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/troqzbzbc69.jpg",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1777123717319",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/wwb7s92z0vp.jpg",
+        "type": "image"
+      },
+      {
+        "id": "1777123720608",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/bbbt53ujruv.jpg",
+        "type": "image"
+      },
+      {
+        "id": "1777123724527",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ea01xh0lfxo.jpg",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": null,
+    "model_number": null,
+    "sku": null,
+    "specifications": {
+      "slug": "minicraft-hand-engraver-machine-4810"
+    },
+    "features": [],
+    "weight": null,
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": null,
+    "video_url": null,
+    "meta_title": null,
+    "meta_description": null
+  },
+  {
+    "id": "26fea443-97cb-4caa-b8b8-35c7f66a3ad0",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Torch Gas Refill",
+    "description": "High-purity butane gas refill can for micro torches.",
+    "retail_price": 150,
+    "wholesale_price": 90,
+    "wholesale_moq": 24,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/wb4ta28j6w.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597138606",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/83mree5sf0p.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597139246",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/x27psvtxz9.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 10,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-027861",
+    "specifications": {
+      "slug": "torch-gas-refill-7861"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "76f40654-b693-459f-84c5-8b323ce5e823",
+    "created_at": "2026-07-21T01:42:58.699314+00:00",
+    "name": "DinaNath's branded invisible ring size adjuster kit designed to tighten loose rings",
+    "description": " DinaNath's branded invisible ring size adjuster kit designed to tighten loose rings.It includes a total of 10 pieces in three different widths (2mm, 3mm, and 4mm) to fit rings ranging from 1mm to 6mm wide.The adjusters are made of silicone or TPU material and are designed to be discreet when worn.",
+    "retail_price": 200,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/0biytf9jvwcm.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598170674",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6f8e1rnu1wu.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598171077",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yh3fsbykit.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-078495",
+    "specifications": {
+      "slug": "dinanath-s-branded-invisible-ring-size-adjuster-kit-designed-to-tighten-loose-rings-7741",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "8d160eb0-19c9-426f-a0b9-34656bad3599",
+    "created_at": "2026-07-21T01:49:35.286034+00:00",
+    "name": "Dinanath's brand soldering liquid ",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/iwopfcq1cb.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598573685",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cn38mlkwqpr.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598573943",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3n3ep6p66vj.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-087474",
+    "specifications": {
+      "slug": "dinanath-s-brand-soldering-liquid-2643",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1ab5bac3-1cf5-46be-936a-849337a0d212",
+    "created_at": "2026-07-21T01:53:48.238413+00:00",
+    "name": "Rubber Mixing Bowl Big",
+    "description": "Rubber Mixing Bowl Big",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/olsw7u2grvj.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-091461",
+    "specifications": {
+      "slug": "rubber-mixing-bowl-big-6094",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "e05d0f16-24df-4235-ac42-1924cc98bba5",
+    "created_at": "2026-07-21T01:58:34.270318+00:00",
+    "name": "Dinanath's Precision nipper cutters with black blades and red ergonomic handles",
+    "description": "Precision nipper cutters with black blades and red ergonomic handles",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/utbnnxxrt0c.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598976153",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/uxhtji7vpyo.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598976417",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ttialynp3z.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-103994",
+    "specifications": {
+      "slug": "dinanath-s-precision-nipper-cutters-with-black-blades-and-red-ergonomic-handles-8227",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "faff6704-e24a-46ab-8d5c-a44ec5770a2a",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Liquid Suhaga for Jewellery Soldering",
+    "description": "Ready-to-use liquid flux (Suhaga) for gold and silver soldering.",
+    "retail_price": 150,
+    "wholesale_price": 80,
+    "wholesale_moq": 20,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/yb0lcpv0wk.webp",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596747067",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6j9k92i6hrq.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596747358",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/rh214ltddp8.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-936508",
+    "specifications": {
+      "slug": "liquid-suhaga-for-jewellery-soldering-9823",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "3bac506e-f17a-49b9-9a8b-72c055b5c2a0",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Ring expanding machine",
+    "description": "Standard ring sizing machine for quick adjustments.",
+    "retail_price": 900,
+    "wholesale_price": 1000,
+    "wholesale_moq": 15,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/qiih20i9f2c.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596727967",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/631jl9plcyn.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596728332",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2vdegrb3imc.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [
+      {
+        "id": "1777112961271",
+        "name": "2nd Quality",
+        "price": 550,
+        "inStock": true
+      }
+    ],
+    "variant_type": "Quality",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-124065",
+    "specifications": {
+      "slug": "ring-expanding-machine-3825",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "207d0f69-6305-43c5-9ae0-3aa90b653245",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Suhaga Goti Khaar Goti",
+    "description": "Solid borax flux lumps for melting gold.",
+    "retail_price": 200,
+    "wholesale_price": 120,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/q9bc6yd4wln.webp",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597197808",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/thqg0j1mag.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597198454",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/349dhccjssv.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597199162",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/dlv7ixxg2nb.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597199758",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3q9e41k5qo.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-127767",
+    "specifications": {
+      "slug": "suhaga-goti-khaar-goti-2749",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "5ef8aeb3-26e4-49ee-ad58-0e80f5e578c1",
+    "created_at": "2026-07-21T02:02:14.605813+00:00",
+    "name": "Dinanath's brand wooden scrapped dust",
+    "description": "Dinanath's brand wooden scrapped dust",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/1sv0q7g0ijk.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599295800",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/a47lt2b4c1.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599296264",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2u64c7kdpns.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-625207",
+    "specifications": {
+      "slug": "dinanaths-brand-wooden-scrapped-dust-5207"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "2876d22b-b75f-4454-9177-a0793cd43779",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Clarion Saw Blade",
+    "description": "Swiss-quality saw blades for piercing metal. Gross pack.",
+    "retail_price": 850,
+    "wholesale_price": 600,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/98p26ymc4ft.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597165395",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/4mcjxbo5xj3.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597166042",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/7b28fk8jjtr.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-832022",
+    "specifications": {
+      "slug": "clarion-saw-blade-1451",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "19aa6f40-01de-4fd9-adb9-aca91720e899",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath Portable Gas Torch Gun Manual",
+    "description": "Handheld gas torch with manual ignition.",
+    "retail_price": 450,
+    "wholesale_price": 280,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ivo4ibb8vki.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596637810",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mrly63emjb.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596638733",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/149dmhprr4gr.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-896559",
+    "specifications": {
+      "slug": "dinanath-portable-gas-torch-gun-manual-1562",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "5ea83329-691b-44fb-979a-f584aaaba66f",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Silver Cleaning Liquid",
+    "description": "Professional grade silver restoration liquid for workshop use.",
+    "retail_price": 350,
+    "wholesale_price": 180,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/iabtkpgz5ls.webp",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600843577",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/9xgimh2nmcp.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600844189",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/vjm4onj4nqr.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-900594",
+    "specifications": {
+      "slug": "dinanath-s-silver-cleaning-liquid-5004",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "5aa0a720-e2d5-4f7b-9d87-2fb88323661a",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Asbestoss Sheet Joint per kg",
+    "description": "Heat resistant soldering sheet for protecting surfaces.",
+    "retail_price": 200,
+    "wholesale_price": 60,
+    "wholesale_moq": 20,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/jjyw5nyfeop.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596708112",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cj5trkactc.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596708880",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/j3ay5rkj2w.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-916255",
+    "specifications": {
+      "slug": "asbestoss-sheet-joint-per-kg-1444",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "dda68bd8-6acc-41d6-8e74-923f97ecc986",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Gold Coin Card Pack",
+    "description": "Luxury gold coin packaging cards with certification slot.",
+    "retail_price": 35,
+    "wholesale_price": 18,
+    "wholesale_moq": 100,
+    "image": "/images/packaging/gold-coin-card.jpg",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-919742",
+    "specifications": {
+      "slug": "gold-coin-card-pack-2051",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "74fe19d5-1416-4abf-a782-fa7dda9a06b1",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's 10K Powder Coated Black Tweezer",
+    "description": "Anti-magnetic, powder-coated tweezers for electronics and jewelry work.",
+    "retail_price": 350,
+    "wholesale_price": 200,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/fpanwf3b4e6.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-922856",
+    "specifications": {
+      "slug": "dinanath-s-10k-powder-coated-black-tweezer-8216",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "82a4468c-9061-46d7-a7e7-8c9ef0fa4238",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's 15F Stainless Steel Tweezers 1dz",
+    "description": "Durable 15F tweezers, sold in a pack of 1 dozen. Ideal for general assembly.",
+    "retail_price": 600,
+    "wholesale_price": 350,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/wkofy66oyr8.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597443055",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/h2tghn0j9i.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597443655",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mx7a8672i8g.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-928614",
+    "specifications": {
+      "slug": "dinanath-s-15f-stainless-steel-tweezers-1dz-3852",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "c21051b7-8304-4301-b975-bd26d38b2520",
+    "created_at": "2026-04-25T10:45:18.799198+00:00",
+    "name": "Big Power Portable Ring Extender Machine Double Cone",
+    "description": "* Available Big 1 to 36 & Small 1 to 15\n* with Laser Marking\n* one side Grooved (for Stone ring)",
+    "retail_price": 1400,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/f7pirglzpru.png",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-984329",
+    "specifications": {
+      "slug": "big-power-portable-ring-extender-machine-double-cone-7032",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1020c97c-0f14-4de9-aae2-5bf1bc530727",
+    "created_at": "2026-04-25T10:59:00.918345+00:00",
+    "name": "Ring stretcher machine, export quality.",
+    "description": "A machine used to stretch rings and other ring-like structure items.",
+    "retail_price": 4000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ngxtioq6jo.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-992456",
+    "specifications": {
+      "slug": "ring-stretcher-machine-export-quality-9909",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "ba2b3f72-457d-43c4-9c2a-47916d620dbd",
+    "created_at": "2026-04-25T13:16:37.190313+00:00",
+    "name": "KUNDAN BOX RING",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/dnet57gkibu.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-051533",
+    "specifications": {
+      "slug": "kundan-box-ring-7498",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "02a2360b-76ad-49b7-a3a0-23c8fc23ad71",
+    "created_at": "2026-07-22T15:53:37.733761+00:00",
+    "name": "Ear and nose piercing gun with different piercing sizes.",
+    "description": "",
+    "retail_price": 800,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/0m7750kcti4n.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784751354220",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/fq9dwlrnc9i.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751359841",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/fjq4yt7mhwe.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-540585",
+    "specifications": {
+      "slug": "ear-and-nose-piercing-gun-with-different-piercing-sizes-5127",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "4af935ca-fb0f-4261-9a9d-592e018562d7",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Sharping Stone",
+    "description": "Dual-grit sharpening stone for gravers and knives.",
+    "retail_price": 350,
+    "wholesale_price": 200,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/km1ll4dg8c.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596966800",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/wmtl83vyi4.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596967442",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/1s5vv98w7yj.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596968118",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/fjlx2s0xr48.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-827521",
+    "specifications": {
+      "slug": "dinanath-s-sharping-stone-5936",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "8ac1b90f-f4fa-4132-b6a2-64920ec19f01",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's AA Tweezers",
+    "description": "High-precision AA stainless steel tweezers for diamond and gemstone handling.",
+    "retail_price": 250,
+    "wholesale_price": 150,
+    "wholesale_moq": 12,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/ic30fsheono.png",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-846474",
+    "specifications": {
+      "slug": "dinanath-s-aa-tweezers-2273",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1f78772d-af92-413c-8a33-6d88db2c6d25",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Copper Balls Alloy",
+    "description": "Pure copper alloy shots for alloying gold.",
+    "retail_price": 800,
+    "wholesale_price": 650,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/nmp6jclywis.webp",
+    "category": "Consumables",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596930658",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/w1lidkl0mn.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596933524",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2gwh319oqeo.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-851061",
+    "specifications": {
+      "slug": "dinanath-s-copper-balls-alloy-1460",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "2609d6da-e6cc-400f-8321-30a5f912c791",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Gold Bar Coin Card Pack",
+    "description": "Specialized packaging for gold bars. Secure and elegant.",
+    "retail_price": 45,
+    "wholesale_price": 25,
+    "wholesale_moq": 50,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/cyl049xu5hr.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-866482",
+    "specifications": {
+      "slug": "gold-bar-coin-card-pack-9060",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "19af66f2-2fad-4364-b183-c718e4e3605d",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Silver Coin Card Pack",
+    "description": "Premium quality card packaging for silver coins. Ideal for gifting and display.",
+    "retail_price": 25,
+    "wholesale_price": 12,
+    "wholesale_moq": 100,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/09syb250zx5l.png",
+    "category": "Packaging",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-869989",
+    "specifications": {
+      "slug": "silver-coin-card-pack-8046",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "157afa09-43b5-4074-beee-9be14540e8ee",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Sand Blast Media Dust Collector Machine",
+    "description": "Heavy-duty dust collector for sandblasting units. Keeps workshop air clean.",
+    "retail_price": 15500,
+    "wholesale_price": 12000,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/8tnar4rxi0i.png",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-875501",
+    "specifications": {
+      "slug": "sand-blast-media-dust-collector-machine-5339",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "1b73fca9-a96f-4c92-a8cf-1c9698c02192",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Tik-Tak Original Citric Acid",
+    "description": "High-purity citric acid for pickling and cleaning jewelry.",
+    "retail_price": 140,
+    "wholesale_price": 75,
+    "wholesale_moq": 50,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/kxwq9xbidrj.jpg",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-878740",
+    "specifications": {
+      "slug": "tik-tak-original-citric-acid-4210",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "b05f434b-4b01-4321-8acf-6913bd05e2f1",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Tik-Tak Boric Acid",
+    "description": "Pure boric acid powder for soldering and casting flux.",
+    "retail_price": 120,
+    "wholesale_price": 70,
+    "wholesale_moq": 50,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/f61ysme81js.jpg",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-883651",
+    "specifications": {
+      "slug": "tik-tak-boric-acid-6164",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "0c321eda-8078-4a03-ae35-27440af24697",
+    "created_at": "2026-07-21T02:13:06.581041+00:00",
+    "name": "Brass blowpipe Bunknal",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/5glk8imjumm.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599985439",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/foz6gfsgtjk.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599985787",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3nxaxcffhli.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-581672",
+    "specifications": {
+      "slug": "brass-blowpipe-bunknal-9439",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "03452ad4-c090-4e0b-86f6-f8b111fcebb7",
+    "created_at": "2026-07-21T02:11:45.190292+00:00",
+    "name": "Ceramic Heat Resistant Dish ",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/95w7scylqca.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599883958",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/sczuwsbtzpj.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599884293",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/o42p5ojxa5h.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-585007",
+    "specifications": {
+      "slug": "ceramic-heat-resistant-dish-8939",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "c59a9607-fbba-485f-9f5b-53979d762371",
+    "created_at": "2026-07-21T02:10:57.47452+00:00",
+    "name": "Black Kasauti gold testing stone small size",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/hw9rje9evpa.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599855892",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/uusflzgmz2.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599856256",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ol8g87elgc.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-588148",
+    "specifications": {
+      "slug": "black-kasauti-gold-testing-stone-small-size-3233",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "c9013e1d-8ced-47ab-b768-87acb1e7a857",
+    "created_at": "2026-07-21T02:10:25.163662+00:00",
+    "name": "Black Kasauti gold testing stone medium size",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/gvdoiw1tm6.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599816696",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/lg54rnz51yh.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599817009",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mlhbw14dt6.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-593076",
+    "specifications": {
+      "slug": "black-kasauti-gold-testing-stone-medium-size-1414",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "522234c9-1712-4f0a-a2af-82ea59da84e5",
+    "created_at": "2026-07-21T02:09:41.768265+00:00",
+    "name": "Black Kasauti gold testing stone Big size",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/4ss7hc2xeyf.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599773092",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/uvefpns8e6b.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599773432",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2epaaoa5d67.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-596675",
+    "specifications": {
+      "slug": "black-kasauti-gold-testing-stone-big-size-9772",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "91c6aebe-353b-404f-becf-42c76d09eb6a",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Portable Ring Extender",
+    "description": "Compact tool for slightly stretching rings without stones.",
+    "retail_price": 1100,
+    "wholesale_price": 800,
+    "wholesale_moq": 5,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/iah72ew3vj.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-969970",
+    "specifications": {
+      "slug": "portable-ring-extender-9281",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "a6b770e2-d5c2-498d-b666-06cbb7a54aa2",
+    "created_at": "2026-04-25T11:23:26.775287+00:00",
+    "name": "Steel Ring Sizer Export",
+    "description": "",
+    "retail_price": 400,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2t09wjjsz43.png",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "Dinanath's",
+    "model_number": "",
+    "sku": "DNS-004889",
+    "specifications": {
+      "slug": "steel-ring-sizer-export-6790",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "8a8e660d-828c-4eae-9a8a-3771db1543e4",
+    "created_at": "2026-07-21T01:52:21.00923+00:00",
+    "name": "Ear Piercing Gun Plastic with Marking Pen and Mirror",
+    "description": "Ear Piercing Gun Plastic with Marking Pen and Mirror",
+    "retail_price": 200,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/dn05x5yevog.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784598695470",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/80owdx7mp8.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784598695798",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/vq73h09rjp8.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-081599",
+    "specifications": {
+      "slug": "ear-piercing-gun-plastic-with-marking-pen-and-mirror-8621",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "3ac38a35-cf0a-4eff-9384-a1420bde6a71",
+    "created_at": "2026-07-22T15:54:30.661557+00:00",
+    "name": "Disposable ear piercing stud",
+    "description": "",
+    "retail_price": 1000,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/xcfvfgmz6n.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784751384150",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/d7ic0ocdgqb.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751384579",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/zu1q0lwsr.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-537178",
+    "specifications": {
+      "slug": "disposable-ear-piercing-stud-9027",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "42b0182f-5bdb-4f43-b4e5-af2b54157ca0",
+    "created_at": "2026-07-21T02:28:49.407016+00:00",
+    "name": "Dinanath's Half Round Stainless Steel Plier ",
+    "description": "",
+    "retail_price": 350,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/8uodcj278ye.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600918085",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/qkyt1oxqbl.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600920715",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/utbo7i55npm.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "Size- 5.5 Inch",
+    "model_number": "",
+    "sku": "DNS-547411",
+    "specifications": {
+      "slug": "dinanath-s-half-round-stainless-steel-plier-9946",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "b673e6e7-faed-44c5-b680-8d709b5542e1",
+    "created_at": "2026-07-21T02:22:01.503299+00:00",
+    "name": "Dinanath's loupe 18mm 10x magnification (chrome)",
+    "description": "Dinanath brand jeweler's loupe features a chrome finish with a 10x magnification power 18mm",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6l9wolrq72.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600404616",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/axjnb08i7al.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600404945",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/dm84fwbm076.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-558688",
+    "specifications": {
+      "slug": "dinanath-s-loupe-18mm-10x-magnification-chrome-1578",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "d58c7f46-d188-4ff4-93e1-3e70d7353da7",
+    "created_at": "2026-07-21T02:19:53.487574+00:00",
+    "name": "DinaNath's eye loupe 21mm 10x magnification",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cpxtixiizr.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600365618",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cwqf2b93zap.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600365989",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/sf1azezqq7.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-564950",
+    "specifications": {
+      "slug": "dinanath-s-eye-loupe-21mm-10x-magnification-7957",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "ace0c9b9-19bf-4593-967c-5586335738bc",
+    "created_at": "2026-07-21T02:18:54.531975+00:00",
+    "name": "DinaNath's jewelers eye loupe 18mm 10x magnification ",
+    "description": "",
+    "retail_price": 0,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/dra3j3a917j.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600305352",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mbf9co4sor.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600305768",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/o5c01f5j9a.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-568889",
+    "specifications": {
+      "slug": "dinanath-s-jewelers-eye-loupe-18mm-10x-magnification-3696",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "ca09f77a-d8e8-49ba-a653-26ecc01cc261",
+    "created_at": "2026-07-21T02:06:38.443251+00:00",
+    "name": "Dinanath's black half round plier Mini",
+    "description": "",
+    "retail_price": 200,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/2nvgmfqljh5.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784599571631",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/8pvpr5rmaio.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784599572014",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/km91m736s3m.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "SIZE- 4 Inch",
+    "model_number": "",
+    "sku": "DNS-601345",
+    "specifications": {
+      "slug": "dinanath-s-black-half-round-plier-mini-9466",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "a7b3d189-6b8c-415f-888a-17cc6d47a93d",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": " Clarion Imported Sand Frosting Media designed for gold and platinum jewelry surface finishing",
+    "description": " Clarion Imported Sand Frosting Media designed for gold and platinum jewelry surface finishing",
+    "retail_price": 1800,
+    "wholesale_price": 1400,
+    "wholesale_moq": 2,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/ujrlqakugvn.webp",
+    "category": "Chemicals",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784600136901",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/hkceca43f5.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784600137342",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/sp8j7rcggv.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-818036",
+    "specifications": {
+      "slug": "clarion-imported-sand-frosting-media-designed-for-gold-and-platinum-jewelry-surface-finishing-6605",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "ba6ad19d-d8ad-4721-b809-27d9c4080541",
+    "created_at": "2026-04-26T08:22:01.124623+00:00",
+    "name": "3\" Rolling Mill Machine/Tar Patti Machine for Gold & Silver Jewellery – Wire & Sheet Metal Forming Tool – Durable Heavy Duty (Multicolour)",
+    "description": "",
+    "retail_price": 5400,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/038gmqyhvd2p.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784751630915",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/a2ydncna6f.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751631287",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/iqy1jcwhn6k.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784751631671",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/rdei1rxi56.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-068560",
+    "specifications": {
+      "slug": "3-rolling-mill-machine-tar-patti-machine-for-gold-silver-jewellery-wire-sheet-metal-forming-tool-durable-heavy-duty-multicolour-8989",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "0dacb770-b182-4fa3-817c-cd1344d81382",
+    "created_at": "2026-07-25T06:00:17.019893+00:00",
+    "name": "Foredom Machine Hang Up Flexible Shaft Machine For Multipurpose Task Carving, Cutting, Grinding, Sanding, Polishing, and Craft Work - Professional Rotary Tool with Variable Speed Contro",
+    "description": "",
+    "retail_price": 2800,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/4ansj08gmq.webp",
+    "category": "Machinery",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-445584",
+    "specifications": {
+      "slug": "foredom-machine-hang-up-flexible-shaft-machine-for-multipurpose-task-carving-cutting-grinding-sanding-polishing-and-craft-work-professional-rotary-tool-with-variable-speed-contro-5584"
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "00b75c47-5bee-4b51-a97f-2309a87c1e66",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Half Round Nose Plier",
+    "description": "Ergonomic handle half-round pliers for everyday use.",
+    "retail_price": 250,
+    "wholesale_price": 200,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/gmbl4v0wny.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596537242",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/cfs3ekunw0q.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596537581",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/mn1phsqcy1.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "SIZE- 4.5 Inch",
+    "model_number": "",
+    "sku": "DNS-811960",
+    "specifications": {
+      "slug": "dinanath-s-half-round-nose-plier-7353",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "4ab8a038-ce21-4b01-8539-c5abc2bead65",
+    "created_at": "2026-02-16T11:56:35.192132+00:00",
+    "name": "Dinanath's Steel Nose Half Round Plier",
+    "description": "Precision round nose pliers for making loops and bends.",
+    "retail_price": 350,
+    "wholesale_price": 220,
+    "wholesale_moq": 10,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/poh09a3i7or.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784597242263",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/3f79ktjbqlk.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597243121",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/adjozf5oinq.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784597243761",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/9oey274n9wh.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "SIZE- 6.5 Inch",
+    "model_number": "",
+    "sku": "DNS-944112",
+    "specifications": {
+      "slug": "dinanath-s-steel-nose-half-round-plier-2957",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  },
+  {
+    "id": "3138669b-eb1e-4cd0-9b7d-36aa1673aa33",
+    "created_at": "2026-04-25T10:52:45.567611+00:00",
+    "name": "Ring Expanding Machine ",
+    "description": "Standard ring sizing machine for quick adjustments.",
+    "retail_price": 900,
+    "wholesale_price": 0,
+    "wholesale_moq": 1,
+    "image": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/adbvurdxn4n.webp",
+    "category": "Tools",
+    "in_stock": true,
+    "reviews": [],
+    "gallery": [
+      {
+        "id": "1784596433777",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/6uawkfn4ws.webp",
+        "type": "image"
+      },
+      {
+        "id": "1784596445127",
+        "url": "https://rdothiivupbtuprwknqk.supabase.co/storage/v1/object/public/products/product-media/o439krds3o.webp",
+        "type": "image"
+      }
+    ],
+    "group_id": null,
+    "variant_attributes": {},
+    "variants": [],
+    "variant_type": "Size",
+    "quantity": 100,
+    "brand": "",
+    "model_number": "",
+    "sku": "DNS-989141",
+    "specifications": {
+      "slug": "ring-expanding-machine-1339",
+      "seo_title": "",
+      "seo_keywords": "",
+      "seo_description": ""
+    },
+    "features": [],
+    "weight": "",
+    "dimensions": {
+      "width": "",
+      "height": "",
+      "length": ""
+    },
+    "warranty_info": "",
+    "video_url": "",
+    "meta_title": "",
+    "meta_description": ""
+  }
+]

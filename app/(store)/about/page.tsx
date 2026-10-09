@@ -25,43 +25,43 @@ export default function About() {
     const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
     const stats = [
-        { label: 'Founded', value: '1980', icon: <History size={16} /> },
-        { label: 'Global Clients', value: '4,500+', icon: <Users size={16} /> },
-        { label: 'Precision Tools', value: '12k+', icon: <Cpu size={16} /> },
-        { label: 'Export Nodes', value: '42', icon: <Globe size={16} /> },
+        { label: 'Founded', value: '1960', icon: <History size={16} /> },
+        { label: 'Heritage', value: '60+ Yrs', icon: <Users size={16} /> },
+        { label: 'Catalog', value: '110+ Units', icon: <Cpu size={16} /> },
+        { label: 'Location', value: 'Chandni Chowk', icon: <Globe size={16} /> },
     ];
 
     const timeline = [
         { 
-            year: '1980', 
+            year: '1960', 
             title: 'The Foundation', 
-            desc: 'Dinanath & Sons established in Maliwara, Chandni Chowk, initially focusing on specialized hand tools for local jewelry workshops.',
+            desc: 'Dinanath & Sons established in Maliwara, Chandni Chowk by the Soni family, supplying hand-forged tools, tweezers, and balances to traditional goldsmiths.',
             image: '/about_page_timeline_asset_1777173615106.png'
         },
         { 
-            year: '1995', 
-            title: 'Industrial Pivot', 
-            desc: 'Introduction of motorized equipment and automated polishing machines, transitioning from hand tools to factory setups.',
+            year: '1985', 
+            title: 'Workshop Modernization', 
+            desc: 'Introduction of combination rolling mills, flexible shaft machines, and motor-driven polishing buff systems for expanding workshops.',
             image: '/industrial_expo_booth.png'
         },
         { 
             year: '2010', 
-            title: 'Global Connectivity', 
-            desc: 'Launched global distribution networks, supplying metallurgical tools to manufacturing hubs in Dubai, Italy, and Thailand.',
+            title: 'Equipment & Consumables', 
+            desc: 'Partnered with renowned manufacturers to supply micromotors (Marathon, Saeshin), lost-wax casting systems, and coin assay packaging across India.',
             image: '/modern_factory_floor.png'
         },
         { 
             year: '2024', 
-            title: 'Digital Engineering', 
-            desc: 'Implementation of smart inventory systems and AI-driven precision testing for the next generation of industrial manufacturing.',
+            title: 'Direct Pan-India Logistics', 
+            desc: 'Digital technical catalog launch providing transparent workshop pricing and surface freight dispatch to jewellery artisans in every state.',
             image: '/about_page_modern_engineering_1777173637011.png'
         }
     ];
 
     const values = [
-        { title: 'Extreme Precision', desc: 'Every micron matters. Our tools are calibrated to global metallurgical standards.', icon: <Target className="text-gold-primary" size={20} /> },
-        { title: 'Authentic Heritage', desc: 'Forty years of on-the-ground expertise in the heart of the jewelry industry.', icon: <Award className="text-blue-500" size={20} /> },
-        { title: 'Future-Ready', desc: 'Bridging the gap between traditional goldsmithing and modern automated manufacturing.', icon: <Zap className="text-emerald-500" size={20} /> },
+        { title: 'Bench Quality', desc: 'Crafted for continuous daily workshop duty in demanding jewelry manufacturing environments.', icon: <Target className="text-gold-primary" size={20} /> },
+        { title: 'Authentic Heritage', desc: 'Over sixty years of continuous hands-on experience in the heart of Delhi jewelry quarter.', icon: <Award className="text-blue-500" size={20} /> },
+        { title: 'Direct Value', desc: 'Bridging workshop artisans directly with genuine manufacturers and fair pricing.', icon: <Zap className="text-emerald-500" size={20} /> },
     ];
 
     return (
@@ -84,7 +84,7 @@ export default function About() {
                         animate={{ opacity: 1, y: 0 }}
                         className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-gold text-gold-primary text-[8.5px] font-black uppercase tracking-[0.25em] mb-4 shadow-xs"
                     >
-                        <ShieldCheck size={12} /> Industrial Authority • Since 1980
+                        <ShieldCheck size={12} /> Workshop Authority • Established 1960
                     </motion.div>
                     
                     <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-4 uppercase text-text-primary select-none font-display">

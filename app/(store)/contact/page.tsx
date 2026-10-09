@@ -61,7 +61,7 @@ export default function Contact() {
     };
 
     const businessInfo = {
-        address: '1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi 110006',
+        address: '1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi - 110006, India',
         phone: '9953435647',
         email: 'info@dinanathandsons.com',
         hours: '11:00 AM - 8:00 PM (Mon-Sat)',
@@ -93,20 +93,20 @@ export default function Contact() {
 
     const faqs = [
         {
-            q: "What is the typical lead time for industrial machinery?",
-            a: "Standard retail tools ship within 24-48 hours. Large industrial units (e.g., Rolling Mills) typically have a 2-3 week lead time depending on calibration requirements and global shipping nodes."
+            q: "What is the typical lead time for workshop machinery?",
+            a: "Standard bench tools ship within 24-48 hours. Workshop machinery units (e.g., Rolling Mills) dispatch via surface freight within 2 to 4 business days."
         },
         {
-            q: "Do you offer on-site machine calibration?",
-            a: "Yes. For wholesale partners, our technical team provides on-site installation and calibration across India. International support is handled via our digital engineering interface or local certified partners."
+            q: "Do you offer machinery installation guidance?",
+            a: "Yes. Our technical team provides setup guidance, video walkthroughs, and phone support for micromotors, casting units, and rolling mills across India."
         },
         {
             q: "Can I request custom tool modifications?",
-            a: "Absolutely. We specialize in metallurgical engineering and can modify tool specifications (hardness, dimensions, voltage) to meet specific manufacturing requirements."
+            a: "Yes. We can assist with specific workshop requirements including custom plier modifications, mandrel sizing, and specialized workshop consumables."
         },
         {
-            q: "How do I verify the authenticity of a Dinanath tool?",
-            a: "Every tool comes with a unique serial number and a Holographic Certification Shield. You can verify your serial number through our digital database in the account portal."
+            q: "Can I inspect tools in person before purchase?",
+            a: "Yes! You are welcome to visit our central storefront at 1914, Chatta Madan Gopal, Maliwara, Chandni Chowk, Delhi - 110006 for in-person product demonstrations and workshop consultation."
         }
     ];
 
@@ -156,7 +156,7 @@ export default function Contact() {
                             </h1>
                         </div>
                         <p className="text-text-secondary text-sm sm:text-base font-medium max-w-sm mb-2 leading-relaxed">
-                            Based in Delhi, India. Helping jewelry manufacturing setups in over 40 countries.
+                            Central Store in Chandni Chowk, Delhi. Supplying goldsmith workshops and manufacturing setups across India.
                         </p>
                     </motion.div>
  

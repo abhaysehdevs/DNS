@@ -1,112 +1,38 @@
 import { MetadataRoute } from 'next'
 import { supabase } from '@/lib/supabase'
-import { getCanonicalProductSlug } from '@/lib/slug'
+import { getCanonicalProductSlug, normalizeProduct } from '@/lib/slug'
 import { CATEGORIES } from '@/lib/categories'
+import { BLOG_POSTS } from '@/lib/blog-data'
 import { initialBlogPosts } from '@/lib/data'
+import { SITE_CONFIG } from '@/lib/site-config'
 
-export const revalidate = 3600 // Cache and revalidate every 1 hour
+export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://dinanathandsons.com'
-    const now = new Date()
+    const baseUrl = SITE_CONFIG.baseUrl
 
-    // 1. Core High-Priority Static Pages
+    // 1. Core High-Priority Static Pages (NO google-merchant-feed.xml, NO changefreq/priority)
     const staticRoutes: MetadataRoute.Sitemap = [
-        {
-            url: baseUrl,
-            lastModified: now,
-            changeFrequency: 'daily',
-            priority: 1.0,
-        },
-        {
-            url: `${baseUrl}/shop`,
-            lastModified: now,
-            changeFrequency: 'daily',
-            priority: 0.95,
-        },
-        {
-            url: `${baseUrl}/new-arrivals`,
-            lastModified: now,
-            changeFrequency: 'daily',
-            priority: 0.9,
-        },
-        {
-            url: `${baseUrl}/offers`,
-            lastModified: now,
-            changeFrequency: 'weekly',
-            priority: 0.85,
-        },
-        {
-            url: `${baseUrl}/blog`,
-            lastModified: now,
-            changeFrequency: 'weekly',
-            priority: 0.85,
-        },
-        {
-            url: `${baseUrl}/about`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/contact`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/faq`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.75,
-        },
-        {
-            url: `${baseUrl}/track-order`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/shipping-policy`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/return-policy`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/terms`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/privacy-policy`,
-            lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/google-merchant-feed.xml`,
-            lastModified: now,
-            changeFrequency: 'daily',
-            priority: 0.8,
-        },
+        { url: baseUrl },
+        { url: `${baseUrl}/shop` },
+        { url: `${baseUrl}/new-arrivals` },
+        { url: `${baseUrl}/offers` },
+        { url: `${baseUrl}/blog` },
+        { url: `${baseUrl}/about` },
+        { url: `${baseUrl}/contact` },
+        { url: `${baseUrl}/faq` },
+        { url: `${baseUrl}/shipping-policy` },
+        { url: `${baseUrl}/return-policy` },
+        { url: `${baseUrl}/terms` },
+        { url: `${baseUrl}/privacy-policy` },
     ]
 
     // 2. Canonical Category Routes
     const categoryRoutes: MetadataRoute.Sitemap = CATEGORIES.map(cat => ({
         url: `${baseUrl}/shop/category/${cat.slug}`,
-        lastModified: now,
-        changeFrequency: 'daily',
-        priority: 0.9,
     }))
 
-    // 3. Dynamic Canonical Product Routes with Image Metadata
+    // 3. Dynamic Canonical Product Routes with Image Metadata & Real lastmod
     let productRoutes: MetadataRoute.Sitemap = []
     try {
         const { data: products } = await supabase
@@ -121,37 +47,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         productRoutes = catalogProducts
             .map((product: any) => {
-                const slug = getCanonicalProductSlug(product)
+                const normalized = normalizeProduct(product)
+                const slug = getCanonicalProductSlug(normalized)
                 if (!slug || seenSlugs.has(slug)) return null
                 seenSlugs.add(slug)
 
-                const rawImg = product.image || product.image_url || product.primaryImage
+                const rawImg = normalized.image || normalized.primaryImage
                 const imgUrl = rawImg ? (rawImg.startsWith('http') ? rawImg : `${baseUrl}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`) : undefined
 
-                return {
+                const entry: MetadataRoute.Sitemap[number] = {
                     url: `${baseUrl}/shop/${slug}`,
-                    lastModified: new Date(product.updated_at || product.created_at || now),
-                    changeFrequency: 'weekly' as const,
-                    priority: 0.8,
                     images: imgUrl ? [imgUrl] : undefined,
                 }
+
+                if (product.updated_at) {
+                    entry.lastModified = new Date(product.updated_at)
+                }
+
+                return entry
             })
             .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
     } catch (error) {
         console.error('Error generating product routes for sitemap:', error)
     }
 
-    // 4. Dynamic Blog Routes
+    // 4. Dynamic Blog Routes (Combining Supabase and local posts)
     let blogRoutes: MetadataRoute.Sitemap = []
     try {
+        const seenBlog = new Set<string>()
+        const combinedPosts: any[] = [...BLOG_POSTS]
+
         const { data: dbPosts } = await supabase
             .from('blog_posts')
             .select('*')
 
-        const posts = dbPosts && dbPosts.length > 0 ? dbPosts : initialBlogPosts
-        const seenBlog = new Set<string>()
+        if (dbPosts && dbPosts.length > 0) {
+            combinedPosts.push(...dbPosts)
+        } else {
+            combinedPosts.push(...initialBlogPosts)
+        }
 
-        blogRoutes = posts
+        blogRoutes = combinedPosts
             .map((post: any) => {
                 const slug = post.slug || post.id
                 if (!slug || seenBlog.has(slug)) return null
@@ -160,21 +96,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 const rawImg = post.cover_image || post.image
                 const imgUrl = rawImg ? (rawImg.startsWith('http') ? rawImg : `${baseUrl}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`) : undefined
 
-                return {
+                const entry: MetadataRoute.Sitemap[number] = {
                     url: `${baseUrl}/blog/${slug}`,
-                    lastModified: new Date(post.updated_at || post.created_at || now),
-                    changeFrequency: 'weekly' as const,
-                    priority: 0.75,
                     images: imgUrl ? [imgUrl] : undefined,
                 }
+
+                if (post.updated_at) {
+                    entry.lastModified = new Date(post.updated_at)
+                }
+
+                return entry
             })
             .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
     } catch (error) {
-        blogRoutes = initialBlogPosts.map((post) => ({
-            url: `${baseUrl}/blog/${post.id}`,
-            lastModified: now,
-            changeFrequency: 'weekly',
-            priority: 0.75,
+        blogRoutes = BLOG_POSTS.map(post => ({
+            url: `${baseUrl}/blog/${post.id}`
         }))
     }
 

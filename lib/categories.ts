@@ -1,3 +1,5 @@
+import { SITE_CONFIG } from './site-config';
+
 export interface CategoryDefinition {
     slug: string;
     aliases: string[];
@@ -18,12 +20,12 @@ export const CATEGORIES: CategoryDefinition[] = [
         aliases: ['tools', 'hand-tools', 'goldsmith-tools'],
         name: 'Hand Tools',
         categoryKey: 'Tools',
-        seoTitle: 'Goldsmith Hand Tools, Pliers & Precision Instruments',
-        seoDescription: 'Buy professional goldsmith tweezers, pliers, saw frames, and ring mandrels in Maliwara, Chandni Chowk. Precision-calibrated for master jewellers.',
+        seoTitle: 'Goldsmith Hand Tools, Pliers & Bench Instruments',
+        seoDescription: 'Professional goldsmith tweezers, pliers, saw frames, piercing blades, and ring mandrels in Maliwara, Chandni Chowk, Delhi.',
         h1: 'Goldsmith Hand Tools & Precision Bench Instruments',
-        subtitle: 'Engineered for master goldsmiths, stone setters, and manufacturing workshops since 1960',
-        description: 'Equip your jewellery bench with master-grade hand tools designed for precision goldsmithing, stone setting, wire bending, and delicate micro-soldering. From non-magnetic stainless steel tweezers to forged steel shears (katiya), ring mandrels, and needle files, our collection has served Indian craftsmen for over six decades.',
-        wholesaleNote: 'Available for both individual artisans and B2B wholesale workshop bulk orders with MOQ pricing and pan-India logistics.',
+        subtitle: 'Crafted for master goldsmiths, stone setters, and jewelry manufacturing workshops',
+        description: 'Equip your jewellery bench with precision hand tools designed for goldsmithing, stone setting, wire forming, and bench assembly. From non-magnetic stainless steel tweezers to forged steel shears (katiya), ring mandrels, saw frames, and needle files, our tools support workshops across India.',
+        wholesaleNote: 'Available for artisans and wholesale workshop bulk orders with MOQ pricing and pan-India logistics.',
         keywords: [
             'goldsmith tools',
             'jewellery tools Chandni Chowk',
@@ -39,18 +41,19 @@ export const CATEGORIES: CategoryDefinition[] = [
         aliases: ['machinery', 'machines', 'equipment'],
         name: 'Machinery & Equipment',
         categoryKey: 'Machinery',
-        seoTitle: 'Jewellery Making Machinery, Dust Collectors & Equipment',
-        seoDescription: 'Heavy-duty jewellery workshop machinery, casting equipment, sandblasters, and ring stretchers. Wholesale factory pricing and nationwide delivery.',
+        seoTitle: 'Jewellery Workshop Machinery & Motor Equipment',
+        seoDescription: 'High-torque micromotors, combination rolling mills, sandblast dust collectors, water jets, and magnetic polishers with pan-India delivery.',
         h1: 'Jewellery Manufacturing Machinery & Workshop Equipment',
-        subtitle: 'Industrial power, precision calibration, and durable engineering for production workshops',
-        description: 'Industrial-grade machinery engineered for modern jewellery manufacturing, melting, casting, and finishing operations. Dinanath & Sons supplies heavy-duty sandblast dust collectors, ring stretchers, rolling mill accessories, and melting equipment backed by technical advice and genuine spare parts.',
-        wholesaleNote: 'B2B wholesale pricing available with pan-India transport and workshop calibration support.',
+        subtitle: 'Durable rotary motors, rolling mills, and surface finishing machinery',
+        description: 'Industrial machinery engineered for modern jewelry manufacturing, melting, casting, and finishing operations. Dinanath & Sons supplies high-torque micromotors (Marathon, Saeshin), combination rolling mills, sandblast dust collectors, magnetic polishers, and flexible shaft systems with spare parts and technical advice.',
+        wholesaleNote: 'B2B wholesale pricing available with surface freight transport across India.',
         keywords: [
             'jewellery making machinery',
             'jewelry machinery Delhi',
+            'marathon micromotor India',
+            'saeshin micromotor',
             'sand blasting dust collector',
-            'ring stretcher reducing machine',
-            'casting equipment India',
+            'rolling mill machine Delhi',
             'jewellery workshop machinery supplier'
         ]
     },
@@ -59,19 +62,19 @@ export const CATEGORIES: CategoryDefinition[] = [
         aliases: ['consumables', 'polishing', 'buffs'],
         name: 'Polishing & Consumables',
         categoryKey: 'Consumables',
-        seoTitle: 'Jewellery Polishing Buffs, Compounds & Soldering Flux',
-        seoDescription: 'High-lustre muslin cloth buffs, diamond compounds, soldering joint paper, and copper alloy balls for jewellery manufacturing and finishing.',
+        seoTitle: 'Jewellery Polishing Buffs, Sand Frosting & Consumables',
+        seoDescription: 'Cotton muslin polishing buff wheels, Clarion sand frosting media, copper alloying balls, lakh batti, and high-temp heat sheets.',
         h1: 'Jewellery Polishing Buffs & Finishing Consumables',
-        subtitle: 'High-lustre mirror finishing wheels and metallurgical soldering consumables',
-        description: 'Achieve flawless mirror finishes on gold, platinum, and silver jewellery. Our polishing catalog includes multi-layer stitched cotton muslin buffs, premium compounds, soldering alloy joint sheets, butane refills, and pure copper alloying balls for jewellery casting workshops.',
-        wholesaleNote: 'Bulk packs available in cartons of 50+ units for manufacturing units and polishing factories.',
+        subtitle: 'Lustre buffing wheels, abrasive frosting media, and bench consumables',
+        description: 'Essential polishing wheels, abrasive media, and bench consumables for jewelry manufacturing and finishing. Catalog includes multi-layer stitched cotton muslin buffs, imported Clarion sand frosting media, pure copper alloying balls for gold, natural lakh sealing wax, and high-temp jointing sheets.',
+        wholesaleNote: 'Bulk packs available in cartons for manufacturing units and polishing factories.',
         keywords: [
             'jewellery polishing buffs',
             'cloth buff for jewelry',
-            'soldering joint paper',
+            'sand frosting media',
             'copper alloy balls for gold',
-            'polishing consumables wholesale',
-            'jewellery finishing supplies Delhi'
+            'lakh batti for stone setting',
+            'polishing consumables wholesale'
         ]
     },
     {
@@ -79,19 +82,19 @@ export const CATEGORIES: CategoryDefinition[] = [
         aliases: ['packaging', 'display', 'packaging-display'],
         name: 'Packaging & Display',
         categoryKey: 'Packaging',
-        seoTitle: 'Jewellery Packaging, Coin Packing Cards & Display Trays',
-        seoDescription: 'Tamper-proof silver & gold coin packing cards, barcode price tags, and luxury velvet display trays for retail jewelers across India.',
+        seoTitle: 'Jewellery Packaging, Coin Cards & Price Tags',
+        seoDescription: 'Tamper-evident gold and silver coin packing cards, luxury Kundan set presentation boxes, jewelry hallmark price tags, and wrapping paper.',
         h1: 'Jewellery Packaging, Coin Packing Cards & Display',
-        subtitle: 'Tamper-evident coin cards, velvet displays, and high-definition retail packaging',
-        description: 'Elevate your jewellery presentation with certified coin packing cards for silver and gold coins, tamper-evident security blister cards, and durable barcode-ready jewellery price tags. Trusted by Indian jewellers for retail counter branding and bullion gifting.',
-        wholesaleNote: 'Wholesale quantities starting from 100-pack bundles with custom printing inquiries accepted.',
+        subtitle: 'Security coin blister cards, velvet presentation boxes, and retail packaging',
+        description: 'Elevate your jewellery presentation with certified coin packing cards for silver and gold coins, tamper-evident blister packaging, luxury velvet Kundan set boxes, and durable jewellery price tags for retail branding.',
+        wholesaleNote: 'Wholesale quantities starting from bundle packs with pan-India dispatch.',
         keywords: [
             'coin packing card',
             'silver coin packing card',
             'gold coin packaging card',
+            'kundan set box wholesale',
             'jewellery price tags',
-            'jewellery display trays',
-            'jewellery packaging wholesale Chandni Chowk'
+            'jewellery packaging Chandni Chowk'
         ]
     },
     {
@@ -99,38 +102,19 @@ export const CATEGORIES: CategoryDefinition[] = [
         aliases: ['chemicals', 'cleaning', 'flux'],
         name: 'Cleaning & Flux Solutions',
         categoryKey: 'Chemicals',
-        seoTitle: 'Jewellery Cleaning Solutions, Borax & Liquid Suhaga',
-        seoDescription: 'Original liquid suhaga flux, solid borax goti, and instant silver cleaning dip for precious metal soldering, refining, and casting.',
+        seoTitle: 'Jewellery Soldering Flux, Suhaga Borax & Silver Cleaners',
+        seoDescription: 'Liquid suhaga flux, natural solid borax goti, Tik-Tak instant silver cleaning dip, citric acid, and boric acid for jewelry workshops.',
         h1: 'Suhaga Borax Soldering Flux & Silver Cleaners',
         subtitle: 'High-purity metallurgical fluxes and instant chemical cleaning solutions',
-        description: 'Essential metallurgical fluxes and chemical cleaning solutions for gold melting, soldering, and silver tarnish removal. Featuring pure natural Suhaga Goti (solid borax), concentrated liquid flux, and instant dip silver cleaners for bench jewelers and polishing units.',
-        wholesaleNote: 'Available in retail bottles and bulk workshop barrels with secure pan-India chemical courier.',
+        description: 'Essential metallurgical fluxes and cleaning solutions for gold soldering, melting, and silver tarnish removal. Featuring pure natural Suhaga Goti (solid borax), concentrated liquid flux, Tik-Tak silver cleaner dip, laboratory-grade citric acid, and boric acid.',
+        wholesaleNote: 'Available in retail bottles and workshop packs with pan-India surface delivery.',
         keywords: [
             'suhaga borax flux',
             'suhaga goti',
             'liquid suhaga for jewelry',
-            'silver cleaner dip',
-            'tik tak silver polish',
+            'tik tak silver cleaner',
+            'citric acid pickle bath',
             'jewellery flux supplier Delhi'
-        ]
-    },
-    {
-        slug: 'bullion',
-        aliases: ['bullion'],
-        name: 'Certified Bullion',
-        categoryKey: 'Bullion',
-        seoTitle: 'Certified 24K Gold Bars & 999 Fine Silver Coins',
-        seoDescription: 'Authentic hallmarked 24K gold minted bars and 999 pure silver coins with assay certificates. Ideal for workshop alloying and corporate gifting.',
-        h1: 'Certified Gold Bars & Pure Silver Bullion Coins',
-        subtitle: 'Hallmarked 999 pure silver coins and 24K gold bars in tamper-proof assay cards',
-        description: 'Hallmarked 24K gold bars and 999 fine silver coins sealed in tamper-proof security assay packaging. Ideal for retail investment, corporate gifting, and master alloy casting in jewellery workshops.',
-        wholesaleNote: 'Direct live bullion rates with insured transit delivery across India.',
-        keywords: [
-            'silver coin 20g pure',
-            '24k gold bar 1g',
-            'gold bar 5g',
-            'hallmarked bullion Chandni Chowk',
-            'pure silver coins wholesale'
         ]
     },
     {
@@ -138,18 +122,35 @@ export const CATEGORIES: CategoryDefinition[] = [
         aliases: ['casting', 'metallurgy', 'casting & metallurgy', 'welding'],
         name: 'Casting & Metallurgy',
         categoryKey: 'Casting & Metallurgy',
-        seoTitle: 'Jewellery Casting Machines, Crucibles & Metallurgy Supplies',
-        seoDescription: 'High-grade graphite crucibles, manual casting machines, ingot moulds, and melting equipment for gold and silver smiths.',
-        h1: 'Jewellery Casting Equipment & Metallurgical Workshop Tools',
-        subtitle: 'Precision casting machinery, graphite crucibles, and high-temp melting accessories',
-        description: 'Professional metallurgy and lost-wax casting supplies engineered for master goldsmiths and silver casting units. Featuring high-density graphite crucibles, manual centrifugal casting machines, ingot moulds, and electric furnaces.',
-        wholesaleNote: 'Available for jewellery manufacturers with pan-India delivery and direct factory pricing.',
+        seoTitle: 'Jewellery Casting Machines, Crucibles & Ingot Moulds',
+        seoDescription: 'High-density graphite crucibles, 2-in-1 manual casting machines, digital wax injectors, electric furnaces, and reversible ingot moulds.',
+        h1: 'Jewellery Casting Equipment & Metallurgy Supplies',
+        subtitle: 'Graphite melting crucibles, casting apparatus, and ingot moulds',
+        description: 'Professional metallurgy and lost-wax casting supplies engineered for goldsmiths and silver casting units. Featuring high-density graphite crucibles, digital vacuum wax injectors, 2-in-1 manual casting machines, electric melting furnaces, and heavy-duty ingot moulds.',
+        wholesaleNote: 'Available for jewellery manufacturers with pan-India delivery and direct workshop pricing.',
         keywords: [
             'jewellery casting machine',
             'graphite crucible for gold',
             'ingot mould gold silver',
-            'casting metallurgy supplies',
+            'vacuum wax injector jewelry',
             'jewellery melting furnace'
+        ]
+    },
+    {
+        slug: 'bullion',
+        aliases: ['bullion'],
+        name: 'Certified Bullion Packaging',
+        categoryKey: 'Bullion',
+        seoTitle: 'Certified Coin Packaging & Bullion Cards',
+        seoDescription: 'Assay certified tamper-evident coin packing cards and blister cases for 24K gold bars and 999 fine silver coins.',
+        h1: 'Certified Bullion Packaging & Coin Cards',
+        subtitle: 'Tamper-evident assay blister cards for gold bars and fine silver coins',
+        description: 'Protective security blister assay cards and packaging designed for pure gold minted bars and fine silver coins. Preserves assay certification and protects mint finish for retail counters and gifting.',
+        wholesaleNote: 'Wholesale packs available for bullion dealers and retail jewelers.',
+        keywords: [
+            'gold bar packing card',
+            'silver coin blister pack',
+            'bullion packaging Chandni Chowk'
         ]
     }
 ];

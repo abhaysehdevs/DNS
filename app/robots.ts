@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { SITE_CONFIG } from '@/lib/site-config'
 
 export const dynamic = 'force-static'
 
@@ -7,12 +8,10 @@ export default function robots(): MetadataRoute.Robots {
         rules: [
             {
                 userAgent: '*',
-                allow: '/',
+                allow: ['/', '/api/public/'],
                 disallow: [
                     '/admin',
                     '/admin/*',
-                    '/api',
-                    '/api/*',
                     '/account',
                     '/account/*',
                     '/cart',
@@ -25,13 +24,17 @@ export default function robots(): MetadataRoute.Robots {
                     '/order-confirmation',
                     '/order-confirmation/*',
                     '/wishlist',
-                    '/seed',
                     '/auth',
                     '/auth/*',
+                    '/*?sort=',
+                    '/*&sort=',
+                    '/*?q=',
+                    '/*?search=',
+                    '/*?filter',
+                    '/*?cat=',
                 ],
             }
         ],
-        sitemap: 'https://dinanathandsons.com/sitemap.xml',
-        host: 'https://dinanathandsons.com',
+        sitemap: `${SITE_CONFIG.baseUrl}/sitemap.xml`,
     }
 }

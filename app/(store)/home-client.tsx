@@ -15,11 +15,11 @@ import { getAllBlogPosts } from '@/lib/blog';
 import { normalizeProduct } from '@/lib/slug';
 
 const homeCategories = [
-    { name: 'Hand Tools', count: '120+ Products', img: '/categories/hand-tools.png', href: '/shop/category/hand-tools' },
-    { name: 'Machines', count: '45+ Products', img: '/categories/machinery.png', href: '/shop/category/machines' },
-    { name: 'Polishing & Buffs', count: '60+ Products', img: '/categories/cleaning-buffs.png', href: '/shop/category/polishing' },
-    { name: 'Cleaning Solutions', count: '25+ Products', img: '/categories/cleaning-solutions.png', href: '/shop/category/chemicals' },
-    { name: 'Packaging & Cards', count: '30+ Products', img: '/categories/packaging-and-cards.png', href: '/shop/category/packaging' }
+    { name: 'Hand Tools', count: '63 Products', img: '/categories/hand-tools.png', href: '/shop/category/hand-tools' },
+    { name: 'Machines', count: '16 Products', img: '/categories/machinery.png', href: '/shop/category/machines' },
+    { name: 'Polishing & Buffs', count: '14 Products', img: '/categories/cleaning-buffs.png', href: '/shop/category/polishing' },
+    { name: 'Cleaning Solutions', count: '8 Products', img: '/categories/cleaning-solutions.png', href: '/shop/category/chemicals' },
+    { name: 'Packaging & Cards', count: '12 Products', img: '/categories/packaging-and-cards.png', href: '/shop/category/packaging' }
 ];
 
 export function HomeClient() {

@@ -19,6 +19,9 @@ import {
     MessageSquare, Maximize2, X, ChevronLeft, ChevronRight, ZoomIn
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getSanitizedDescription } from '@/lib/product-copy';
+import { getCanonicalProductSlug } from '@/lib/slug';
+import { RETURN_POLICY } from '@/lib/policies';
 
 export default function ProductClient({ id, initialProduct }: { id: string; initialProduct?: any }) {
     const router = useRouter();
@@ -241,7 +244,7 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                 {/* 1. BREADCRUMBS PATH */}
                 <div className="mb-1.5 sm:mb-5 text-left">
                     <Breadcrumbs items={[
-                        { label: 'Inventory', href: '/shop' },
+                        { label: 'Shop', href: '/shop' },
                         { 
                             label: product.category, 
                             href: `/shop/category/${
@@ -370,13 +373,12 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                                 {isPriceInvalid ? (
                                     <div className="space-y-1">
                                         <span className="text-lg sm:text-2xl font-black text-[#D12A1C] uppercase tracking-wider block">Out of Stock</span>
-                                        <p className="text-[#71717A] text-[9px] sm:text-[10px] font-bold uppercase">This product is currently out of stock or price is pending update.</p>
+                                        <p className="text-[#71717A] text-[9px] sm:text-[10px] font-bold uppercase">This product is currently out of stock. Contact our workshop desk for restock inquiries.</p>
                                     </div>
                                 ) : (
                                     <>
                                         <span className="text-xl sm:text-3xl md:text-4xl font-black text-[#18181B] tracking-tight">₹{activePrice.toLocaleString('en-IN')}</span>
-                                        <span className="text-[#71717A] text-xs sm:text-sm line-through uppercase font-bold">₹{originalPrice.toLocaleString('en-IN')}</span>
-                                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[8.5px] sm:text-[9.5px] font-bold uppercase tracking-wider">({discountPercent}% OFF)</span>
+                                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[8.5px] sm:text-[9.5px] font-bold uppercase tracking-wider">Inclusive of GST</span>
                                     </>
                                 )}
                             </div>
@@ -498,7 +500,7 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                             <div className="pt-1 flex items-center justify-between">
                                 <a 
                                     href={`https://api.whatsapp.com/send?phone=919953435647&text=${encodeURIComponent(
-                                        `Hello Dinanath & Sons, I would like to make an inquiry for "${product.name}"${selectedVariant ? ` (Variant: ${selectedVariant.name})` : ''}.\nProduct Link: https://dinanathandsons.com/shop/${product.slug || product.id}`
+                                        `Hello Dinanath & Sons, I would like to make an inquiry for "${product.name}"${selectedVariant ? ` (Variant: ${selectedVariant.name})` : ''}.\nProduct Link: https://dinanathandsons.com/shop/${getCanonicalProductSlug(product)}`
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -509,6 +511,16 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                                 </a>
                                 <span className="text-[9px] text-[#71717A] font-mono font-bold uppercase">Direct Workshop Desk</span>
                             </div>
+                        </div>
+
+                        {/* PRODUCT DESCRIPTION & WORKSHOP OVERVIEW */}
+                        <div className="bg-white border border-[#E8E2D5] rounded-2xl p-4 sm:p-5 space-y-2 shadow-xs text-left">
+                            <span className="text-[8.5px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-[#966E2E] block border-b border-[#E8E2D5] pb-1.5">
+                                Product Description & Workshop Overview
+                            </span>
+                            <p className="text-xs sm:text-sm text-[#52525B] leading-relaxed font-normal">
+                                {getSanitizedDescription(product)}
+                            </p>
                         </div>
 
                         {/* PRODUCT TECHNICAL SPECIFICATIONS PANEL (ONLY RENDERED IF SPECIFICATIONS EXIST) */}
@@ -609,10 +621,10 @@ export default function ProductClient({ id, initialProduct }: { id: string; init
                                 </div>
                                 <div>
                                     <h4 className="text-xs font-bold text-[#18181B] uppercase tracking-wider flex items-center gap-2">
-                                        Return Policy Notice
+                                        7-Day Replacement Guarantee
                                     </h4>
                                     <p className="text-[10px] text-[#71717A] font-medium leading-relaxed mt-0.5">
-                                        No Return Policy available on almost all products (except where explicitly marked on specific items). Manufacturing defect inspection applies upon delivery. <Link href="/return-policy" className="text-[#966E2E] underline font-bold">View Details</Link>
+                                        {RETURN_POLICY.shortNotice} <Link href="/return-policy" className="text-[#966E2E] underline font-bold">Read Policy</Link>
                                     </p>
                                 </div>
                             </div>

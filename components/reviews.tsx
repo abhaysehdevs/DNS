@@ -161,24 +161,35 @@ export function Reviews({ initialReviews = [], productId }: { initialReviews?: R
                 <div className="lg:col-span-5 space-y-4">
                     {/* Score Summary Box */}
                     <div className="flex items-center gap-4 bg-[#FAF9F5] p-4 sm:p-5 border border-[#E8E2D5] rounded-xl">
-                        <div className="text-3xl sm:text-4xl font-black text-[#966E2E] tracking-tight shrink-0">
-                            {averageRating > 0 ? averageRating.toFixed(1) : '5.0'}
-                        </div>
-                        <div>
-                            <div className="flex text-[#966E2E] gap-0.5">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star 
-                                        key={i} 
-                                        size={15} 
-                                        fill={i < Math.round(averageRating > 0 ? averageRating : 5) ? "currentColor" : "none"} 
-                                        strokeWidth={2} 
-                                    />
-                                ))}
+                        {reviews.length > 0 ? (
+                            <>
+                                <div className="text-3xl sm:text-4xl font-black text-[#966E2E] tracking-tight shrink-0">
+                                    {averageRating.toFixed(1)}
+                                </div>
+                                <div>
+                                    <div className="flex text-[#966E2E] gap-0.5">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star 
+                                                key={i} 
+                                                size={15} 
+                                                fill={i < Math.round(averageRating) ? "currentColor" : "none"} 
+                                                strokeWidth={2} 
+                                            />
+                                        ))}
+                                    </div>
+                                    <p className="text-[10px] text-[#71717A] font-bold uppercase tracking-widest mt-1">
+                                        {reviews.length} Verified Customer {reviews.length === 1 ? 'Review' : 'Reviews'}
+                                    </p>
+                                </div>
+                            </>
+                        ) : (
+                            <div>
+                                <h4 className="text-sm font-bold text-[#18181B] uppercase tracking-wider">No Customer Reviews Yet</h4>
+                                <p className="text-[10px] text-[#71717A] font-medium leading-relaxed mt-0.5">
+                                    Be the first workshop craftsman to share technical feedback on this product.
+                                </p>
                             </div>
-                            <p className="text-[10px] text-[#71717A] font-bold uppercase tracking-widest mt-1">
-                                {reviews.length > 0 ? `${reviews.length} Verified Customer Reviews` : 'Verified Quality Rating'}
-                            </p>
-                        </div>
+                        )}
                     </div>
 
                     {/* Write Review Form Card */}

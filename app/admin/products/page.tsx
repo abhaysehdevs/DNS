@@ -55,7 +55,7 @@ const SEO_RESERVED_KEYS = new Set([
     'slug', 'seo_title', 'seo_description', 'seo_keywords', 'meta_title', 'meta_description'
 ]);
 
-export const filterOutSeoKeys = (specs: Record<string, any> = {}) => {
+const filterOutSeoKeys = (specs: Record<string, any> = {}) => {
     const clean: Record<string, string> = {};
     if (!specs || typeof specs !== 'object') return clean;
     for (const [k, v] of Object.entries(specs)) {

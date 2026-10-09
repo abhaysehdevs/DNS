@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 interface ProductGridProps {
     products: Product[];
     loading: boolean;
-    onClearFilters: () => void;
+    onClearFilters?: () => void;
     displayMode?: 'grid' | 'list';
 }
 
