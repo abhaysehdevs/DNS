@@ -2,16 +2,6 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  const host = request.headers.get('host') || '';
-  
-  // 1. Single-hop permanent 301 from www to apex
-  if (host.startsWith('www.dinanathandsons.com')) {
-    const targetUrl = new URL(request.url);
-    targetUrl.host = 'dinanathandsons.com';
-    targetUrl.protocol = 'https:';
-    return NextResponse.redirect(targetUrl.toString(), 301);
-  }
-
   return await createClient(request);
 }
 

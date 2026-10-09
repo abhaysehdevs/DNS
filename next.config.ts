@@ -38,19 +38,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // 1. Host canonicalization: 301 permanent redirect from www to apex domain
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.dinanathandsons.com',
-          },
-        ],
-        destination: 'https://dinanathandsons.com/:path*',
-        permanent: true,
-      },
-      // 2. Category root-level shortcuts (resolves GSC redirect errors)
+      // 1. Category root-level shortcuts (resolves GSC redirect errors)
       { source: '/chemicals', destination: '/shop/category/chemicals', permanent: true },
       { source: '/packaging', destination: '/shop/category/packaging', permanent: true },
       { source: '/polishing', destination: '/shop/category/polishing', permanent: true },
