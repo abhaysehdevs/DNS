@@ -8,28 +8,38 @@ import { SITE_CONFIG } from '@/lib/site-config'
 
 export const revalidate = 3600
 
+function cleanXmlUrl(url: string): string {
+    return url
+        .replace(/&amp;/g, '&')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = SITE_CONFIG.baseUrl
 
     // 1. Core High-Priority Static Pages (NO google-merchant-feed.xml, NO changefreq/priority)
     const staticRoutes: MetadataRoute.Sitemap = [
-        { url: baseUrl },
-        { url: `${baseUrl}/shop` },
-        { url: `${baseUrl}/new-arrivals` },
-        { url: `${baseUrl}/offers` },
-        { url: `${baseUrl}/blog` },
-        { url: `${baseUrl}/about` },
-        { url: `${baseUrl}/contact` },
-        { url: `${baseUrl}/faq` },
-        { url: `${baseUrl}/shipping-policy` },
-        { url: `${baseUrl}/return-policy` },
-        { url: `${baseUrl}/terms` },
-        { url: `${baseUrl}/privacy-policy` },
+        { url: cleanXmlUrl(baseUrl) },
+        { url: cleanXmlUrl(`${baseUrl}/shop`) },
+        { url: cleanXmlUrl(`${baseUrl}/new-arrivals`) },
+        { url: cleanXmlUrl(`${baseUrl}/offers`) },
+        { url: cleanXmlUrl(`${baseUrl}/blog`) },
+        { url: cleanXmlUrl(`${baseUrl}/about`) },
+        { url: cleanXmlUrl(`${baseUrl}/contact`) },
+        { url: cleanXmlUrl(`${baseUrl}/faq`) },
+        { url: cleanXmlUrl(`${baseUrl}/shipping-policy`) },
+        { url: cleanXmlUrl(`${baseUrl}/return-policy`) },
+        { url: cleanXmlUrl(`${baseUrl}/terms`) },
+        { url: cleanXmlUrl(`${baseUrl}/privacy-policy`) },
     ]
 
     // 2. Canonical Category Routes
     const categoryRoutes: MetadataRoute.Sitemap = CATEGORIES.map(cat => ({
-        url: `${baseUrl}/shop/category/${cat.slug}`,
+        url: cleanXmlUrl(`${baseUrl}/shop/category/${cat.slug}`),
     }))
 
     // 3. Dynamic Canonical Product Routes with Image Metadata & Real lastmod
@@ -55,9 +65,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 const rawImg = normalized.image || normalized.primaryImage
                 const imgUrl = rawImg ? (rawImg.startsWith('http') ? rawImg : `${baseUrl}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`) : undefined
 
+                const isEligibleImage = imgUrl && !imgUrl.includes('unsplash.com')
+
                 const entry: MetadataRoute.Sitemap[number] = {
-                    url: `${baseUrl}/shop/${slug}`,
-                    images: imgUrl ? [imgUrl] : undefined,
+                    url: cleanXmlUrl(`${baseUrl}/shop/${slug}`),
+                    images: isEligibleImage ? [cleanXmlUrl(imgUrl)] : undefined,
                 }
 
                 if (product.updated_at) {
@@ -96,9 +108,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 const rawImg = post.cover_image || post.image
                 const imgUrl = rawImg ? (rawImg.startsWith('http') ? rawImg : `${baseUrl}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`) : undefined
 
+                const isEligibleImage = imgUrl && !imgUrl.includes('unsplash.com')
+
                 const entry: MetadataRoute.Sitemap[number] = {
-                    url: `${baseUrl}/blog/${slug}`,
-                    images: imgUrl ? [imgUrl] : undefined,
+                    url: cleanXmlUrl(`${baseUrl}/blog/${slug}`),
+                    images: isEligibleImage ? [cleanXmlUrl(imgUrl)] : undefined,
                 }
 
                 if (post.updated_at) {
@@ -110,7 +124,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
     } catch (error) {
         blogRoutes = BLOG_POSTS.map(post => ({
-            url: `${baseUrl}/blog/${post.id}`
+            url: cleanXmlUrl(`${baseUrl}/blog/${post.id}`)
         }))
     }
 
