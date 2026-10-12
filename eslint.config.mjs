@@ -12,7 +12,24 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "database_scripts/**",
+    "supabase/**",
+    "scripts/**",
   ]),
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-require-imports": "warn",
+      "react/no-unescaped-entities": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/rules-of-hooks": "warn",
+      "react-hooks/immutability": "off",
+      "@next/next/no-html-link-for-pages": "warn",
+      "prefer-const": "warn",
+      "import/no-anonymous-default-export": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

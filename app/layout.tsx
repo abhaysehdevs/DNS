@@ -172,9 +172,9 @@ export default function RootLayout({
             __html: JSON.stringify(siteGraphSchema)
           }}
         />
-        <GoogleAnalytics />
       </head>
       <body className={cn(inter.variable, cinzel.variable, roboto.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col bg-surface-2 text-text-primary")}>
+        <GoogleAnalytics />
         <AuthListener />
         {children}
       </body>

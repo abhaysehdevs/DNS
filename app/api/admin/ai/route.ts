@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { askGemini } from '@/lib/admin-ai/ai-client';
 import { getAdminSupabase } from '@/lib/admin-ai/ai-tools';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();
