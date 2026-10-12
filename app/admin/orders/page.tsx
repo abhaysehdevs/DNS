@@ -34,6 +34,14 @@ export default function OrdersPage() {
     const [itemsLoading, setItemsLoading] = useState(false);
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const statusParam = params.get('status');
+            if (statusParam) {
+                setStatusFilter(statusParam);
+            }
+        }
+
         fetchOrders();
 
         const channel = supabase

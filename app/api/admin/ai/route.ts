@@ -20,26 +20,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized: Admin privileges required.' }, { status: 403 });
         }
 
-        // Check if there is an API key in site_settings if not passed directly or in env
-        let finalApiKey = providedKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_API_KEY;
-        if (!finalApiKey) {
-            try {
-                const supabase = getAdminSupabase();
-                const { data } = await supabase.from('site_settings').select('settings').eq('key', 'global').single();
-                if (data?.settings?.geminiApiKey) {
-                    finalApiKey = data.settings.geminiApiKey;
-                }
-            } catch (err) {
-                // Ignore DB lookup error and continue to fallback
-            }
-        }
+        // Enforce Rule 5 & 1.7: API keys live only in server-side environment variables
+        const finalApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_API_KEY;
 
         const result = await askGemini(messages, finalApiKey);
 
         return NextResponse.json({
             success: true,
             reply: result.reply,
-            actionResult: result.actionResult
+            actionResult: result.actionResult,
+            pendingConfirmation: result.pendingConfirmation
         });
     } catch (err: any) {
         console.error('Error in /api/admin/ai:', err);

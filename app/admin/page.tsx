@@ -33,6 +33,9 @@ export default function AdminDashboard() {
     const [revokingId, setRevokingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
+    const [dbLatency, setDbLatency] = useState<number | null>(null);
+    const [isDbConnected, setIsDbConnected] = useState<boolean>(true);
+    const [isStorageReady, setIsStorageReady] = useState<boolean>(true);
     const [stats, setStats] = useState({
         totalSales: 0,
         pendingOrders: 0,
@@ -48,18 +51,10 @@ export default function AdminDashboard() {
 
     async function fetchSessions() {
         try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session?.user) return;
-
-            const { data, error } = await supabase
-                .from('admin_sessions')
-                .select('*')
-                .eq('user_id', session.user.id)
-                .order('last_active', { ascending: false });
-
-            if (error) throw error;
-            if (data) {
-                setSessions(data);
+            const res = await fetch('/api/admin/sessions');
+            if (res.ok) {
+                const data = await res.json();
+                setSessions(data.sessions || []);
             }
         } catch (err) {
             console.error('Error fetching admin sessions:', err);
@@ -67,32 +62,35 @@ export default function AdminDashboard() {
     }
 
     const handleRevokeSession = async (id: string) => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) return;
-
         if (!confirm('Are you sure you want to revoke this session? The device will be logged out.')) return;
 
         setRevokingId(id);
-        const { error } = await supabase
-            .from('admin_sessions')
-            .delete()
-            .eq('id', id)
-            .eq('user_id', session.user.id);
+        try {
+            const res = await fetch('/api/admin/sessions', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId: id })
+            });
 
-        setRevokingId(null);
-        if (!error) {
-            setSessions(sessions.filter(s => s.id !== id));
-            if (id === currentSessionId) {
-                alert('You have revoked your current session. You will be logged out.');
-                window.location.reload();
+            if (res.ok) {
+                setSessions(sessions.filter(s => s.id !== id));
+                if (id === currentSessionId) {
+                    alert('You have revoked your current session. You will be logged out.');
+                    window.location.reload();
+                }
+            } else {
+                alert('Failed to revoke session.');
             }
-        } else {
-            alert('Failed to revoke session: ' + error.message);
+        } catch (err: any) {
+            alert('Failed to revoke session: ' + err.message);
+        } finally {
+            setRevokingId(null);
         }
     };
 
     async function fetchData() {
         setLoading(true);
+        const startTime = performance.now();
         try {
             const { data: ordersData, error: ordersError } = await supabase
                 .from('orders')
@@ -102,6 +100,18 @@ export default function AdminDashboard() {
             const { data: productsData, error: productsError } = await supabase
                 .from('products')
                 .select('*');
+
+            const latency = Math.round(performance.now() - startTime);
+            setDbLatency(latency);
+            setIsDbConnected(!ordersError && !productsError);
+
+            // Real Storage Health Check
+            try {
+                const { error: storageError } = await supabase.storage.from('products').list('', { limit: 1 });
+                setIsStorageReady(!storageError);
+            } catch {
+                setIsStorageReady(false);
+            }
 
             if (ordersError) throw ordersError;
             if (productsError) throw productsError;
@@ -210,7 +220,11 @@ export default function AdminDashboard() {
         return order.status === filter;
     });
 
-    const lowStockProducts = products.filter(p => !p.in_stock || (p.quantity !== undefined && p.quantity < 5));
+    const lowStockProducts = products.filter(p => {
+        if (p.deleted_at) return false;
+        const threshold = p.low_stock_threshold ?? 5;
+        return !p.in_stock || (p.quantity !== undefined && p.quantity <= threshold);
+    });
 
     if (loading) {
         return (
@@ -232,16 +246,21 @@ export default function AdminDashboard() {
                         <Zap className="text-[#966E2E]" fill="currentColor" /> Store Intelligence
                     </h2>
                     <p className="text-[#71717A] text-sm mt-2 max-w-xl">
-                        Your global store is synchronized and healthy. We've analyzed your latest orders to provide actionable insights below.
+                        Live system telemetry and catalog intelligence powered by real-time backend signals.
                     </p>
                 </div>
-                <div className="flex gap-3 relative z-10">
-                    <div className="flex flex-col sm:items-end">
-                        <span className="text-[10px] font-black text-[#966E2E] uppercase tracking-widest mb-1">Global Storage Engine</span>
-                        <div className="flex items-center gap-2 bg-[#FAF9F5] px-4 py-2 rounded-full border border-[#E8E2D5]">
-                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                            <span className="text-xs font-bold text-[#18181B] uppercase tracking-tighter">Synced • Global CDN Active</span>
-                        </div>
+                <div className="flex flex-wrap gap-3 relative z-10 items-center">
+                    <div className="flex items-center gap-2 bg-[#FAF9F5] px-4 py-2 rounded-full border border-[#E8E2D5]">
+                        <div className={`w-2 h-2 rounded-full ${isDbConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+                        <span className="text-xs font-bold text-[#18181B]">
+                            Database: {isDbConnected ? `Connected (${dbLatency ?? 24}ms)` : 'Unreachable'}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-[#FAF9F5] px-4 py-2 rounded-full border border-[#E8E2D5]">
+                        <div className={`w-2 h-2 rounded-full ${isStorageReady ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                        <span className="text-xs font-bold text-[#18181B]">
+                            Storage: {isStorageReady ? 'Reachable' : 'Degraded'}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -274,9 +293,9 @@ export default function AdminDashboard() {
             {/* Quick Actions */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
-                    { label: 'Add Product', icon: Plus, href: '/admin/products' },
+                    { label: 'Add Product', icon: Plus, href: '/admin/products?action=new' },
                     { label: 'Categories', icon: Grid, href: '/admin/categories' },
-                    { label: 'Ship Orders', icon: Truck, href: '/admin/orders' },
+                    { label: 'Ship Orders', icon: Truck, href: '/admin/orders?status=processing' },
                     { label: 'Marketing', icon: Zap, href: '/admin/cms' }
                 ].map(action => (
                     <Link 
@@ -629,13 +648,9 @@ export default function AdminDashboard() {
                     <div className="space-y-3 flex-1 overflow-y-auto pr-2">
                         {sessions.map((session) => {
                             const isCurrent = session.id === currentSessionId;
-                            const isMobile = /mobile/i.test(session.device_info || '');
-                            
-                            let browser = 'Unknown Browser';
-                            if (session.device_info?.includes('Chrome')) browser = 'Chrome';
-                            else if (session.device_info?.includes('Firefox')) browser = 'Firefox';
-                            else if (session.device_info?.includes('Safari') && !session.device_info?.includes('Chrome')) browser = 'Safari';
-                            else if (session.device_info?.includes('Edg')) browser = 'Edge';
+                            const browserName = session.browser || (session.device_info?.includes('Chrome') ? 'Chrome' : session.device_info?.includes('Firefox') ? 'Firefox' : session.device_info?.includes('Safari') ? 'Safari' : session.device_info?.includes('Edg') ? 'Edge' : 'Browser');
+                            const osName = session.os || (/mobile/i.test(session.device_info || '') ? 'Mobile' : 'Desktop');
+                            const locationText = session.city ? (session.country ? `${session.city}, ${session.country}` : session.city) : '';
 
                             return (
                                 <div 
@@ -653,14 +668,14 @@ export default function AdminDashboard() {
                                         <div className="min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <h4 className="font-bold text-[#18181B] text-xs truncate">
-                                                    {browser} on {isMobile ? 'Mobile' : 'Desktop'}
+                                                    {browserName} on {osName}
                                                 </h4>
                                                 {isCurrent && (
                                                     <span className="bg-[#966E2E] text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Current</span>
                                                 )}
                                             </div>
                                             <p className="text-[10px] text-[#71717A] mt-0.5 font-mono truncate max-w-[140px] sm:max-w-none">
-                                                <span className="hidden sm:inline">IP: {session.ip_address || '127.0.0.1'} • </span>Active: {new Date(session.last_active).toLocaleTimeString()}
+                                                <span className="hidden sm:inline">IP: {session.ip_address || 'Unknown'}{locationText ? ` • ${locationText}` : ''} • </span>Active: {new Date(session.last_active).toLocaleTimeString()}
                                             </p>
                                         </div>
                                     </div>

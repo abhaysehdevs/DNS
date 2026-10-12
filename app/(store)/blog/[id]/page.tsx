@@ -21,14 +21,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
             robots: { index: false, follow: false }
         };
     }
-    const title = post.title;
-    const description = post.excerpt ? (post.excerpt.length > 155 ? `${post.excerpt.slice(0, 152).trim()}...` : post.excerpt) : post.title;
-    const canonicalUrl = `https://dinanathandsons.com/blog/${post.id}`;
-    const image = post.image || 'https://dinanathandsons.com/placeholder.jpg';
+    const title = (post as any).meta_title || post.title;
+    const description = (post as any).meta_description || (post.excerpt ? (post.excerpt.length > 155 ? `${post.excerpt.slice(0, 152).trim()}...` : post.excerpt) : post.title);
+    const canonicalUrl = (post as any).canonical_url || `https://dinanathandsons.com/blog/${(post as any).slug || post.id}`;
+    const image = (post as any).og_image_url || post.image || 'https://dinanathandsons.com/placeholder.jpg';
+    const keywords = (post as any).meta_keywords || undefined;
+    const robots = (post as any).noindex ? { index: false, follow: false } : undefined;
 
     return {
         title,
         description,
+        keywords,
+        robots,
         alternates: {
             canonical: canonicalUrl,
         },

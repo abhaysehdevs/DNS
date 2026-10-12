@@ -21,6 +21,7 @@ export interface AdminSettings {
     geminiApiKey?: string;
     aiModel?: string;
     aiCustomInstructions?: string;
+    disableAiWrites?: boolean;
     socialLinks?: {
         facebook?: string;
         twitter?: string;

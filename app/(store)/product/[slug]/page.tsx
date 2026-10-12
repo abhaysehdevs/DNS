@@ -17,23 +17,27 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     }
 
     const category = rawProduct.category || 'Jewellery Tools';
-    let baseTitle = rawProduct.seo_title || `${rawProduct.name} | ${category}`;
+    let baseTitle = rawProduct.meta_title || rawProduct.seo_title || `${rawProduct.name} | ${category}`;
     baseTitle = baseTitle.replace(/\s*\|\s*Dinanath\s*&\s*Sons.*$/i, '').trim();
 
-    const rawDesc = rawProduct.seo_description || rawProduct.description || '';
+    const rawDesc = rawProduct.meta_description || rawProduct.seo_description || rawProduct.description || '';
     const description = rawDesc
-        ? (rawDesc.length > 155 ? `${rawDesc.slice(0, 152).trim()}...` : rawDesc)
+        ? (rawDesc.length > 165 && !rawProduct.meta_description ? `${rawDesc.slice(0, 155).trim()}...` : rawDesc)
         : `Buy ${rawProduct.name} at Dinanath & Sons. Professional ${category.toLowerCase()} for goldsmiths and manufacturing workshops. Pan-India delivery.`;
 
-    const rawImage = rawProduct.primaryImage || rawProduct.image || '/placeholder.jpg';
+    const rawImage = rawProduct.og_image_url || rawProduct.primaryImage || rawProduct.image || '/placeholder.jpg';
     const image = rawImage.startsWith('http') ? rawImage : `https://dinanathandsons.com${rawImage.startsWith('/') ? '' : '/'}${rawImage}`;
     const canonicalSlug = getCanonicalProductSlug(rawProduct);
+    const canonical = rawProduct.canonical_url || `https://dinanathandsons.com/shop/${canonicalSlug}`;
+    const keywords = rawProduct.meta_keywords || rawProduct.seo_keywords || undefined;
 
     return {
         title: baseTitle,
         description,
+        keywords,
+        robots: rawProduct.noindex ? { index: false, follow: false } : undefined,
         alternates: {
-            canonical: `https://dinanathandsons.com/shop/${canonicalSlug}`
+            canonical
         },
         openGraph: {
             title: baseTitle,

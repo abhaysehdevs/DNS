@@ -93,44 +93,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
     }, [isAdminAuthenticated, pathname, router]);
 
-    // ADMIN SESSION TRACKING
+    // ADMIN SESSION TRACKING (Server-side IP & Diagnostic Logging)
     useEffect(() => {
         if (!isAdminAuthenticated) return;
 
         const trackSession = async () => {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (!session?.user) return;
-
                 const sessionId = localStorage.getItem('admin_session_id');
-                const deviceInfo = navigator.userAgent;
+                const userEmail = sessionStorage.getItem('dns_admin_email') || 'ajayabhay12872@gmail.com';
 
-                if (sessionId) {
-                    // Update heartbeat
-                    const { error } = await supabase
-                        .from('admin_sessions')
-                        .update({ last_active: new Date().toISOString() })
-                        .eq('id', sessionId)
-                        .eq('user_id', session.user.id); // Security check
+                const res = await fetch('/api/admin/sessions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId, userEmail })
+                });
 
-                    if (error) {
-                        // If session not found (maybe deleted remotely), create new
+                if (res.status === 401) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.revoked) {
                         localStorage.removeItem('admin_session_id');
+                        sessionStorage.removeItem('dns_admin_session_active');
+                        logoutAdmin();
+                        alert('Your session was revoked remotely. Please sign in again.');
+                        router.push('/admin/login');
+                        return;
                     }
-                } else {
-                    // Create new session
-                    const { data, error } = await supabase
-                        .from('admin_sessions')
-                        .insert({
-                            user_id: session.user.id,
-                            device_info: deviceInfo,
-                            last_active: new Date().toISOString()
-                        })
-                        .select()
-                        .single();
+                }
 
-                    if (data && !error) {
-                        localStorage.setItem('admin_session_id', data.id);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.session?.id) {
+                        localStorage.setItem('admin_session_id', data.session.id);
                     }
                 }
             } catch (err) {
@@ -139,8 +132,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         };
 
         trackSession();
-        // Heartbeat every 5 minutes
-        const interval = setInterval(trackSession, 5 * 60 * 1000);
+        // Heartbeat every 2 minutes
+        const interval = setInterval(trackSession, 2 * 60 * 1000);
         return () => clearInterval(interval);
     }, [isAdminAuthenticated, logoutAdmin, router]);
 

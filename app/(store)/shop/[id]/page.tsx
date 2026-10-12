@@ -46,40 +46,44 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     const shortTitle = getSanitizedProductTitle(rawProduct.name);
     const brandInfo = detectRealBrandAndMpn(rawProduct.name, rawProduct.brand, rawProduct.sku);
     
-    // Title template: <= 65 characters, brand once at end, no mid-word truncation
-    let fullTitle = `${shortTitle} | Dinanath & Sons`;
-    if (fullTitle.length > 65) {
-        const words = shortTitle.split(' ');
-        let cur = '';
-        for (const w of words) {
-            if ((cur + (cur ? ' ' : '') + w).length <= 44) {
-                cur = cur + (cur ? ' ' : '') + w;
-            } else {
-                break;
+    // Prioritize meta_title / seo_title if set in admin
+    let fullTitle = rawProduct.meta_title || rawProduct.seo_title;
+    if (!fullTitle) {
+        fullTitle = `${shortTitle} | Dinanath & Sons`;
+        if (fullTitle.length > 65) {
+            const words = shortTitle.split(' ');
+            let cur = '';
+            for (const w of words) {
+                if ((cur + (cur ? ' ' : '') + w).length <= 44) {
+                    cur = cur + (cur ? ' ' : '') + w;
+                } else {
+                    break;
+                }
             }
+            fullTitle = `${cur || shortTitle.slice(0, 44).trim()} | Dinanath & Sons`;
         }
-        fullTitle = `${cur || shortTitle.slice(0, 44).trim()} | Dinanath & Sons`;
     }
 
-    // Description template: 120-155 chars, factual, no "Buy" on OOS
-    const inStock = Boolean(rawProduct.inStock ?? rawProduct.in_stock ?? true);
+    // Description: prioritize meta_description / seo_description
     const cleanDesc = getSanitizedDescription(rawProduct);
-    let description = cleanDesc;
-    if (description.length > 155) {
-        // Trim cleanly at a word boundary
+    let description = rawProduct.meta_description || rawProduct.seo_description || cleanDesc;
+    if (description.length > 165 && !rawProduct.meta_description) {
         const sub = description.slice(0, 150);
         const lastSpace = sub.lastIndexOf(' ');
         description = (lastSpace > 100 ? sub.slice(0, lastSpace) : sub).trim() + '.';
     }
     
-    const rawImage = rawProduct.primaryImage || rawProduct.image || rawProduct.image_url || '/placeholder.jpg';
+    const rawImage = rawProduct.og_image_url || rawProduct.primaryImage || rawProduct.image || rawProduct.image_url || '/placeholder.jpg';
     const image = rawImage.startsWith('http') ? rawImage : getAbsoluteUrl(rawImage);
     const canonicalSlug = getCanonicalProductSlug(rawProduct);
-    const canonicalUrl = getAbsoluteUrl(`/shop/${canonicalSlug}`);
+    const canonicalUrl = rawProduct.canonical_url || getAbsoluteUrl(`/shop/${canonicalSlug}`);
+    const keywords = rawProduct.meta_keywords || rawProduct.seo_keywords || undefined;
 
     return {
         title: fullTitle,
         description,
+        keywords,
+        robots: rawProduct.noindex ? { index: false, follow: false } : undefined,
         alternates: {
             canonical: canonicalUrl,
         },
@@ -143,9 +147,9 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
     const productSchema: Record<string, any> = {
         "@context": "https://schema.org",
         "@type": "Product",
-        "name": shortTitle,
-        "image": [absoluteImage],
-        "description": cleanDesc,
+        "name": normalized.meta_title || shortTitle,
+        "image": [normalized.og_image_url || absoluteImage],
+        "description": normalized.meta_description || normalized.seo_description || cleanDesc,
         "sku": normalized.sku || `DNS-${normalized.id.slice(0, 8)}`,
         "brand": {
             "@type": "Brand",

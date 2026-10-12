@@ -37,6 +37,14 @@ export interface ChatMessage {
         data?: any;
         navigationUrl?: string;
     };
+    pendingConfirmation?: {
+        id: string;
+        action: string;
+        args: any;
+        summary: string;
+        needsTypedConfirmation: boolean;
+        changes: { field: string; value: string }[];
+    };
 }
 
 interface AdminAiAssistantProps {
@@ -207,7 +215,8 @@ export default function AdminAiAssistant({
                 role: 'assistant',
                 content: data.reply || 'Task processed.',
                 timestamp: Date.now(),
-                actionResult: data.actionResult
+                actionResult: data.actionResult,
+                pendingConfirmation: data.pendingConfirmation
             };
 
             setMessages(prev => [...prev, aiMsg]);
@@ -243,8 +252,72 @@ export default function AdminAiAssistant({
                 timestamp: Date.now()
             }];
             setMessages(resetMsg);
-            sessionStorage.removeItem('dns_admin_ai_chat');
         }
+    };
+
+    const [confirmingId, setConfirmingId] = useState<string | null>(null);
+    const [typedConfirmText, setTypedConfirmText] = useState('');
+
+    const handleConfirmAction = async (msgId: string, conf: any) => {
+        if (conf.needsTypedConfirmation && typedConfirmText !== 'CONFIRM') {
+            alert('Please type "CONFIRM" to authorize this destructive change.');
+            return;
+        }
+
+        setConfirmingId(msgId);
+        try {
+            const adminEmail = typeof window !== 'undefined' ? sessionStorage.getItem('dns_admin_email') || 'ajayabhay12872@gmail.com' : 'ajayabhay12872@gmail.com';
+            const res = await fetch('/api/admin/ai/confirm', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-email': adminEmail
+                },
+                body: JSON.stringify({
+                    action: conf.action,
+                    args: conf.args,
+                    typedConfirmation: typedConfirmText
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to execute action');
+
+            setMessages(prev => prev.map(m => {
+                if (m.id === msgId) {
+                    return {
+                        ...m,
+                        content: `${m.content}\n\n✅ **Action Confirmed & Executed**: ${data.message || 'Updated successfully.'}`,
+                        pendingConfirmation: undefined,
+                        actionResult: {
+                            success: true,
+                            action: conf.action,
+                            message: data.message || 'Database updated successfully.',
+                            navigationUrl: data.actionResult?.navigationUrl
+                        }
+                    };
+                }
+                return m;
+            }));
+            setTypedConfirmText('');
+        } catch (err: any) {
+            alert('Failed to execute: ' + err.message);
+        } finally {
+            setConfirmingId(null);
+        }
+    };
+
+    const handleCancelAction = (msgId: string) => {
+        setMessages(prev => prev.map(m => {
+            if (m.id === msgId) {
+                return {
+                    ...m,
+                    content: `${m.content}\n\n❌ *Action cancelled by administrator.*`,
+                    pendingConfirmation: undefined
+                };
+            }
+            return m;
+        }));
     };
 
     // Quick Command Prompts
@@ -425,6 +498,58 @@ export default function AdminAiAssistant({
                                             )}
                                         </div>
                                     </motion.div>
+                                )}
+
+                                {/* Pending Confirmation Card (Phase 1 AI Safeguards) */}
+                                {msg.pendingConfirmation && (
+                                    <div className="p-4 rounded-xl border border-amber-300 bg-amber-50 text-xs flex flex-col gap-3 shadow-xs">
+                                        <div className="flex items-center gap-2 font-bold text-amber-900">
+                                            <AlertCircle size={16} className="text-amber-600 shrink-0" />
+                                            <span>{msg.pendingConfirmation.summary}</span>
+                                        </div>
+
+                                        {msg.pendingConfirmation.changes && msg.pendingConfirmation.changes.length > 0 && (
+                                            <div className="bg-white/80 border border-amber-200 rounded-lg p-2.5 divide-y divide-amber-100 text-[11px]">
+                                                {msg.pendingConfirmation.changes.map((ch: any, i: number) => (
+                                                    <div key={i} className="py-1 flex justify-between gap-2">
+                                                        <span className="font-semibold text-amber-950">{ch.field}:</span>
+                                                        <span className="font-mono text-amber-800 truncate">{ch.value}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {msg.pendingConfirmation.needsTypedConfirmation && (
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold uppercase text-rose-700">Type "CONFIRM" to authorize destructive change:</label>
+                                                <input 
+                                                    type="text"
+                                                    value={typedConfirmText}
+                                                    onChange={e => setTypedConfirmText(e.target.value)}
+                                                    placeholder="CONFIRM"
+                                                    className="w-full bg-white border border-rose-300 rounded-lg p-2 text-xs font-mono"
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center gap-2 pt-1">
+                                            <button
+                                                onClick={() => handleConfirmAction(msg.id, msg.pendingConfirmation)}
+                                                disabled={confirmingId === msg.id}
+                                                className="flex-1 py-2 bg-[#966E2E] hover:bg-[#7D5A25] text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
+                                            >
+                                                {confirmingId === msg.id ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                                                Confirm & Apply
+                                            </button>
+                                            <button
+                                                onClick={() => handleCancelAction(msg.id)}
+                                                disabled={confirmingId === msg.id}
+                                                className="px-3 py-2 bg-white border border-amber-300 hover:bg-amber-100/50 text-amber-900 rounded-lg font-bold text-xs transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
                                 )}
 
                                 <span className={`text-[10px] text-[#71717A] block px-1 ${isUser ? 'text-right' : 'text-left'}`}>

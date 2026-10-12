@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Cinzel, Inter, Roboto, Noto_Sans_Devanagari } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import Script from 'next/script';
 import { AuthListener } from '@/components/auth-listener';
+import { GoogleAnalytics } from '@/components/google-analytics';
 import { SITE_CONFIG, getAbsoluteUrl } from '@/lib/site-config';
 import { RETURN_POLICY } from '@/lib/policies';
 
@@ -172,21 +172,7 @@ export default function RootLayout({
             __html: JSON.stringify(siteGraphSchema)
           }}
         />
-        {/* Google Tag / GA4 Loader */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.ga4Id}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${SITE_CONFIG.analytics.ga4Id}', {
-              send_page_view: true
-            });
-          `}
-        </Script>
+        <GoogleAnalytics />
       </head>
       <body className={cn(inter.variable, cinzel.variable, roboto.variable, notoSansDevanagari.variable, "font-sans antialiased min-h-screen flex flex-col bg-surface-2 text-text-primary")}>
         <AuthListener />
