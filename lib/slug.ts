@@ -109,6 +109,8 @@ export const LEGACY_SLUG_REDIRECTS: Record<string, string> = {
     'p-tags': 'jewellery-hallmark-tags-4189',
     'pasa-die-plate': 'dapping-block-pasa-6752',
     'p-pasa': 'dapping-block-pasa-6752',
+    'dapping-block-pasa-1950': 'dapping-block-pasa-6752',
+    'dapping-block-pasa': 'dapping-block-pasa-6752',
     'kundan-box-ranihar': 'kundan-box-ranihar-3805',
     'gold-bar-1g': 'gold-bar-coin-card-pack-9060',
     '24k-gold-bar-1-gram-1': 'gold-bar-coin-card-pack-9060',
@@ -264,6 +266,11 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
     const mappedTarget = LEGACY_SLUG_REDIRECTS[cleanId] || cleanId;
     const targetsToTry = Array.from(new Set([mappedTarget, cleanId]));
     
+    // Parse possible SKU or ID suffix (e.g., "dapping-block-pasa-1950" -> base: "dapping-block-pasa", suffix: "1950")
+    const suffixMatch = cleanId.match(/^(.+)-(\d{3,6})$/);
+    const baseFromTarget = suffixMatch ? suffixMatch[1] : cleanId;
+    const suffixDigits = suffixMatch ? suffixMatch[2] : '';
+
     try {
         // 1. Try Supabase exact ID
         for (const target of targetsToTry) {
@@ -306,11 +313,62 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
                 return normalizeProduct(bySku);
             }
         }
+
+        // 5. Try Supabase SKU suffix match (resolves dynamically generated sku-suffixed slugs like dapping-block-pasa-1950)
+        if (suffixDigits) {
+            const { data: bySkuSuffix } = await supabase
+                .from('products')
+                .select('*')
+                .ilike('sku', `%${suffixDigits}`)
+                .limit(10);
+
+            if (bySkuSuffix && bySkuSuffix.length > 0) {
+                const matched = bySkuSuffix.find((p: any) => {
+                    const pBase = toSlug(p.name);
+                    const pCanon = getCanonicalProductSlug(p).toLowerCase();
+                    return pCanon === cleanId || pBase === baseFromTarget || cleanId.startsWith(pBase) || pBase.startsWith(baseFromTarget);
+                }) || bySkuSuffix[0];
+
+                if (matched) {
+                    return normalizeProduct(matched);
+                }
+            }
+        }
+
+        // 6. Try Supabase base slug / name matching
+        if (baseFromTarget) {
+            const nameWords = baseFromTarget.split('-').filter((w: string) => w.length > 3);
+            const searchWord = nameWords[0] || baseFromTarget.split('-')[0];
+            if (searchWord) {
+                const { data: byName } = await supabase
+                    .from('products')
+                    .select('*')
+                    .ilike('name', `%${searchWord}%`)
+                    .limit(20);
+
+                if (byName && byName.length > 0) {
+                    const matched = byName.find((p: any) => {
+                        const pBase = toSlug(p.name);
+                        const pCanon = getCanonicalProductSlug(p).toLowerCase();
+                        const pSpecsSlug = (p.specifications?.slug || '').toLowerCase();
+                        return (
+                            pCanon === cleanId ||
+                            pSpecsSlug === cleanId ||
+                            pBase === cleanId ||
+                            pBase === baseFromTarget
+                        );
+                    });
+                    if (matched) {
+                        return normalizeProduct(matched);
+                    }
+                }
+            }
+        }
     } catch (e) {
         console.warn('Database lookup failed, falling back to local catalog:', e);
     }
 
-    // 5. Fallback to clean local catalog
+    // 7. Fallback to clean local catalog
     const { products: localCatalog } = await import('./data');
     for (const target of targetsToTry) {
         const found = localCatalog.find(
@@ -319,8 +377,29 @@ export async function findProductByIdOrSlug(idOrSlug: string): Promise<any> {
                 (p.slug && p.slug.toLowerCase() === target) ||
                 (p.sku && p.sku.toLowerCase() === target) ||
                 (p.specifications?.slug && p.specifications.slug.toLowerCase() === target) ||
+                getCanonicalProductSlug(p).toLowerCase() === target ||
                 toSlug(p.name) === target
         );
+        if (found) {
+            return normalizeProduct(found);
+        }
+    }
+
+    // 8. Suffix & base slug match on local catalog
+    if (suffixDigits || baseFromTarget) {
+        const found = localCatalog.find((p) => {
+            const pSkuDigits = String(p.sku || '').replace(/\D/g, '').slice(-4);
+            const pBase = toSlug(p.name);
+            const pSlugBase = (p.slug || '').replace(/-\d{4}$/, '');
+            
+            if (suffixDigits && pSkuDigits === suffixDigits) {
+                return pBase === baseFromTarget || cleanId.startsWith(pBase) || pSlugBase === baseFromTarget;
+            }
+            if (baseFromTarget && (pBase === baseFromTarget || pSlugBase === baseFromTarget)) {
+                return true;
+            }
+            return false;
+        });
         if (found) {
             return normalizeProduct(found);
         }

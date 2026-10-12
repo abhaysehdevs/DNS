@@ -87,79 +87,7 @@ export default function ProductsAdminPage() {
 
     const [dbCategories, setDbCategories] = useState<any[]>([]);
 
-    // AI Generation States
-    const [aiGeneratingDesc, setAiGeneratingDesc] = useState(false);
-    const [aiGeneratingSeo, setAiGeneratingSeo] = useState(false);
-    const [aiGeneratingAll, setAiGeneratingAll] = useState(false);
 
-    const handleAiGenerateContent = async (type: 'description' | 'seo' | 'all') => {
-        if (!currentProduct.name || !currentProduct.name.trim()) {
-            alert('Please provide a Product Name first so the AI can inspect and research the product specifications.');
-            return;
-        }
-
-        if (type === 'description') setAiGeneratingDesc(true);
-        else if (type === 'seo') setAiGeneratingSeo(true);
-        else setAiGeneratingAll(true);
-
-        try {
-            const res = await fetch('/api/admin/ai/generate-product-content', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: currentProduct.name,
-                    category: currentProduct.category || 'General',
-                    brand: currentProduct.brand || '',
-                    model_number: currentProduct.model_number || '',
-                    retail_price: currentProduct.retail_price || 0,
-                    image: currentProduct.image || '',
-                    gallery: currentProduct.gallery || [],
-                    specifications: currentProduct.specifications || {},
-                    mode: type
-                })
-            });
-
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Failed to generate AI content');
-
-            const generated = data.data || {};
-            const marketingDescription = generated.marketingDescription || generated.description;
-            const metaTitle = generated.metaTitle || generated.seo_title;
-            const metaDescription = generated.metaDescription || generated.seo_description;
-            const keywords = generated.keywords || generated.seo_keywords;
-            const technicalSpecs = generated.technicalSpecs || generated.specifications;
-
-            if ((type === 'description' || type === 'all') && marketingDescription) {
-                setCurrentProduct(prev => ({ ...prev, description: marketingDescription }));
-            }
-            if (type === 'seo' || type === 'all') {
-                setCurrentProduct(prev => ({
-                    ...prev,
-                    seo_title: metaTitle || prev.seo_title,
-                    seo_description: metaDescription || prev.seo_description,
-                    seo_keywords: keywords || prev.seo_keywords
-                }));
-            }
-            if (type === 'all' && technicalSpecs && typeof technicalSpecs === 'object') {
-                const cleanAiSpecs = filterOutSeoKeys(technicalSpecs);
-                if (Object.keys(cleanAiSpecs).length > 0) {
-                    setCurrentProduct(prev => ({
-                        ...prev,
-                        specifications: {
-                            ...filterOutSeoKeys(prev.specifications || {}),
-                            ...cleanAiSpecs
-                        }
-                    }));
-                }
-            }
-        } catch (err: any) {
-            alert('AI Generation error: ' + err.message);
-        } finally {
-            setAiGeneratingDesc(false);
-            setAiGeneratingSeo(false);
-            setAiGeneratingAll(false);
-        }
-    };
 
     useEffect(() => {
         fetchProducts();
@@ -179,7 +107,16 @@ export default function ProductsAdminPage() {
             .order('created_at', { ascending: false });
 
         if (error) console.error('Error fetching products:', error);
-        else setProducts(data || []);
+        else {
+            const normalized = (data || []).map((p: any) => ({
+                ...p,
+                seo_title: p.seo_title || p.meta_title || p.specifications?.seo_title || '',
+                seo_description: p.seo_description || p.meta_description || p.specifications?.seo_description || '',
+                seo_keywords: p.seo_keywords || p.specifications?.seo_keywords || '',
+                slug: p.slug || p.specifications?.slug || '',
+            }));
+            setProducts(normalized);
+        }
         setLoading(false);
     };
 
@@ -361,10 +298,17 @@ export default function ProductsAdminPage() {
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/(^-|-$)+/g, '');
-            const generatedSlug = isEditing && currentProduct.slug ? currentProduct.slug : `${baseSlug}-${Math.floor(1000 + Math.random() * 9000)}`;
+            const existingSlug = currentProduct.slug || currentProduct.specifications?.slug;
+            const skuSuffix = generatedSku ? generatedSku.replace(/\D/g, '').slice(-4) : Math.floor(1000 + Math.random() * 9000);
+            const generatedSlug = isEditing && existingSlug ? existingSlug : `${baseSlug}-${skuSuffix}`;
 
             // Filter out any SEO fields or slug from technical specifications (Issue 2 fix)
             const cleanSpecs = filterOutSeoKeys(currentProduct.specifications || {});
+            // Ensure slug and SEO metadata are always stored in specifications for resilient database persistence
+            cleanSpecs.slug = generatedSlug;
+            cleanSpecs.seo_keywords = (currentProduct.seo_keywords || '').trim();
+            cleanSpecs.seo_title = (currentProduct.seo_title || '').trim();
+            cleanSpecs.seo_description = (currentProduct.seo_description || '').trim();
 
             const payload: any = {
                 name: currentProduct.name,
@@ -671,33 +615,6 @@ export default function ProductsAdminPage() {
 
                             <div className="flex items-center gap-2 pt-1">
                                 <button 
-                                    onClick={() => {
-                                        const { id, ...clone } = p;
-                                        const specs = filterOutSeoKeys(clone.specifications || {});
-                                        const newSku = p.sku ? `${p.sku}-COPY-${Math.floor(100 + Math.random() * 900)}` : `DNS-${Date.now().toString().slice(-6)}`;
-                                        const existingSlug = p.slug || (clone.specifications as any)?.slug;
-                                        const newSlug = existingSlug ? `${existingSlug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
-                                        setCurrentProduct({ 
-                                            ...clone, 
-                                            name: `${clone.name} (Copy)`, 
-                                            sku: newSku,
-                                            slug: newSlug,
-                                            specifications: specs,
-                                            seo_title: clone.seo_title || (clone as any).meta_title || (clone.specifications as any)?.seo_title || '',
-                                            seo_description: clone.seo_description || (clone as any).meta_description || (clone.specifications as any)?.seo_description || '',
-                                            seo_keywords: clone.seo_keywords || (clone.specifications as any)?.seo_keywords || '',
-                                            variants: Array.isArray(clone.variants) ? clone.variants : [],
-                                            variant_type: clone.variant_type || 'Size',
-                                            gallery: clone.gallery || []
-                                        });
-                                        setIsEditing(false);
-                                        setShowForm(true);
-                                    }} 
-                                    className="flex-1 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
-                                >
-                                    <Layers size={14} /> Duplicate
-                                </button>
-                                <button 
                                     onClick={() => handleEdit(p)} 
                                     className="flex-1 py-2.5 bg-[#FAF9F5] hover:bg-[#FAF9F5]/70 text-[#966E2E] border border-[#E8E2D5] rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                                 >
@@ -789,36 +706,8 @@ export default function ProductsAdminPage() {
                                     </td>
                                     <td className="px-8 py-6 text-right">
                                             <div className="flex justify-end gap-3 md:opacity-0 md:group-hover:opacity-100 transition-all md:translate-x-4 md:group-hover:translate-x-0">
-                                                <button 
-                                                    onClick={() => {
-                                                        const { id, ...clone } = p;
-                                                        const specs = filterOutSeoKeys(clone.specifications || {});
-                                                        const newSku = p.sku ? `${p.sku}-COPY-${Math.floor(100 + Math.random() * 900)}` : `DNS-${Date.now().toString().slice(-6)}`;
-                                                        const existingSlug = p.slug || (clone.specifications as any)?.slug;
-                                                        const newSlug = existingSlug ? `${existingSlug}-copy-${Math.floor(100 + Math.random() * 900)}` : undefined;
-                                                        setCurrentProduct({ 
-                                                            ...clone, 
-                                                            name: `${clone.name} (Copy)`, 
-                                                            sku: newSku,
-                                                            slug: newSlug,
-                                                            specifications: specs,
-                                                            seo_title: clone.seo_title || (clone as any).meta_title || (clone.specifications as any)?.seo_title || '',
-                                                            seo_description: clone.seo_description || (clone as any).meta_description || (clone.specifications as any)?.seo_description || '',
-                                                            seo_keywords: clone.seo_keywords || (clone.specifications as any)?.seo_keywords || '',
-                                                            variants: Array.isArray(clone.variants) ? clone.variants : [],
-                                                            variant_type: clone.variant_type || 'Size',
-                                                            gallery: clone.gallery || []
-                                                        });
-                                                        setIsEditing(false);
-                                                        setShowForm(true);
-                                                    }} 
-                                                    className="p-3 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-2xl transition-all"
-                                                    title="Duplicate Listing"
-                                                >
-                                                    <Layers size={20} />
-                                                </button>
-                                                <button onClick={() => handleEdit(p)} className="p-3 bg-[#FAF9F5] text-[#966E2E] hover:bg-white border border-[#E8E2D5] rounded-2xl transition-all"><Edit size={20} /></button>
-                                                <button onClick={() => handleDelete(p.id)} className="p-3 bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 rounded-2xl transition-all"><Trash2 size={20} /></button>
+                                                <button onClick={() => handleEdit(p)} className="p-3 bg-[#FAF9F5] text-[#966E2E] hover:bg-white border border-[#E8E2D5] rounded-2xl transition-all" title="Edit Listing"><Edit size={20} /></button>
+                                                <button onClick={() => handleDelete(p.id)} className="p-3 bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 rounded-2xl transition-all" title="Delete Listing"><Trash2 size={20} /></button>
                                             </div>
                                     </td>
                                 </tr>
@@ -893,17 +782,6 @@ export default function ProductsAdminPage() {
                                     <h2 className="text-3xl md:text-4xl font-black text-[#18181B]">{isEditing ? 'Sync Listing' : 'Initialize Product'}</h2>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <button 
-                                        type="button"
-                                        onClick={() => handleAiGenerateContent('all')}
-                                        disabled={aiGeneratingAll}
-                                        className="px-5 py-3 bg-[#966E2E] hover:bg-[#7D5A25] text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all cursor-pointer disabled:opacity-50"
-                                        title="AI inspects title, brand, and media to generate comprehensive technical description and SEO metadata"
-                                    >
-                                        {aiGeneratingAll ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                                        <span className="hidden sm:inline">AI Auto-Write Description & SEO</span>
-                                        <span className="sm:hidden">AI Auto-Write</span>
-                                    </button>
                                     <button onClick={() => setShowForm(false)} className="w-12 h-12 bg-[#FAF9F5] border border-[#E8E2D5] rounded-full flex items-center justify-center text-[#71717A] hover:text-[#18181B] transition-all"><X size={24} /></button>
                                 </div>
                             </div>
@@ -971,19 +849,7 @@ export default function ProductsAdminPage() {
                                                 </div>
                                             </div>
                                             <div className="space-y-4">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest">Marketing Copy / Description</label>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleAiGenerateContent('description')}
-                                                        disabled={aiGeneratingDesc}
-                                                        className="text-[10px] font-black uppercase tracking-wider text-[#966E2E] hover:text-[#7D5A25] flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF9F5] hover:bg-[#FAF9F5]/70 border border-[#E8E2D5] rounded-xl transition-all cursor-pointer disabled:opacity-50"
-                                                        title="AI inspects title, brand, and media to write an accurate, highly specific description"
-                                                    >
-                                                        {aiGeneratingDesc ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                                                        <span>{aiGeneratingDesc ? 'Analyzing & Writing...' : '✨ Write with AI'}</span>
-                                                    </button>
-                                                </div>
+                                                <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest block">Marketing Copy / Description</label>
                                                 <textarea 
                                                     rows={6}
                                                     value={currentProduct.description || ''}
@@ -1390,24 +1256,9 @@ export default function ProductsAdminPage() {
                                 {/* --- Tab Content: SEO Metadata --- */}
                                 {activeTab === 'seo' && (
                                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                            <div>
-                                                <h3 className="text-xl font-black text-[#18181B] flex items-center gap-2">
-                                                    <span>Search Engine Optimization</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-full">AI Powered</span>
-                                                </h3>
-                                                <p className="text-[#71717A] text-[10px] uppercase font-bold tracking-widest mt-1">Configure search engine visibility and previews</p>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleAiGenerateContent('seo')}
-                                                disabled={aiGeneratingSeo}
-                                                className="px-5 py-2.5 bg-[#966E2E] hover:bg-[#7D5A25] text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all cursor-pointer disabled:opacity-50"
-                                                title="AI will inspect the product title, brand, and details to generate an optimized Meta Title, Description, and Keywords"
-                                            >
-                                                {aiGeneratingSeo ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                                                <span>{aiGeneratingSeo ? 'Analyzing & Writing SEO...' : '✨ Generate SEO with AI'}</span>
-                                            </button>
+                                        <div>
+                                            <h3 className="text-xl font-black text-[#18181B]">Search Engine Optimization</h3>
+                                            <p className="text-[#71717A] text-[10px] uppercase font-bold tracking-widest mt-1">Configure search engine visibility and previews</p>
                                         </div>
                                         
                                         <div className="space-y-6">
