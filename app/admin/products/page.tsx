@@ -31,6 +31,7 @@ interface ProductDB {
     image: string;
     category: string;
     in_stock: boolean;
+    featured_on_hero?: boolean;
     quantity: number;
     brand?: string;
     model_number?: string;
@@ -468,6 +469,7 @@ Provide a JSON object with:
                 og_image_url: currentProduct.og_image_url || '',
                 noindex: Boolean(currentProduct.noindex),
                 is_price_on_request: Boolean(currentProduct.is_price_on_request),
+                featured_on_hero: Boolean(currentProduct.featured_on_hero),
                 updated_at: new Date().toISOString()
             };
 
@@ -1206,6 +1208,16 @@ Provide a JSON object with:
                                                     className="w-4 h-4 text-[#966E2E] rounded border-[#E8E2D5]"
                                                 />
                                                 <span className="text-xs font-bold text-[#18181B]">Price on Request</span>
+                                            </label>
+
+                                            <label className="flex items-center gap-3 cursor-pointer bg-[#FAF9F5] px-3 py-1.5 rounded-xl border border-[#E8E2D5]">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={Boolean(currentProduct.featured_on_hero)}
+                                                    onChange={e => setCurrentProduct({...currentProduct, featured_on_hero: e.target.checked})}
+                                                    className="w-4 h-4 text-[#966E2E] rounded border-[#E8E2D5]"
+                                                />
+                                                <span className="text-xs font-bold text-[#966E2E]">Featured on Homepage Hero</span>
                                             </label>
                                         </div>
                                     </div>

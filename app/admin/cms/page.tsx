@@ -17,6 +17,16 @@ interface Banner {
     active: boolean;
     display_order: number;
     platform: 'all' | 'desktop' | 'mobile';
+    eyebrow?: string;
+    secondary_button_text?: string;
+    secondary_link?: string;
+    whatsapp_number?: string;
+    whatsapp_message?: string;
+    fallback_image_desktop?: string;
+    fallback_image_mobile?: string;
+    featured_product_ids?: string[];
+    start_date?: string;
+    end_date?: string;
 }
 export default function CMSPage() {
     const [banners, setBanners] = useState<Banner[]>([]);
@@ -170,6 +180,21 @@ export default function CMSPage() {
         setBanners(banners.map(b => b.id === id ? { ...b, ...updates } : b));
     };
 
+    const resetBannerToDefault = (id: string) => {
+        handleUpdateBanner(id, {
+            eyebrow: 'Since 1960 · Chandni Chowk, New Delhi',
+            title: 'Jewellery Tools, Machines & Packaging for Goldsmiths and Manufacturers',
+            subtitle: 'Pliers, tweezers, polishing machines, torches, ring tools and packaging, supplied to jewellers and workshops across India.',
+            button_text: 'Shop the catalog',
+            link: '/shop',
+            secondary_button_text: 'Get a bulk quote',
+            secondary_link: '/contact?subject=Bulk+Quote',
+            whatsapp_number: '919953435647',
+            whatsapp_message: 'Hello Dinanath & Sons, I would like to inquire about bulk jewellery tools & machinery.',
+            platform: 'all'
+        });
+    };
+
     const handleDeleteBanner = (id: string) => {
         setBanners(banners.filter(b => b.id !== id));
     };
@@ -255,100 +280,320 @@ export default function CMSPage() {
             <div className="mt-8">
                 {activeTab === 'banners' && (
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center bg-white p-6 rounded-3xl border border-[#E8E2D5] shadow-sm">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-[#E8E2D5] shadow-xs">
                             <div>
-                                <h3 className="text-lg font-black text-[#18181B]">Main Slide Deck</h3>
-                                <p className="text-[#71717A] text-xs mt-1">High-impact visual stories for the homepage hero section.</p>
+                                <h3 className="text-lg font-black text-[#18181B]">Homepage Hero Configuration</h3>
+                                <p className="text-[#71717A] text-xs mt-1">Configure mobile-first hero copy, call-to-actions, WhatsApp channels, and featured products.</p>
                             </div>
-                            <button onClick={handleAddBanner} className="bg-[#FAF9F5] hover:bg-white text-[#966E2E] border border-[#E8E2D5] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xs">
-                                + New Slide
-                            </button>
+                            <div className="flex items-center gap-3">
+                                <button 
+                                    onClick={() => banners[0] && resetBannerToDefault(banners[0].id)} 
+                                    className="bg-white hover:bg-[#FAF9F5] text-[#71717A] border border-[#E8E2D5] hover:border-[#966E2E] px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all shadow-2xs"
+                                >
+                                    Reset to Defaults
+                                </button>
+                                <button 
+                                    onClick={handleAddBanner} 
+                                    className="bg-[#FAF9F5] hover:bg-white text-[#966E2E] border border-[#E8E2D5] hover:border-[#966E2E] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-2xs"
+                                >
+                                    + Add Variant
+                                </button>
+                            </div>
                         </div>
+
                         <div className="space-y-6">
-                            {banners.map((banner, index) => (
-                                <motion.div layout key={banner.id} className="bg-white border border-[#E8E2D5] rounded-3xl overflow-hidden shadow-sm">
-                                    <div className="flex flex-col lg:flex-row">
-                                        <div className="lg:w-1/3 bg-[#FAF9F5] min-h-[250px] relative group">
-                                            {banner.image_url ? (
-                                                <img src={banner.image_url} className="w-full h-full object-cover" alt="Preview" />
-                                            ) : (
-                                                <div className="w-full h-full flex flex-col items-center justify-center text-[#A1A1AA] gap-2 border-2 border-dashed border-[#E8E2D5] m-4 rounded-2xl">
-                                                    <ImageIcon size={48} />
+                            {banners.map((banner, index) => {
+                                const eyebrowText = banner.eyebrow || 'Since 1960 · Chandni Chowk, New Delhi';
+                                const titleText = banner.title || 'Jewellery Tools, Machines & Packaging for Goldsmiths and Manufacturers';
+                                const subtitleText = banner.subtitle || 'Pliers, tweezers, polishing machines, torches, ring tools and packaging, supplied to jewellers and workshops across India.';
+                                const primaryBtnText = banner.button_text || 'Shop the catalog';
+                                const secondaryBtnText = banner.secondary_button_text || 'Get a bulk quote';
+
+                                return (
+                                <motion.div layout key={banner.id} className="bg-white border border-[#E8E2D5] rounded-3xl overflow-hidden shadow-xs">
+                                    {/* Editor Header Banner */}
+                                    <div className="bg-[#FAF9F5] px-6 py-4 border-b border-[#E8E2D5] flex flex-wrap items-center justify-between gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-[#966E2E]" />
+                                            <span className="text-xs font-bold font-mono uppercase text-[#18181B]">
+                                                Hero Slide #{index + 1}
+                                            </span>
+                                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white border border-[#E8E2D5] text-[#71717A]">
+                                                Platform: {banner.platform}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <button 
+                                                type="button"
+                                                onClick={() => resetBannerToDefault(banner.id)}
+                                                className="text-[10px] font-semibold text-[#7A541E] hover:underline"
+                                            >
+                                                Reset this slide
+                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <div 
+                                                    onClick={() => handleUpdateBanner(banner.id, { active: !banner.active })} 
+                                                    className={`w-10 h-5 rounded-full relative transition-all cursor-pointer ${banner.active ? 'bg-emerald-600' : 'bg-gray-300'}`}
+                                                >
+                                                    <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all ${banner.active ? 'left-5' : 'left-1'}`} />
                                                 </div>
-                                            )}
-                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center p-6">
-                                                <div className="w-full space-y-3">
-                                                    <div className="space-y-1">
-                                                        <label className="text-[10px] font-black text-amber-300 uppercase">CDN Asset URL</label>
+                                                <span className="text-[10px] font-bold text-[#71717A] uppercase">{banner.active ? 'Active' : 'Draft'}</span>
+                                            </div>
+                                            <button 
+                                                onClick={() => handleDeleteBanner(banner.id)} 
+                                                className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                                                aria-label="Delete banner"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-6 md:p-8 space-y-6">
+                                        {/* 1. Core Copy Fields with Validation & Character Counters */}
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#966E2E]">1. Hero Copy & Messaging</h4>
+                                            
+                                            {/* Eyebrow */}
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between items-center text-[10px] font-bold text-[#71717A] uppercase">
+                                                    <label>Eyebrow Badge (Max 60 chars)</label>
+                                                    <span className={(banner.eyebrow || '').length > 60 ? 'text-rose-600 font-bold' : ''}>
+                                                        {(banner.eyebrow || '').length}/60
+                                                    </span>
+                                                </div>
+                                                <input 
+                                                    value={banner.eyebrow || ''} 
+                                                    maxLength={60}
+                                                    placeholder="Since 1960 · Chandni Chowk, New Delhi"
+                                                    onChange={e => handleUpdateBanner(banner.id, { eyebrow: e.target.value })} 
+                                                    className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-3 text-xs text-[#18181B] font-mono focus:border-[#966E2E] focus:bg-white outline-none" 
+                                                />
+                                            </div>
+
+                                            {/* H1 Title */}
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between items-center text-[10px] font-bold text-[#71717A] uppercase">
+                                                    <label>Main Headline / H1 (Max 90 chars)</label>
+                                                    <span className={(banner.title || '').length > 90 ? 'text-rose-600 font-bold' : ''}>
+                                                        {(banner.title || '').length}/90
+                                                    </span>
+                                                </div>
+                                                <input 
+                                                    value={banner.title || ''} 
+                                                    maxLength={90}
+                                                    placeholder="Jewellery Tools, Machines & Packaging for Goldsmiths and Manufacturers"
+                                                    onChange={e => handleUpdateBanner(banner.id, { title: e.target.value })} 
+                                                    className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-3.5 text-sm text-[#18181B] font-bold focus:border-[#966E2E] focus:bg-white outline-none" 
+                                                />
+                                            </div>
+
+                                            {/* Subheading */}
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between items-center text-[10px] font-bold text-[#71717A] uppercase">
+                                                    <label>Subheading Copy (Max 180 chars)</label>
+                                                    <span className={(banner.subtitle || '').length > 180 ? 'text-rose-600 font-bold' : ''}>
+                                                        {(banner.subtitle || '').length}/180
+                                                    </span>
+                                                </div>
+                                                <textarea 
+                                                    rows={2}
+                                                    value={banner.subtitle || ''} 
+                                                    maxLength={180}
+                                                    placeholder="Pliers, tweezers, polishing machines, torches, ring tools and packaging, supplied to jewellers and workshops across India."
+                                                    onChange={e => handleUpdateBanner(banner.id, { subtitle: e.target.value })} 
+                                                    className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-3 text-xs text-[#18181B] focus:border-[#966E2E] focus:bg-white outline-none leading-relaxed" 
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* 2. Call to Action Links */}
+                                        <div className="space-y-4 pt-4 border-t border-[#E8E2D5]">
+                                            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#966E2E]">2. Call to Action Buttons & Links</h4>
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {/* Primary CTA */}
+                                                <div className="space-y-1.5 p-3.5 bg-[#FAF9F5] rounded-2xl border border-[#E8E2D5]">
+                                                    <span className="text-[10px] font-bold text-[#966E2E] uppercase">Primary CTA (Retail)</span>
+                                                    <div className="space-y-2">
+                                                        <div className="flex justify-between text-[9px] text-[#71717A]">
+                                                            <span>Label (Max 24)</span>
+                                                            <span>{(banner.button_text || '').length}/24</span>
+                                                        </div>
                                                         <input 
-                                                            type="text" 
-                                                            value={banner.image_url}
-                                                            onChange={(e) => handleUpdateBanner(banner.id, { image_url: e.target.value })}
-                                                            className="w-full bg-white border border-[#E8E2D5] rounded-xl p-2 text-xs text-[#18181B] outline-none focus:border-[#966E2E]"
-                                                            placeholder="Paste image link..."
+                                                            value={banner.button_text || ''} 
+                                                            maxLength={24}
+                                                            placeholder="Shop the catalog"
+                                                            onChange={e => handleUpdateBanner(banner.id, { button_text: e.target.value })} 
+                                                            className="w-full bg-white border border-[#E8E2D5] rounded-xl p-2.5 text-xs text-[#18181B] font-medium outline-none focus:border-[#966E2E]"
+                                                        />
+                                                        <input 
+                                                            value={banner.link || ''} 
+                                                            placeholder="/shop"
+                                                            onChange={e => handleUpdateBanner(banner.id, { link: e.target.value })} 
+                                                            className="w-full bg-white border border-[#E8E2D5] rounded-xl p-2.5 text-xs font-mono text-[#18181B] outline-none focus:border-[#966E2E]"
                                                         />
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <label className="text-[10px] font-black text-amber-300 uppercase block">Or Upload Image</label>
+                                                </div>
+
+                                                {/* Secondary CTA */}
+                                                <div className="space-y-1.5 p-3.5 bg-[#FAF9F5] rounded-2xl border border-[#E8E2D5]">
+                                                    <span className="text-[10px] font-bold text-[#71717A] uppercase">Secondary CTA (Wholesale / B2B)</span>
+                                                    <div className="space-y-2">
+                                                        <div className="flex justify-between text-[9px] text-[#71717A]">
+                                                            <span>Label (Max 24)</span>
+                                                            <span>{(banner.secondary_button_text || '').length}/24</span>
+                                                        </div>
                                                         <input 
-                                                            type="file" 
-                                                            accept="image/*"
-                                                            onChange={(e) => {
-                                                                const file = e.target.files?.[0];
-                                                                if (file) handleUploadImage(banner.id, file);
-                                                            }}
-                                                            disabled={uploading === banner.id}
-                                                            className="w-full bg-white border border-[#E8E2D5] rounded-xl p-1.5 text-[10px] text-[#18181B] file:bg-[#FAF9F5] file:text-[#18181B] file:border file:border-[#E8E2D5] file:px-2 file:py-0.5 file:rounded file:mr-2 file:cursor-pointer hover:file:bg-white"
+                                                            value={banner.secondary_button_text || ''} 
+                                                            maxLength={24}
+                                                            placeholder="Get a bulk quote"
+                                                            onChange={e => handleUpdateBanner(banner.id, { secondary_button_text: e.target.value })} 
+                                                            className="w-full bg-white border border-[#E8E2D5] rounded-xl p-2.5 text-xs text-[#18181B] font-medium outline-none focus:border-[#966E2E]"
                                                         />
-                                                        {uploading === banner.id && (
-                                                            <span className="text-[8px] text-amber-300 font-bold block animate-pulse">Uploading...</span>
-                                                        )}
+                                                        <input 
+                                                            value={banner.secondary_link || ''} 
+                                                            placeholder="/contact?subject=Bulk+Quote"
+                                                            onChange={e => handleUpdateBanner(banner.id, { secondary_link: e.target.value })} 
+                                                            className="w-full bg-white border border-[#E8E2D5] rounded-xl p-2.5 text-xs font-mono text-[#18181B] outline-none focus:border-[#966E2E]"
+                                                        />
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            {/* WhatsApp Channel */}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-[#71717A] uppercase">WhatsApp Number (e.g. 919953435647)</label>
+                                                    <input 
+                                                        value={banner.whatsapp_number || ''} 
+                                                        placeholder="919953435647"
+                                                        onChange={e => handleUpdateBanner(banner.id, { whatsapp_number: e.target.value })} 
+                                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-2.5 text-xs font-mono text-[#18181B] outline-none focus:border-[#966E2E]"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-[#71717A] uppercase">WhatsApp Prefilled Message</label>
+                                                    <input 
+                                                        value={banner.whatsapp_message || ''} 
+                                                        placeholder="Hello Dinanath & Sons, I would like to inquire about jewellery tools..."
+                                                        onChange={e => handleUpdateBanner(banner.id, { whatsapp_message: e.target.value })} 
+                                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-2.5 text-xs text-[#18181B] outline-none focus:border-[#966E2E]"
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="lg:w-2/3 p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest">Main Headline</label>
-                                                <input value={banner.title} onChange={e => handleUpdateBanner(banner.id, { title: e.target.value })} className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-4 text-sm text-[#18181B] font-bold focus:border-[#966E2E] focus:bg-white outline-none" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest">Supporting Text</label>
-                                                <input value={banner.subtitle} onChange={e => handleUpdateBanner(banner.id, { subtitle: e.target.value })} className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-4 text-sm text-[#18181B] focus:border-[#966E2E] focus:bg-white outline-none" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest">Action Link</label>
-                                                <input value={banner.link} onChange={e => handleUpdateBanner(banner.id, { link: e.target.value })} className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-4 text-sm text-[#18181B] font-mono focus:border-[#966E2E] focus:bg-white outline-none" />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest">Platform</label>
-                                                    <select value={banner.platform} onChange={e => handleUpdateBanner(banner.id, { platform: e.target.value as any })} className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-4 text-xs text-[#18181B] appearance-none focus:border-[#966E2E] outline-none font-bold">
-                                                        <option value="all">Universal</option>
-                                                        <option value="desktop">Desktop Pro</option>
-                                                        <option value="mobile">Mobile Optimized</option>
+
+                                        {/* 3. Platform Targeting & Scheduling */}
+                                        <div className="space-y-4 pt-4 border-t border-[#E8E2D5]">
+                                            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#966E2E]">3. Platform Targeting & Seasonal Scheduling</h4>
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-[#71717A] uppercase">Device Platform</label>
+                                                    <select 
+                                                        value={banner.platform} 
+                                                        onChange={e => handleUpdateBanner(banner.id, { platform: e.target.value as any })} 
+                                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-3 text-xs text-[#18181B] font-bold outline-none focus:border-[#966E2E]"
+                                                    >
+                                                        <option value="all">Universal (All Devices)</option>
+                                                        <option value="desktop">Desktop Only</option>
+                                                        <option value="mobile">Mobile Optimized Only</option>
                                                     </select>
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-[#71717A] uppercase tracking-widest">Order</label>
-                                                    <input type="number" value={banner.display_order} onChange={e => handleUpdateBanner(banner.id, { display_order: parseInt(e.target.value) })} className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-4 text-xs text-[#18181B] focus:border-[#966E2E] focus:bg-white outline-none font-bold" />
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-[#71717A] uppercase">Campaign Start Date</label>
+                                                    <input 
+                                                        type="datetime-local"
+                                                        value={banner.start_date ? banner.start_date.substring(0, 16) : ''} 
+                                                        onChange={e => handleUpdateBanner(banner.id, { start_date: e.target.value })} 
+                                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-2.5 text-xs text-[#18181B] outline-none focus:border-[#966E2E]"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-[#71717A] uppercase">Campaign End Date</label>
+                                                    <input 
+                                                        type="datetime-local"
+                                                        value={banner.end_date ? banner.end_date.substring(0, 16) : ''} 
+                                                        onChange={e => handleUpdateBanner(banner.id, { end_date: e.target.value })} 
+                                                        className="w-full bg-[#FAF9F5] border border-[#E8E2D5] rounded-xl p-2.5 text-xs text-[#18181B] outline-none focus:border-[#966E2E]"
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="px-6 md:px-10 py-5 bg-[#FAF9F5]/60 border-t border-[#E8E2D5] flex justify-between items-center">
-                                        <div className="flex items-center gap-8">
-                                            <div className="flex items-center gap-3">
-                                                <div onClick={() => handleUpdateBanner(banner.id, { active: !banner.active })} className={`w-12 h-6 rounded-full relative transition-all cursor-pointer ${banner.active ? 'bg-emerald-600' : 'bg-gray-300'}`}>
-                                                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${banner.active ? 'left-7' : 'left-1'}`} />
+
+                                        {/* 4. Fallback Images Slot */}
+                                        <div className="space-y-4 pt-4 border-t border-[#E8E2D5]">
+                                            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#966E2E]">4. Fallback Hero Images (WebP/AVIF auto-optimized)</h4>
+                                            
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="p-4 bg-[#FAF9F5] rounded-2xl border border-[#E8E2D5] space-y-2">
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-[10px] font-bold text-[#18181B] uppercase">Desktop Fallback</span>
+                                                        <span className="text-[9px] text-[#71717A]">1200x800px · Max 120KB</span>
+                                                    </div>
+                                                    <input 
+                                                        type="file" 
+                                                        accept="image/*"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) handleUploadImage(banner.id, file);
+                                                        }}
+                                                        disabled={uploading === banner.id}
+                                                        className="w-full bg-white border border-[#E8E2D5] rounded-xl p-1.5 text-[10px] text-[#18181B] file:bg-[#FAF9F5] file:text-[#18181B] file:border file:border-[#E8E2D5] file:px-2 file:py-0.5 file:rounded file:mr-2 file:cursor-pointer hover:file:bg-white"
+                                                    />
+                                                    {banner.image_url && (
+                                                        <p className="text-[9px] text-emerald-700 font-mono truncate">Asset: {banner.image_url}</p>
+                                                    )}
                                                 </div>
-                                                <span className="text-[10px] font-black text-[#71717A] uppercase">{banner.active ? 'Visible' : 'Draft'}</span>
+
+                                                <div className="p-4 bg-[#FAF9F5] rounded-2xl border border-[#E8E2D5] space-y-2">
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-[10px] font-bold text-[#18181B] uppercase">Mobile Fallback</span>
+                                                        <span className="text-[9px] text-[#71717A]">600x600px · Max 80KB</span>
+                                                    </div>
+                                                    <input 
+                                                        type="file" 
+                                                        accept="image/*"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) handleUploadImage(banner.id, file);
+                                                        }}
+                                                        disabled={uploading === banner.id}
+                                                        className="w-full bg-white border border-[#E8E2D5] rounded-xl p-1.5 text-[10px] text-[#18181B] file:bg-[#FAF9F5] file:text-[#18181B] file:border file:border-[#E8E2D5] file:px-2 file:py-0.5 file:rounded file:mr-2 file:cursor-pointer hover:file:bg-white"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                        <button onClick={() => handleDeleteBanner(banner.id)} className="p-3 bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 rounded-2xl transition-all"><Trash2 size={18}/></button>
+
+                                        {/* 5. Live Preview Card */}
+                                        <div className="pt-4 border-t border-[#E8E2D5]">
+                                            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#966E2E] mb-3">Live Mobile Layout Preview</h4>
+                                            <div className="max-w-md mx-auto bg-[#FAF9F5] border border-[#E8E2D5] rounded-2xl p-4 shadow-sm space-y-3">
+                                                <div className="inline-block bg-white border border-[#E8E2D5] rounded-full px-2.5 py-0.5 text-[9px] font-bold font-mono text-[#7A541E] uppercase">
+                                                    {eyebrowText}
+                                                </div>
+                                                <div className="text-base font-bold font-display text-[#18181B] leading-tight">
+                                                    {titleText}
+                                                </div>
+                                                <div className="text-xs text-[#52525B] leading-relaxed">
+                                                    {subtitleText}
+                                                </div>
+                                                <div className="space-y-1.5 pt-1">
+                                                    <div className="w-full h-10 bg-[#966E2E] text-white font-bold text-xs rounded-xl flex items-center justify-center">
+                                                        {primaryBtnText} →
+                                                    </div>
+                                                    <div className="w-full h-9 bg-white border border-[#E8E2D5] text-[#18181B] font-bold text-xs rounded-xl flex items-center justify-center">
+                                                        {secondaryBtnText}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </motion.div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 )}

@@ -153,7 +153,15 @@ const siteGraphSchema = {
       "@type": "WebSite",
       "@id": `${SITE_CONFIG.baseUrl}/#website`,
       "name": SITE_CONFIG.businessName,
-      "url": SITE_CONFIG.baseUrl
+      "url": SITE_CONFIG.baseUrl,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${SITE_CONFIG.baseUrl}/shop?search={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
     }
   ]
 };

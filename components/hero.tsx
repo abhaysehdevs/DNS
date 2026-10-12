@@ -1,501 +1,435 @@
 'use client';
 
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
-import { useRef, useEffect, useState } from 'react';
-import { ArrowRight, Sparkles, Sliders, Compass, Flame, ShieldCheck, Zap, Award, Search, CheckCircle2, ChevronRight, Package, Wrench, Layers } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { 
+    ArrowRight, MessageCircle, Wrench, Cog, Sparkles, 
+    Droplets, Package, ShieldCheck, Truck, Receipt, History, 
+    X, ChevronRight, CheckCircle2 
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { SITE_CONFIG } from '@/lib/site-config';
+import { products as initialLocalProducts } from '@/lib/data';
+import { normalizeProduct } from '@/lib/slug';
+import { HeroCarousel, HeroProductItem } from './hero-carousel';
 
-interface ShowcaseCategory {
-    id: string;
+interface HeroConfig {
+    eyebrow: string;
     title: string;
-    categoryLabel: string;
-    badge: string;
-    image: string;
-    tagline: string;
-    link: string;
-    specs: { label: string; value: string }[];
-    description: string;
-    icon: any;
-    glowColor: string;
+    subtitle: string;
+    primaryButtonText: string;
+    primaryButtonLink: string;
+    secondaryButtonText: string;
+    secondaryButtonLink: string;
+    whatsAppNumber: string;
+    whatsAppMessage: string;
+    announcementMessage?: string;
+    trustItems: {
+        id: string;
+        label: string;
+        sublabel: string;
+        enabled: boolean;
+    }[];
 }
 
-const CATEGORY_SHOWCASES: ShowcaseCategory[] = [
-    {
-        id: 'tools',
-        title: 'Precision Goldsmith Tools',
-        categoryLabel: 'HAND TOOLS & INSTRUMENTS',
-        badge: 'SUS316 // 62 HRC HARDNESS',
-        image: '/images/products/15f-tweezers.png',
-        tagline: 'Micro-tolerance stainless steel tweezers, pliers, cutters & setting instruments.',
-        description: 'Engineered for precision stone setting, delicate soldering, and microscopic metalwork. Manufactured from high-grade anti-magnetic alloys.',
-        link: '/shop/category/hand-tools',
-        specs: [
-            { label: 'Material', value: 'Non-Magnetic SUS316 Stainless Steel' },
-            { label: 'Hardness', value: '62 HRC Tempered Tips' },
-            { label: 'Precision', value: 'Zero-Tolerance Alignment' }
-        ],
-        icon: Sliders,
-        glowColor: '#966E2E'
-    },
-    {
-        id: 'machinery',
-        title: 'Jewellery Workshop Machinery',
-        categoryLabel: 'HEAVY MACHINERY & EQUIPMENT',
-        badge: '2.5 HP // 500 CFM DUST EXTRACTOR',
-        image: '/images/products/sand-blasting-dust-collector-machine.png',
-        tagline: 'Industrial sand blasters, polishing dust collectors & motor units calibrated for output.',
-        description: 'High-torque workshop machinery built for gold recovery, metal surface texturing, and heavy-duty continuous operations.',
-        link: '/shop/category/machines',
-        specs: [
-            { label: 'Motor Rating', value: '2.5 HP Heavy Duty Copper Wound' },
-            { label: 'Filtration', value: 'Dual HEPA Dust Collector Chamber' },
-            { label: 'Airflow', value: '500 CFM High Vacuum' }
-        ],
-        icon: Compass,
-        glowColor: '#966E2E'
-    },
-    {
-        id: 'torch',
-        title: 'Automatic Brazing & Soldering',
-        categoryLabel: 'WELDING & MELTING',
-        badge: '3200°F PEAK MELTING TEMP',
-        image: '/images/products/gas-torch-auto.png',
-        tagline: 'Piezo auto-ignition torches, gas burners & flux accessories for gold casting.',
-        description: 'Self-igniting micro torches with needle-valve flame regulation designed for seamless gold, silver, and platinum soldering.',
-        link: '/shop/category/hand-tools',
-        specs: [
-            { label: 'Max Temp', value: '3200°F (1760°C) Pinpoint Flame' },
-            { label: 'Ignition', value: 'Instant Piezo Push Trigger' },
-            { label: 'Fuel Compat', value: 'LPG / MAPP / Propane Gas' }
-        ],
-        icon: Flame,
-        glowColor: '#966E2E'
-    },
-    {
-        id: 'polishing',
-        title: 'Polishing & Finishing Buffs',
-        categoryLabel: 'BUFFING & CONSUMABLES',
-        badge: 'HIGH-GLOSS MIRROR FINISH',
-        image: '/images/products/15f-tweezers.png',
-        tagline: 'Cotton buff wheels, rouge compounds, and bristle brushes for high mirror lustre.',
-        description: 'Specially treated stitched cotton buffs and diamond polishing compounds formulated for ultra-smooth finishing of precious alloys.',
-        link: '/shop/category/polishing',
-        specs: [
-            { label: 'Buff Type', value: 'Fine Cotton Stitched & Loose' },
-            { label: 'Applications', value: 'Gold, Silver & Platinum Lustre' },
-            { label: 'Durability', value: 'Reinforced Center Washer' }
-        ],
-        icon: Wrench,
-        glowColor: '#966E2E'
-    },
-    {
-        id: 'packaging',
-        title: 'Luxury Packaging & Trays',
-        categoryLabel: 'PACKAGING & DISPLAY',
-        badge: 'PREMIUM VELVET & LEATHERETTE',
-        image: '/images/products/sand-blasting-dust-collector-machine.png',
-        tagline: 'Custom jewellery presentation boxes, velvet rolls, and counter display organizers.',
-        description: 'Elevate your retail brand with bespoke jewellery display boxes, gem counters, and velvet storage trays.',
-        link: '/shop/category/packaging',
-        specs: [
-            { label: 'Finishing', value: 'Soft Micro-Velvet & Matte Leatherette' },
-            { label: 'Branding', value: 'Custom Gold Foil Embossing Available' },
-            { label: 'Capacity', value: 'Multi-Compartment Organizer Trays' }
-        ],
-        icon: Package,
-        glowColor: '#966E2E'
-    }
+const DEFAULT_HERO_CONFIG: HeroConfig = {
+    eyebrow: 'Since 1960 · Chandni Chowk, New Delhi',
+    title: 'Jewellery Tools, Machines & Packaging for Goldsmiths and Manufacturers',
+    subtitle: 'Pliers, tweezers, polishing machines, torches, ring tools and packaging, supplied to jewellers and workshops across India.',
+    primaryButtonText: 'Shop the catalog',
+    primaryButtonLink: '/shop',
+    secondaryButtonText: 'Get a bulk quote',
+    secondaryButtonLink: '/contact?subject=Bulk+Quote',
+    whatsAppNumber: SITE_CONFIG.contact.whatsApp || '919953435647',
+    whatsAppMessage: 'Hello Dinanath & Sons, I would like to inquire about bulk jewellery tools & machinery.',
+    announcementMessage: '',
+    trustItems: [
+        { id: 'since1960', label: 'Since 1960', sublabel: '3 generations of trade', enabled: true },
+        { id: 'gst', label: 'GST invoice', sublabel: 'For B2B and wholesale orders', enabled: true },
+        { id: 'shipping', label: 'Ships across India', sublabel: 'Insured dispatch from Delhi', enabled: true },
+        { id: 'catalog', label: '80+ products', sublabel: 'Tools, machines, consumables', enabled: true }
+    ]
+};
+
+// 5 core category quick shortcuts corresponding to catalog categories
+const CATEGORY_SHORTCUTS = [
+    { name: 'Hand Tools', href: '/shop/category/hand-tools', icon: Wrench },
+    { name: 'Machines', href: '/shop/category/machines', icon: Cog },
+    { name: 'Polishing', href: '/shop/category/polishing', icon: Sparkles },
+    { name: 'Cleaning', href: '/shop/category/chemicals', icon: Droplets },
+    { name: 'Packaging', href: '/shop/category/packaging', icon: Package }
 ];
 
 export function Hero() {
-    const router = useRouter();
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
-    const [activeTabId, setActiveTabId] = useState<string>('tools');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [banners, setBanners] = useState<any[]>([]);
-    const [currentSlide, setCurrentSlide] = useState(0);
+    const [config, setConfig] = useState<HeroConfig>(DEFAULT_HERO_CONFIG);
+    const [featuredProducts, setFeaturedProducts] = useState<HeroProductItem[]>([]);
+    const [liveCount, setLiveCount] = useState<number>(80);
+    const [isAnnouncementDismissed, setIsAnnouncementDismissed] = useState<boolean>(false);
 
-    const activeShowcase = CATEGORY_SHOWCASES.find(c => c.id === activeTabId) || CATEGORY_SHOWCASES[0];
-
+    // Initial check for session-dismissed announcement
     useEffect(() => {
-        const fetchBanners = async () => {
+        try {
+            if (typeof window !== 'undefined') {
+                const dismissed = sessionStorage.getItem('dns_hero_announcement_dismissed');
+                if (dismissed === 'true') {
+                    setIsAnnouncementDismissed(true);
+                }
+            }
+        } catch (e) {}
+    }, []);
+
+    // 1. Fetch CMS Banner configuration & active announcements
+    useEffect(() => {
+        async function fetchCmsData() {
             try {
-                const { data, error } = await supabase
+                // Check homepage_banners
+                const { data: banners } = await supabase
                     .from('homepage_banners')
                     .select('*')
                     .eq('active', true)
-                    .order('display_order');
-                if (!error && data) {
-                    setBanners(data);
+                    .order('display_order', { ascending: true })
+                    .limit(1);
+
+                if (banners && banners.length > 0) {
+                    const b = banners[0];
+                    setConfig(prev => ({
+                        ...prev,
+                        eyebrow: b.eyebrow?.trim() || prev.eyebrow,
+                        title: b.title?.trim() || prev.title,
+                        subtitle: b.subtitle?.trim() || prev.subtitle,
+                        primaryButtonText: b.button_text?.trim() || prev.primaryButtonText,
+                        primaryButtonLink: b.link?.trim() || prev.primaryButtonLink,
+                        secondaryButtonText: b.secondary_button_text?.trim() || prev.secondaryButtonText,
+                        secondaryButtonLink: b.secondary_link?.trim() || prev.secondaryButtonLink,
+                        whatsAppNumber: b.whatsapp_number?.trim() || prev.whatsAppNumber,
+                        whatsAppMessage: b.whatsapp_message?.trim() || prev.whatsAppMessage,
+                        trustItems: Array.isArray(b.trust_items) && b.trust_items.length > 0 ? b.trust_items : prev.trustItems
+                    }));
+                }
+
+                // Check active announcements for optional dismissible offer bar
+                const { data: annList } = await supabase
+                    .from('announcements')
+                    .select('message')
+                    .eq('active', true)
+                    .limit(1);
+
+                if (annList && annList.length > 0 && annList[0].message) {
+                    setConfig(prev => ({ ...prev, announcementMessage: annList[0].message }));
                 }
             } catch (err) {
-                console.error('Error loading banners:', err);
+                // Graceful fallback to default config
             }
-        };
-        fetchBanners();
-    }, []);
-
-    useEffect(() => {
-        if (banners.length <= 1) return;
-        const interval = setInterval(() => {
-            setCurrentSlide(prev => (prev + 1) % banners.length);
-        }, 6000);
-        return () => clearInterval(interval);
-    }, [banners]);
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!containerRef.current) return;
-            const rect = containerRef.current.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width;
-            const y = (e.clientY - rect.top) / rect.height;
-            setMousePosition({ x, y });
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
-
-    const smoothX = useSpring(useMotionValue(0.5), { damping: 40, stiffness: 220 });
-    const smoothY = useSpring(useMotionValue(0.5), { damping: 40, stiffness: 220 });
-
-    useEffect(() => {
-        smoothX.set(mousePosition.x - 0.5);
-        smoothY.set(mousePosition.y - 0.5);
-    }, [mousePosition, smoothX, smoothY]);
-
-    const cardRotateX = useTransform(smoothY, [-0.5, 0.5], [6, -6]);
-    const cardRotateY = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
-
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
         }
+
+        fetchCmsData();
+    }, []);
+
+    // 2. Fetch live in-stock products for the showcase carousel
+    useEffect(() => {
+        async function fetchProducts() {
+            try {
+                // Get exact count of in-stock items with retail_price > 0
+                const { count } = await supabase
+                    .from('products')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('in_stock', true)
+                    .gt('retail_price', 0);
+
+                if (typeof count === 'number' && count > 0) {
+                    setLiveCount(count);
+                }
+
+                // Try fetching products flagged featured_on_hero
+                let candidateProducts: any[] = [];
+                try {
+                    const { data: flagged } = await supabase
+                        .from('products')
+                        .select('id, name, retail_price, in_stock, image, category, sku, specifications')
+                        .eq('in_stock', true)
+                        .gt('retail_price', 0)
+                        .eq('featured_on_hero', true)
+                        .limit(6);
+
+                    if (flagged && flagged.length >= 2) {
+                        candidateProducts = flagged;
+                    }
+                } catch (e) {
+                    // Column might not exist yet; fall through
+                }
+
+                // If not enough flagged, fallback to newest in-stock products
+                if (candidateProducts.length < 2) {
+                    const { data: newest } = await supabase
+                        .from('products')
+                        .select('id, name, retail_price, in_stock, image, category, sku, specifications')
+                        .eq('in_stock', true)
+                        .gt('retail_price', 0)
+                        .order('created_at', { ascending: false })
+                        .limit(6);
+
+                    if (newest && newest.length > 0) {
+                        candidateProducts = newest;
+                    }
+                }
+
+                if (candidateProducts.length >= 2) {
+                    const mapped: HeroProductItem[] = candidateProducts.map(p => {
+                        const norm = normalizeProduct(p);
+                        return {
+                            id: norm.id,
+                            name: norm.name,
+                            category: norm.category,
+                            retailPrice: norm.retailPrice,
+                            image: norm.image || '/placeholder.jpg',
+                            slug: norm.slug
+                        };
+                    });
+                    setFeaturedProducts(mapped);
+                    return;
+                }
+            } catch (err) {
+                // Fallback below
+            }
+
+            // Safe offline fallback: curated in-stock local items
+            const localFiltered = initialLocalProducts
+                .filter(p => p.inStock && p.retailPrice > 0 && p.primaryImage)
+                .slice(0, 6)
+                .map(p => {
+                    const norm = normalizeProduct(p);
+                    return {
+                        id: norm.id,
+                        name: norm.name,
+                        category: norm.category,
+                        retailPrice: norm.retailPrice,
+                        image: norm.image || norm.primaryImage || '/placeholder.jpg',
+                        slug: norm.slug
+                    };
+                });
+
+            setFeaturedProducts(localFiltered);
+        }
+
+        fetchProducts();
+    }, []);
+
+    const handleDismissAnnouncement = () => {
+        setIsAnnouncementDismissed(true);
+        try {
+            sessionStorage.setItem('dns_hero_announcement_dismissed', 'true');
+        } catch (e) {}
     };
+
+    const whatsAppHref = config.whatsAppNumber
+        ? `https://wa.me/${config.whatsAppNumber.replace(/\D/g, '')}?text=${encodeURIComponent(config.whatsAppMessage)}`
+        : '';
 
     return (
         <section 
-            ref={containerRef}
-            className="relative w-full flex flex-col justify-start lg:justify-center bg-[#FAF9F5] text-[#18181B] overflow-hidden pt-2 sm:pt-3 lg:pt-6 pb-4 sm:pb-6 lg:pb-8 px-3.5 sm:px-8 md:px-12 lg:px-16 border-b border-[#E8E2D5]"
+            aria-labelledby="hero-heading"
+            className="relative w-full bg-[#FAF9F5] text-[#18181B] border-b border-[#E8E2D5] overflow-hidden"
         >
-            {/* Ambient Radial Spotlight */}
-            <div 
-                className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-700 opacity-40"
-                style={{
-                    background: `radial-gradient(900px circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(150, 110, 46, 0.08), transparent 70%)`
-                }}
-            />
-
-            {/* Grid Pattern Backdrop */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(150,110,46,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(150,110,46,0.04)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0" />
-            
-            {/* Top Glow Blur Pill */}
-            <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-[#966E2E]/10 rounded-full blur-[140px] pointer-events-none z-0" />
-
-            <div className="container mx-auto max-w-7xl relative z-10 w-full">
-                
-                {/* ==================== 1. MOBILE DEDICATED HERO (lg:hidden) ==================== */}
-                <div className="block lg:hidden w-full max-w-lg mx-auto space-y-2.5">
-                    
-                    {/* 1. Flagship Brand Banner Card */}
-                    <div className="relative w-full rounded-2xl overflow-hidden border border-[#966E2E]/30 bg-gradient-to-br from-[#FFFDF9] via-[#F8F5EE] to-[#EFEAE1] p-4 sm:p-5 shadow-lg text-left">
-                        {/* Background Storefront Watermark Overlay */}
-                        <div 
-                            className="absolute inset-0 opacity-10 pointer-events-none bg-cover bg-center mix-blend-luminosity"
-                            style={{ backgroundImage: "url('/headquarters_storefront.png')" }}
-                        />
-                        {/* Ambient Gradient Glow */}
-                        <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-[#966E2E]/15 blur-[60px] pointer-events-none" />
-
-                        <div className="relative z-10 flex flex-col space-y-2">
-                            {/* Heritage Badge */}
-                            <div className="flex items-center justify-between">
-                                <div className="inline-flex items-center gap-1.5 bg-white/90 border border-[#966E2E]/30 rounded-full px-3 py-1 shadow-sm backdrop-blur-sm">
-                                    <Sparkles size={11} className="text-[#966E2E] animate-pulse" />
-                                    <span className="text-[8.5px] font-mono font-bold tracking-[0.15em] text-[#966E2E] uppercase">
-                                        ESTD 1960 • CHANDNI CHOWK, DELHI
-                                    </span>
-                                </div>
-                                <span className="text-[8px] font-mono text-[#966E2E] font-bold tracking-wider uppercase border border-[#966E2E]/30 px-2 py-0.5 rounded-md bg-white/80">
-                                    3RD GEN
-                                </span>
-                            </div>
-
-                            {/* Headline */}
-                            <div className="pt-1">
-                                <h1 className="text-[23px] font-black font-display tracking-wide uppercase text-[#18181B] leading-tight">
-                                    Dinanath <span className="text-[#966E2E] font-sans font-light tracking-[0.1em]">& SONS</span>
-                                </h1>
-                                <div className="text-[11px] font-bold text-[#966E2E] tracking-wide uppercase mt-0.5">
-                                    Jewellery Tools & Equipment Pioneer
-                                </div>
-                            </div>
-
-                            {/* Value Pitch */}
-                            <p className="text-[10.5px] text-[#52525B] leading-relaxed font-normal">
-                                Supplying India's master goldsmiths with precision tweezers, casting torches, and industrial polishing machinery.
+            {/* 1. OPTIONAL DISMISSIBLE ANNOUNCEMENT / OFFER BAR */}
+            {config.announcementMessage && !isAnnouncementDismissed && (
+                <div 
+                    role="region" 
+                    aria-label="Store Announcement"
+                    className="w-full bg-[#F7F2EA] border-b border-[#E8E2D5] text-[#7A541E] text-xs font-medium py-2 px-3.5 transition-all"
+                >
+                    <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 truncate">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#966E2E] shrink-0" aria-hidden="true" />
+                            <p className="truncate text-[11px] sm:text-xs">
+                                {config.announcementMessage}
                             </p>
-
-                            {/* Action CTA Buttons */}
-                            <div className="flex items-center gap-2.5 pt-2">
-                                <Link href="/shop" className="flex-1">
-                                    <button className="w-full h-10 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-wider text-[10px] rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
-                                        <span>Explore 110+ Tools</span>
-                                        <ArrowRight size={13} strokeWidth={2.5} />
-                                    </button>
-                                </Link>
-                                <Link href="/shop/category/machines" className="flex-1">
-                                    <button className="w-full h-10 bg-white border border-[#E8E2D5] hover:border-[#966E2E] text-[#18181B] font-bold uppercase tracking-wider text-[10px] rounded-xl transition-all flex items-center justify-center gap-1 active:scale-95 cursor-pointer shadow-sm">
-                                        <span>Machinery</span>
-                                        <ChevronRight size={13} className="text-[#966E2E]" />
-                                    </button>
-                                </Link>
-                            </div>
                         </div>
+                        <button
+                            type="button"
+                            onClick={handleDismissAnnouncement}
+                            className="p-1 hover:bg-[#E8E2D5]/50 rounded-md text-[#7A541E] transition-colors cursor-pointer shrink-0"
+                            aria-label="Dismiss announcement"
+                        >
+                            <X size={14} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* MAIN HERO CONTAINER (Strict mobile-first layout with desktop two-column enhancement) */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 lg:pt-12 pb-6 sm:pb-8 lg:pb-12">
+                
+                {/* Responsive Grid: Single column on mobile/tablet, 2-column on desktop (lg:1024px+) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
+                    
+                    {/* =========================================================================
+                        LEFT COLUMN: Core Value Pitch & Direct CTAs
+                        Must fit within first 640px height on mobile devices!
+                       ========================================================================= */}
+                    <div className="lg:col-span-7 flex flex-col items-start text-left space-y-3.5 sm:space-y-4">
+                        
+                        {/* Eyebrow */}
+                        <div className="inline-flex items-center gap-2 bg-white border border-[#E8E2D5] rounded-full px-3 py-1 shadow-2xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#966E2E]" aria-hidden="true" />
+                            <span className="text-[10px] sm:text-xs font-mono font-bold tracking-wider text-[#7A541E] uppercase">
+                                {config.eyebrow}
+                            </span>
+                        </div>
+
+                        {/* Single Semantic H1 */}
+                        <h1 
+                            id="hero-heading"
+                            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[#18181B] tracking-tight leading-[1.12]"
+                        >
+                            {config.title}
+                        </h1>
+
+                        {/* Subheading */}
+                        <p className="text-sm sm:text-base text-[#52525B] leading-relaxed max-w-2xl font-normal">
+                            {config.subtitle}
+                        </p>
+
+                        {/* Call to Actions (Mobile-first, full-width touch targets >= 44px) */}
+                        <div className="w-full pt-1 sm:pt-2 space-y-2.5 sm:space-y-0 sm:flex sm:items-center sm:gap-3.5">
+                            {/* Primary Retail CTA */}
+                            <Link 
+                                href={config.primaryButtonLink}
+                                className="w-full sm:w-auto block"
+                            >
+                                <button
+                                    type="button"
+                                    className="w-full sm:w-auto h-[52px] px-6 sm:px-8 bg-[#966E2E] hover:bg-[#7D5A25] active:bg-[#684618] text-white font-semibold text-sm rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#966E2E] focus-visible:ring-offset-2"
+                                >
+                                    <span>{config.primaryButtonText}</span>
+                                    <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
+                                </button>
+                            </Link>
+
+                            {/* Secondary Wholesale / B2B CTA */}
+                            <Link 
+                                href={config.secondaryButtonLink}
+                                className="w-full sm:w-auto block"
+                            >
+                                <button
+                                    type="button"
+                                    className="w-full sm:w-auto h-[48px] sm:h-[52px] px-5 sm:px-7 bg-white hover:bg-[#FAF9F5] border border-[#E8E2D5] hover:border-[#966E2E] text-[#18181B] font-semibold text-sm rounded-xl transition-all shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#966E2E] focus-visible:ring-offset-2"
+                                >
+                                    <span>{config.secondaryButtonText}</span>
+                                    <ChevronRight size={16} className="text-[#966E2E]" aria-hidden="true" />
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Tertiary WhatsApp Action */}
+                        {whatsAppHref && (
+                            <div className="pt-1">
+                                <a 
+                                    href={whatsAppHref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs font-medium text-[#7A541E] hover:text-[#58390F] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#966E2E] rounded-md px-1 py-0.5"
+                                >
+                                    <MessageCircle size={15} className="text-[#25D366]" aria-hidden="true" />
+                                    <span>Chat on WhatsApp for custom orders & bulk inquiries</span>
+                                </a>
+                            </div>
+                        )}
+
+                        {/* Desktop Trust Strip (Displayed under CTAs in left column on desktop) */}
+                        <div className="hidden lg:grid grid-cols-2 gap-3 pt-6 w-full border-t border-[#E8E2D5]">
+                            {config.trustItems.filter(item => item.enabled).map((item) => {
+                                const isCatalog = item.id === 'catalog';
+                                const displayLabel = isCatalog ? `${liveCount}+ products` : item.label;
+
+                                return (
+                                    <div key={item.id} className="flex items-start gap-2.5">
+                                        <div className="w-7 h-7 rounded-lg bg-white border border-[#E8E2D5] flex items-center justify-center shrink-0 text-[#966E2E] mt-0.5">
+                                            {item.id === 'since1960' && <History size={14} />}
+                                            {item.id === 'gst' && <Receipt size={14} />}
+                                            {item.id === 'shipping' && <Truck size={14} />}
+                                            {item.id === 'catalog' && <CheckCircle2 size={14} />}
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold text-[#18181B] leading-tight">
+                                                {displayLabel}
+                                            </div>
+                                            <div className="text-[11px] text-[#71717A] leading-tight mt-0.5">
+                                                {item.sublabel}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
                     </div>
 
-                    {/* 4. Trust & Heritage Stats Strip */}
-                    <div className="grid grid-cols-4 gap-1.5 w-full pt-1">
-                        {[
-                            { label: "60+ YRS", sub: "Heritage" },
-                            { label: "110+", sub: "Tools" },
-                            { label: "PAN INDIA", sub: "Dispatch" },
-                            { label: "DELHI", sub: "Storefront" }
-                        ].map((stat, idx) => (
-                            <div key={idx} className="bg-white border border-[#E8E2D5] rounded-xl py-2 px-1 text-center shadow-xs">
-                                <div className="text-[11px] font-black text-[#966E2E] font-mono leading-none">{stat.label}</div>
-                                <div className="text-[7.5px] text-[#71717A] font-bold uppercase tracking-wider mt-1 leading-none">{stat.sub}</div>
-                            </div>
-                        ))}
+                    {/* =========================================================================
+                        RIGHT COLUMN: Live Product Showcase Carousel
+                       ========================================================================= */}
+                    <div className="lg:col-span-5 w-full">
+                        <HeroCarousel products={featuredProducts} />
                     </div>
 
                 </div>
 
-                {/* ==================== 2. DESKTOP HERO DISPLAY GRID (hidden lg:block) ==================== */}
-                <div className="hidden lg:block w-full">
-                    {/* 1. HERITAGE & VALUE BANNER STRIP */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-[#E8E2D5]">
-                        <motion.div 
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="inline-flex items-center gap-2.5 bg-white border border-[#966E2E]/30 rounded-full px-4 py-1.5 shadow-sm"
+                {/* =========================================================================
+                    CATEGORY QUICK SHORTCUTS (Replace old chips)
+                    Mobile: swipeable single row with fade edge. Desktop: clean inline row.
+                   ========================================================================= */}
+                <div className="mt-8 pt-5 border-t border-[#E8E2D5]">
+                    <div className="flex items-center justify-between mb-2.5">
+                        <span className="text-[10px] font-mono font-bold tracking-wider text-[#71717A] uppercase">
+                            POPULAR CATEGORIES
+                        </span>
+                        <Link 
+                            href="/shop" 
+                            className="text-[11px] font-semibold text-[#7A541E] hover:underline flex items-center gap-0.5"
                         >
-                            <Sparkles size={12} className="text-[#966E2E] animate-pulse" />
-                            <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-[#966E2E] uppercase">
-                                ESTABLISHED 1960 • CHANDNI CHOWK, NEW DELHI
-                            </span>
-                        </motion.div>
-
-                        {/* Quick Category Quick-Nav Chips */}
-                        <div className="flex items-center gap-2">
-                            {CATEGORY_SHOWCASES.map((cat) => {
-                                const Icon = cat.icon;
-                                const isActive = activeTabId === cat.id;
-                                return (
-                                    <button
-                                        key={cat.id}
-                                        onClick={() => setActiveTabId(cat.id)}
-                                        className={`px-3.5 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 border ${
-                                            isActive 
-                                                ? 'bg-[#966E2E] text-white border-[#966E2E] shadow-sm font-bold' 
-                                                : 'bg-white text-[#52525B] border-[#E8E2D5] hover:border-[#966E2E]/50 hover:text-[#18181B]'
-                                        }`}
-                                    >
-                                        <Icon size={11} />
-                                        <span>{cat.title.split(' ')[0]}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                            All Categories <ChevronRight size={12} aria-hidden="true" />
+                        </Link>
                     </div>
 
-                    {/* 2. MAIN HERO DISPLAY GRID */}
-                    <div className="grid grid-cols-12 gap-14 items-center">
-                        
-                        {/* LEFT COLUMN: BRAND PROPOSITION & INTERACTIVE CONTROLS */}
-                        <div className="col-span-6 flex flex-col space-y-6 text-left items-start">
-                            
-                            <motion.div
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
-                                className="space-y-3"
-                            >
-                                <h1 className="text-5xl lg:text-6xl font-black font-display tracking-wider uppercase leading-[1.08] text-[#18181B]">
-                                    Dinanath
-                                    <span className="block text-3xl lg:text-4xl text-[#966E2E] font-sans font-light mt-1 tracking-[0.2em]">
-                                        & SONS
-                                    </span>
-                                </h1>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar touch-pan-x -mx-4 px-4 sm:mx-0 sm:px-0">
+                        {CATEGORY_SHORTCUTS.map((cat) => {
+                            const Icon = cat.icon;
+                            return (
+                                <Link
+                                    key={cat.name}
+                                    href={cat.href}
+                                    className="shrink-0 min-h-[44px] px-3.5 py-2 bg-white hover:bg-[#FAF9F5] active:bg-[#F3EFE6] border border-[#E8E2D5] hover:border-[#966E2E] rounded-xl text-xs font-medium text-[#18181B] transition-all flex items-center gap-2 shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#966E2E]"
+                                >
+                                    <Icon size={14} className="text-[#966E2E]" aria-hidden="true" />
+                                    <span>{cat.name}</span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                                <h2 className="text-2xl font-display font-light uppercase tracking-wide leading-snug pt-1 text-[#18181B]">
-                                    India's Premier <span className="text-[#966E2E] font-bold">Jewellery Tools & Equipment</span> Pioneer
-                                </h2>
-                            </motion.div>
+                {/* =========================================================================
+                    MOBILE TRUST STRIP (< 1024px)
+                    2x2 Grid with high-contrast text and clean borders
+                   ========================================================================= */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-4 mt-4 lg:hidden border-t border-[#E8E2D5]">
+                    {config.trustItems.filter(item => item.enabled).map((item) => {
+                        const isCatalog = item.id === 'catalog';
+                        const displayLabel = isCatalog ? `${liveCount}+ products` : item.label;
 
-                            <motion.p
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                                className="text-sm text-[#52525B] leading-relaxed max-w-xl font-normal tracking-wide"
+                        return (
+                            <div 
+                                key={item.id} 
+                                className="bg-white border border-[#E8E2D5] rounded-xl p-2.5 shadow-2xs flex flex-col justify-center"
                             >
-                                Equipping over three generations of master goldsmiths, jewelry manufacturers, and casting workshops with precision tweezers, heavy polishing machines, automatic gas torches, and certified supplies.
-                            </motion.p>
-
-                            {/* Interactive Search Launcher */}
-                            <motion.form 
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                onSubmit={handleSearchSubmit}
-                                className="w-full max-w-lg relative flex items-center bg-white border border-[#E8E2D5] hover:border-[#966E2E]/60 rounded-xl overflow-hidden shadow-sm transition-all h-12"
-                            >
-                                <div className="pl-4 text-[#966E2E]">
-                                    <Search size={16} />
+                                <div className="text-xs font-bold text-[#18181B] leading-tight">
+                                    {displayLabel}
                                 </div>
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search catalog: Tweezers, Dust Collectors, Torches, Buffs..."
-                                    className="w-full py-3.5 px-3 bg-transparent text-xs text-[#18181B] placeholder-[#A1A1AA] focus:outline-none font-medium"
-                                />
-                                <button
-                                    type="submit"
-                                    className="px-5 py-3.5 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase text-[9px] tracking-widest transition-colors flex items-center gap-1.5 shrink-0"
-                                >
-                                    <span>Search</span>
-                                    <ArrowRight size={12} strokeWidth={2.5} />
-                                </button>
-                            </motion.form>
-
-                            {/* CTA Buttons */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                                className="flex flex-wrap gap-4 pt-1"
-                            >
-                                <Link href="/shop">
-                                    <button className="h-12 px-7 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-widest text-[9.5px] rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 shadow-md border-none cursor-pointer">
-                                        <span>Explore Full Catalog</span>
-                                        <ArrowRight size={14} strokeWidth={2.5} />
-                                    </button>
-                                </Link>
-
-                                <Link href={activeShowcase.link}>
-                                    <button className="h-12 px-7 bg-white border border-[#E8E2D5] hover:border-[#966E2E] text-[#18181B] font-bold uppercase tracking-widest text-[9.5px] rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer shadow-sm">
-                                        <span>Browse {activeShowcase.title.split(' ')[0]}</span>
-                                        <ChevronRight size={14} className="text-[#966E2E]" />
-                                    </button>
-                                </Link>
-                            </motion.div>
-
-                            {/* Interactive Feature Badges */}
-                            <div className="grid grid-cols-4 gap-3 pt-4 w-full">
-                                {[
-                                    { label: "60+ YRS", sub: "Heritage Excellence" },
-                                    { label: "110+", sub: "Jewellery Tools" },
-                                    { label: "PAN INDIA", sub: "Fast Dispatch" },
-                                    { label: "DELHI", sub: "Chandni Chowk" }
-                                ].map((stat, idx) => (
-                                    <div key={idx} className="bg-white border border-[#E8E2D5] rounded-xl p-2.5 text-center shadow-xs">
-                                        <div className="text-sm font-black text-[#966E2E] uppercase font-mono">{stat.label}</div>
-                                        <div className="text-[7.5px] text-[#71717A] font-bold uppercase tracking-wider mt-0.5">{stat.sub}</div>
-                                    </div>
-                                ))}
+                                <div className="text-[10px] text-[#71717A] mt-0.5 leading-snug">
+                                    {item.sublabel}
+                                </div>
                             </div>
-
-                        </div>
-
-                        {/* RIGHT COLUMN: INTERACTIVE 3D CATEGORY SHOWCASE CARD */}
-                        <div className="col-span-6 flex flex-col items-center justify-center w-full relative">
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={activeShowcase.id}
-                                    initial={{ opacity: 0, scale: 0.96, y: 15 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.96, y: -15 }}
-                                    transition={{ duration: 0.4 }}
-                                    style={{
-                                        rotateX: cardRotateX,
-                                        rotateY: cardRotateY,
-                                        transformStyle: 'preserve-3d'
-                                    }}
-                                    className="relative w-full max-w-lg bg-white border border-[#E8E2D5] rounded-3xl p-8 flex flex-col justify-between overflow-hidden shadow-xl group select-none"
-                                >
-                                    {/* Radial Glow Behind Image */}
-                                    <div 
-                                        className="absolute -top-10 -right-10 w-64 h-64 rounded-full blur-[80px] opacity-15 pointer-events-none transition-all duration-700"
-                                        style={{ backgroundColor: activeShowcase.glowColor }}
-                                    />
-
-                                    {/* Header Tag */}
-                                    <div className="flex items-center justify-between w-full mb-4 relative z-10 border-b border-[#E8E2D5] pb-3">
-                                        <div className="flex items-center gap-2">
-                                            <span className="w-2 h-2 rounded-full bg-[#966E2E] animate-ping" />
-                                            <span className="text-[8px] font-mono font-bold tracking-[0.2em] text-[#966E2E] uppercase">
-                                                {activeShowcase.categoryLabel}
-                                            </span>
-                                        </div>
-                                        <span className="text-[7.5px] font-mono text-white font-extrabold bg-[#966E2E] px-2.5 py-0.5 rounded uppercase tracking-wider shadow-sm">
-                                            {activeShowcase.badge}
-                                        </span>
-                                    </div>
-
-                                    {/* Main Showcase Image */}
-                                    <div className="w-full h-64 flex items-center justify-center p-4 relative z-10 my-2 bg-[#FAF9F5] rounded-2xl border border-[#E8E2D5]/50">
-                                        <img 
-                                            src={activeShowcase.image} 
-                                            alt={activeShowcase.title}
-                                            className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-105 drop-shadow-[0_10px_20px_rgba(0,0,0,0.06)]"
-                                            onError={(e) => {
-                                                (e.target as HTMLImageElement).src = '/logo.png';
-                                            }}
-                                        />
-                                    </div>
-
-                                    {/* Content & Live Spec Badges */}
-                                    <div className="relative z-10 space-y-3 pt-3 border-t border-[#E8E2D5] text-left">
-                                        <div>
-                                            <h3 className="text-xl font-bold text-[#18181B] uppercase tracking-wide">
-                                                {activeShowcase.title}
-                                            </h3>
-                                            <p className="text-xs text-[#52525B] font-normal leading-relaxed mt-1 line-clamp-2">
-                                                {activeShowcase.description}
-                                            </p>
-                                        </div>
-
-                                        {/* Specifications Grid */}
-                                        <div className="grid grid-cols-1 gap-1.5 pt-1">
-                                            {activeShowcase.specs.map((spec, i) => (
-                                                <div key={i} className="flex items-center justify-between text-[8.5px] bg-[#FAF9F5] px-3 py-1.5 rounded-lg border border-[#E8E2D5]">
-                                                    <span className="text-[#71717A] font-mono uppercase tracking-wider">{spec.label}</span>
-                                                    <span className="text-[#966E2E] font-bold font-mono tracking-wider">{spec.value}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {/* Action Bar */}
-                                        <div className="pt-2 flex items-center justify-between">
-                                            <Link href={activeShowcase.link} className="w-full">
-                                                <button className="w-full h-11 bg-[#966E2E] hover:bg-[#7D5A25] text-white font-bold uppercase tracking-widest text-[9px] rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer">
-                                                    <span>View {activeShowcase.title}</span>
-                                                    <ArrowRight size={13} strokeWidth={2.5} />
-                                                </button>
-                                            </Link>
-                                        </div>
-
-                                    </div>
-
-                                </motion.div>
-                            </AnimatePresence>
-                        </div>
-
-                    </div>
+                        );
+                    })}
                 </div>
 
             </div>
